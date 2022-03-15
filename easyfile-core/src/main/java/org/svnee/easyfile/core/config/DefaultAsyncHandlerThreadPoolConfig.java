@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
  * @desc
  **/
 @Component
-@ConfigurationProperties(prefix = "ads.default.async.download.handler.thread-pool")
+@ConfigurationProperties(prefix = "easyfile.default.async.download.handler.thread-pool")
 public class DefaultAsyncHandlerThreadPoolConfig {
 
     private Integer corePoolSize = 10;
