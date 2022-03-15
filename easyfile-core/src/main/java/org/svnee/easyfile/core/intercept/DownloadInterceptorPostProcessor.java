@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * 下载执行器后置处理Bean
  *
- * @author xuzhao
+ * @author svnee
  */
 @Component
 public class DownloadInterceptorPostProcessor implements BeanPostProcessor {

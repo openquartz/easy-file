@@ -7,7 +7,7 @@ import org.svnee.easyfile.common.constants.Constants;
 /**
  * 文件后缀枚举
  *
- * @author xuzhao
+ * @author svnee
  */
 @Getter
 @AllArgsConstructor

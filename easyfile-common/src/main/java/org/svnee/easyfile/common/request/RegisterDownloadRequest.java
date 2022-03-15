@@ -8,7 +8,7 @@ import org.svnee.easyfile.common.bean.Notifier;
 /**
  * 注册下载请求
  *
- * @author xuzhao
+ * @author svnee
  */
 public class RegisterDownloadRequest extends BaseExecuteParam {
 

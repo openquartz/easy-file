@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 通知信息
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class Notifier {

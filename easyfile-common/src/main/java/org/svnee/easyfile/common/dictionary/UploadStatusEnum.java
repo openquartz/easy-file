@@ -5,7 +5,7 @@ import java.util.stream.Stream;
 /**
  * 上传状态
  *
- * @author xuzhao
+ * @author svnee
  */
 public enum UploadStatusEnum {
 

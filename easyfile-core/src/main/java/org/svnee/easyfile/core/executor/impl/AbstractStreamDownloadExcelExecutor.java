@@ -21,7 +21,7 @@ import org.svnee.easyfile.core.executor.StreamDownloadExecutor;
  * @param <S> Session - 流式查询会话对象
  * @param <R> 流式查询的结果集合-需要支持为迭代器
  * @param <T> 导出实体模版类对象
- * @author xuzhao
+ * @author svnee
  **/
 public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T>
     implements StreamDownloadExecutor<S, R, T> {

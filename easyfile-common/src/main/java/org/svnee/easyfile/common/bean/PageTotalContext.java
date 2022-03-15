@@ -5,7 +5,7 @@ import org.springframework.core.NamedThreadLocal;
 /**
  * PageTotalContext
  *
- * @author xuzhao
+ * @author svnee
  */
 public final class PageTotalContext {
 

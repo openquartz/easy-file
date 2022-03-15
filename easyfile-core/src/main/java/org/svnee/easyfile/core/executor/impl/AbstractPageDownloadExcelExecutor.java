@@ -22,7 +22,7 @@ import org.svnee.easyfile.core.executor.PageShardingDownloadExecutor;
  * 同时 <T> 泛型为导出实体类对象
  * 对象导出需要配合注解使用{@link org.svnee.easyfile.common.annotation.ExcelProperty}
  *
- * @author xuzhao
+ * @author svnee
  */
 public abstract class AbstractPageDownloadExcelExecutor<T> implements PageShardingDownloadExecutor<T> {
 

@@ -6,7 +6,7 @@ import org.svnee.easyfile.core.exception.DownloadRejectExecuteException;
 import org.svnee.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 
 /**
- * @author xuzhao
+ * @author svnee
  * 默认下载执行器时间
  * 如果需要进行其他业务逻辑也可自行实现,比如：报警通知等等
  **/

@@ -9,7 +9,7 @@ import lombok.Data;
 /**
  * 导出结果查询
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class ListDownloadResultRequest {

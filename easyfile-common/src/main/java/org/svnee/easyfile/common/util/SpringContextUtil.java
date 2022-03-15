@@ -5,7 +5,7 @@ import org.springframework.aop.support.AopUtils;
 /**
  * SpringContextUtil
  *
- * @author xuzhao
+ * @author svnee
  */
 public class SpringContextUtil {
 

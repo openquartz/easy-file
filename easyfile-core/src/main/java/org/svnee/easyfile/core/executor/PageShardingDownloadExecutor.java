@@ -12,7 +12,7 @@ import org.svnee.easyfile.common.bean.PageTotal;
  * 按页分片下载执行器
  * <p>
  *
- * @author xuzhao
+ * @author svnee
  */
 public interface PageShardingDownloadExecutor<T> extends BaseDownloadExecutor {
 

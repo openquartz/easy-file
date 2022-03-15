@@ -7,7 +7,7 @@ import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
 /**
  * 下载处理器拦截器
  *
- * @author xuzhao
+ * @author svnee
  */
 public interface DownloadExecutorInterceptor {
 

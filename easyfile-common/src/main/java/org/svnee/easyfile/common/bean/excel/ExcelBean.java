@@ -12,7 +12,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 /**
  * ExcelBean
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class ExcelBean implements Closeable {

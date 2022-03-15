@@ -8,7 +8,7 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 /**
  * 上传回传结果请求
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class UploadCallbackRequest {

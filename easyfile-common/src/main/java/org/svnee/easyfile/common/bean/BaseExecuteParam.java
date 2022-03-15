@@ -7,7 +7,7 @@ import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 /**
  * 执行参数
  *
- * @author xuzhao
+ * @author svnee
  */
 public class BaseExecuteParam {
 

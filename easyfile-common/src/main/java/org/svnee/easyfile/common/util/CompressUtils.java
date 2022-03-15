@@ -27,7 +27,7 @@ import org.apache.commons.compress.utils.IOUtils;
 /**
  * 压缩文件夹工具类
  *
- * @author xuzhao
+ * @author svnee
  */
 public class CompressUtils {
 

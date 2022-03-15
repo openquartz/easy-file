@@ -25,7 +25,7 @@ import org.svnee.easyfile.core.intercept.InterceptorContext;
  * 默认线程池配置{@link DefaultAsyncHandlerThreadPoolConfig} 可以进行自行覆盖
  * 可以做异常捕捉做自己的提示执行
  *
- * @author xuzhao
+ * @author svnee
  */
 public class DefaultAsyncFileHandler extends AsyncFileHandlerAdapter {
 

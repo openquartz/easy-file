@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
  * wrapper 同步请求头
  * 当下载为同步执行器时,包装同步返回头
  *
- * @author xuzhao
+ * @author svnee
  */
 public interface BaseWrapperSyncResponseHeader {
 

@@ -5,7 +5,7 @@ import org.svnee.easyfile.common.bean.BaseExecuteParam;
 /**
  * 导出限流请求
  *
- * @author xuzhao
+ * @author svnee
  */
 public class ExportLimitingRequest extends BaseExecuteParam {
 

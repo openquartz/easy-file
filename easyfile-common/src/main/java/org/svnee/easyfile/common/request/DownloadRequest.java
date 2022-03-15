@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * 下载次数
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class DownloadRequest {

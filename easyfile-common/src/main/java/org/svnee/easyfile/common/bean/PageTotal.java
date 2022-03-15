@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 汇总信息
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class PageTotal {

@@ -7,7 +7,7 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 /**
  * 导出结果
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class ExportResult {

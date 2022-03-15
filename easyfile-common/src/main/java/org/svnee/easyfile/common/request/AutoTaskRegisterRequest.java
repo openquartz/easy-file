@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 /**
  * 自动任务注册请求
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 @Accessors(chain = true)

@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 import javax.validation.groups.Default;
 
 /**
- * @author xuzhao
+ * @author svnee
  */
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)

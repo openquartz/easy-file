@@ -30,7 +30,7 @@ import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
  * 异步处理器适配器
  * 提供异步下载的默认实现
  *
- * @author xuzhao
+ * @author svnee
  */
 public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
 

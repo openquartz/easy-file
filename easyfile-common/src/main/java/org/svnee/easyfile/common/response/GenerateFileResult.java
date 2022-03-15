@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 /**
  * 生成文件结果
  *
- * @author xuzhao
+ * @author svnee
  */
 public class GenerateFileResult {
 

@@ -16,7 +16,7 @@ import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
 
 /**
- * @author xuzhao
+ * @author svnee
  * @date 2019/10/11 11:53
  */
 public class ExcelBeanUtils {

@@ -3,7 +3,7 @@ package org.svnee.easyfile.common.constants;
 /**
  * 常量类
  *
- * @author xuzhao
+ * @author svnee
  */
 public final class Constants {
 

@@ -5,7 +5,7 @@ import java.io.OutputStream;
 /**
  * 请求上下文
  *
- * @author xuzhao
+ * @author svnee
  */
 public class DownloaderRequestContext extends BaseDownloaderRequestContext {
 

@@ -6,7 +6,7 @@ import java.lang.reflect.Type;
 /**
  * 泛型工具类
  *
- * @author xuzhao
+ * @author svnee
  */
 public class GenericUtils {
 

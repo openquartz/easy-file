@@ -1,7 +1,7 @@
 package org.svnee.easyfile.core.exception;
 
 /**
- * @author xuzhao
+ * @author svnee
  * @desc 下载拒绝执行异常
  **/
 public class DownloadRejectExecuteException extends EasyFileException {

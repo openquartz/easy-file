@@ -7,7 +7,7 @@ import lombok.Data;
 /**
  * 请求上下文
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class BaseDownloaderRequestContext {

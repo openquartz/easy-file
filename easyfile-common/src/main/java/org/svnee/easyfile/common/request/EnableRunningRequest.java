@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 校验运行请求
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class EnableRunningRequest {

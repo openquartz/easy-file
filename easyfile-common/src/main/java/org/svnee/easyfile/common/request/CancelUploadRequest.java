@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * 撤销上传请求
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class CancelUploadRequest {
