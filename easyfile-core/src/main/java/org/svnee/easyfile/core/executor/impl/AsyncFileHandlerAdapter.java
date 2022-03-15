@@ -23,6 +23,7 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.response.GenerateFileResult;
 import org.svnee.easyfile.common.util.CompressUtils;
+import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.core.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
 
