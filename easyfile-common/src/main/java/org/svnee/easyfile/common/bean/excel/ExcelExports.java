@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
@@ -25,6 +24,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * @author chaofan
@@ -61,7 +62,7 @@ public class ExcelExports {
     }
 
     public static <T> void writeData(ExcelBean excelBean, List<Field> exportFieldList, List<T> rowList) {
-        if (Objects.isNull(rowList) || rowList.isEmpty()) {
+        if (CollectionUtils.isEmpty(rowList)) {
             return;
         }
         excelBean.getCurrentSheet();
@@ -100,7 +101,7 @@ public class ExcelExports {
     }
 
     private static void setHeader(ExcelBean excelBean, List<Field> exportFields) {
-        if (Objects.isNull(exportFields) || exportFields.isEmpty()) {
+        if (CollectionUtils.isEmpty(exportFields)) {
             return;
         }
         Sheet sheet = excelBean.getCurrentSheet();

@@ -11,15 +11,19 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import javax.validation.groups.Default;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.bean.Pair;
+import org.svnee.easyfile.common.util.CollectionUtils;
 
 /**
  * @author svnee
  * @date 2019/10/11 11:53
  */
-public class ExcelBeanUtils {
+public final class ExcelBeanUtils {
+
+    private ExcelBeanUtils() {
+    }
 
     /**
      * 按照分组获取所有的字段
@@ -50,8 +54,8 @@ public class ExcelBeanUtils {
                     .anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(ExcelProperty.class));
             })
             .map(field -> Pair.of(field, AnnotatedElementUtils.findMergedAnnotation(field, ExcelProperty.class)))
-            //            .filter(e -> CollectionUtils
-            //                .isNotEmpty(CollectionUtils.intersection(groupSet, Arrays.asList(e.getValue().group()))))
+            .filter(e -> CollectionUtils
+                .isNotEmpty(CollectionUtils.intersection(groupSet, Arrays.asList(e.getValue().group()))))
             .sorted(Comparator.comparingInt(o -> o.getValue().order()))
             .map(Pair::getKey)
             .collect(Collectors.toList());

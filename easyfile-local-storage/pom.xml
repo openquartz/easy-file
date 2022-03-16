@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
 
   <parent>
     <groupId>org.svnee</groupId>
@@ -9,28 +11,13 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>easyfile-spring-boot-starter</artifactId>
+  <artifactId>easyfile-local-storage</artifactId>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
   <description>${project.artifactId}</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
-    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -38,27 +25,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.aliyun</groupId>
-      <artifactId>alibaba-dingtalk-service-sdk</artifactId>
-      <!-- 用户反馈其中 javax.jms 无法下载, 未发现 log4j 用处, 暂且排除 -->
-      <exclusions>
-        <exclusion>
-          <artifactId>log4j</artifactId>
-          <groupId>log4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.rholder</groupId>
-      <artifactId>guava-retrying</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.svnee</groupId>
       <artifactId>easyfile-storage</artifactId>
     </dependency>
-
   </dependencies>
 
   <build>
@@ -92,4 +61,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

@@ -9,56 +9,23 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>easyfile-spring-boot-starter</artifactId>
+  <artifactId>easyfile-remote-storage</artifactId>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
   <description>${project.artifactId}</description>
 
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <optional>true</optional>
-    </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
     </dependency>
 
-    <dependency>
-      <groupId>com.aliyun</groupId>
-      <artifactId>alibaba-dingtalk-service-sdk</artifactId>
-      <!-- 用户反馈其中 javax.jms 无法下载, 未发现 log4j 用处, 暂且排除 -->
-      <exclusions>
-        <exclusion>
-          <artifactId>log4j</artifactId>
-          <groupId>log4j</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.rholder</groupId>
-      <artifactId>guava-retrying</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.svnee</groupId>
-      <artifactId>easyfile-storage</artifactId>
-    </dependency>
-
+      <dependency>
+          <groupId>org.svnee</groupId>
+          <artifactId>easyfile-storage</artifactId>
+      </dependency>
   </dependencies>
 
   <build>
@@ -92,4 +59,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>

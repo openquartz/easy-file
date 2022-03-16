@@ -12,10 +12,11 @@
     <modules>
         <module>easyfile-common</module>
         <module>easyfile-server</module>
-        <module>easyfile-remote</module>
-        <module>easyfile-core</module>
         <module>easyfile-spring-boot-starter</module>
         <module>easyfile-example</module>
+        <module>easyfile-storage</module>
+        <module>easyfile-remote-storage</module>
+        <module>easyfile-local-storage</module>
     </modules>
 
     <name>${project.artifactId}</name>
@@ -26,6 +27,7 @@
 
         <dozer.version>6.5.0</dozer.version>
         <guava.version>29.0-jre</guava.version>
+        <guava.retry.version>2.0.0</guava.retry.version>
         <okhttp3.version>3.12.0</okhttp3.version>
         <hutool-all.version>5.4.7</hutool-all.version>
         <fastjson.version>1.2.75</fastjson.version>
@@ -196,9 +198,28 @@
 
             <dependency>
                 <groupId>org.svnee</groupId>
-                <artifactId>easyfile-remote</artifactId>
+                <artifactId>easyfile-storage</artifactId>
                 <version>${revision}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.svnee</groupId>
+                <artifactId>easyfile-remote-storage</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.svnee</groupId>
+                <artifactId>easyfile-local-storage</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.rholder</groupId>
+                <artifactId>guava-retrying</artifactId>
+                <version>${guava.retry.version}</version>
+            </dependency>
+
 
         </dependencies>
     </dependencyManagement>
