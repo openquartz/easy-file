@@ -6,12 +6,15 @@ package org.svnee.easyfile.starter.exception;
  **/
 public class GenerateFileException extends EasyFileException {
 
-    private GenerateFileErrorCode errorCode;
+    private final GenerateFileErrorCode errorCode;
 
     public GenerateFileException(GenerateFileErrorCode errorCode) {
         super(errorCode);
         this.errorCode = errorCode;
     }
 
-
+    @Override
+    public GenerateFileErrorCode getErrorCode() {
+        return errorCode;
+    }
 }

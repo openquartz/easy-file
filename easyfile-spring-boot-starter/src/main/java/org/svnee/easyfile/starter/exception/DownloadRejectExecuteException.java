@@ -6,9 +6,7 @@ package org.svnee.easyfile.starter.exception;
  **/
 public class DownloadRejectExecuteException extends EasyFileException {
 
-    private final String errorMsg;
-
-    public DownloadRejectExecuteException(String errorMsg) {
-        this.errorMsg = errorMsg;
+    public DownloadRejectExecuteException(EasyFileErrorCode errorCode) {
+        super(errorCode);
     }
 }

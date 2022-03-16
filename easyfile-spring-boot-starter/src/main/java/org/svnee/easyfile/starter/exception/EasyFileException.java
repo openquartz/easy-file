@@ -7,10 +7,14 @@ package org.svnee.easyfile.starter.exception;
  */
 public class EasyFileException extends RuntimeException {
 
-    private EasyFileErrorCode errorCode;
+    private final EasyFileErrorCode errorCode;
 
     public EasyFileException(EasyFileErrorCode errorCode) {
         super(errorCode.getErrorMsg());
         this.errorCode = errorCode;
+    }
+
+    public EasyFileErrorCode getErrorCode() {
+        return errorCode;
     }
 }

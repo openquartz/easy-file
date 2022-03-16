@@ -2,6 +2,7 @@ package org.svnee.easyfile.starter.executor.impl;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.starter.exception.DownloadErrorCode;
 import org.svnee.easyfile.starter.exception.DownloadRejectExecuteException;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 
@@ -16,7 +17,7 @@ public class DefaultDownloadRejectExecutionHandler implements BaseDefaultDownloa
     @Override
     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
         log.warn("[DefaultDownloadRejectExecutionHandler] reject execution,r:{}", r.toString());
-        throw new DownloadRejectExecuteException("Reject download exception!");
+        throw new DownloadRejectExecuteException(DownloadErrorCode.DOWNLOAD_OVER_WAIT_NUM_REJECT);
     }
 
 }
