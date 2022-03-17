@@ -6,7 +6,7 @@ import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 /**
  * 下载开始事件
  *
- * @author xuzhao
+ * @author svnee
  */
 public class DownloadStartEvent {
 

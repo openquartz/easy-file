@@ -5,7 +5,7 @@ import org.svnee.easyfile.common.request.ExportLimitingRequest;
 /**
  * 限流服务
  *
- * @author xuzhao
+ * @author svnee
  */
 public interface LimitingService {
 

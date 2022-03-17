@@ -5,7 +5,7 @@ import java.net.InetAddress;
 /**
  * IP 工具类
  *
- * @author xuzhao
+ * @author svnee
  */
 public final class IpUtil {
 
