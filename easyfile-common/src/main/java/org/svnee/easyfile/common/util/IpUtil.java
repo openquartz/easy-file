@@ -1,0 +1,30 @@
+package org.svnee.easyfile.common.util;
+
+import java.net.InetAddress;
+
+/**
+ * IP 工具类
+ *
+ * @author xuzhao
+ */
+public final class IpUtil {
+
+    private IpUtil() {
+    }
+
+    /**
+     * 获取当前机器的IP
+     *
+     * @return ip
+     */
+    public static String getIp() {
+        // 查询当前IP
+        String ip = null;
+        try {
+            ip = InetAddress.getLocalHost().getHostAddress();
+        } catch (Exception ex) {
+        }
+        return ip;
+    }
+
+}

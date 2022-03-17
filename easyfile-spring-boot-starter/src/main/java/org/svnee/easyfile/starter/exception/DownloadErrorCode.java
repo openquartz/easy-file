@@ -11,6 +11,9 @@ public enum DownloadErrorCode implements EasyFileErrorCode {
 
     /*超过队列前缀*/
     DOWNLOAD_OVER_WAIT_NUM_REJECT("01", "超过队列等待数拒绝下载"),
+    /*文件下载执行器必须使用注解*/
+    FILE_GENERATOR_MUST_SUPPORT_ANNOTATION("02", "文件下载执行器必须使用@FileExportExecutor注解"),
+    SYNC_DOWNLOAD_EXECUTE_ERROR("03", "同步下载执行异常"),
 
     ;
     /** 异常码 */

@@ -1,10 +1,14 @@
 package org.svnee.easyfile.common.util;
 
 /**
+ * StringUtils
+ *
  * @author svnee
- * @desc StringUtils
  **/
-public class StringUtils {
+public final class StringUtils {
+
+    private StringUtils() {
+    }
 
     /**
      * The empty String {@code ""}.

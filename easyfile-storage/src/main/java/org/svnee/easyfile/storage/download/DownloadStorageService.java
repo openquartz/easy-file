@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.download;
 
+import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 
 /**
@@ -23,6 +24,14 @@ public interface DownloadStorageService {
      * @param request 请求
      */
     void uploadCallback(UploadCallbackRequest request);
+
+    /**
+     * 注册下载请求
+     *
+     * @param downloadRequest 下载请求
+     * @return 注册下载ID
+     */
+    Long register(RegisterDownloadRequest downloadRequest);
 
 
 }

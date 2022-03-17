@@ -16,4 +16,5 @@ public class SpringContextUtil {
         return AopUtils.isAopProxy(springBean) ? AopUtils.getTargetClass(springBean) : springBean.getClass();
     }
 
+
 }

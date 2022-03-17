@@ -16,6 +16,11 @@ public class EasyFileDownloadProperties {
     public static final String PREFIX = "easyfile.download";
 
     /**
+     * 是否启用
+     */
+    private boolean enabled;
+
+    /**
      * 服务APPID
      */
     private String appId;
