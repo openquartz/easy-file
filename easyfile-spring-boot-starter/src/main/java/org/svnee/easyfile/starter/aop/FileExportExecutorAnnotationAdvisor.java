@@ -100,6 +100,8 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-
+        if (this.advice instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) this.advice).setBeanFactory(beanFactory);
+        }
     }
 }

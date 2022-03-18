@@ -53,4 +53,9 @@ public class EasyFileDownloadProperties {
      */
     private Integer minEnableCompressMbSize = 1;
 
+    /**
+     * 切面顺序,默认 Integer.MAX_VALUE
+     */
+    private Integer exportAdvisorOrder = Integer.MAX_VALUE;
+
 }

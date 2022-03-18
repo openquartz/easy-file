@@ -4,11 +4,9 @@ import static org.svnee.easyfile.starter.exception.DownloadErrorCode.FILE_GENERA
 import static org.svnee.easyfile.starter.exception.DownloadErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
 import java.util.Map;
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.apache.ibatis.binding.MapperMethod.MethodSignature;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -34,8 +32,9 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 
 /**
+ * 文件导出方法拦截器
+ *
  * @author svnee
- * @desc 文件导出方法拦截器
  **/
 public class FileExportInterceptor implements MethodInterceptor {
 

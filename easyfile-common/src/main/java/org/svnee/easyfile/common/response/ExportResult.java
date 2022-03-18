@@ -1,7 +1,6 @@
 package org.svnee.easyfile.common.response;
 
 import lombok.Data;
-import org.svnee.easyfile.common.dictionary.UploadFileSystem;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 
 /**
@@ -25,7 +24,7 @@ public class ExportResult {
     /**
      * 上传文件系统
      */
-    private UploadFileSystem fileSystem;
+    private String fileSystem;
 
     /**
      * 文件地址

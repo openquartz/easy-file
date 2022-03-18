@@ -20,13 +20,6 @@ import org.svnee.easyfile.common.annotation.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Pair;
-import org.svnee.easyfile.common.dictionary.DefaultUploadFileSystem;
-import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.starter.exception.AssertUtil;
-import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
-import org.svnee.easyfile.starter.exception.GenerateFileException;
-import org.svnee.easyfile.starter.executor.bean.GenerateFileResult;
-import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -34,11 +27,16 @@ import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CompressUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
+import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.starter.exception.AssertUtil;
+import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
+import org.svnee.easyfile.starter.exception.GenerateFileException;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.starter.executor.bean.GenerateFileResult;
+import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
-import org.svnee.easyfile.common.dictionary.UploadFileSystem;
 import org.svnee.easyfile.storage.file.UploadService;
 
 /**
@@ -80,7 +78,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
         FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
 
-        Pair<UploadFileSystem, String> fileUrl;
+        Pair<String, String> fileUrl;
         boolean handleBreakFlag;
         GenerateFileResult genFileResult = null;
         try {
@@ -252,7 +250,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                 // 生成文件
                 GenerateFileResult genFileResult = generateFile(executor, exportExecutor, baseRequest, registerId,
                     downloadProperties.getLocalFileTempPath());
-                Pair<UploadFileSystem, String> fileUrl = null;
+                Pair<String, String> fileUrl = null;
                 Throwable error = null;
                 if (!genFileResult.isHandleBreakFlag()) {
                     try {
@@ -310,7 +308,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         ExportResult exportResult = new ExportResult();
         exportResult.setRegisterId(registerId);
         exportResult.setUploadStatus(UploadStatusEnum.FAIL);
-        exportResult.setFileSystem(DefaultUploadFileSystem.NONE);
+        exportResult.setFileSystem(Constants.NONE_SYSTEM);
         exportResult.setFileUrl(StringUtils.EMPTY);
         return exportResult;
     }

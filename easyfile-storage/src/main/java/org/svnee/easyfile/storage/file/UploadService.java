@@ -2,7 +2,6 @@ package org.svnee.easyfile.storage.file;
 
 import java.io.File;
 import org.svnee.easyfile.common.bean.Pair;
-import org.svnee.easyfile.common.dictionary.UploadFileSystem;
 
 /**
  * 文件上传服务
@@ -19,6 +18,6 @@ public interface UploadService {
      * @param appId 服务ID
      * @return key: 文件系统 --> value:返回文件URL/KEY标识符
      */
-    <T extends UploadFileSystem> Pair<T, String> upload(File file, String fileName, String appId);
+    Pair<String, String> upload(File file, String fileName, String appId);
 
 }

@@ -37,8 +37,8 @@ public class CollectionUtils {
          * @param b the second collection
          */
         public CardinalityHelper(final Iterable<? extends O> a, final Iterable<? extends O> b) {
-            cardinalityA = CollectionUtils.<O>getCardinalityMap(a);
-            cardinalityB = CollectionUtils.<O>getCardinalityMap(b);
+            cardinalityA = CollectionUtils.getCardinalityMap(a);
+            cardinalityB = CollectionUtils.getCardinalityMap(b);
         }
 
         /**
@@ -84,7 +84,7 @@ public class CollectionUtils {
         private final int getFreq(final Object obj, final Map<?, Integer> freqMap) {
             final Integer count = freqMap.get(obj);
             if (count != null) {
-                return count.intValue();
+                return count;
             }
             return 0;
         }
@@ -187,14 +187,9 @@ public class CollectionUtils {
      * @return the populated cardinality map
      */
     public static <O> Map<O, Integer> getCardinalityMap(final Iterable<? extends O> coll) {
-        final Map<O, Integer> count = new HashMap<O, Integer>();
+        final Map<O, Integer> count = new HashMap<>();
         for (final O obj : coll) {
-            final Integer c = count.get(obj);
-            if (c == null) {
-                count.put(obj, Integer.valueOf(1));
-            } else {
-                count.put(obj, Integer.valueOf(c.intValue() + 1));
-            }
+            count.merge(obj, 1, Integer::sum);
         }
         return count;
     }

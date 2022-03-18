@@ -2,7 +2,6 @@ package org.svnee.easyfile.common.request;
 
 import javax.validation.constraints.NotNull;
 import lombok.Data;
-import org.svnee.easyfile.common.dictionary.UploadFileSystem;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 
 /**
@@ -28,7 +27,7 @@ public class UploadCallbackRequest {
      * 上传系统枚举
      */
     @NotNull(message = "上传文件系统不能为空")
-    private UploadFileSystem system;
+    private String system;
 
     /**
      * 上传文件状态

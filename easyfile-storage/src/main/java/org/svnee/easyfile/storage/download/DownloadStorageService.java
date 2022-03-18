@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.download;
 
+import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 
@@ -33,5 +34,10 @@ public interface DownloadStorageService {
      */
     Long register(RegisterDownloadRequest downloadRequest);
 
-
+    /**
+     * 自动注册下载任务
+     *
+     * @param request 请求
+     */
+    void autoRegisterTask(AutoTaskRegisterRequest request);
 }
