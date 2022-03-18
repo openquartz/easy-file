@@ -28,11 +28,18 @@ import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**
- * @author chaofan
+ * 导出下载工具类-支持
+ *
+ * @author svnee
  */
 @Slf4j
 public class ExcelExports {
 
+    /**
+     * 写入数据到Excel-流
+     * @param excelBean excel类
+     * @param outputStream 输出流
+     */
     public static void writeWorkbook(ExcelBean excelBean, OutputStream outputStream) {
         try {
             excelBean.getWorkbook().write(outputStream);
