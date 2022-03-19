@@ -6,11 +6,11 @@ import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**
- * 调用远程服务的下载存储服务
+ * 本地下载存储
  *
  * @author svnee
  **/
-public class RemoteDownloadStorageService implements DownloadStorageService {
+public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
 
     @Override
     public boolean enableRunning(Long registerId) {

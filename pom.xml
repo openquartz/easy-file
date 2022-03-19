@@ -36,6 +36,7 @@
         <poi.version>3.17</poi.version>
         <netty-all.version>4.0.42.Final</netty-all.version>
         <netty-static.version>1.1.33.Fork26</netty-static.version>
+        <javax.persistence.version>2.2</javax.persistence.version>
 
         <slf4j-api.version>1.7.7</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
@@ -104,6 +105,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.persistence</groupId>
+                <artifactId>javax.persistence-api</artifactId>
+                <version>${javax.persistence.version}</version>
             </dependency>
 
             <dependency>

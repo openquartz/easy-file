@@ -21,10 +21,10 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.file.UploadService;
 import org.svnee.easyfile.storage.file.local.LocalUploadService;
-import org.svnee.easyfile.storage.impl.LocalDownloadStorageService;
-import org.svnee.easyfile.storage.impl.LocalLimitingService;
-import org.svnee.easyfile.storage.impl.RemoteDownloadStorageService;
-import org.svnee.easyfile.storage.impl.RemoteLimitingService;
+import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
+import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
+import org.svnee.easyfile.storage.impl.RemoteDownloadStorageServiceImpl;
+import org.svnee.easyfile.storage.impl.RemoteLimitingServiceImpl;
 
 /**
  * @author svnee
@@ -88,27 +88,27 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnClass(LocalDownloadStorageService.class)
+    @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
     public DownloadStorageService localDownloadStorageService() {
-        return new LocalDownloadStorageService();
+        return new LocalDownloadStorageServiceImpl();
     }
 
     @Bean
-    @ConditionalOnClass(RemoteDownloadStorageService.class)
+    @ConditionalOnClass(RemoteDownloadStorageServiceImpl.class)
     public DownloadStorageService remoteDownloadStorageService() {
-        return new RemoteDownloadStorageService();
+        return new RemoteDownloadStorageServiceImpl();
     }
 
     @Bean
-    @ConditionalOnClass(LocalLimitingService.class)
+    @ConditionalOnClass(LocalLimitingServiceImpl.class)
     public LimitingService localLimitingService() {
-        return new LocalLimitingService();
+        return new LocalLimitingServiceImpl();
     }
 
     @Bean
-    @ConditionalOnClass(RemoteLimitingService.class)
+    @ConditionalOnClass(RemoteLimitingServiceImpl.class)
     public LimitingService remoteLimitingService() {
-        return new RemoteLimitingService();
+        return new RemoteLimitingServiceImpl();
     }
 
 }

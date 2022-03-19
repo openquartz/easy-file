@@ -4,11 +4,11 @@ import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.storage.download.LimitingService;
 
 /**
- * 远程服务端统一限流
+ * 本地限流服务-限制下载
  *
  * @author svnee
  **/
-public class RemoteLimitingService implements LimitingService {
+public class LocalLimitingServiceImpl implements LimitingService {
 
     @Override
     public void limiting(ExportLimitingRequest request) {
