@@ -1,7 +1,7 @@
 package org.svnee.easyfile.storage.remote.protocol;
 
 import org.svnee.easyfile.storage.remote.CommandCustomHeader;
-import org.svnee.easyfile.storage.remote.annotation.CFNotNull;
+import org.svnee.easyfile.storage.remote.CFNotNull;
 import org.svnee.easyfile.storage.remote.exception.RemotingCommandException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

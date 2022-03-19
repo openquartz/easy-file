@@ -16,6 +16,7 @@
  */
 package org.svnee.easyfile.storage.remote.netty;
 
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.storage.remote.ChannelEventListener;
 import org.svnee.easyfile.storage.remote.InvokeCallback;
 import org.svnee.easyfile.storage.remote.RPCHook;
@@ -59,7 +60,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -1,7 +1,7 @@
 package org.svnee.easyfile.storage.remote.common;
 
 import java.util.List;
-import org.apache.commons.lang3.StringUtils;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * JSON util.

@@ -2,6 +2,7 @@ package org.svnee.easyfile.starter.spring.boot.autoconfig;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Advisor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,6 +21,10 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.file.UploadService;
 import org.svnee.easyfile.storage.file.local.LocalUploadService;
+import org.svnee.easyfile.storage.impl.LocalDownloadStorageService;
+import org.svnee.easyfile.storage.impl.LocalLimitingService;
+import org.svnee.easyfile.storage.impl.RemoteDownloadStorageService;
+import org.svnee.easyfile.storage.impl.RemoteLimitingService;
 
 /**
  * @author svnee
@@ -80,6 +85,30 @@ public class EasyFileCreatorAutoConfiguration {
     @ConditionalOnMissingBean(UploadService.class)
     public UploadService localUploadService() {
         return new LocalUploadService();
+    }
+
+    @Bean
+    @ConditionalOnClass(LocalDownloadStorageService.class)
+    public DownloadStorageService localDownloadStorageService() {
+        return new LocalDownloadStorageService();
+    }
+
+    @Bean
+    @ConditionalOnClass(RemoteDownloadStorageService.class)
+    public DownloadStorageService remoteDownloadStorageService() {
+        return new RemoteDownloadStorageService();
+    }
+
+    @Bean
+    @ConditionalOnClass(LocalLimitingService.class)
+    public LimitingService localLimitingService() {
+        return new LocalLimitingService();
+    }
+
+    @Bean
+    @ConditionalOnClass(RemoteLimitingService.class)
+    public LimitingService remoteLimitingService() {
+        return new RemoteLimitingService();
     }
 
 }

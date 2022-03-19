@@ -16,6 +16,8 @@
  */
 package org.svnee.easyfile.storage.remote.netty;
 
+import java.util.Map;
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.storage.remote.ChannelEventListener;
 import org.svnee.easyfile.storage.remote.InvokeCallback;
 import org.svnee.easyfile.storage.remote.RPCHook;
@@ -47,7 +49,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,7 @@ public abstract class NettyRemotingAbstract {
      * This container holds all processors per request code, aka, for each incoming request, we may look up the
      * responding processor in this map to handle the request.
      */
-    protected final HashMap<Integer/* request code */, Pair<NettyRequestProcessor, ExecutorService>> processorTable =
+    protected final Map<Integer/* request code */, Pair<NettyRequestProcessor, ExecutorService>> processorTable =
         new HashMap<>(64);
 
     /**

@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.remote;
 
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.storage.remote.exception.RemotingSendRequestException;
 import org.svnee.easyfile.storage.remote.exception.RemotingTimeoutException;
 import org.svnee.easyfile.storage.remote.exception.RemotingTooMuchRequestException;
@@ -7,10 +8,11 @@ import org.svnee.easyfile.storage.remote.netty.NettyRequestProcessor;
 import org.svnee.easyfile.storage.remote.protocol.RemotingCommand;
 import io.netty.channel.Channel;
 import java.util.concurrent.ExecutorService;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  * 远程服务
+ *
+ * @author svnee
  */
 public interface RemotingServer extends org.svnee.easyfile.storage.remote.RemotingService {
 
