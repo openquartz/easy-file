@@ -23,7 +23,20 @@ public final class Constants {
     /**
      * 无系统
      */
-    public static final String NONE_SYSTEM = "NONE";
+    public static final String NONE_FILE_SYSTEM = "NONE";
 
+    /**
+     * 默认限流策略
+     */
+    public static final String DEFAULT_LIMITING_STRATEGY = "NONE";
 
+    /**
+     * 初始化版本号
+     */
+    public static final int DATA_INIT_VERSION = 1;
+
+    /**
+     * 系统用户
+     */
+    public static final String SYSTEM_USER = "system";
 }

@@ -1,5 +1,7 @@
 package org.svnee.easyfile.starter.exception;
 
+import org.svnee.easyfile.common.exception.EasyFileErrorCode;
+
 /**
  * 生成文件异常码
  *

@@ -1,5 +1,7 @@
 package org.svnee.easyfile.starter.exception;
 
+import org.svnee.easyfile.common.exception.EasyFileException;
+
 /**
  * @author svnee
  * @desc 文件生成异常

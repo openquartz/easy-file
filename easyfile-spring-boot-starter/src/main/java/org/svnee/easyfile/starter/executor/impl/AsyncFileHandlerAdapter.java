@@ -13,7 +13,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang3.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.svnee.easyfile.common.annotation.FileExportExecutor;
@@ -26,9 +25,10 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CompressUtils;
+import org.svnee.easyfile.common.util.DateFormatUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.starter.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.AssertUtil;
 import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileException;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
@@ -308,7 +308,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         ExportResult exportResult = new ExportResult();
         exportResult.setRegisterId(registerId);
         exportResult.setUploadStatus(UploadStatusEnum.FAIL);
-        exportResult.setFileSystem(Constants.NONE_SYSTEM);
+        exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
         exportResult.setFileUrl(StringUtils.EMPTY);
         return exportResult;
     }

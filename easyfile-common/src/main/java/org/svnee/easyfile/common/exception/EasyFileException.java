@@ -1,4 +1,4 @@
-package org.svnee.easyfile.starter.exception;
+package org.svnee.easyfile.common.exception;
 
 /**
  * 异步文件异常

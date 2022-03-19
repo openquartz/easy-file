@@ -6,6 +6,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 import java.util.Date;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 
 /**
  * 异步下载记录
@@ -43,7 +44,7 @@ public class AsyncDownloadRecord {
      * 上传状态
      */
     @Column(name = "upload_status")
-    private String uploadStatus;
+    private UploadStatusEnum uploadStatus;
 
     /**
      * 文件路径

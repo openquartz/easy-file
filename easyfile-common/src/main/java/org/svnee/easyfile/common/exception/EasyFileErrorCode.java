@@ -1,8 +1,9 @@
-package org.svnee.easyfile.starter.exception;
+package org.svnee.easyfile.common.exception;
 
 /**
+ * 异常Code
+ *
  * @author svnee
- * @desc 异常Code
  **/
 public interface EasyFileErrorCode {
 

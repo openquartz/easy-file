@@ -1,6 +1,7 @@
 package org.svnee.easyfile.starter.exception;
 
 import lombok.Getter;
+import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 
 /**
  * @author svnee

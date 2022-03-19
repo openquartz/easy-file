@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -192,6 +193,20 @@ public class CollectionUtils {
             count.merge(obj, 1, Integer::sum);
         }
         return count;
+    }
+
+    /**
+     * 创建ArrayList
+     *
+     * @param collection 集合
+     * @param <T> T
+     * @return list
+     */
+    public static <T> List<T> newArrayList(Collection<T> collection) {
+        if (Objects.isNull(collection)) {
+            return null;
+        }
+        return new ArrayList<>(collection);
     }
 
 

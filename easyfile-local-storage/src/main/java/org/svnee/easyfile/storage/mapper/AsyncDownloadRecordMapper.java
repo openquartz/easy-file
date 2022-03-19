@@ -2,9 +2,9 @@ package org.svnee.easyfile.storage.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
+import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
 
 /**
  * 异步下载记录Mapper
@@ -35,16 +35,16 @@ public interface AsyncDownloadRecordMapper {
      * @param id id
      * @return record
      */
-    @Select("select * from ef_async_download_record where id = #{id} ")
     AsyncDownloadRecord findById(@Param("id") Long id);
 
-    //    /**
-    //     * 变更上传信息
-    //     *
-    //     * @param condition 变更信息条件
-    //     * @return 变更行数
-    //     */
-    //    int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
+    /**
+     * 变更上传信息
+     *
+     * @param condition 变更信息条件
+     * @return 变更行数
+     */
+    int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
+
     //
     //    /**
     //     * 查询最大创建时间
