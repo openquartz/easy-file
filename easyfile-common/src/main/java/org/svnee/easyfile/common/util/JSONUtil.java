@@ -26,6 +26,14 @@ public class JSONUtil {
         return JSON_FACADE.toJson(object);
     }
 
+    /**
+     * 反序列化成对象
+     *
+     * @param text json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 对象
+     */
     public static <T> T parseObject(String text, Class<T> clazz) {
         if (StringUtils.isBlank(text)) {
             return null;
@@ -34,6 +42,14 @@ public class JSONUtil {
         return JSON_FACADE.parseObject(text, clazz);
     }
 
+    /**
+     * 解析数组
+     *
+     * @param text json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 返回ArrayList
+     */
     public static <T> List<T> parseArray(String text, Class<T> clazz) {
         if (StringUtils.isBlank(text)) {
             return null;
