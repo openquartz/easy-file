@@ -1,12 +1,11 @@
 package org.svnee.easyfile.starter.executor;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import java.util.List;
 import java.util.Map;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
+import org.svnee.easyfile.common.bean.Pair;
 
 /**
  * 按页分片下载执行器
