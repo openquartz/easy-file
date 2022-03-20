@@ -9,9 +9,9 @@ import org.svnee.easyfile.storage.download.LimitingService;
  * @author svnee
  **/
 public class LocalLimitingServiceImpl implements LimitingService {
-    
+
     @Override
     public void limiting(ExportLimitingRequest request) {
-        // TODO: 2022/3/18 待处理
+
     }
 }

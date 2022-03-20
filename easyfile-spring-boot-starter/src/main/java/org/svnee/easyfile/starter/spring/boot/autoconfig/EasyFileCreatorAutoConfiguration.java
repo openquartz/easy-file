@@ -25,6 +25,8 @@ import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
 import org.svnee.easyfile.storage.impl.RemoteDownloadStorageServiceImpl;
 import org.svnee.easyfile.storage.impl.RemoteLimitingServiceImpl;
+import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
+import org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper;
 
 /**
  * @author svnee
@@ -89,8 +91,9 @@ public class EasyFileCreatorAutoConfiguration {
 
     @Bean
     @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
-    public DownloadStorageService localDownloadStorageService() {
-        return new LocalDownloadStorageServiceImpl();
+    public DownloadStorageService localDownloadStorageService(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
+        AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
+        return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);
     }
 
     @Bean

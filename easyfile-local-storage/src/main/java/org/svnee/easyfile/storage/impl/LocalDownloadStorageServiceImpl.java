@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
@@ -48,18 +47,14 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         if (Objects.isNull(downloadRecord) || downloadRecord.getUploadStatus() != UploadStatusEnum.NONE) {
             return false;
         }
-        // todo 分布式锁-锁住共享资源
-        //        String generateKey = lockKeyFactory.genKey(LockKeyFormatter.DOWNLOAD_RUNNING_LOCK, registerId);
-        //        Boolean running = redisTemplate.opsForValue()
-        //            .setIfAbsent(generateKey, "true", systemConfig.getDownloadRunningLockSeconds(), TimeUnit.SECONDS);
-        boolean running = true;
+        boolean running = downloadRecord.getUploadStatus() == UploadStatusEnum.NONE;
         if (Boolean.TRUE.equals(running)) {
             int affect = asyncDownloadRecordMapper
                 .refreshUploadStatus(registerId, UploadStatusEnum.NONE, UploadStatusEnum.EXECUTING,
                     downloadRecord.getUpdateBy());
             return affect > 0;
         }
-        return Boolean.TRUE.equals(running);
+        return false;
     }
 
     @Override

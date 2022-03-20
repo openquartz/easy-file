@@ -6,7 +6,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 下载配置参数
- *
  * @author svnee
  **/
 @Getter
