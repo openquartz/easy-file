@@ -1,8 +1,7 @@
-package org.svnee.easyfile.storage.mapper.condition;
-
-import lombok.Data;
+package org.svnee.easyfile.server.mapper.condition;
 
 import java.util.Date;
+import lombok.Data;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 
 /**

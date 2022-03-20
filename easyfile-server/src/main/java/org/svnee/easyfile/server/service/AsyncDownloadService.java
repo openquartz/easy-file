@@ -1,0 +1,91 @@
+package org.svnee.easyfile.server.service;
+
+import java.util.List;
+import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.request.CancelUploadRequest;
+import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.request.ExportLimitingRequest;
+import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.RegisterDownloadRequest;
+import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.CancelUploadResult;
+import org.svnee.easyfile.common.response.DownloadResult;
+
+/**
+ * 异步下载任务服务
+ *
+ * @author svnee
+ */
+public interface AsyncDownloadService {
+
+    /**
+     * 注册下载记录
+     *
+     * @param request 注册下载请求
+     * @return 下载记录ID
+     */
+    Long register(RegisterDownloadRequest request);
+
+    /**
+     * 限流请求
+     *
+     * @param request 限流请求
+     * @return 请求成功或失败
+     */
+    boolean limiting(ExportLimitingRequest request);
+
+    /**
+     * 上传回馈
+     *
+     * @param request 上传请求
+     */
+    void uploadCallback(UploadCallbackRequest request);
+
+    //    /**
+    //     * 重试服务
+    //     */
+    //    void retry();
+
+    /**
+     * 校验运行
+     *
+     * @param registerId 注册ID
+     * @return 是否可以运行
+     */
+    boolean enableRunning(Long registerId);
+
+    /**
+     * 导出结果查询
+     *
+     * @param request 查询请求
+     * @return 查询结果
+     */
+    Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request);
+
+    /**
+     * 加载APP ID
+     *
+     * @return All APP ID
+     */
+    List<String> loadAllAppId();
+
+    /**
+     * 失效链接下载
+     */
+    void invalid();
+
+    /**
+     * 下载次数
+     *
+     * @param request 请求
+     */
+    void download(DownloadRequest request);
+
+    /**
+     * 撤销
+     *
+     * @param request 请求
+     * @return 撤销上传任务
+     */
+    CancelUploadResult cancel(CancelUploadRequest request);
+}

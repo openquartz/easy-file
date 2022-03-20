@@ -4,6 +4,7 @@ import static org.apache.commons.collections4.CollectionUtils.addAll;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -207,6 +208,43 @@ public class CollectionUtils {
             return null;
         }
         return new ArrayList<>(collection);
+    }
+
+    public static <T> List<T> newArrayList(T... elements) {
+        checkNotNull(elements);
+        int capacity = computeArrayListCapacity(elements.length);
+        ArrayList<T> list = new ArrayList(capacity);
+        Collections.addAll(list, elements);
+        return list;
+    }
+
+    static int computeArrayListCapacity(int arraySize) {
+        if (arraySize < 0) {
+            throw new IllegalArgumentException(
+                (new StringBuilder(40 + "arrayList".length()))
+                    .append("arrayList")
+                    .append(" cannot be negative but was: ")
+                    .append(arraySize)
+                    .toString()
+            );
+        }
+        return saturatedCast(5L + arraySize + (arraySize / 10));
+    }
+
+    private static int saturatedCast(long value) {
+        if (value > 2147483647L) {
+            return 2147483647;
+        } else {
+            return value < -2147483648L ? -2147483648 : (int) value;
+        }
+    }
+
+    private static <T> T checkNotNull(T reference) {
+        if (reference == null) {
+            throw new NullPointerException();
+        } else {
+            return reference;
+        }
     }
 
 

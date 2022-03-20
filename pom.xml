@@ -37,10 +37,13 @@
         <netty-all.version>4.0.42.Final</netty-all.version>
         <netty-static.version>1.1.33.Fork26</netty-static.version>
         <javax.persistence.version>2.2</javax.persistence.version>
+        <druid.version>1.1.6</druid.version>
+        <redisson.version>3.9.1</redisson.version>
 
         <slf4j-api.version>1.7.7</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <pagehelper.version>1.2.10</pagehelper.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
 
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -63,6 +66,12 @@
                 <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid</artifactId>
+                <version>${druid.version}</version>
             </dependency>
 
             <dependency>
@@ -190,6 +199,18 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-tcnative-boringssl-static</artifactId>
                 <version>${netty-static.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper-spring-boot-starter</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
         </dependencies>

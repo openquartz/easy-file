@@ -39,4 +39,9 @@ public final class Constants {
      * 系统用户
      */
     public static final String SYSTEM_USER = "system";
+
+    /**
+     * GMT+8
+     */
+    public static final String GMT8 = "GMT+8";
 }
