@@ -9,7 +9,7 @@ import java.util.Objects;
  *
  * @author svnee
  */
-public class InterceptorContext {
+public final class InterceptorContext {
 
     /**
      * 上下文

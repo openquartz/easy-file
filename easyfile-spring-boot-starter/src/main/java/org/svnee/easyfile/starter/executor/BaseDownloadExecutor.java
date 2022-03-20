@@ -1,8 +1,8 @@
 package org.svnee.easyfile.starter.executor;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**

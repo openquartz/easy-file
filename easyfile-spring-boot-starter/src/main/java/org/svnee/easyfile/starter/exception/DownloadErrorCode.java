@@ -4,8 +4,9 @@ import lombok.Getter;
 import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 
 /**
+ * 下载异常码
+ *
  * @author svnee
- * @desc 下载异常码
  **/
 @Getter
 public enum DownloadErrorCode implements EasyFileErrorCode {

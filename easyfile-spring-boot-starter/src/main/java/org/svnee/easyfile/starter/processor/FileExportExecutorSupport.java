@@ -1,13 +1,12 @@
 package org.svnee.easyfile.starter.processor;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import org.apache.commons.lang3.tuple.Pair;
 import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 

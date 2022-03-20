@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * 默认异步处理线程池配置
+ *
  * @author svnee
- * @desc
  **/
 @Slf4j
 @Getter

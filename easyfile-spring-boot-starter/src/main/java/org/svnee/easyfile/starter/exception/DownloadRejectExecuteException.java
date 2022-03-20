@@ -4,8 +4,9 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 
 /**
+ * 下载拒绝执行异常
+ *
  * @author svnee
- * @desc 下载拒绝执行异常
  **/
 public class DownloadRejectExecuteException extends EasyFileException {
 

@@ -5,8 +5,9 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
+ * 下载配置参数
+ *
  * @author svnee
- * @desc 下载参数
  **/
 @Getter
 @Setter
