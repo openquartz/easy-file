@@ -50,4 +50,25 @@ public final class Constants {
      */
     public static final String UTF8 = "UTF-8";
 
+    /**
+     * response-header-content
+     */
+    public static final String RESPONSE_HEADER_CONTENT = "Content-Disposition";
+
+    /**
+     * response-attachment-prefix
+     */
+    public static final String RESPONSE_ATTACHMENT_PREFIX = "attachment;filename=";
+
+    /**
+     * Response Header Content-Type Excel
+     */
+    public static final String RESPONSE_HEADER_CONTENT_TYPE_EXCEL = "application/msexcel";
+
+    /**
+     * Response Header Content-Type CSV
+     */
+    public static final String RESPONSE_HEADER_CONTENT_TYPE_CSV = "text/csv;charset=utf-8";
+
+
 }

@@ -18,6 +18,7 @@ public enum DownloadErrorCode implements EasyFileErrorCode {
     SYNC_DOWNLOAD_EXECUTE_ERROR("03", "同步下载执行异常"),
     /*处理文件下载异常*/
     HANDLE_DOWNLOAD_FILE_ERROR("04", "处理下载文件异常"),
+    DOWNLOAD_FILE_NAME_ENCODING_ERROR("05", "下载文件名Encoding异常"),
 
     ;
     /** 异常码 */

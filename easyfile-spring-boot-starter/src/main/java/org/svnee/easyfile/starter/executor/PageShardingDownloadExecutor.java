@@ -9,7 +9,7 @@ import org.svnee.easyfile.common.bean.Pair;
 
 /**
  * 按页分片下载执行器
- * <p>
+ * <T> : 下载模版类
  *
  * @author svnee
  */
