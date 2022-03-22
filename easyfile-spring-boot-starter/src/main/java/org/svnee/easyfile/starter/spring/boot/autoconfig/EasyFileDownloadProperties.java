@@ -18,7 +18,7 @@ public class EasyFileDownloadProperties {
     /**
      * 是否启用
      */
-    private boolean enabled;
+    private boolean enabled = true;
 
     /**
      * 服务APPID
