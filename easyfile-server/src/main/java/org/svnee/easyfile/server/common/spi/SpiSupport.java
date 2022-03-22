@@ -10,18 +10,18 @@ public class SpiSupport {
     private SpiSupport() {
     }
 
-    private static ServiceRegistry registry = new ServiceRegistry();
+    private static final ServiceRegistry REGISTRY = new ServiceRegistry();
 
     public static <T extends ServiceProvider> void register(Class<? extends T> clazz, String providerName, T provider) {
-        registry.register(clazz, providerName, provider);
+        REGISTRY.register(clazz, providerName, provider);
     }
 
     public static <T extends ServiceProvider> T getServiceProvider(Class<T> clazz, String providerName) {
-        T provider = (T) registry.getServiceProvider(clazz, providerName);
+        T provider = (T) REGISTRY.getServiceProvider(clazz, providerName);
         return provider;
     }
 
-    public static <T extends ServiceProvider> List getServiceProviders(Class<T> clazz) {
-        return registry.getServiceProviders(clazz);
+    public static <T extends ServiceProvider> List<T> getServiceProviders(Class<T> clazz) {
+        return REGISTRY.getServiceProviders(clazz);
     }
 }

@@ -6,11 +6,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.svnee.easyfile.common.util.CollectionUtils;
 
 /**
- * @author chaofan
+ * @author svnee
  */
 public class ServiceRegistry {
 
-    private Map<Class<? extends ServiceProvider>, Map<String, ServiceProvider>> registerMap = new ConcurrentHashMap<>();
+    private final Map<Class<? extends ServiceProvider>, Map<String, ServiceProvider>> registerMap = new ConcurrentHashMap<>();
 
     public void register(Class<? extends ServiceProvider> clazz, String providerName, ServiceProvider serviceProvider) {
         if (!registerMap.containsKey(clazz)) {
@@ -30,7 +30,7 @@ public class ServiceRegistry {
         return providerMap.get(providerName);
     }
 
-    public List<ServiceProvider> getServiceProviders(Class<? extends ServiceProvider> clazz) {
+    public List getServiceProviders(Class<? extends ServiceProvider> clazz) {
         if (!registerMap.containsKey(clazz)) {
             return CollectionUtils.newArrayList();
         }

@@ -39,7 +39,7 @@ public class DefaultAsyncHandlerThreadPoolProperties {
 
     @Override
     public String toString() {
-        return "AdsDefaultAsyncHandlerThreadPoolConfig{" +
+        return "DefaultAsyncHandlerThreadPoolProperties{" +
             "corePoolSize=" + corePoolSize +
             ", maximumPoolSize=" + maximumPoolSize +
             ", keepAliveTime=" + keepAliveTime +

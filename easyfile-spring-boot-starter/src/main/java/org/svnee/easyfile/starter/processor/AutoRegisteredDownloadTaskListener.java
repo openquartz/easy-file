@@ -35,14 +35,14 @@ public class AutoRegisteredDownloadTaskListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info(
-            ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{}Ready! auto register ads download task!",
+            ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{}Ready! auto register async download task!",
             downloadProperties.getAppId(),
             downloadProperties.getUnifiedAppId());
 
         List<BaseDownloadExecutor> executorList = FileExportExecutorSupport.executorList();
         if (CollectionUtils.isEmpty(executorList)) {
             log.info(
-                ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{} Empty! auto register ads download task!",
+                ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{} Empty! auto register async download task!",
                 downloadProperties.getAppId(),
                 downloadProperties.getUnifiedAppId());
             return;

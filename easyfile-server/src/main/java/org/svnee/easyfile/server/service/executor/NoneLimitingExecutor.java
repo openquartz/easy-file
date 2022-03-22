@@ -4,7 +4,7 @@ import static org.svnee.easyfile.server.service.executor.LimitingConstants.LIMIT
 
 import lombok.RequiredArgsConstructor;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
-import org.svnee.easyfile.server.common.spi.SpringSpi;
+import org.svnee.easyfile.server.common.spi.ComponentSpi;
 
 /**
  * 不做限流
@@ -12,7 +12,7 @@ import org.svnee.easyfile.server.common.spi.SpringSpi;
  * @author svnee
  */
 @RequiredArgsConstructor
-@SpringSpi(type = ExportLimitingExecutor.class, providerName = LIMITING_PREFIX + LimitingConstants.NONE)
+@ComponentSpi(type = ExportLimitingExecutor.class, providerName = LIMITING_PREFIX + LimitingConstants.NONE)
 public class NoneLimitingExecutor implements ExportLimitingExecutor {
 
     @Override

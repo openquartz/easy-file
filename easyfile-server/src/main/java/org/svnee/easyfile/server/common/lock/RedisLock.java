@@ -8,7 +8,7 @@ import org.redisson.api.RLock;
 /**
  * RedisLock
  *
- * @author zhaoli@100.me
+ * @author svnee
  */
 @Slf4j
 @RequiredArgsConstructor

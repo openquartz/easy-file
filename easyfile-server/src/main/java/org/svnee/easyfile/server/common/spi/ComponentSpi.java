@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @Component
-public @interface SpringSpi {
+public @interface ComponentSpi {
 
     /**
      * 类型

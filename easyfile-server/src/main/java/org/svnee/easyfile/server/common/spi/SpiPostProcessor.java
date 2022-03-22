@@ -8,7 +8,7 @@ import org.svnee.easyfile.common.util.StringUtils;
 
 
 /**
- * @author chaofan
+ * @author svnee
  */
 @Component
 public class SpiPostProcessor implements BeanPostProcessor {
@@ -17,8 +17,8 @@ public class SpiPostProcessor implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         Class<?> clazz = SpringContextUtil.getRealClass(bean);
         if (clazz.isAnnotationPresent(
-            SpringSpi.class) && bean instanceof ServiceProvider) {
-            SpringSpi spi = clazz.getAnnotation(SpringSpi.class);
+            ComponentSpi.class) && bean instanceof ServiceProvider) {
+            ComponentSpi spi = clazz.getAnnotation(ComponentSpi.class);
             if (StringUtils.isNotBlank(spi.providerName())) {
                 SpiSupport
                     .register(spi.type(), spi.providerName(), (ServiceProvider) bean);

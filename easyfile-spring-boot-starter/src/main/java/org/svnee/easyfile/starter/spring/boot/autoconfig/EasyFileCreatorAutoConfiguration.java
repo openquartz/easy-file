@@ -29,8 +29,9 @@ import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper;
 
 /**
+ * spring-配置核心类
+ *
  * @author svnee
- * @desc spring-配置核心类
  **/
 @Slf4j
 @Configuration
