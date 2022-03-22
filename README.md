@@ -32,9 +32,9 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
     <version>1.0.0-beta.3</version>
 </dependency>
 <dependency>
-<groupId>org.svnee</groupId>
-<artifactId>easyfile-local-storage</artifactId>
-<version>1.0.0-beta.3</version>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-local-storage</artifactId>
+    <version>1.0.0-beta.3</version>
 </dependency>
 ```
 
@@ -48,9 +48,9 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
     <version>1.0.0-beta.3</version>
 </dependency>
 <dependency>
-<groupId>org.svnee</groupId>
-<artifactId>easyfile-remote-storage</artifactId>
-<version>1.0.0-beta.3</version>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-remote-storage</artifactId>
+    <version>1.0.0-beta.3</version>
 </dependency>
 ```
 
