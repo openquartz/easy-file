@@ -18,6 +18,8 @@ local 模式:  需要提供本地的api 存储Mapper. 将数据存储到本地�
 
 remote模式：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
 
+
+
 ### 使用教程
 
 #### 一、引入maven依赖
@@ -25,32 +27,30 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 如果使用本地模式 引入maven
 
 ```xml
-
 <dependency>
-    <groupId>org.svnee</groupId>
-    <artifactId>easyfile-spring-boot-starter</artifactId>
-    <version>1.0.0-beta.3</version>
+   <groupId>org.svnee</groupId>
+   <artifactId>easyfile-spring-boot-starter</artifactId>
+   <version>1.0.0-beta.3</version>
 </dependency>
 <dependency>
-    <groupId>org.svnee</groupId>
-    <artifactId>easyfile-local-storage</artifactId>
-    <version>1.0.0-beta.3</version>
+   <groupId>org.svnee</groupId>
+   <artifactId>easyfile-local-storage</artifactId>
+   <version>1.0.0-beta.3</version>
 </dependency>
 ```
 
 如果使用远程模式引入maven 依赖
 
 ```xml
-
 <dependency>
-    <groupId>org.svnee</groupId>
-    <artifactId>easyfile-spring-boot-starter</artifactId>
-    <version>1.0.0-beta.3</version>
+   <groupId>org.svnee</groupId>
+   <artifactId>easyfile-spring-boot-starter</artifactId>
+   <version>1.0.0-beta.3</version>
 </dependency>
 <dependency>
-    <groupId>org.svnee</groupId>
-    <artifactId>easyfile-remote-storage</artifactId>
-    <version>1.0.0-beta.3</version>
+   <groupId>org.svnee</groupId>
+   <artifactId>easyfile-remote-storage</artifactId>
+   <version>1.0.0-beta.3</version>
 </dependency>
 ```
 
@@ -85,6 +85,8 @@ public interface UploadService {
 
 将文件上传到自己的文件存储服务
 
+
+
 #### 三、额外处理
 
 如果是使用Local模式，需要提供存储Mapper
@@ -95,7 +97,11 @@ public interface UploadService {
 
 需要执行SQL
 
+
+
 如果是使用remote服务，需要部署easyfile-server 服务，并设置域名。配置到客户端
+
+
 
 #### 四、客户端配置
 
@@ -120,6 +126,69 @@ Client 配置
 | easyfile.download.localFileTempPath       | Client端下载文件本地临时目录                                 | /tmp              |
 | easyfile.download.enableAutoRegister      | Client端自动注册下载任务开关                                 | false             |
 | easyfile.download.enableCompressFile      | Client 是否开启文件压缩优化                                  | false             |
-| easyfile.download.minEnableCompressMbSize | Client 启用文件压缩最小的大小，单位:MB 在启用文件压缩后生效 | 1                 |
+| easyfile.download.minEnableCompressMbSize | Client 启用文件压缩最小的大小，单位:MB  在启用文件压缩后生效 | 1                 |
 | easyfile.download.exportAdvisorOrder      | Client下载切面顺序                                           | Integer.MAX_VALUE |
 
+
+
+#### 五、实现下载器
+
+实现接口：`org.svnee.easyfile.starter.executor.BaseDownloadExecutor`
+
+并注入到Spring ApplicationContext中，并使用注解 `org.svnee.easyfile.common.annotation.FileExportExecutor`
+
+如果需要支持同步导出，需要设置文件的HttpResponse 请求头，需要实现接口 `org.svnee.easyfile.starter.executor.BaseWrapperSyncResponseHeader`
+
+例如：
+
+```java
+import org.springframework.stereotype.Component;
+import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.starter.executor.BaseWrapperSyncResponseHeader;
+
+@Component
+@FileExportExecutor("ExampleExcelExecutor")
+public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyncResponseHeader {
+
+    @Override
+    public boolean enableAsync(DownloaderRequestContext context) {
+        // 判断是否开启异步
+        return true;
+    }
+
+    @Override
+    public void export(DownloaderRequestContext context) {
+		// 生成文件下载逻辑
+    }
+}
+```
+
+
+
+##### 拓展
+
+下载器
+
+1、分页下载支持
+
+`org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor`
+
+提供更加方便的分页支持
+
+`org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor`
+
+需要配合使用（`org.svnee.easyfile.common.annotation.ExcelProperty`）
+
+
+
+2、流式下载支持
+
+`org.svnee.easyfile.starter.executor.StreamDownloadExecutor`
+
+提供更加方便的流式支持
+
+`org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor`
+
+需要配合使用(`org.svnee.easyfile.common.annotation.ExcelProperty`)
