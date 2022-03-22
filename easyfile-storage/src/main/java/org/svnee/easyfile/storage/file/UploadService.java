@@ -12,6 +12,7 @@ public interface UploadService {
 
     /**
      * 文件上传
+     * 如果需要重试则需要抛出 org.svnee.easyfile.starter.exception.GenerateFileException
      *
      * @param file 文件
      * @param fileName 自定义生成的文件名

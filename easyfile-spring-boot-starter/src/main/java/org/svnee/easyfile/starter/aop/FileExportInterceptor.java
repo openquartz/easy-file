@@ -69,7 +69,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         AssertUtil.notNull(exportExecutor, FILE_GENERATOR_MUST_SUPPORT_ANNOTATION);
 
         boolean async = false;
-        // 是否 开启ADS服务
+        // 是否 开启EasyFile异步服务
         try {
             if (downloadProperties.isEnabled()) {
                 // 执行限流

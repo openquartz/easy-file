@@ -22,6 +22,8 @@ import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
+import org.svnee.easyfile.common.exception.EasyFileErrorCode;
+import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CompressUtils;
@@ -29,6 +31,7 @@ import org.svnee.easyfile.common.util.DateFormatUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.starter.exception.DownloadErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileException;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
@@ -262,7 +265,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                         throw ex;
                     } catch (Throwable t) {
                         genFileResult.setHandleBreakFlag(true);
-                        genFileResult.getErrorMsg().add("[文件上传OSS:]" + t.getMessage());
+                        genFileResult.getErrorMsg().add("[文件上传]" + t.getMessage());
                         error = t;
                     }
                 }
@@ -272,7 +275,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             logger.error(
                 "[AsyncFileHandlerAdapter#handleFileWithRetry] retry execute handle file,error!registerId:{},executor:{}",
                 registerId, exportExecutor.value(), e);
-            throw new RuntimeException(e.getMessage());
+            throw new EasyFileException(DownloadErrorCode.HANDLE_DOWNLOAD_FILE_ERROR);
         }
     }
 

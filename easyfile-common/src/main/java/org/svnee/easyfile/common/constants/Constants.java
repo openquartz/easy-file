@@ -44,4 +44,10 @@ public final class Constants {
      * GMT+8
      */
     public static final String GMT8 = "GMT+8";
+
+    /**
+     * UTF-8 字符集
+     */
+    public static final String UTF8 = "UTF-8";
+
 }

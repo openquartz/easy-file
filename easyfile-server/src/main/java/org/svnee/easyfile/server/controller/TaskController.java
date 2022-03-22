@@ -13,7 +13,7 @@ import org.svnee.easyfile.server.service.AsyncDownloadTaskService;
 /**
  * TaskController
  *
- * @author xuzhao
+ * @author svnee
  */
 @RestController
 @RequestMapping("/task")

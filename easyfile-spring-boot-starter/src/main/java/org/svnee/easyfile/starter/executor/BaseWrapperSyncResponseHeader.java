@@ -16,6 +16,5 @@ public interface BaseWrapperSyncResponseHeader {
      * @param response 当前请求response
      */
     default void setSyncResponseHeader(HttpServletResponse response) {
-        return;
     }
 }

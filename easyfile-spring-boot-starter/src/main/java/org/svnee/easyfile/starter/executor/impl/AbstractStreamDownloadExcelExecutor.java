@@ -92,13 +92,13 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
                 if (Objects.nonNull(session)) {
                     try {
                         session.close();
-                    } catch (Exception ex) {
+                    } catch (Exception ignored) {
                     }
                 }
                 if (Objects.nonNull(iterable) && iterable instanceof Closeable) {
                     try {
                         ((Closeable) iterable).close();
-                    } catch (Exception ex) {
+                    } catch (Exception ignored) {
                     }
                 }
             }
