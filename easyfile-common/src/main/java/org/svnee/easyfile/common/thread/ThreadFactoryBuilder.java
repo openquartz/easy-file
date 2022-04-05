@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * ThreadFactory builder.
  *
  * @author svnee
- * @date 2021/7/5 21:53
  */
 public class ThreadFactoryBuilder implements Builder<ThreadFactory> {
 

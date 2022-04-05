@@ -5,7 +5,7 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 /**
  * 上传异常码
  *
- * @author xuzhao
+ * @author svnee
  */
 public enum RemoteUploadExceptionCode implements EasyFileErrorCode {
 

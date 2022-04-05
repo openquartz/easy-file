@@ -48,7 +48,6 @@ public interface AsyncDownloadRecordMapper {
      */
     int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
 
-
     /**
      * 查询最大创建时间
      *

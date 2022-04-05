@@ -202,7 +202,6 @@ public class ExcelExports {
      *
      * @param obj obj
      * @return {@link String}
-     * @date 2019/10/10 15:56
      */
     private static String getValue(Object obj, Field filed) {
         if (Objects.isNull(obj)) {

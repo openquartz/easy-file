@@ -1,13 +1,12 @@
 package org.svnee.easyfile.storage.remote;
 
-import java.lang.reflect.Type;
-import lombok.extern.slf4j.Slf4j;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.ResponseResult;
+import org.svnee.easyfile.common.bean.auth.TokenInfo;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.common.util.StringUtils;
@@ -17,7 +16,6 @@ import org.svnee.easyfile.common.util.TypeReference;
  * Security proxy.
  *
  * @author svnee
- * @date 2021/12/20 20:19
  */
 @Slf4j
 public class SecurityProxy {
@@ -59,6 +57,7 @@ public class SecurityProxy {
             }
         } catch (Throwable ignore) {
             // ignore
+            log.warn("[SecurityProxy#applyToken] servers:{},handle error!", servers, ignore);
         }
 
         return false;
@@ -84,6 +83,7 @@ public class SecurityProxy {
                 String tokenJsonStr = JSONUtil.toJson(responseResult.getData());
                 TokenInfo tokenInfo = JSONUtil.parseObject(tokenJsonStr, TokenInfo.class);
 
+                assert tokenInfo != null;
                 accessToken = tokenInfo.getAccessToken();
                 tokenTtl = tokenInfo.getTokenTtl();
                 tokenRefreshWindow = tokenTtl / 10;

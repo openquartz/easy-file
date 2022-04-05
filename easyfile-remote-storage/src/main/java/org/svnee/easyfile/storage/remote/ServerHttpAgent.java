@@ -16,7 +16,6 @@ import org.svnee.easyfile.common.util.TypeReference;
  * Server http agent.
  *
  * @author svnee
- * @date 2021/6/23 20:50
  */
 public class ServerHttpAgent implements HttpAgent {
 

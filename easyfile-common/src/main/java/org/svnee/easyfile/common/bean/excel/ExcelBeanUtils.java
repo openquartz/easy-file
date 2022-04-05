@@ -18,7 +18,6 @@ import org.svnee.easyfile.common.util.CollectionUtils;
 
 /**
  * @author svnee
- * @date 2019/10/11 11:53
  */
 public final class ExcelBeanUtils {
 
@@ -29,7 +28,6 @@ public final class ExcelBeanUtils {
      * 按照分组获取所有的字段
      *
      * @return {@link List< Field>}
-     * @date 2019/9/19 17:34
      */
     public static <T> List<Field> getFieldsByGroup(Class<T> sourceClazz, Class<?>... group) {
         org.springframework.util.Assert.notNull(sourceClazz, "source class must not be null");
@@ -65,7 +63,6 @@ public final class ExcelBeanUtils {
      * 获取父类的字段
      *
      * @return {@link List<Field>}
-     * @date 2019/9/23 14:23
      */
     public static List<Field> getClassFields(Class<?> clazz) {
         List<Field> list = new ArrayList<>();

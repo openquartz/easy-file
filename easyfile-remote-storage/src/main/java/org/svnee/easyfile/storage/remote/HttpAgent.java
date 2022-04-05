@@ -8,7 +8,6 @@ import org.svnee.easyfile.common.util.TypeReference;
  * Http agent.
  *
  * @author svnee
- * @date 2021/6/23 20:45
  */
 public interface HttpAgent {
 

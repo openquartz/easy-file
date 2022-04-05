@@ -85,24 +85,22 @@ public final class Constants {
     /**
      * Health Check
      */
-    public static final String HEALTH_CHECK_PATH =  BASE_PATH + "/health/check";
+    public static final String HEALTH_CHECK_PATH = BASE_PATH + "/health/check";
 
     /**
      * Server UP
      */
     public static final String UP = "UP";
 
-    public static final String TP_ID = "tpId";
-
-    public static final String ITEM_ID = "itemId";
-
-    public static final String NAMESPACE = "namespace";
-
-    public static final String GROUP_KEY = "groupKey";
-
-    public static final String AUTHORITIES_KEY = "auth";
-
+    /**
+     * Access_Token
+     */
     public static final String ACCESS_TOKEN = "accessToken";
+
+    /**
+     * SSL
+     */
+    public static final String SSL = "SSL";
 
 
 }

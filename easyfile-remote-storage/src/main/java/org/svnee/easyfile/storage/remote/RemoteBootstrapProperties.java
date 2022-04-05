@@ -6,7 +6,6 @@ import lombok.Data;
  * Bootstrap properties.
  *
  * @author svnee
- * @date 2021/6/22 09:14
  */
 @Data
 public class RemoteBootstrapProperties {

@@ -9,7 +9,6 @@ import org.svnee.easyfile.common.constants.Constants;
  * Server health check.
  *
  * @author svnee
- * @date 2021/12/8 20:16
  */
 @Slf4j
 public class HttpScheduledHealthCheck extends AbstractHealthCheck {

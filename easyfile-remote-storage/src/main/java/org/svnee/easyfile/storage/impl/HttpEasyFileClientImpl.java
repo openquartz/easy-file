@@ -38,22 +38,22 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
 
     @Override
     public ResponseResult<?> autoRegisterTask(AutoTaskRegisterRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.TASK_AUTO_REGISTER_URL,request);
+        return httpAgent.httpPost(RemoteUrlConstants.TASK_AUTO_REGISTER_URL, request);
     }
 
     @Override
     public ResponseResult<?> uploadCallback(UploadCallbackRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CALLBACK_URL,request);
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CALLBACK_URL, request);
     }
 
     @Override
     public ResponseResult<?> limiting(ExportLimitingRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_LIMITING_URL,request);
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_LIMITING_URL, request);
     }
 
     @Override
     public ResponseResult<Boolean> enableRunning(EnableRunningRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_ENABLE_RUNNING_URL,request,Boolean.class);
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_ENABLE_RUNNING_URL, request, Boolean.class);
     }
 
     @Override
@@ -65,11 +65,11 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
 
     @Override
     public ResponseResult<String> download(DownloadRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL,request,String.class);
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL, request, String.class);
     }
 
     @Override
     public ResponseResult<CancelUploadResult> cancelUpload(CancelUploadRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CANCEL_URL,request,CancelUploadResult.class);
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CANCEL_URL, request, CancelUploadResult.class);
     }
 }

@@ -192,56 +192,6 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
         }
     }
 
-    //    @Override
-    //    public void retry() {
-    //        Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-    //        calendar.add(Calendar.SECOND, systemConfig.getRetryExecuteIntervalSeconds());
-    //
-    //        Calendar startCalendar = Calendar.getInstance(TimeZone.getTimeZone("GMT+8"));
-    //        startCalendar.add(Calendar.DATE, -1);
-    //
-    //        // 前一天到现在执行的时间
-    //        RetryQueryCondition condition = RetryQueryCondition.create(startCalendar.getTime(), calendar.getTime(),
-    //            CollectionUtils.newArrayList(UploadStatusEnum.NONE, UploadStatusEnum.FAIL), 500);
-    //
-    //        List<AsyncDownloadRecord> recordList = asyncDownloadRecordMapper.selectExportRecordOfRetryable(condition);
-    //        if (CollectionUtils.isEmpty(recordList)) {
-    //            return;
-    //        }
-    //        for (AsyncDownloadRecord downloadRecord : recordList) {
-    //            threadPoolExecutor.execute(() -> retry(downloadRecord));
-    //        }
-    //    }
-
-    //    /**
-    //     * 重试执行调度 service-->client端
-    //     *
-    //     * @param downloadRecord 重试记录
-    //     */
-    //    private void retry(AsyncDownloadRecord downloadRecord) {
-    //        int affect = asyncDownloadRecordMapper.updateRetryById(downloadRecord.getId());
-    //        if (affect > 0) {
-    //            RetryClient retryClient = retryClientFactory.generate(downloadRecord.getAppId());
-    //
-    //            RetryExecuteRequest request = new RetryExecuteRequest();
-    //            request.setRegisterId(downloadRecord.getId());
-    //            request.setDownloadCode(downloadRecord.getDownloadCode());
-    //
-    //            String executeParam = downloadRecord.getExecuteParam();
-    //            BaseExecuteParam param = JSONUtil.parseObject(executeParam, BaseExecuteParam.class);
-    //            request.setFileSuffix(param.getFileSuffix());
-    //            request.setOtherMap(param.getOtherMap());
-    //            try {
-    //                retryClient.retry(request);
-    //            } catch (Exception ex) {
-    //                log.error("[RetryService#retry] 执行重试异常 request:{}", request, ex);
-    //                asyncDownloadRecordMapper.updateExecuteErrorMsg(request.getRegisterId(),
-    //                    "服务端重试异常：" + ex.getMessage(),
-    //                    CollectionUtils.newArrayList(UploadStatusEnum.NONE, UploadStatusEnum.FAIL));
-    //            }
-    //        }
-    //    }
-
     @Override
     public boolean enableRunning(Long registerId) {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(registerId);

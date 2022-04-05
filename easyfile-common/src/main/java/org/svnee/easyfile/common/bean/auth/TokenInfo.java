@@ -1,4 +1,4 @@
-package org.svnee.easyfile.storage.remote;
+package org.svnee.easyfile.common.bean.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
  * Token info.
  *
  * @author svnee
- * @date 2021/12/20 20:02
  */
 @Data
 @NoArgsConstructor

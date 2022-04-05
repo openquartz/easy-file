@@ -13,7 +13,6 @@ import org.svnee.easyfile.common.util.StringUtils;
  * Server list manager.
  *
  * @author svnee
- * @date 2021/6/23 20:42
  */
 @Slf4j
 public class ServerListManager {
@@ -22,7 +21,7 @@ public class ServerListManager {
 
     private static final String HTTP = "http://";
 
-    private String serverAddrsStr;
+    private final String serverAddrsStr;
 
     @Getter
     volatile List<String> serverUrls = new ArrayList<>();

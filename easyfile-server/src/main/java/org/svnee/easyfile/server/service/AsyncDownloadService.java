@@ -41,11 +41,6 @@ public interface AsyncDownloadService {
      */
     void uploadCallback(UploadCallbackRequest request);
 
-    //    /**
-    //     * 重试服务
-    //     */
-    //    void retry();
-
     /**
      * 校验运行
      *

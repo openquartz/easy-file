@@ -20,7 +20,6 @@ import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
  * Abstract health check.
  *
  * @author svnee
- * @date 2021/12/8 20:19
  */
 @Slf4j
 public abstract class AbstractHealthCheck implements ServerHealthCheck, InitializingBean,
@@ -77,7 +76,7 @@ public abstract class AbstractHealthCheck implements ServerHealthCheck, Initiali
         if (healthCheckStatus) {
             if (Objects.equals(healthStatus, false)) {
                 healthStatus = true;
-                log.info("🚀 The client reconnects to the server successfully.");
+                log.info("The client reconnects to the server successfully.");
                 signalAllBizThread();
             }
         } else {

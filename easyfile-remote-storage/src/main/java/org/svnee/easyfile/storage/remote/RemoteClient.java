@@ -27,7 +27,6 @@ import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
  * HttpClient util.
  *
  * @author svnee
- * @date 2021/6/10 13:30
  */
 @Slf4j
 public class RemoteClient {
