@@ -11,6 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -245,6 +246,14 @@ public class CollectionUtils {
         } else {
             return reference;
         }
+    }
+
+    public static <T> T getFirst(Collection<T> collection) {
+        return Optional.ofNullable(collection)
+            .orElse(Collections.emptyList())
+            .stream()
+            .findFirst()
+            .orElse(null);
     }
 
 
