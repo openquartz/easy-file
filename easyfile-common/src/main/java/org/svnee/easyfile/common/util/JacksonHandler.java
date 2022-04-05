@@ -4,6 +4,7 @@ import static org.svnee.easyfile.common.util.ExceptionUtils.rethrow;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
@@ -74,6 +76,17 @@ public final class JacksonHandler implements JsonFacade {
     public <T> T parseObject(String text, Class<T> clazz) {
         try {
             return mapper.readValue(text, clazz);
+        } catch (IOException e) {
+            return rethrow(e);
+        }
+    }
+
+    @Override
+    public <T> T parseObject(String text, TypeReference<T> typeReference) {
+        try {
+            Type type = typeReference.getType();
+            JavaType javaType = mapper.getTypeFactory().constructType(type);
+            return mapper.readValue(text, javaType);
         } catch (IOException e) {
             return rethrow(e);
         }

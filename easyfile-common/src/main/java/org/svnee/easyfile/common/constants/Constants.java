@@ -1,5 +1,7 @@
 package org.svnee.easyfile.common.constants;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * 常量类
  *
@@ -48,7 +50,7 @@ public final class Constants {
     /**
      * UTF-8 字符集
      */
-    public static final String UTF8 = "UTF-8";
+    public static final String UTF_8 = StandardCharsets.UTF_8.toString();
 
     /**
      * response-header-content
@@ -69,6 +71,38 @@ public final class Constants {
      * Response Header Content-Type CSV
      */
     public static final String RESPONSE_HEADER_CONTENT_TYPE_CSV = "text/csv;charset=utf-8";
+
+    /**
+     * Health Check Interval
+     */
+    public static final int HEALTH_CHECK_INTERVAL = 5;
+
+    /**
+     * 服务前缀
+     */
+    public static final String BASE_PATH = "/easyfile";
+
+    /**
+     * Health Check
+     */
+    public static final String HEALTH_CHECK_PATH =  BASE_PATH + "/health/check";
+
+    /**
+     * Server UP
+     */
+    public static final String UP = "UP";
+
+    public static final String TP_ID = "tpId";
+
+    public static final String ITEM_ID = "itemId";
+
+    public static final String NAMESPACE = "namespace";
+
+    public static final String GROUP_KEY = "groupKey";
+
+    public static final String AUTHORITIES_KEY = "auth";
+
+    public static final String ACCESS_TOKEN = "accessToken";
 
 
 }

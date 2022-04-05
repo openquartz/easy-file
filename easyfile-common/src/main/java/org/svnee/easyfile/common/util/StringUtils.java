@@ -46,4 +46,30 @@ public final class StringUtils {
         return true;
     }
 
+    /**
+     * Is all not empty.
+     */
+    public static boolean isAllNotEmpty(CharSequence... args) {
+        return !hasEmpty(args);
+    }
+
+    /**
+     * Has empty.
+     */
+    public static boolean hasEmpty(CharSequence... strList) {
+        if (strList == null || strList.length == 0) {
+            return true;
+        }
+
+        for (CharSequence str : strList) {
+            if (isEmpty(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isEmpty(CharSequence str) {
+        return str == null || str.length() == 0;
+    }
 }

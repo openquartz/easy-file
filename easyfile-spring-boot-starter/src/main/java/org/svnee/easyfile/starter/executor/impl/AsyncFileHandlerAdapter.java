@@ -22,7 +22,6 @@ import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
-import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
@@ -30,7 +29,7 @@ import org.svnee.easyfile.common.util.CompressUtils;
 import org.svnee.easyfile.common.util.DateFormatUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.starter.exception.DownloadErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileException;
@@ -144,7 +143,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         if (!parentFile.exists()) {
             try {
                 boolean mkdirs = parentFile.mkdirs();
-                AssertUtil.isTrue(mkdirs, GenerateFileErrorCode.CREATE_LOCAL_TEMP_FILE_ERROR);
+                Asserts.isTrue(mkdirs, GenerateFileErrorCode.CREATE_LOCAL_TEMP_FILE_ERROR);
             } catch (Exception ex) {
                 logger.error(
                     "[AbstractAsyncFileHandlerAdapter#handle] create dictionary error,registerId:{},downloadCode:{}",
@@ -156,7 +155,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         if (!file.exists()) {
             try {
                 boolean fileHasName = file.createNewFile();
-                AssertUtil.isTrue(fileHasName, GenerateFileErrorCode.FILE_NAME_DUPLICATE_ERROR,
+                Asserts.isTrue(fileHasName, GenerateFileErrorCode.FILE_NAME_DUPLICATE_ERROR,
                     GenerateFileException.class);
             } catch (Exception ex) {
                 logger.error(

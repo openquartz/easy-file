@@ -1,5 +1,6 @@
 package org.svnee.easyfile.server.exception;
 
+import lombok.Getter;
 import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 
 /**
@@ -7,6 +8,7 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
  *
  * @author svnee
  **/
+@Getter
 public enum AsyncDownloadExceptionCode implements EasyFileErrorCode {
     DOWNLOAD_TASK_IS_DISABLE("01", "下载任务已经被禁用"),
     ;
@@ -19,15 +21,5 @@ public enum AsyncDownloadExceptionCode implements EasyFileErrorCode {
     AsyncDownloadExceptionCode(String errorCode, String errorMsg) {
         this.errorCode = SIMPLE_BASE_CODE + errorCode;
         this.errorMsg = errorMsg;
-    }
-
-    @Override
-    public String getErrorCode() {
-        return errorCode;
-    }
-
-    @Override
-    public String getErrorMsg() {
-        return errorMsg;
     }
 }

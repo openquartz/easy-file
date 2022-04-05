@@ -27,7 +27,7 @@ public final class ExportsResponseHeaderWrapper {
     public static void wrapperExcel07(HttpServletResponse response, String fileName) {
         try {
             response.setHeader(Constants.RESPONSE_HEADER_CONTENT,
-                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF8)
+                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8)
                     + FileSuffixEnum.EXCEL_07
                     .getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
@@ -45,7 +45,7 @@ public final class ExportsResponseHeaderWrapper {
     public static void wrapperExcel03(HttpServletResponse response, String fileName) {
         try {
             response.setHeader(Constants.RESPONSE_HEADER_CONTENT,
-                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF8)
+                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8)
                     + FileSuffixEnum.EXCEL_03
                     .getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
@@ -63,7 +63,7 @@ public final class ExportsResponseHeaderWrapper {
     public static void wrapperCsv(HttpServletResponse response, String fileName) {
         try {
             response.setHeader(Constants.RESPONSE_HEADER_CONTENT,
-                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF8) + FileSuffixEnum.CSV
+                Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8) + FileSuffixEnum.CSV
                     .getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
             throw new EasyFileException(DownloadErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);

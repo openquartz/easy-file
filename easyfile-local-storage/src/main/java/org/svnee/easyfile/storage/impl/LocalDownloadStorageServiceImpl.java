@@ -12,7 +12,7 @@ import lombok.AllArgsConstructor;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
-import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
@@ -60,10 +60,10 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     @Override
     public void uploadCallback(UploadCallbackRequest request) {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
-        AssertUtil.notNull(downloadRecord, DataExecuteErrorCode.NOT_EXIST_ERROR);
+        Asserts.notNull(downloadRecord, DataExecuteErrorCode.NOT_EXIST_ERROR);
         UploadInfoChangeCondition condition = buildUploadInfoChangeCondition(request, downloadRecord);
         int affect = asyncDownloadRecordMapper.changeUploadInfo(condition);
-        AssertUtil.isTrue(affect > 0, DataExecuteErrorCode.UPDATE_ERROR);
+        Asserts.isTrue(affect > 0, DataExecuteErrorCode.UPDATE_ERROR);
     }
 
     private UploadInfoChangeCondition buildUploadInfoChangeCondition(UploadCallbackRequest request,
@@ -88,7 +88,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         }
         AsyncDownloadRecord downloadRecord = buildRegisterDefaultDownloadRecord(downloadRequest, downloadTask);
         int affect = asyncDownloadRecordMapper.insertSelective(downloadRecord);
-        AssertUtil.isTrue(affect > 0, DataExecuteErrorCode.INSERT_ERROR);
+        Asserts.isTrue(affect > 0, DataExecuteErrorCode.INSERT_ERROR);
         return downloadRecord.getId();
     }
 

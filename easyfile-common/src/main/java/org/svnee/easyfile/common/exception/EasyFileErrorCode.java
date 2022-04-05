@@ -21,4 +21,12 @@ public interface EasyFileErrorCode {
      */
     String getErrorMsg();
 
+    /**
+     * 是否替换占位
+     * @return 是否可以占位替换
+     */
+    default boolean replacePlaceHold(){
+        return false;
+    }
+
 }

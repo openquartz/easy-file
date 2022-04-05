@@ -43,6 +43,22 @@ public class JSONUtil {
     }
 
     /**
+     * 反序列化成对象
+     *
+     * @param text json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 对象
+     */
+    public static <T> T parseObject(String text, TypeReference<T> clazz) {
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+
+        return JSON_FACADE.parseObject(text, clazz);
+    }
+
+    /**
      * 解析数组
      *
      * @param text json

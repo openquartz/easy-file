@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.impl;
 
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
+import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.LimitingService;
 
 /**
@@ -10,8 +11,14 @@ import org.svnee.easyfile.storage.download.LimitingService;
  **/
 public class RemoteLimitingServiceImpl implements LimitingService {
 
+    private final EasyFileClient easyFileClient;
+
+    public RemoteLimitingServiceImpl(EasyFileClient easyFileClient) {
+        this.easyFileClient = easyFileClient;
+    }
+
     @Override
     public void limiting(ExportLimitingRequest request) {
-        // TODO: 2022/3/18 待处理
+        easyFileClient.limiting(request);
     }
 }

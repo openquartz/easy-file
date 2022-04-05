@@ -29,6 +29,15 @@ public interface JsonFacade {
     <T> T parseObject(String text, Class<T> clazz);
 
     /**
+     * Type
+     * @param text text
+     * @param typeReference type
+     * @param <T> T
+     * @return T
+     */
+    <T> T parseObject(String text, TypeReference<T> typeReference);
+
+    /**
      * Parse array.
      *
      * @param text text

@@ -18,7 +18,7 @@ import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.util.IpUtil;
 import org.svnee.easyfile.common.util.SpringContextUtil;
-import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
@@ -66,7 +66,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         DownloaderRequestContext requestContext = (DownloaderRequestContext) args[0];
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
         FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
-        AssertUtil.notNull(exportExecutor, FILE_GENERATOR_MUST_SUPPORT_ANNOTATION);
+        Asserts.notNull(exportExecutor, FILE_GENERATOR_MUST_SUPPORT_ANNOTATION);
 
         boolean async = false;
         // 是否 开启EasyFile异步服务

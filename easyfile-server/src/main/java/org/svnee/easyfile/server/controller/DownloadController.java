@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import org.svnee.easyfile.common.bean.Pagination;
-import org.svnee.easyfile.common.bean.ResponseBaseVo;
+import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
@@ -23,7 +23,7 @@ import org.svnee.easyfile.server.service.AsyncDownloadService;
  * @author svnee
  */
 @RestController
-@RequestMapping("/download")
+@RequestMapping("/easyfile/download")
 @RequiredArgsConstructor
 public class DownloadController {
 
@@ -33,12 +33,12 @@ public class DownloadController {
      * 限流
      */
     @PostMapping("/limiting")
-    public ResponseBaseVo<?> exportLimiting(@RequestBody @Valid ExportLimitingRequest request) {
+    public ResponseResult<?> exportLimiting(@RequestBody @Valid ExportLimitingRequest request) {
         boolean limitResult = asyncDownloadService.limiting(request);
         if (limitResult) {
-            return ResponseBaseVo.ok();
+            return ResponseResult.ok();
         } else {
-            return ResponseBaseVo.fail("01", "超过限流标准");
+            return ResponseResult.fail("01", "超过限流标准");
         }
     }
 
@@ -49,9 +49,9 @@ public class DownloadController {
      * @return 返回下载记录ID
      */
     @PostMapping("/register")
-    public ResponseBaseVo<Long> register(@RequestBody @Valid RegisterDownloadRequest request) {
+    public ResponseResult<Long> register(@RequestBody @Valid RegisterDownloadRequest request) {
         Long registerId = asyncDownloadService.register(request);
-        return ResponseBaseVo.ok(registerId);
+        return ResponseResult.ok(registerId);
     }
 
     /**
@@ -61,9 +61,9 @@ public class DownloadController {
      * @return 上传
      */
     @PostMapping("/callback")
-    public ResponseBaseVo<?> uploadCallback(@RequestBody @Valid UploadCallbackRequest request) {
+    public ResponseResult<?> uploadCallback(@RequestBody @Valid UploadCallbackRequest request) {
         asyncDownloadService.uploadCallback(request);
-        return ResponseBaseVo.ok();
+        return ResponseResult.ok();
     }
 
     /**
@@ -73,9 +73,9 @@ public class DownloadController {
      * @return 请求
      */
     @PostMapping("/cancel")
-    public ResponseBaseVo<CancelUploadResult> cancelUpload(@RequestBody @Valid CancelUploadRequest request) {
+    public ResponseResult<CancelUploadResult> cancelUpload(@RequestBody @Valid CancelUploadRequest request) {
         CancelUploadResult result = asyncDownloadService.cancel(request);
-        return ResponseBaseVo.ok(result);
+        return ResponseResult.ok(result);
     }
 
     /**
@@ -85,9 +85,9 @@ public class DownloadController {
      * @return 运行请求
      */
     @PostMapping("/enableRunning")
-    public ResponseBaseVo<Boolean> enableRunning(@RequestBody @Valid EnableRunningRequest request) {
+    public ResponseResult<Boolean> enableRunning(@RequestBody @Valid EnableRunningRequest request) {
         boolean running = asyncDownloadService.enableRunning(request.getRegisterId());
-        return ResponseBaseVo.ok(running);
+        return ResponseResult.ok(running);
     }
 
     /**
@@ -97,10 +97,10 @@ public class DownloadController {
      * @return 导出结果
      */
     @PostMapping("/listExport")
-    public ResponseBaseVo<Pagination<DownloadResult>> listExportResult(
+    public ResponseResult<Pagination<DownloadResult>> listExportResult(
         @RequestBody @Valid ListDownloadResultRequest request) {
         Pagination<DownloadResult> resultList = asyncDownloadService.listExportResult(request);
-        return ResponseBaseVo.ok(resultList);
+        return ResponseResult.ok(resultList);
     }
 
     /**
@@ -110,9 +110,9 @@ public class DownloadController {
      * @return 结果
      */
     @PostMapping("/file")
-    public ResponseBaseVo<?> download(@RequestBody @Valid DownloadRequest request) {
+    public ResponseResult<?> download(@RequestBody @Valid DownloadRequest request) {
         asyncDownloadService.download(request);
-        return ResponseBaseVo.ok();
+        return ResponseResult.ok();
     }
 
 }

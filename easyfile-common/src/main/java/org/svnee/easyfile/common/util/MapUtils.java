@@ -48,4 +48,12 @@ public final class MapUtils {
             return value;
         }
     }
+
+    /**
+     * new HashMap
+     * @return Map
+     */
+    public static Map<String, String> newHashMap() {
+        return new HashMap<>();
+    }
 }

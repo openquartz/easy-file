@@ -1,6 +1,6 @@
 package org.svnee.easyfile.server.utils;
 
-import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 
 /**
@@ -14,11 +14,11 @@ public final class DbUtils {
     }
 
     public static void checkInsertedOneRows(int affect) {
-        AssertUtil.isTrue(affect == 1, DataExecuteErrorCode.INSERT_ERROR);
+        Asserts.isTrue(affect == 1, DataExecuteErrorCode.INSERT_ERROR);
     }
 
     public static void checkUpdatedOneRows(int affect) {
-        AssertUtil.isTrue(affect == 1, DataExecuteErrorCode.UPDATE_ERROR);
+        Asserts.isTrue(affect == 1, DataExecuteErrorCode.UPDATE_ERROR);
     }
 
 

@@ -21,7 +21,7 @@ import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
-import org.svnee.easyfile.common.exception.AssertUtil;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -75,8 +75,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
         log.info("[DownloadService#Register] request:{}", request);
         AsyncDownloadTask downloadTask = asyncDownloadTaskMapper
             .selectByDownloadCode(request.getDownloadCode(), request.getAppId());
-        AssertUtil.notNull(downloadTask, DataExecuteErrorCode.NOT_EXIST_ERROR);
-        AssertUtil.isTrue(EnableStatusEnum.ENABLE.getCode().equals(downloadTask.getEnableStatus()),
+        Asserts.notNull(downloadTask, DataExecuteErrorCode.NOT_EXIST_ERROR);
+        Asserts.isTrue(EnableStatusEnum.ENABLE.getCode().equals(downloadTask.getEnableStatus()),
             AsyncDownloadExceptionCode.DOWNLOAD_TASK_IS_DISABLE);
 
         AsyncDownloadRecord downloadRecord = buildAsyncRecord(request, downloadTask);
@@ -145,7 +145,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
     public void uploadCallback(UploadCallbackRequest request) {
 
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
-        AssertUtil.notNull(downloadRecord, DataExecuteErrorCode.NOT_EXIST_ERROR);
+        Asserts.notNull(downloadRecord, DataExecuteErrorCode.NOT_EXIST_ERROR);
         // 如果是成功直接过滤掉
         if (downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS) {
             return;

@@ -7,6 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 默认异步处理线程池配置
+ *
  * @author svnee
  **/
 @Slf4j
