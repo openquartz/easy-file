@@ -127,4 +127,17 @@ public class ResponseResult<T> implements Serializable {
     public static <T> ResponseResult<T> fail(String errorCode, String message, T data, String errorInfo) {
         return new ResponseResult(false, errorCode, message, data, (Object) null, errorInfo);
     }
+
+    @Override
+    public String toString() {
+        return "ResponseResult{" +
+            "message='" + message + '\'' +
+            ", code='" + code + '\'' +
+            ", timestamp='" + timestamp + '\'' +
+            ", success=" + success +
+            ", data=" + data +
+            ", requestValue=" + requestValue +
+            ", errorInfo='" + errorInfo + '\'' +
+            '}';
+    }
 }

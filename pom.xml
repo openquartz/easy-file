@@ -34,8 +34,6 @@
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
         <compress.version>1.18</compress.version>
         <poi.version>3.17</poi.version>
-        <netty-all.version>4.0.42.Final</netty-all.version>
-        <netty-static.version>1.1.33.Fork26</netty-static.version>
         <javax.persistence.version>2.2</javax.persistence.version>
         <druid.version>1.1.6</druid.version>
         <redisson.version>3.9.1</redisson.version>
@@ -187,18 +185,6 @@
                 <groupId>com.github.rholder</groupId>
                 <artifactId>guava-retrying</artifactId>
                 <version>${guava.retry.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-all</artifactId>
-                <version>${netty-all.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.netty</groupId>
-                <artifactId>netty-tcnative-boringssl-static</artifactId>
-                <version>${netty-static.version}</version>
             </dependency>
 
             <dependency>

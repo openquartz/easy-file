@@ -22,7 +22,7 @@ import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.file.UploadService;
-import org.svnee.easyfile.storage.file.local.LocalUploadService;
+import org.svnee.easyfile.storage.file.local.LocalUploadServiceImpl;
 import org.svnee.easyfile.storage.impl.HttpEasyFileClientImpl;
 import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
@@ -97,7 +97,7 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(UploadService.class)
     public UploadService localUploadService() {
-        return new LocalUploadService();
+        return new LocalUploadServiceImpl();
     }
 
     @Bean

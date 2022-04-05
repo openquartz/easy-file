@@ -7,7 +7,7 @@ import org.svnee.easyfile.storage.file.UploadService;
 /**
  * @author svnee
  **/
-public class LocalUploadService implements UploadService {
+public class LocalUploadServiceImpl implements UploadService {
 
     /**
      * 本地存储标识
