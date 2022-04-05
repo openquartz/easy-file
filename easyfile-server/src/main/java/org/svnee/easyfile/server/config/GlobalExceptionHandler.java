@@ -20,7 +20,6 @@ import org.svnee.easyfile.server.exception.CommonExceptionCode;
  * 全局异常捕获器.
  *
  * @author svnee
- * @date 2021/11/18 22:18
  */
 @Slf4j
 @RestControllerAdvice
