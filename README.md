@@ -121,13 +121,13 @@ Client 配置
 | 配置key                                   | 描述                                                         | 默认值            |
 | ----------------------------------------- | ------------------------------------------------------------ | ----------------- |
 | easyfile.download.enabled                 | EasyFile是否启用                                             | true              |
-| easyfile.download.appId                   | Client端 AppId                                               |                   |
-| easyfile.download.unifiedAppId            | Client端统一AppId                                            |                   |
-| easyfile.download.localFileTempPath       | Client端下载文件本地临时目录                                 | /tmp              |
-| easyfile.download.enableAutoRegister      | Client端自动注册下载任务开关                                 | false             |
-| easyfile.download.enableCompressFile      | Client 是否开启文件压缩优化                                  | false             |
-| easyfile.download.minEnableCompressMbSize | Client 启用文件压缩最小的大小，单位:MB  在启用文件压缩后生效 | 1                 |
-| easyfile.download.exportAdvisorOrder      | Client下载切面顺序                                           | Integer.MAX_VALUE |
+| easyfile.download.app-id                   | Client端 AppId                                               |                   |
+| easyfile.download.unified-app-id            | Client端统一AppId                                            |                   |
+| easyfile.download.local-file-temp-path       | Client端下载文件本地临时目录                                 | /tmp              |
+| easyfile.download.enable-auto-register      | Client端自动注册下载任务开关                                 | false             |
+| easyfile.download.enable-compress-file      | Client 是否开启文件压缩优化                                  | false             |
+| easyfile.download.min-enable-compress-mb-size | Client 启用文件压缩最小的大小，单位:MB 在启用文件压缩后生效 | 1                 |
+| easyfile.download.export-advisor-order      | Client下载切面顺序                                           | Integer.MAX_VALUE |
 
 
 
