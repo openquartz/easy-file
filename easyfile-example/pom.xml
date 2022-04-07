@@ -40,13 +40,13 @@
     <dependency>
       <groupId>org.svnee</groupId>
       <artifactId>easyfile-spring-boot-starter</artifactId>
-      <version>1.0.0-beta.3</version>
+      <version>${revision}</version>
     </dependency>
 
     <dependency>
       <groupId>org.svnee</groupId>
       <artifactId>easyfile-local-storage</artifactId>
-      <version>1.0.0-beta.3</version>
+      <version>${revision}</version>
     </dependency>
   </dependencies>
 
