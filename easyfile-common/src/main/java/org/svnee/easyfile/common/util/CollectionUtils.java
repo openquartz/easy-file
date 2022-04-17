@@ -1,7 +1,5 @@
 package org.svnee.easyfile.common.util;
 
-import static org.apache.commons.collections4.CollectionUtils.addAll;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -92,6 +90,22 @@ public class CollectionUtils {
             return 0;
         }
     }
+
+    public static <C> boolean addAll(final Collection<C> collection, final Iterable<? extends C> iterable) {
+        if (iterable instanceof Collection<?>) {
+            return collection.addAll((Collection<? extends C>) iterable);
+        }
+        return addAll(collection, iterable.iterator());
+    }
+
+    public static <C> boolean addAll(final Collection<C> collection, final Iterator<? extends C> iterator) {
+        boolean changed = false;
+        while (iterator.hasNext()) {
+            changed |= collection.add(iterator.next());
+        }
+        return changed;
+    }
+
 
     /**
      * Helper class for set-related operations, e.g. union, subtract, intersection.
