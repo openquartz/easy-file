@@ -23,7 +23,7 @@ public class HttpScheduledHealthCheck extends AbstractHealthCheck {
     protected boolean sendHealthCheck() {
         boolean healthStatus = false;
         try {
-            ResponseResult healthResponseResult = httpAgent.httpGetSimple(Constants.HEALTH_CHECK_PATH);
+            ResponseResult<?> healthResponseResult = httpAgent.httpGetSimple(Constants.HEALTH_CHECK_PATH);
             if (healthResponseResult != null && Objects.equals(healthResponseResult.getData(), Constants.UP)) {
                 healthStatus = true;
             }
