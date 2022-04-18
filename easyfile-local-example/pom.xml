@@ -10,7 +10,7 @@
     <version>${revision}</version>
   </parent>
 
-  <artifactId>easyfile-example</artifactId>
+  <artifactId>easyfile-local-example</artifactId>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>

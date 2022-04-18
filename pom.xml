@@ -13,10 +13,10 @@
         <module>easyfile-common</module>
         <module>easyfile-server</module>
         <module>easyfile-spring-boot-starter</module>
-        <module>easyfile-local-example</module>
         <module>easyfile-storage</module>
         <module>easyfile-remote-storage</module>
         <module>easyfile-local-storage</module>
+        <module>easyfile-local-example</module>
         <module>easyfile-remote-example</module>
     </modules>
 
