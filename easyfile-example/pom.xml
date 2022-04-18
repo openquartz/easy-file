@@ -45,7 +45,7 @@
 
     <dependency>
       <groupId>org.svnee</groupId>
-      <artifactId>easyfile-local-storage</artifactId>
+      <artifactId>easyfile-remote-storage</artifactId>
       <version>${revision}</version>
     </dependency>
   </dependencies>

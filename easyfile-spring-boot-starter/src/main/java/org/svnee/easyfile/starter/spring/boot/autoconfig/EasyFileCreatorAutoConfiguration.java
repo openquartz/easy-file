@@ -145,14 +145,6 @@ public class EasyFileCreatorAutoConfiguration {
         remoteBootstrapProperties.setPassword(easyFileRemoteProperties.getPassword());
         remoteBootstrapProperties.setServerAddr(easyFileRemoteProperties.getServerAddr());
         remoteBootstrapProperties.setNamespace(easyFileRemoteProperties.getNamespace());
-        remoteBootstrapProperties.setItemId(easyFileRemoteProperties.getItemId());
-        remoteBootstrapProperties.setEnable(easyFileRemoteProperties.getEnable());
-        remoteBootstrapProperties.setBanner(easyFileRemoteProperties.getBanner());
-        remoteBootstrapProperties.setEnableCollect(easyFileRemoteProperties.getEnableCollect());
-        remoteBootstrapProperties.setTaskBufferSize(easyFileRemoteProperties.getTaskBufferSize());
-        remoteBootstrapProperties.setInitialDelay(easyFileRemoteProperties.getInitialDelay());
-        remoteBootstrapProperties.setCollectInterval(easyFileRemoteProperties.getCollectInterval());
-        remoteBootstrapProperties.setJsonSerializeType(easyFileRemoteProperties.getJsonSerializeType());
         return remoteBootstrapProperties;
     }
 
