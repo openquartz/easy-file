@@ -12,7 +12,7 @@ import org.svnee.easyfile.common.event.ApplicationCompleteEvent;
  */
 public class ApplicationContentPostProcessor implements ApplicationListener<ContextRefreshedEvent> {
 
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     private boolean executeOnlyOnce = true;
 
