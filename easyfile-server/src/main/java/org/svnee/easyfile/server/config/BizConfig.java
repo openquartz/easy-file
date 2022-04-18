@@ -3,6 +3,8 @@ package org.svnee.easyfile.server.config;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.svnee.easyfile.common.util.JSONUtil;
+import org.svnee.easyfile.common.util.TypeReference;
 
 /**
  * 业务配置config
@@ -12,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class BizConfig {
 
-    @Value("easyfile.server.file.invalid.time:{}")
-    private Map<String, Integer> fileInvalidTimeMap;
+    @Value("${easyfile.server.file.invalid.time:{}}")
+    private String fileInvalidTimeMap;
 
     /**
      * 查询文件失效时间
@@ -21,6 +23,7 @@ public class BizConfig {
      * @return 失效时间
      */
     public Map<String, Integer> getFileInvalidTimeMap() {
-        return fileInvalidTimeMap;
+        return JSONUtil.parseObject(fileInvalidTimeMap, new TypeReference<Map<String, Integer>>() {
+        });
     }
 }

@@ -1,9 +1,5 @@
 server:
     port: 8080
-#spring
-spring:
-    aop:
-        proxy-target-class: true
 
 mybatis-plus:
     mapper-locations: classpath*:/mapper/**Mapper.xml
@@ -33,6 +29,23 @@ mybatis-plus:
         map-underscore-to-camel-case: true
         cache-enabled: false
 
-#logging
-logging:
-    level: warn
+### Data source customization section
+spring:
+    aop:
+        proxy-target-class: true
+    datasource:
+        url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+        username: root
+        password: 123456
+
+        ### Hikari Datasource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        hikari.pool-name: Hikari
+        hikari.connectionTimeout: 30000
+        hikari.idleTimeout: 30000
+        hikari.validationTimeout: 3000
+        hikari.maxLifetime: 120000
+        hikari.loginTimeout: 5
+        hikari.minimumIdle: 5
+        hikari.maximumPoolSize: 15
+        hikari.connection-test-query: SELECT 1
