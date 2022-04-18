@@ -110,7 +110,8 @@ public class EasyFileCreatorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(DownloadStorageService.class)
-    @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
+    @ConditionalOnClass({LocalDownloadStorageServiceImpl.class, AsyncDownloadRecordMapper.class,
+        AsyncDownloadTaskMapper.class})
     public DownloadStorageService localDownloadStorageService(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
         AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
         return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);

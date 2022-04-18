@@ -29,13 +29,13 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 ```xml
 <dependency>
    <groupId>org.svnee</groupId>
-   <artifactId>easyfile-spring-boot-starter</artifactId>
-   <version>1.0.0-beta.3</version>
+    <artifactId>easyfile-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
 </dependency>
 <dependency>
    <groupId>org.svnee</groupId>
    <artifactId>easyfile-local-storage</artifactId>
-   <version>1.0.0-beta.3</version>
+   <version>1.0.0</version>
 </dependency>
 ```
 
@@ -44,13 +44,13 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 ```xml
 <dependency>
    <groupId>org.svnee</groupId>
-   <artifactId>easyfile-spring-boot-starter</artifactId>
-   <version>1.0.0-beta.3</version>
+    <artifactId>easyfile-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
 </dependency>
 <dependency>
    <groupId>org.svnee</groupId>
    <artifactId>easyfile-remote-storage</artifactId>
-   <version>1.0.0-beta.3</version>
+   <version>1.0.0</version>
 </dependency>
 ```
 

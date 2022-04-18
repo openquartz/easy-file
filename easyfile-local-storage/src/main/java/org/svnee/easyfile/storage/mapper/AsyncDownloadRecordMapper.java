@@ -45,23 +45,6 @@ public interface AsyncDownloadRecordMapper {
      */
     int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
 
-    //
-    //    /**
-    //     * 查询最大创建时间
-    //     *
-    //     * @param condition 条件
-    //     * @return
-    //     */
-    //    Integer countTimeRange(@Param("condition") LimiterRecordQueryCondition condition);
-
-    //    /**
-    //     * 查询导出重试记录
-    //     *
-    //     * @param condition 查询条件
-    //     * @return 下载记录
-    //     */
-    //    List<AsyncDownloadRecord> selectExportRecordOfRetryable(@Param("condition") RetryQueryCondition condition);
-
     /**
      * 更新重试信息
      *
@@ -80,13 +63,6 @@ public interface AsyncDownloadRecordMapper {
     void updateExecuteErrorMsg(@Param("id") Long id, @Param("errorMsg") String errorMsg,
         @Param("list") List<UploadStatusEnum> failStatusList);
 
-    //    /**
-    //     * 根据条件查询
-    //     *
-    //     * @param condition 查询条件
-    //     * @return 导出结果
-    //     */
-    //    List<AsyncDownloadRecord> selectByCondition(@Param("condition") BaseRecordQueryCondition condition);
 
     /**
      * 刷新上传状态

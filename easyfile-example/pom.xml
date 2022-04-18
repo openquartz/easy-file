@@ -48,6 +48,16 @@
       <artifactId>easyfile-remote-storage</artifactId>
       <version>${revision}</version>
     </dependency>
+
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
