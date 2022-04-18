@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScans;
 /**
  * @author svnee
  **/
-
 @SpringBootApplication
 @ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
 @MapperScan("org.svnee.easyfile.example.mapper")
