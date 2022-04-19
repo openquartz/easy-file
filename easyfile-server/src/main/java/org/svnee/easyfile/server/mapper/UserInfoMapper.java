@@ -1,6 +1,5 @@
 package org.svnee.easyfile.server.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.svnee.easyfile.server.entity.UserInfo;
@@ -12,7 +11,7 @@ import org.svnee.easyfile.server.entity.UserInfo;
  * @date 2021/10/30 21:42
  */
 @Mapper
-public interface UserInfoMapper extends BaseMapper<UserInfo> {
+public interface UserInfoMapper {
 
     /**
      * insert selective

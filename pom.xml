@@ -42,7 +42,8 @@
 
         <slf4j-api.version>1.7.7</slf4j-api.version>
         <logback.version>1.2.3</logback.version>
-        <mybatis-plus.version>3.4.2</mybatis-plus.version>
+        <mybatis-plus.version>3.5.0</mybatis-plus.version>
+        <mybatis.version>2.0.1</mybatis.version>
         <pagehelper.version>1.2.10</pagehelper.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
 
@@ -114,6 +115,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mybatis.spring.boot</groupId>
+                <artifactId>mybatis-spring-boot-starter</artifactId>
+                <version>${mybatis.version}</version>
             </dependency>
 
             <dependency>

@@ -21,43 +21,49 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter</artifactId>
+      </dependency>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
 
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
+      <dependency>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-test</artifactId>
+          <scope>test</scope>
+      </dependency>
 
-    <dependency>
-      <groupId>org.svnee</groupId>
-      <artifactId>easyfile-spring-boot-starter</artifactId>
-      <version>${revision}</version>
-    </dependency>
+      <dependency>
+          <groupId>org.svnee</groupId>
+          <artifactId>easyfile-spring-boot-starter</artifactId>
+          <version>${revision}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>org.svnee</groupId>
-      <artifactId>easyfile-local-storage</artifactId>
-      <version>${revision}</version>
-    </dependency>
+      <dependency>
+          <groupId>org.svnee</groupId>
+          <artifactId>easyfile-remote-storage</artifactId>
+          <version>${revision}</version>
+      </dependency>
 
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>com.baomidou</groupId>
+          <artifactId>mybatis-plus-boot-starter</artifactId>
+      </dependency>
 
-    <dependency>
-      <groupId>javax.persistence</groupId>
-      <artifactId>javax.persistence-api</artifactId>
-    </dependency>
+      <dependency>
+          <groupId>javax.persistence</groupId>
+          <artifactId>javax.persistence-api</artifactId>
+      </dependency>
+
+      <dependency>
+          <groupId>mysql</groupId>
+          <artifactId>mysql-connector-java</artifactId>
+          <scope>runtime</scope>
+      </dependency>
   </dependencies>
 
   <build>

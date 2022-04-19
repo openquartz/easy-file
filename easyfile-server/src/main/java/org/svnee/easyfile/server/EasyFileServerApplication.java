@@ -3,14 +3,17 @@ package org.svnee.easyfile.server;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScans;
 
 /**
  * 文件服务Application
  *
  * @author svnee
  **/
-@MapperScan("org.svnee.easyfile.server.mapper")
 @SpringBootApplication
+@MapperScan("org.svnee.easyfile.server.mapper")
+@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
 public class EasyFileServerApplication {
 
     public static void main(String[] args) {

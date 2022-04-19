@@ -1,7 +1,10 @@
 package org.svnee.easyfile.server.common.lock;
 
+import java.text.MessageFormat;
+import java.util.StringJoiner;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.svnee.easyfile.common.constants.Constants;
 
 /**
  * 分布式锁Formatter
@@ -45,5 +48,22 @@ public enum LockKeyFormatter {
      * 描述
      */
     private final String desc;
+
+    /**
+     * 生成lockKey
+     *
+     * @param applicationName appId
+     * @param placeHolder placeHolder
+     * @return lockKey
+     */
+    public String generateLockKey(String applicationName, Object... placeHolder) {
+        StringJoiner joiner = new StringJoiner(Constants.COMMA_SPLITTER);
+        joiner.add(applicationName);
+        joiner.add(this.getKeyPrefix());
+        joiner.add(MessageFormat.format(this.getPattern(), placeHolder));
+        joiner.add(this.getStorageType());
+        return joiner.toString();
+    }
+
 
 }

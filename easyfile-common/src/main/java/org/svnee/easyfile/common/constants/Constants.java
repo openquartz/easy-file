@@ -102,5 +102,10 @@ public final class Constants {
      */
     public static final String SSL = "SSL";
 
+    /**
+     * 分隔符
+     */
+    public static final String COMMA_SPLITTER = ":";
+
 
 }

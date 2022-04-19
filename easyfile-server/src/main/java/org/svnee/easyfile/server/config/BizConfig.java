@@ -17,6 +17,9 @@ public class BizConfig {
     @Value("${easyfile.server.file.invalid.time:{}}")
     private String fileInvalidTimeMap;
 
+    @Value("${spring.application.name}")
+    private String appId;
+
     /**
      * 查询文件失效时间
      *
@@ -25,5 +28,9 @@ public class BizConfig {
     public Map<String, Integer> getFileInvalidTimeMap() {
         return JSONUtil.parseObject(fileInvalidTimeMap, new TypeReference<Map<String, Integer>>() {
         });
+    }
+
+    public String getAppId() {
+        return appId;
     }
 }
