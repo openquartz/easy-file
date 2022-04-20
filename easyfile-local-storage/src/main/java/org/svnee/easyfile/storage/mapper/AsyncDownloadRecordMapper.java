@@ -84,7 +84,6 @@ public interface AsyncDownloadRecordMapper {
      * @param id ID
      * @param uploadStatus 上传状态
      */
-    void download(@Param("id") Long id,
-        @Param("uploadStatus") UploadStatusEnum uploadStatus);
+    void download(@Param("id") Long id, @Param("uploadStatus") UploadStatusEnum uploadStatus);
 
 }
