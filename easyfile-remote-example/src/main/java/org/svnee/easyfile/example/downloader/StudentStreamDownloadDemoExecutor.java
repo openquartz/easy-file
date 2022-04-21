@@ -13,7 +13,6 @@ import org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecu
 
 /**
  * @author svnee
- * @desc
  **/
 @Component
 @FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出")
