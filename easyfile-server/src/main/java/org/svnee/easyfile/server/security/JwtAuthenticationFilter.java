@@ -10,6 +10,7 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +31,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    private ThreadLocal<Integer> rememberMe = new ThreadLocal();
+    private static final ThreadLocal<Integer> REMEMBER_ME = new NamedThreadLocal<>("RememberMe");
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
@@ -43,7 +44,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // 从输入流中获取到登录的信息
         try {
             LoginUser loginUser = new ObjectMapper().readValue(request.getInputStream(), LoginUser.class);
-            rememberMe.set(loginUser.getRememberMe());
+            REMEMBER_ME.set(loginUser.getRememberMe());
             return authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginUser.getUsername(), loginUser.getPassword(),
                     new ArrayList<>())
@@ -60,7 +61,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         FilterChain chain,
         Authentication authResult) throws IOException {
         JwtUser jwtUser = (JwtUser) authResult.getPrincipal();
-        boolean isRemember = rememberMe.get() == 1;
+        boolean isRemember = REMEMBER_ME.get() == 1;
 
         String role = "";
         Collection<? extends GrantedAuthority> authorities = jwtUser.getAuthorities();

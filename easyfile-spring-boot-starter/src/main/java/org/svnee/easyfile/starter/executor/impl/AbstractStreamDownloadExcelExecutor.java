@@ -11,6 +11,7 @@ import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
+import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 
@@ -52,7 +53,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
      * @return 500
      */
     public Integer enhanceLength() {
-        return 500;
+        return Constants.STREAM_EXPORT_ENHANCE_RECOMMEND_LEN;
     }
 
     @Override

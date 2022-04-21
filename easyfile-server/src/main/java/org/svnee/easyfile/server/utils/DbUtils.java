@@ -13,13 +13,24 @@ public final class DbUtils {
     private DbUtils() {
     }
 
-    public static void checkInsertedOneRows(int affect) {
-        Asserts.isTrue(affect == 1, DataExecuteErrorCode.INSERT_ERROR);
+    public static void checkInsertedOneRow(int affect) {
+        checkInsertedRows(1, affect);
     }
 
-    public static void checkUpdatedOneRows(int affect) {
-        Asserts.isTrue(affect == 1, DataExecuteErrorCode.UPDATE_ERROR);
+    public static void checkInsertedRows(int expect, int affect) {
+        Asserts.isTrue(affect == expect, DataExecuteErrorCode.INSERT_ERROR);
     }
 
+    public static void checkUpdatedRows(int expect, int affect) {
+        Asserts.isTrue(affect == expect, DataExecuteErrorCode.UPDATE_ERROR);
+    }
+
+    public static void checkUpdatedOneRow(int affect) {
+        checkUpdatedRows(1, affect);
+    }
+
+    public static void checkDeletedOneRow(int affect) {
+        Asserts.isTrue(affect == 1, DataExecuteErrorCode.DELETE_ERROR);
+    }
 
 }

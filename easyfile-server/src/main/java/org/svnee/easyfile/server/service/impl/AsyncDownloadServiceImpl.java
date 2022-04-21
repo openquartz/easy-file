@@ -81,7 +81,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
 
         AsyncDownloadRecord downloadRecord = buildAsyncRecord(request, downloadTask);
         int insertNum = asyncDownloadRecordMapper.insertSelective(downloadRecord);
-        DbUtils.checkInsertedOneRows(insertNum);
+        DbUtils.checkInsertedOneRow(insertNum);
         return downloadRecord.getId();
     }
 
@@ -162,7 +162,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
             calendar.add(Calendar.HOUR, bizConfig.getFileInvalidTimeMap().getOrDefault(request.getSystem(), 100));
             condition.setInvalidTime(calendar.getTime());
             int changeNum = asyncDownloadRecordMapper.changeUploadInfo(condition);
-            DbUtils.checkUpdatedOneRows(changeNum);
+            DbUtils.checkUpdatedOneRow(changeNum);
 
             // 如果需要执行通知,则执行通知
             if (downloadRecord.getNotifyEnableStatus().equals(EnableStatusEnum.ENABLE.getCode())) {
@@ -188,7 +188,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
             condition.setErrorMsg(request.getErrorMsg());
             condition.setLastExecuteTime(new Date());
             int changeNum = asyncDownloadRecordMapper.changeUploadInfo(condition);
-            DbUtils.checkUpdatedOneRows(changeNum);
+            DbUtils.checkUpdatedOneRow(changeNum);
         }
     }
 

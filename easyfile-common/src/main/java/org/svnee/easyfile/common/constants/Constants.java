@@ -107,5 +107,9 @@ public final class Constants {
      */
     public static final String COMMA_SPLITTER = ":";
 
+    /**
+     * 流式导出增强推荐长度
+     */
+    public static final Integer STREAM_EXPORT_ENHANCE_RECOMMEND_LEN = 500;
 
 }
