@@ -160,16 +160,17 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 
     @Override
     public void export(DownloaderRequestContext context) {
-		// 生成文件下载逻辑
+        // 生成文件下载逻辑
     }
 }
 ```
 
+#### 拓展
 
+类继承关系图
+![AbstractStreamDownloadExcelExecutor](doc/AbstractStreamDownloadExcelExecutor.png)
 
-##### 拓展
-
-下载器
+##### 下载器
 
 1、分页下载支持
 
@@ -180,7 +181,6 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 `org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor`
 
 需要配合使用（`org.svnee.easyfile.common.annotation.ExcelProperty`）
-
 
 
 2、流式下载支持
