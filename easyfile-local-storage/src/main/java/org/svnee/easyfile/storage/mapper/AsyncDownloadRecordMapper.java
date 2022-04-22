@@ -1,6 +1,5 @@
 package org.svnee.easyfile.storage.mapper;
 
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
@@ -12,14 +11,6 @@ import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
  * @author svnee
  */
 public interface AsyncDownloadRecordMapper {
-
-    /**
-     * 批量插入异步下载记录
-     *
-     * @param list 数据集合
-     * @return 插入条数
-     */
-    int insertList(@Param("list") List<AsyncDownloadRecord> list);
 
     /**
      * 插入数据
@@ -44,25 +35,6 @@ public interface AsyncDownloadRecordMapper {
      * @return 变更行数
      */
     int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
-
-    /**
-     * 更新重试信息
-     *
-     * @param id 主键
-     * @return affect rows
-     */
-    int updateRetryById(@Param("id") Long id);
-
-    /**
-     * 更新重试执行异常
-     *
-     * @param id ID
-     * @param errorMsg 异常信息
-     * @param failStatusList 失败状态条件
-     */
-    void updateExecuteErrorMsg(@Param("id") Long id, @Param("errorMsg") String errorMsg,
-        @Param("list") List<UploadStatusEnum> failStatusList);
-
 
     /**
      * 刷新上传状态

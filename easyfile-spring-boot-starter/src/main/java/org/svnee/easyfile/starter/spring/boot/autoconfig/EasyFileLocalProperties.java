@@ -14,12 +14,32 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = EasyFileLocalProperties.PREFIX)
 public class EasyFileLocalProperties {
 
-    public static final String PREFIX = "easyfile.local";
+    public static final String PREFIX = "easyfile.local.datasource";
 
     /**
-     * mapperLocal
+     * type
      */
-    private String mapperLocal;
+    private String type;
+
+    /**
+     * jdbcUrl
+     */
+    private String url;
+
+    /**
+     * driver-class-name
+     */
+    private String driverClassName;
+
+    /**
+     * username
+     */
+    private String username;
+
+    /**
+     * password
+     */
+    private String password;
 
 
 }
