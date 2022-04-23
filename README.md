@@ -85,23 +85,79 @@ public interface UploadService {
 
 将文件上传到自己的文件存储服务
 
-
-
 #### 三、额外处理
 
-如果是使用Local模式，需要提供存储Mapper
+如果是使用Local模式，需要提供Client配置
 
-`org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper`
+```properties
+##### easyfile-local-datasource
+easyfile.local.datasource.type=com.zaxxer.hikari.HikariDataSource
+easyfile.local.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+easyfile.local.datasource.url=jdbc:mysql://localhost:3306/test?characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&transformedBitIsBoolean=true&serverTimezone=GMT%2B8
+easyfile.local.datasource.username=root
+easyfile.local.datasource.password=123456
+```
 
-`org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper`
+需要执行SQL:
 
-需要执行SQL
+```sql
+CREATE TABLE ef_async_download_task
+(
+    id                BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
+    task_code         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '任务编码',
+    task_desc         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '任务描述',
+    app_id            VARCHAR(50) NOT NULL DEFAULT '' COMMENT '归属系统 APP ID',
+    unified_app_id    VARCHAR(50) NOT NULL DEFAULT '' COMMENT '统一APP ID',
+    enable_status     TINYINT (3) NOT NULL DEFAULT 0 COMMENT '启用状态',
+    limiting_strategy VARCHAR(50) NOT NULL DEFAULT '' COMMENT '限流策略',
+    version           INT (10) NOT NULL DEFAULT 0 COMMENT '版本号',
+    create_time       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    create_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '创建人',
+    update_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '更新人',
+    is_deleted        BIGINT (20) NOT NULL DEFAULT 0 COMMENT '是否删除',
+    PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载任务';
 
+CREATE TABLE ef_async_download_record
+(
+    id                    BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
+    download_task_id      BIGINT (20) NOT NULL DEFAULT 0 COMMENT '下载任务ID',
+    app_id                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT 'app ID',
+    download_code         VARCHAR(50)           DEFAULT '' COMMENT '下载code',
+    upload_status         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '上传状态',
+    file_url              VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件路径',
+    file_system           VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件所在系统',
+    download_operate_by   VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
+    download_operate_name VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
+    remark                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '备注',
+    notify_enable_status  TINYINT (3) NOT NULL DEFAULT 0 COMMENT '通知启用状态',
+    notify_email          VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '通知有效',
+    max_server_retry      INT (3) NOT NULL DEFAULT 0 COMMENT '最大服务重试',
+    current_retry         INT (3) NOT NULL DEFAULT 0 COMMENT '当前重试次数',
+    execute_param         TEXT         NOT NULL COMMENT '重试执行参数',
+    error_msg             VARCHAR(256) NOT NULL DEFAULT '' COMMENT '异常信息',
+    last_execute_time     DATETIME NULL COMMENT '最新执行时间',
+    invalid_time          DATETIME NULL COMMENT '链接失效时间',
+    download_num          INT (3) NOT NULL DEFAULT 0 COMMENT '下载次数',
+    version               INT (10) NOT NULL DEFAULT 0 COMMENT '版本号',
+    create_time           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    create_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '创建人',
+    update_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '更新人',
+    PRIMARY KEY (id)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
+```
 
+如果是使用remote服务，需要部署easyfile-server 服务,Client提供配置
 
-如果是使用remote服务，需要部署easyfile-server 服务，并设置域名。配置到客户端
-
-
+```properties
+#### easyfile-remote-storage
+easyfile.remote.username=example
+easyfile.remote.password=example
+easyfile.remote.server-addr=127.0.0.1:8080
+easyfile.remote.namespace=remote-example
+```
 
 #### 四、客户端配置
 
@@ -128,7 +184,6 @@ Client 配置
 | easyfile.download.enable-compress-file      | Client 是否开启文件压缩优化                                  | false             |
 | easyfile.download.min-enable-compress-mb-size | Client 启用文件压缩最小的大小，单位:MB 在启用文件压缩后生效 | 1                 |
 | easyfile.download.export-advisor-order      | Client下载切面顺序                                           | Integer.MAX_VALUE |
-
 
 
 #### 五、实现下载器
@@ -223,5 +278,12 @@ public interface ExportLimitingExecutor {
     void limit(ExportLimitingRequest request);
 }
 ```
+
+#### easyfile-server 部署
+
+1、执行存储DBSQL \
+2、部署服务
+
+
 
 
