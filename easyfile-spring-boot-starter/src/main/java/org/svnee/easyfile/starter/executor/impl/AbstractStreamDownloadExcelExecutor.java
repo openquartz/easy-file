@@ -25,6 +25,7 @@ import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
  * @author svnee
  **/
 public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T>
+    extends AbstractDownloadExcel07Executor
     implements StreamDownloadExecutor<S, R, T> {
 
     /**

@@ -2,7 +2,9 @@
 
 ### 介绍
 
-EasyFile-是提供更加便捷的文件导出服务
+EasyFile-是为了提供更加便捷的文件服务,可以提供统一的操作入口
+
+目前主要支持导出功能
 
 支持同步导出、异步导出、文件压缩、流式导出、分页导出等特性。
 
@@ -17,8 +19,6 @@ EasyFile 提供两种模式
 local 模式:  需要提供本地的api 存储Mapper. 将数据存储到本地数据库中管理。
 
 remote模式：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
-
-
 
 ### 使用教程
 
@@ -182,7 +182,6 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 
 需要配合使用（`org.svnee.easyfile.common.annotation.ExcelProperty`）
 
-
 2、流式下载支持
 
 `org.svnee.easyfile.starter.executor.StreamDownloadExecutor`
@@ -192,3 +191,37 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 `org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor`
 
 需要配合使用(`org.svnee.easyfile.common.annotation.ExcelProperty`)
+
+##### 限流执行器
+
+如需限流需要实现ExportLimitingExecutor
+
+```java
+package org.svnee.easyfile.storage.expand;
+
+import org.svnee.easyfile.common.request.ExportLimitingRequest;
+
+/**
+ * 限流服务
+ *
+ * @author svnee
+ */
+public interface ExportLimitingExecutor {
+
+    /**
+     * 策略
+     *
+     * @return 策略code码
+     */
+    String strategy();
+
+    /**
+     * 限流
+     *
+     * @param request request
+     */
+    void limit(ExportLimitingRequest request);
+}
+```
+
+
