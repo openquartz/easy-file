@@ -24,7 +24,7 @@
   </sql>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ads_async_download_task
+        INSERT INTO ef_async_download_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="taskCode!=null">task_code,</if>
             <if test="taskDesc!=null">task_desc,</if>
@@ -59,27 +59,27 @@
     <select id="findById" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ads_async_download_task
+        from ef_async_download_task
         where id=#{id} AND is_deleted = 0
     </select>
 
     <select id="selectByDownloadCode" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ads_async_download_task
+        from ef_async_download_task
         where task_code=#{taskCode}
         AND app_id = #{appId}
         AND is_deleted = 0
     </select>
 
     <select id="selectAllAppId" resultType="java.lang.String">
-        select distinct app_id from ads_async_download_task where is_deleted = 0
+        select distinct app_id from ef_async_download_task where is_deleted = 0
     </select>
 
     <select id="listByDownloadCode" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ads_async_download_task
+        from ef_async_download_task
         where task_code in
         <foreach collection="list" item="item" close=")" open="(" separator="," index="index">
             #{item}
@@ -93,13 +93,13 @@
     
     <select id="getByUnifiedAppId" resultType="java.lang.String">
         select distinct app_id
-        from ads_async_download_task
+        from ef_async_download_task
         where unified_app_id = #{unifiedAppId}
         and is_deleted = 0
     </select>
 
     <insert id="insertList">
-        INSERT INTO ads_async_download_task(
+        INSERT INTO ef_async_download_task(
         task_code,
         task_desc,
         app_id,
@@ -132,7 +132,7 @@
     </insert>
 
     <update id="refreshTaskDesc">
-        update ads_async_download_task set task_desc = #{taskDesc}
+        update ef_async_download_task set task_desc = #{taskDesc}
         where id = #{id}
     </update>
 </mapper>

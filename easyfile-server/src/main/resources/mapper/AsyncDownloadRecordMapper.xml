@@ -38,13 +38,13 @@
     <select id="findById" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ads_async_download_record
+        from ef_async_download_record
         where id=#{id}
     </select>
 
     <!--  变更上传信息-->
     <update id="changeUploadInfo" parameterType="org.svnee.easyfile.server.mapper.condition.UploadInfoChangeCondition">
-        update ads_async_download_record
+        update ef_async_download_record
         set
         upload_status = #{condition.uploadStatus.code},
         <if test="condition.fileUrl != null and condition.fileUrl != ''">
@@ -67,7 +67,7 @@
     </update>
 
     <select id="countTimeRange" resultType="java.lang.Integer">
-        select count(*) from ads_async_download_record
+        select count(*) from ef_async_download_record
         where app_id = #{condition.appId}
         AND download_code = #{condition.downloadCode}
         AND create_time >= #{condition.minCreateTime}
@@ -77,7 +77,7 @@
     <select id="selectExportRecordOfRetryable" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM ads_async_download_record
+        FROM ef_async_download_record
         WHERE last_execute_time >= #{condition.startTime}
         AND #{condition.endTime} > last_execute_time
         AND upload_status IN
@@ -91,7 +91,7 @@
 
     <!--    重试信息-->
     <update id="updateRetryById">
-        UPDATE ads_async_download_record
+        UPDATE ef_async_download_record
         SET last_execute_time = now(),
         current_retry = current_retry + 1
         WHERE id = #{id}
@@ -99,7 +99,7 @@
     </update>
 
     <update id="updateExecuteErrorMsg">
-        UPDATE ads_async_download_record
+        UPDATE ef_async_download_record
         SET error_msg = #{errorMsg}
         WHERE id = #{id}
         AND upload_status IN
@@ -111,7 +111,7 @@
     <select id="selectByCondition" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
-        FROM ads_async_download_record
+        FROM ef_async_download_record
         <where>
             <if test="condition.limitedAppIdList != null and condition.limitedAppIdList.size()>0">
                 AND app_id in
@@ -145,7 +145,7 @@
     </select>
 
     <insert id="insertList" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ads_async_download_record(
+        INSERT INTO ef_async_download_record(
         download_task_id,
         app_id,
         download_code,
@@ -200,7 +200,7 @@
     </insert>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ads_async_download_record
+        INSERT INTO ef_async_download_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="downloadTaskId!=null">download_task_id,</if>
             <if test="appId!=null">app_id,</if>
@@ -256,7 +256,7 @@
 
     <!--    失效-->
     <update id="refreshUploadStatus">
-        update ads_async_download_record set upload_status = #{tagUploadStatus.code},
+        update ef_async_download_record set upload_status = #{tagUploadStatus.code},
         update_by = #{updateBy}
         where id = #{id}
         AND upload_status = #{oriUploadStatus.code}
@@ -264,7 +264,7 @@
 
     <!--    下载记录-->
     <update id="download">
-        update ads_async_download_record set download_num = download_num + 1
+        update ef_async_download_record set download_num = download_num + 1
         where id = #{id}
         and upload_status = #{uploadStatus}
     </update>
