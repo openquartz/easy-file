@@ -116,7 +116,8 @@ CREATE TABLE ef_async_download_task
     create_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '创建人',
     update_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '更新人',
     is_deleted        BIGINT (20) NOT NULL DEFAULT 0 COMMENT '是否删除',
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    UNIQUE KEY `uniq_app_id_task_code` (`task_code`,`app_id`) USING BTREE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载任务';
 
 CREATE TABLE ef_async_download_record
@@ -124,7 +125,7 @@ CREATE TABLE ef_async_download_record
     id                    BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
     download_task_id      BIGINT (20) NOT NULL DEFAULT 0 COMMENT '下载任务ID',
     app_id                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT 'app ID',
-    download_code         VARCHAR(50)           DEFAULT '' COMMENT '下载code',
+    download_code         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载code',
     upload_status         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '上传状态',
     file_url              VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件路径',
     file_system           VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件所在系统',
@@ -135,7 +136,7 @@ CREATE TABLE ef_async_download_record
     notify_email          VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '通知有效',
     max_server_retry      INT (3) NOT NULL DEFAULT 0 COMMENT '最大服务重试',
     current_retry         INT (3) NOT NULL DEFAULT 0 COMMENT '当前重试次数',
-    execute_param         TEXT         NOT NULL COMMENT '重试执行参数',
+    execute_param         TEXT NULL COMMENT '重试执行参数',
     error_msg             VARCHAR(256) NOT NULL DEFAULT '' COMMENT '异常信息',
     last_execute_time     DATETIME NULL COMMENT '最新执行时间',
     invalid_time          DATETIME NULL COMMENT '链接失效时间',
@@ -145,7 +146,10 @@ CREATE TABLE ef_async_download_record
     update_time           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     create_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '创建人',
     update_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '更新人',
-    PRIMARY KEY (id)
+    PRIMARY KEY (id),
+    KEY `idx_download_operate_by` (`download_operate_by`) USING BTREE,
+    KEY `idx_operator_record` (`download_operate_by`,`app_id`,`create_time`),
+    KEY `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 ```
 
@@ -281,7 +285,7 @@ public interface ExportLimitingExecutor {
 
 #### easyfile-server 部署
 
-1、执行存储DBSQL \
+1、执行存储DB SQL \
 2、部署服务
 
 
