@@ -16,9 +16,9 @@ public enum LimitingStrategy {
     GLOBAL_APP(LimitingConstants.GLOBAL_APP, "APP维度限流"),
     ;
 
-    private String code;
+    private final String code;
 
-    private String desc;
+    private final String desc;
 
 
 }

@@ -10,9 +10,10 @@ import java.util.Objects;
 import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
@@ -23,6 +24,7 @@ import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
+import org.svnee.easyfile.common.exception.ExpandExecutorErrorCode;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
@@ -33,8 +35,8 @@ import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
+import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.server.common.spi.SpiSupport;
 import org.svnee.easyfile.server.config.BizConfig;
 import org.svnee.easyfile.server.convertor.AsyncDownloadRecordConverter;
 import org.svnee.easyfile.server.entity.AsyncDownloadRecord;
@@ -48,7 +50,6 @@ import org.svnee.easyfile.server.notify.NotifyMessageTemplate;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 import org.svnee.easyfile.server.service.NotifyService;
 import org.svnee.easyfile.server.service.executor.ExportLimitingExecutor;
-import org.svnee.easyfile.server.service.executor.LimitingConstants;
 import org.svnee.easyfile.server.utils.DbUtils;
 import org.svnee.easyfile.server.utils.PaginationUtils;
 
@@ -58,8 +59,7 @@ import org.svnee.easyfile.server.utils.PaginationUtils;
  * @author svnee
  */
 @Service
-@RequiredArgsConstructor
-public class AsyncDownloadServiceImpl implements AsyncDownloadService {
+public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(AsyncDownloadServiceImpl.class);
 
@@ -67,6 +67,18 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
     private final AsyncDownloadRecordMapper asyncDownloadRecordMapper;
     private final NotifyService notifyService;
     private final BizConfig bizConfig;
+
+    private final Map<String, ExportLimitingExecutor> exportLimitingExecutorMap = MapUtils
+        .newHashMapWithExpectedSize(10);
+
+    public AsyncDownloadServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+        AsyncDownloadRecordMapper asyncDownloadRecordMapper, NotifyService notifyService,
+        BizConfig bizConfig) {
+        this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
+        this.asyncDownloadRecordMapper = asyncDownloadRecordMapper;
+        this.notifyService = notifyService;
+        this.bizConfig = bizConfig;
+    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -125,16 +137,14 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
     public boolean limiting(ExportLimitingRequest request) {
         AsyncDownloadTask downloadTask = asyncDownloadTaskMapper
             .selectByDownloadCode(request.getDownloadCode(), request.getAppId());
-        if (Objects.isNull(downloadTask)) {
-            return true;
-        }
+        Asserts.notNull(downloadTask, AsyncDownloadExceptionCode.DOWNLOAD_TASK_IS_DISABLE);
 
-        ExportLimitingExecutor serviceProvider = SpiSupport.getServiceProvider(ExportLimitingExecutor.class,
-            LimitingConstants.LIMITING_PREFIX + downloadTask.getLimitingStrategy());
+        ExportLimitingExecutor serviceProvider = exportLimitingExecutorMap.get(downloadTask.getLimitingStrategy());
         if (Objects.nonNull(serviceProvider)) {
-            return serviceProvider.limit(request);
+            serviceProvider.limit(request);
         } else {
-            log.error("[limit#downloadCode:{}]没有对应的策略!appId:{},request:{}", request.getDownloadCode(),
+            log.error("[limit#downloadCode:{},strategy:{}]没有对应的策略!appId:{},request:{}", request.getDownloadCode(),
+                downloadTask.getLimitingStrategy(),
                 request.getAppId(), request);
         }
         return true;
@@ -308,5 +318,18 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService {
         uploadResult.setCancelResult(affect > 0);
         uploadResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
         return uploadResult;
+    }
+
+    @Override
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof ExportLimitingExecutor) {
+            ExportLimitingExecutor executor = (ExportLimitingExecutor) bean;
+            ExportLimitingExecutor existExecutor = exportLimitingExecutorMap.putIfAbsent(executor.strategy(), executor);
+            Asserts.isTrue(executor == existExecutor,
+                ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
+                executor.strategy());
+            exportLimitingExecutorMap.put(executor.strategy(), executor);
+        }
+        return bean;
     }
 }

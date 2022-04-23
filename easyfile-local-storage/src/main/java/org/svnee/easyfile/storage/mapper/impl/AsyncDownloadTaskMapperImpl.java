@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.mapper.impl;
 
+import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +29,7 @@ public class AsyncDownloadTaskMapperImpl implements AsyncDownloadTaskMapper {
 
     @Override
     public List<AsyncDownloadTask> listByDownloadCode(List<String> downloadCodeList, List<String> appIdList) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

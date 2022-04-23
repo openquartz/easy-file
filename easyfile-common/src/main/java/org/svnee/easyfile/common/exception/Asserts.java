@@ -29,6 +29,18 @@ public final class Asserts {
      * 断言是否为true
      *
      * @param expression 表达式
+     * @param code 异常码
+     */
+    public static void isTrue(boolean expression, EasyFileErrorCode code, Object... placeHold) {
+        if (!expression) {
+            throw EasyFileException.replacePlaceHold(code, placeHold);
+        }
+    }
+
+    /**
+     * 断言是否为true
+     *
+     * @param expression 表达式
      * @param errorCode 异常码
      * @param exceptionClazz 异常类
      * @param <T> T 异常码
@@ -54,9 +66,17 @@ public final class Asserts {
      * @param code code
      */
     public static void notNull(Object obj, EasyFileErrorCode code) {
-        if (Objects.isNull(obj)) {
-            throw new EasyFileException(code);
-        }
+        isTrue(Objects.nonNull(obj), code);
+    }
+
+    /**
+     * 断言非空
+     *
+     * @param obj obj
+     * @param code code
+     */
+    public static void notNull(Object obj, EasyFileErrorCode code, Object... placeHold) {
+        isTrue(Objects.nonNull(obj), code, placeHold);
     }
 
     /**
@@ -66,8 +86,16 @@ public final class Asserts {
      * @param code code
      */
     public static void isNull(Object obj, EasyFileErrorCode code) {
-        if (Objects.nonNull(obj)) {
-            throw new EasyFileException(code);
-        }
+        isTrue(Objects.isNull(obj), code);
+    }
+
+    /**
+     * 断言为空
+     *
+     * @param obj obj
+     * @param code code
+     */
+    public static void isNull(Object obj, EasyFileErrorCode code, Object... placeHold) {
+        isTrue(Objects.isNull(obj), code, placeHold);
     }
 }

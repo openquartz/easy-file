@@ -19,6 +19,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
+import org.svnee.easyfile.storage.expand.ExportLimitingExecutor;
+import org.svnee.easyfile.storage.expand.NoneExportLimitingExecutor;
 import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
@@ -49,8 +51,8 @@ public class EasyFileLocalStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(LimitingService.class)
     @ConditionalOnClass(LocalLimitingServiceImpl.class)
-    public LimitingService localLimitingService() {
-        return new LocalLimitingServiceImpl();
+    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
+        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper);
     }
 
     @Bean
@@ -114,5 +116,10 @@ public class EasyFileLocalStorageAutoConfiguration {
         return new AsyncDownloadRecordMapperImpl(jdbcTemplate);
     }
 
+    @Bean
+    @ConditionalOnClass(ExportLimitingExecutor.class)
+    public ExportLimitingExecutor noneExportLimitingExecutor() {
+        return new NoneExportLimitingExecutor();
+    }
 
 }

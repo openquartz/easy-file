@@ -17,12 +17,12 @@ public enum LoginExceptionCode implements EasyFileErrorCode {
     }
 
     @Override
-    public String getErrorCode() {
+    public final String getErrorCode() {
         return errorCode;
     }
 
     @Override
-    public String getErrorMsg() {
+    public final String getErrorMsg() {
         return errorMsg;
     }
 }

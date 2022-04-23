@@ -11,6 +11,7 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 @Getter
 public enum AsyncDownloadExceptionCode implements EasyFileErrorCode {
     DOWNLOAD_TASK_IS_DISABLE("01", "下载任务已经被禁用"),
+    DOWNLOAD_TASK_NOT_EXIST("02", "下载任务不存在"),
     ;
 
     private final String errorCode;
