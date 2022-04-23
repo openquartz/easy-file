@@ -110,9 +110,9 @@ public class DownloadController {
      * @return 结果
      */
     @PostMapping("/file")
-    public ResponseResult<?> download(@RequestBody @Valid DownloadRequest request) {
-        asyncDownloadService.download(request);
-        return ResponseResult.ok();
+    public ResponseResult<String> download(@RequestBody @Valid DownloadRequest request) {
+        String fileUrl = asyncDownloadService.download(request);
+        return ResponseResult.ok(fileUrl);
     }
 
 }

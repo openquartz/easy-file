@@ -1,6 +1,5 @@
 package org.svnee.easyfile.storage.mapper;
 
-import org.apache.ibatis.annotations.Param;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
@@ -26,7 +25,7 @@ public interface AsyncDownloadRecordMapper {
      * @param id id
      * @return record
      */
-    AsyncDownloadRecord findById(@Param("id") Long id);
+    AsyncDownloadRecord findById(Long id);
 
     /**
      * 变更上传信息
@@ -34,7 +33,7 @@ public interface AsyncDownloadRecordMapper {
      * @param condition 变更信息条件
      * @return 变更行数
      */
-    int changeUploadInfo(@Param("condition") UploadInfoChangeCondition condition);
+    int changeUploadInfo(UploadInfoChangeCondition condition);
 
     /**
      * 刷新上传状态
@@ -45,17 +44,16 @@ public interface AsyncDownloadRecordMapper {
      * @param updateBy 更新人
      * @return affect num
      */
-    int refreshUploadStatus(@Param("id") Long id,
-        @Param("oriUploadStatus") UploadStatusEnum oriUploadStatus,
-        @Param("tagUploadStatus") UploadStatusEnum tagUploadStatus,
-        @Param("updateBy") String updateBy);
+    int refreshUploadStatus(Long id, UploadStatusEnum oriUploadStatus, UploadStatusEnum tagUploadStatus,
+        String updateBy);
 
     /**
      * 下载
      *
      * @param id ID
      * @param uploadStatus 上传状态
+     * @return affect row
      */
-    void download(@Param("id") Long id, @Param("uploadStatus") UploadStatusEnum uploadStatus);
+    int download(Long id, UploadStatusEnum uploadStatus);
 
 }

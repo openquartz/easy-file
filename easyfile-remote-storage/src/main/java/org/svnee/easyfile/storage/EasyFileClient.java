@@ -71,9 +71,9 @@ public interface EasyFileClient {
      * 下载
      *
      * @param request 下载请求
-     * @return ResponseResult
+     * @return ResponseResult-fileUrl
      */
-    ResponseResult<?> download(DownloadRequest request);
+    ResponseResult<String> download(DownloadRequest request);
 
     /**
      * 用户撤销任务上传

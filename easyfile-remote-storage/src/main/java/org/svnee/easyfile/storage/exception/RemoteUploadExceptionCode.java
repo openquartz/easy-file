@@ -15,6 +15,7 @@ public enum RemoteUploadExceptionCode implements EasyFileErrorCode {
     ENABLE_RUNNING_RESPONSE_ERROR("04", "开启运行任务异常"),
     LIST_DOWNLOAD_RECORD_ERROR("05", "下载记录查询异常"),
     UPLOAD_CANCEL_ERROR("06", "撤销下载异常"),
+    DOWNLOAD_RESPONSE_ERROR("07", "下载调用远程服务响应异常"),
     ;
 
     private final String errorCode;

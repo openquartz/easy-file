@@ -109,9 +109,9 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     }
 
     @Override
-    public void download(Long id, UploadStatusEnum uploadStatus) {
+    public int download(Long id, UploadStatusEnum uploadStatus) {
         final String sql = "update ef_async_download_record set download_num = download_num + 1 where id = ? and upload_status = ?";
-        jdbcTemplate.update(sql, id, uploadStatus.getCode());
+        return jdbcTemplate.update(sql, id, uploadStatus.getCode());
     }
 
     private static class AsyncDownloadRecordRowMapper implements RowMapper<AsyncDownloadRecord> {

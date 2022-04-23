@@ -1,5 +1,7 @@
 package org.svnee.easyfile.storage.impl;
 
+import static org.svnee.easyfile.storage.exception.RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR;
+
 import com.github.rholder.retry.Attempt;
 import com.github.rholder.retry.RetryListener;
 import com.github.rholder.retry.Retryer;
@@ -14,12 +16,14 @@ import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
+import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
+import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
 import org.svnee.easyfile.storage.exception.RemoteUploadExceptionCode;
 
 /**
@@ -38,10 +42,11 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
 
     @Override
     public boolean enableRunning(Long registerId) {
-        log.info("[RemoteDownloadStorageServiceImpl#enableRunning] request registerId:{}",registerId);
+        log.info("[RemoteDownloadStorageServiceImpl#enableRunning] request registerId:{}", registerId);
         ResponseResult<Boolean> result = easyFileClient
             .enableRunning(EnableRunningRequest.create(registerId));
-        log.info("[RemoteDownloadStorageServiceImpl#enableRunning] response registerId:{},result:{}",registerId,result);
+        log.info("[RemoteDownloadStorageServiceImpl#enableRunning] response registerId:{},result:{}", registerId,
+            result);
         if (Objects.nonNull(result) && result.isSuccess()) {
             return result.getData();
         }
@@ -72,7 +77,8 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
             Asserts.notNull(callbackResponse, RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
             Asserts.isTrue(callbackResponse.isSuccess(), RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
         } catch (Exception ex) {
-            log.error("[RemoteDownloadStorageServiceImpl#uploadCallback] call easyfile-client error,request:{}", request,
+            log.error("[RemoteDownloadStorageServiceImpl#uploadCallback] call easyfile-client error,request:{}",
+                request,
                 ex);
             throw new EasyFileException(RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
         }
@@ -90,5 +96,13 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     @Override
     public void autoRegisterTask(AutoTaskRegisterRequest request) {
         easyFileClient.autoRegisterTask(request);
+    }
+
+    @Override
+    public String download(DownloadRequest request) {
+        ResponseResult<String> responseResult = easyFileClient.download(request);
+        Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_ERROR);
+        return responseResult.getData();
     }
 }

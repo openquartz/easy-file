@@ -1,4 +1,4 @@
-package org.svnee.easyfile.server.exception;
+package org.svnee.easyfile.storage.exception;
 
 import lombok.Getter;
 import org.svnee.easyfile.common.exception.EasyFileErrorCode;

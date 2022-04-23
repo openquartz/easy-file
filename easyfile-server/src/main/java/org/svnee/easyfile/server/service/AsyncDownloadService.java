@@ -73,8 +73,9 @@ public interface AsyncDownloadService {
      * 下载次数
      *
      * @param request 请求
+     * @return file url
      */
-    void download(DownloadRequest request);
+    String download(DownloadRequest request);
 
     /**
      * 撤销

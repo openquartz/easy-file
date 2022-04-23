@@ -1,7 +1,6 @@
 package org.svnee.easyfile.storage.mapper;
 
 import java.util.List;
-import org.apache.ibatis.annotations.Param;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTask;
 
 /**
@@ -26,7 +25,7 @@ public interface AsyncDownloadTaskMapper {
      * @param appId 系统ID
      * @return 下载任务
      */
-    AsyncDownloadTask selectByDownloadCode(@Param("taskCode") String taskCode, @Param("appId") String appId);
+    AsyncDownloadTask selectByDownloadCode(String taskCode, String appId);
 
     /**
      * 批量查询
@@ -35,8 +34,7 @@ public interface AsyncDownloadTaskMapper {
      * @param appIdList appID
      * @return 下载任务
      */
-    List<AsyncDownloadTask> listByDownloadCode(@Param("list") List<String> downloadCodeList,
-        @Param("appIdList") List<String> appIdList);
+    List<AsyncDownloadTask> listByDownloadCode(List<String> downloadCodeList, List<String> appIdList);
 
     /**
      * 刷新任务描述
@@ -45,6 +43,6 @@ public interface AsyncDownloadTaskMapper {
      * @param taskDesc 任务描述
      * @return affect row
      */
-    int refreshTaskDesc(@Param("id") Long id, @Param("taskDesc") String taskDesc);
+    int refreshTaskDesc(Long id, String taskDesc);
 
 }

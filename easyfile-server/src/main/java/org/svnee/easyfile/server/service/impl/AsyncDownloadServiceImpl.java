@@ -50,6 +50,7 @@ import org.svnee.easyfile.server.notify.NotifyMessageTemplate;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 import org.svnee.easyfile.server.service.NotifyService;
 import org.svnee.easyfile.server.service.executor.ExportLimitingExecutor;
+import org.svnee.easyfile.server.service.executor.FileUrlTransformer;
 import org.svnee.easyfile.server.utils.DbUtils;
 import org.svnee.easyfile.server.utils.PaginationUtils;
 
@@ -68,8 +69,15 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     private final NotifyService notifyService;
     private final BizConfig bizConfig;
 
+    /**
+     * 限流导出执行器
+     */
     private final Map<String, ExportLimitingExecutor> exportLimitingExecutorMap = MapUtils
         .newHashMapWithExpectedSize(10);
+    /**
+     * 文件转换器
+     */
+    private final Map<String, FileUrlTransformer> fileUrlTransformerMap = MapUtils.newHashMapWithExpectedSize(5);
 
     public AsyncDownloadServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
         AsyncDownloadRecordMapper asyncDownloadRecordMapper, NotifyService notifyService,
@@ -294,9 +302,19 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     }
 
     @Override
-    public void download(DownloadRequest request) {
+    public String download(DownloadRequest request) {
         log.info("[AsyncDownload]#file download,request:{}", request);
+
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
+        Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
+        // 下载
         asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
+
+        FileUrlTransformer transformer = fileUrlTransformerMap.get(downloadRecord.getFileSystem());
+        if (Objects.nonNull(transformer)) {
+            return transformer.transform(downloadRecord);
+        }
+        return downloadRecord.getFileUrl();
     }
 
     @Override
@@ -329,6 +347,15 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
                 ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
                 executor.strategy());
             exportLimitingExecutorMap.put(executor.strategy(), executor);
+        }
+        if (bean instanceof FileUrlTransformer) {
+            FileUrlTransformer transformer = (FileUrlTransformer) bean;
+            FileUrlTransformer fileUrlTransformer = fileUrlTransformerMap
+                .putIfAbsent(transformer.fileSystem(), transformer);
+            Asserts.isTrue(transformer == fileUrlTransformer,
+                ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
+                transformer.fileSystem());
+            fileUrlTransformerMap.put(fileUrlTransformer.fileSystem(), transformer);
         }
         return bean;
     }
