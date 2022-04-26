@@ -171,10 +171,10 @@ easyfile.remote.namespace=remote-example
 
 | 配置key                                                      | 描述                                | 默认值 |
 | ------------------------------------------------------------ | ----------------------------------- | ------ |
-| easyfile.default.async.download.handler.thread-pool.corePoolSize | 默认下载线程池核心线程数            | 10     |
-| easyfile.default.async.download.handler.thread-pool.maximumPoolSize | 默认下载线程池最大线程池数          | 20     |
-| easyfile.default.async.download.handler.thread-pool.keepAliveTime | 默认下载线程池最大空闲时间 单位：秒 | 30     |
-| easyfile.default.async.download.handler.thread-pool.maxBlockingQueueSize | 默认下载线程池阻塞队列最大长度      | 2048   |
+| easyfile.default.async.download.handler.thread-pool.core-pool-size | 默认下载线程池核心线程数            | 10     |
+| easyfile.default.async.download.handler.thread-pool.maximum-pool-size | 默认下载线程池最大线程池数          | 20     |
+| easyfile.default.async.download.handler.thread-pool.keep-alive-time | 默认下载线程池最大空闲时间 单位：秒 | 30     |
+| easyfile.default.async.download.handler.thread-pool.max-blocking-queue-size | 默认下载线程池阻塞队列最大长度      | 2048   |
 
 Client 配置
 
