@@ -1,5 +1,6 @@
 package org.svnee.easyfile.starter.spring.boot.autoconfig;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import javax.sql.DataSource;
@@ -51,8 +52,9 @@ public class EasyFileLocalStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(LimitingService.class)
     @ConditionalOnClass(LocalLimitingServiceImpl.class)
-    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
-        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper);
+    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+        List<ExportLimitingExecutor> executorList) {
+        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList);
     }
 
     @Bean

@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.impl;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +27,10 @@ public class LocalLimitingServiceImpl implements LimitingService, BeanPostProces
     private final Map<String, ExportLimitingExecutor> limitingExecutorMap = MapUtils.newHashMapWithExpectedSize(10);
     private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
 
-    public LocalLimitingServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
+    public LocalLimitingServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+        List<ExportLimitingExecutor> executorList) {
         this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
+        executorList.forEach(executor -> this.limitingExecutorMap.putIfAbsent(executor.strategy(), executor));
     }
 
     @Override

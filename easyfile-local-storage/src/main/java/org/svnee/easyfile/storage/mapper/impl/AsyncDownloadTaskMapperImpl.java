@@ -27,7 +27,7 @@ public class AsyncDownloadTaskMapperImpl implements AsyncDownloadTaskMapper {
     public int insertSelective(AsyncDownloadTask task) {
         final String sql =
             "insert into ef_async_download_task(task_code, task_desc, limiting_strategy, app_id,unified_app_id, enable_status, version, create_time, update_time,"
-                + "create_by, update_by, is_deleted) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                + "create_by, update_by, is_deleted) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         return jdbcTemplate
             .update(sql, task.getTaskCode(), task.getTaskDesc(),
                 task.getLimitingStrategy(), task.getAppId(),

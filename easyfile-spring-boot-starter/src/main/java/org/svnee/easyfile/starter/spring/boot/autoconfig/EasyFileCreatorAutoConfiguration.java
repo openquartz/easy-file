@@ -2,12 +2,14 @@ package org.svnee.easyfile.starter.spring.boot.autoconfig;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Advisor;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Role;
 import org.svnee.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import org.svnee.easyfile.starter.aop.FileExportInterceptor;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
@@ -48,6 +50,7 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
+    @Role(value = BeanDefinition.ROLE_INFRASTRUCTURE)
     public Advisor fileExportExecutorAnnotationAdvisor(EasyFileDownloadProperties easyFileDownloadProperties,
         DownloadStorageService downloadStorageService,
         LimitingService limitingService,
