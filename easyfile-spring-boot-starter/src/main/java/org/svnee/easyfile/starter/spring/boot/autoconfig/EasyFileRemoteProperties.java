@@ -17,21 +17,25 @@ public class EasyFileRemoteProperties {
 
     /**
      * Username.
+     * username
      */
     private String username;
 
     /**
      * Password.
+     * password
      */
     private String password;
 
     /**
      * Server addr
+     * server-addr
      */
     private String serverAddr;
 
     /**
      * Namespace
+     * namespace
      */
     private String namespace;
 
