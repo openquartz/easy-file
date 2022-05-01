@@ -9,6 +9,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Role;
 import org.svnee.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import org.svnee.easyfile.starter.aop.FileExportInterceptor;
@@ -34,6 +35,7 @@ import org.svnee.easyfile.storage.file.local.LocalUploadServiceImpl;
 @EnableConfigurationProperties({DefaultAsyncHandlerThreadPoolProperties.class, EasyFileDownloadProperties.class,
     EasyFileRemoteProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@Import({EasyFileLocalStorageAutoConfiguration.class, EasyFileRemoteStorageAutoConfiguration.class})
 public class EasyFileCreatorAutoConfiguration {
 
     @Bean
