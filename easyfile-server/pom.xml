@@ -6,29 +6,29 @@
 
   <parent>
     <groupId>org.svnee</groupId>
-    <artifactId>easy-file</artifactId>
-    <version>${revision}</version>
+      <artifactId>easy-file</artifactId>
+      <version>${revision}</version>
   </parent>
 
-  <artifactId>easyfile-server</artifactId>
-  <packaging>jar</packaging>
+    <artifactId>easyfile-server</artifactId>
+    <packaging>jar</packaging>
 
-  <name>${project.artifactId}</name>
-  <description>${project.artifactId}</description>
+    <name>${project.artifactId}</name>
+    <description>${project.artifactId}</description>
 
-  <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
+    <!--  <properties>-->
+    <!--    <maven.deploy.skip>true</maven.deploy.skip>-->
+    <!--  </properties>-->
 
-  <dependencies>
+    <dependencies>
 
-      <dependency>
-          <groupId>org.svnee</groupId>
-          <artifactId>easyfile-common</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-common</artifactId>
+        </dependency>
 
-      <dependency>
-          <groupId>org.mybatis.spring.boot</groupId>
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
           <artifactId>mybatis-spring-boot-starter</artifactId>
       </dependency>
 
