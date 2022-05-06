@@ -94,5 +94,4 @@ public class EasyFileCreatorAutoConfiguration {
     public ApplicationContentPostProcessor applicationContentPostProcessor(ApplicationContext applicationContext) {
         return new ApplicationContentPostProcessor(applicationContext);
     }
-
 }

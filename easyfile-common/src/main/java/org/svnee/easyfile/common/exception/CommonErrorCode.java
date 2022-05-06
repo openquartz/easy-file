@@ -9,6 +9,7 @@ import lombok.Getter;
 public enum CommonErrorCode implements EasyFileErrorCode {
 
     PARAM_ILLEGAL_ERROR("01", "参数不合法异常"),
+    DOWNLOAD_EXECUTE_REFLECT_ERROR("02", "下载反射执行异常"),
 
     ;
     private final String errorCode;

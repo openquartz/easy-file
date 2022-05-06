@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
-import org.svnee.easyfile.common.annotation.ExcelProperty;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
+import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
@@ -29,7 +29,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
     implements StreamDownloadExecutor<S, R, T> {
 
     /**
-     * 导出模板类分组 {@link ExcelProperty#group()}
+     * 导出模板类分组 {@link org.svnee.easyfile.common.annotation.ExcelProperty#group()}
      *
      * @param context context
      * @return Class<?>
@@ -60,7 +60,8 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
     @Override
     public void export(DownloaderRequestContext context) {
         // 创建workbook
-        try (ExcelBean excelBean = ExcelExports.createWorkbook()) {
+        try (ExcelBean excelBean = ExcelExports
+            .createWorkbook(ExcelGenProperty.getRowAccessWindowSize(), ExcelGenProperty.getSegmentationSheetRows())) {
             List<Field> fieldList = ExcelBeanUtils
                 .getFieldsByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
             // 设置表头header

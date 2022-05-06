@@ -1,7 +1,5 @@
 package org.svnee.easyfile.common.bean.excel;
 
-import static org.svnee.easyfile.common.bean.excel.ExcelBean.SEGMENTATION_SHEET_ROWS;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
@@ -24,6 +22,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.exception.CommonErrorCode;
+import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 
@@ -33,10 +33,14 @@ import org.svnee.easyfile.common.util.StringUtils;
  * @author svnee
  */
 @Slf4j
-public class ExcelExports {
+public final class ExcelExports {
+
+    private ExcelExports() {
+    }
 
     /**
      * 写入数据到Excel-流
+     *
      * @param excelBean excel类
      * @param outputStream 输出流
      */
@@ -44,21 +48,25 @@ public class ExcelExports {
         try {
             excelBean.getWorkbook().write(outputStream);
         } catch (IOException e) {
-            log.error("[write excel error] write data to workbook error,excelBean:{}", excelBean, e);
+            log.error("[ExcelExports#writeWorkbook] write data to workbook error,excelBean:{}", excelBean, e);
         }
     }
 
-    public static ExcelBean createWorkbook() {
-        Workbook workbook = new SXSSFWorkbook(1000);
+    public static ExcelBean createWorkbook(Integer rowAccessWindowSize, Integer segmentationSheetRows) {
+        Workbook workbook = new SXSSFWorkbook(rowAccessWindowSize);
 
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        ExcelBean excelBean = new ExcelBean();
+        ExcelBean excelBean = new ExcelBean(segmentationSheetRows);
         excelBean.setWorkbook(workbook);
         excelBean.setBaseStyle(cellStyle);
         return excelBean;
+    }
+
+    public static ExcelBean createWorkbook() {
+        return createWorkbook(1000, 1000000);
     }
 
     public static void writeHeader(ExcelBean excelBean, List<Field> exportFieldList) {
@@ -74,7 +82,7 @@ public class ExcelExports {
         }
         excelBean.getCurrentSheet();
         int rowIndex = excelBean.getCurrentRowIndex();
-        int remainSegmentationSheetRows = SEGMENTATION_SHEET_ROWS;
+        int remainSegmentationSheetRows = excelBean.getSegmentationSheetRows();
         // 不存在标题行则去掉一行
         if (rowIndex == 0) {
             remainSegmentationSheetRows = remainSegmentationSheetRows - 1;
@@ -165,8 +173,8 @@ public class ExcelExports {
             assert Objects.nonNull(getterMethod);
             return getterMethod.invoke(obj);
         } catch (Exception e) {
-            log.error("excel生成异常", e);
-            throw new RuntimeException("文件导出异常");
+            log.error("ExcelExports#reflectiveGetFieldValue,excel生成异常", e);
+            throw new EasyFileException(CommonErrorCode.DOWNLOAD_EXECUTE_REFLECT_ERROR);
         }
     }
 
@@ -180,9 +188,9 @@ public class ExcelExports {
 
     private static String firstIndexToUpper(String str) {
         if (str == null || str.length() <= 0) {
-            return "";
+            return StringUtils.EMPTY;
         }
-        String first = str.charAt(0) + "";
+        String first = str.charAt(0) + StringUtils.EMPTY;
         return str.replaceFirst(first, first.toUpperCase());
     }
 

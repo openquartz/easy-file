@@ -21,7 +21,7 @@ public class ExcelBean implements Closeable {
      * 切分sheet 最大行数
      * 必须大于 1 (标题行占1行)
      */
-    public static final int SEGMENTATION_SHEET_ROWS = 1000000;
+    private int segmentationSheetRows = 1000000;
 
     /**
      * 基础CellStyle
@@ -66,6 +66,13 @@ public class ExcelBean implements Closeable {
         }
     }
 
+    public ExcelBean() {
+    }
+
+    public ExcelBean(Integer segmentationSheetRows) {
+        this.segmentationSheetRows = segmentationSheetRows;
+    }
+
     public Workbook getWorkbook() {
         return Objects.nonNull(workbook) ? workbook : new SXSSFWorkbook(1000);
     }
@@ -74,7 +81,7 @@ public class ExcelBean implements Closeable {
      * 获取当前执行的Sheet
      */
     public Sheet getCurrentSheet() {
-        if (Objects.isNull(currentSheet) || currentRowIndex >= SEGMENTATION_SHEET_ROWS) {
+        if (Objects.isNull(currentSheet) || currentRowIndex >= segmentationSheetRows) {
             return nextSheet();
         }
         return currentSheet;

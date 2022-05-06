@@ -3,6 +3,7 @@ package org.svnee.easyfile.starter.spring.boot.autoconfig;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
 import org.svnee.easyfile.common.dictionary.StorageMode;
 
 /**
@@ -73,4 +74,23 @@ public class EasyFileDownloadProperties {
      */
     private String storageMode = StorageMode.LOCAL_MODE;
 
+    /**
+     * excel 最大Sheet行数
+     */
+    private Integer excelMaxSheetRows = 1000000;
+
+    /**
+     * excel 缓存到内存行数-刷盘
+     */
+    private Integer excelRowAccessWindowSize = 1000;
+
+    public void setExcelMaxSheetRows(Integer excelMaxSheetRows) {
+        ExcelGenProperty.setSegmentationSheetRows(excelMaxSheetRows);
+        this.excelMaxSheetRows = excelMaxSheetRows;
+    }
+
+    public void setExcelRowAccessWindowSize(Integer excelRowAccessWindowSize) {
+        ExcelGenProperty.setRowAccessWindowSize(excelRowAccessWindowSize);
+        this.excelRowAccessWindowSize = excelRowAccessWindowSize;
+    }
 }
