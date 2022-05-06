@@ -188,7 +188,8 @@ Client 配置
 | easyfile.download.enable-compress-file      | Client 是否开启文件压缩优化                                  | false             |
 | easyfile.download.min-enable-compress-mb-size | Client 启用文件压缩最小的大小，单位:MB 在启用文件压缩后生效 | 1                 |
 | easyfile.download.export-advisor-order      | Client下载切面顺序                                           | Integer.MAX_VALUE |
-
+| easyfile.download.excel-max-sheet-rows  |Client 导出Excel 单Sheet最大行数|1000000|
+| excel-row-access-window-size |Client 导出Excel 缓存最大行数|1000|
 
 #### 五、实现下载器
 

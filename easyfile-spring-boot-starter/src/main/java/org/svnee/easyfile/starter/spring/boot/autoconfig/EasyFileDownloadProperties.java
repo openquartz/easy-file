@@ -76,11 +76,13 @@ public class EasyFileDownloadProperties {
 
     /**
      * excel 最大Sheet行数
+     * excel-max-sheet-rows
      */
     private Integer excelMaxSheetRows = 1000000;
 
     /**
      * excel 缓存到内存行数-刷盘
+     * excel-row-access-window-size
      */
     private Integer excelRowAccessWindowSize = 1000;
 
