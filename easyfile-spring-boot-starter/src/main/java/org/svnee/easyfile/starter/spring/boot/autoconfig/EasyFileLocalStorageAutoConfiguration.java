@@ -6,6 +6,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -107,8 +108,15 @@ public class EasyFileLocalStorageAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(AsyncDownloadTaskMapper.class)
     @ConditionalOnClass(AsyncDownloadTaskMapper.class)
-    public AsyncDownloadTaskMapper asyncDownloadTaskMapper(JdbcTemplate jdbcTemplate) {
+    public AsyncDownloadTaskMapper asyncDownloadTaskMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new AsyncDownloadTaskMapperImpl(jdbcTemplate);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public JdbcTemplate localStorageJdbcTemplate(@Qualifier("easyFileLocalStorageDataSource") DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean

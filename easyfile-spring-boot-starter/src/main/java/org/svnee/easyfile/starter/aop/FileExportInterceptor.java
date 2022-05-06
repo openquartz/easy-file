@@ -5,6 +5,7 @@ import static org.svnee.easyfile.starter.exception.DownloadErrorCode.SYNC_DOWNLO
 
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.context.ApplicationContext;
@@ -36,6 +37,7 @@ import org.svnee.easyfile.storage.download.LimitingService;
  *
  * @author svnee
  **/
+@Slf4j
 public class FileExportInterceptor implements MethodInterceptor {
 
     private final EasyFileDownloadProperties downloadProperties;
@@ -88,6 +90,7 @@ public class FileExportInterceptor implements MethodInterceptor {
                     publishDownloadEndEvent(executor, requestContext, false, null, syncResult);
                     return syncResult;
                 } catch (Throwable throwable) {
+                    log.error("FileExportInterceptor,executeSync fail!requestContext:{}", requestContext, throwable);
                     publishDownloadEndEvent(executor, requestContext, false, throwable, null);
                     throw new EasyFileException(SYNC_DOWNLOAD_EXECUTE_ERROR);
                 }
@@ -97,6 +100,7 @@ public class FileExportInterceptor implements MethodInterceptor {
                     publishDownloadEndEvent(executor, requestContext, true, null, resultPair);
                     return resultPair;
                 } catch (Throwable ex) {
+                    log.error("FileExportInterceptor,executeAsync fail!requestContext:{}", requestContext, ex);
                     publishDownloadEndEvent(executor, requestContext, true, ex, null);
                     throw ex;
                 }

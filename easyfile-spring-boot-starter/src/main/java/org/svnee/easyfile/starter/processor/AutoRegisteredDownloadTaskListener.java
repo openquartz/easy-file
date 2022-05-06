@@ -35,7 +35,7 @@ public class AutoRegisteredDownloadTaskListener implements ApplicationListener<A
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info(
-            ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{}Ready! auto register async download task!",
+            ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{} Ready! auto register async download task!",
             downloadProperties.getAppId(),
             downloadProperties.getUnifiedAppId());
 
