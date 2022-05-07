@@ -65,10 +65,6 @@ public final class ExcelExports {
         return excelBean;
     }
 
-    public static ExcelBean createWorkbook() {
-        return createWorkbook(1000, 1000000);
-    }
-
     public static void writeHeader(ExcelBean excelBean, List<Field> exportFieldList) {
         if (Objects.nonNull(exportFieldList) && !exportFieldList.isEmpty() && excelBean.getCurrentRowIndex() == 0) {
             setHeader(excelBean, exportFieldList);
