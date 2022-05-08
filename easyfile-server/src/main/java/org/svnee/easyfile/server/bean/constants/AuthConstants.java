@@ -5,7 +5,10 @@ package org.svnee.easyfile.server.bean.constants;
  *
  * @author svnee
  */
-public class AuthConstants {
+public final class AuthConstants {
+
+    private AuthConstants() {
+    }
 
     public static final String SPLIT_STAR = "*";
 

@@ -55,16 +55,15 @@ public abstract class AbstractHealthCheck implements ServerHealthCheck, Initiali
      */
     private final ScheduledThreadPoolExecutor healthCheckExecutor = new ScheduledThreadPoolExecutor(
         1,
-            ThreadFactoryBuilder.builder()
-                .daemon(true)
-                .prefix("client.scheduled.health.check")
-                .build()
+        new ThreadFactoryBuilder()
+            .setDaemon(true)
+            .setNameFormat("ServerHealthCheck-thread-%d")
+            .build()
     );
 
     /**
      * Send health check.
      *
-     * @return
      */
     protected abstract boolean sendHealthCheck();
 

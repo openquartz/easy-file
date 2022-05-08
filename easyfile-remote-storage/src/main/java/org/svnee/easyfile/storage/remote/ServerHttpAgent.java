@@ -38,7 +38,7 @@ public class ServerHttpAgent implements HttpAgent {
         this.securityProxy.applyToken(this.serverListManager.getServerUrls());
         ScheduledExecutorService executorService = new ScheduledThreadPoolExecutor(
             1,
-            ThreadFactoryBuilder.builder().daemon(true).build()
+            new ThreadFactoryBuilder().setDaemon(true).setNameFormat("SecurityInfoRefresh-thread-%d").build()
         );
 
         long securityInfoRefreshIntervalMills = TimeUnit.SECONDS.toMillis(5);
