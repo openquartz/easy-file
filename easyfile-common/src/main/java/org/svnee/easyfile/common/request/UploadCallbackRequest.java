@@ -1,8 +1,12 @@
 package org.svnee.easyfile.common.request;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
+import org.svnee.easyfile.common.serdes.BaseEnumDeserializer;
+import org.svnee.easyfile.common.serdes.BaseEnumSerializer;
 
 /**
  * 上传回传结果请求
@@ -33,6 +37,8 @@ public class UploadCallbackRequest {
      * 上传文件状态
      */
     @NotNull(message = "上传状态不能为空")
+    @JsonSerialize(using = BaseEnumSerializer.class)
+    @JsonDeserialize(using = BaseEnumDeserializer.class)
     private UploadStatusEnum uploadStatus;
 
     /**

@@ -343,10 +343,9 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         if (bean instanceof ExportLimitingExecutor) {
             ExportLimitingExecutor executor = (ExportLimitingExecutor) bean;
             ExportLimitingExecutor existExecutor = exportLimitingExecutorMap.putIfAbsent(executor.strategy(), executor);
-            Asserts.isTrue(executor == existExecutor,
+            Asserts.isTrue(existExecutor == null || executor == existExecutor,
                 ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
                 executor.strategy());
-            exportLimitingExecutorMap.put(executor.strategy(), executor);
         }
         if (bean instanceof FileUrlTransformer) {
             FileUrlTransformer transformer = (FileUrlTransformer) bean;

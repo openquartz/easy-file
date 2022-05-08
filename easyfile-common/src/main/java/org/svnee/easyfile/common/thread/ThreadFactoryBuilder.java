@@ -22,9 +22,6 @@ public final class ThreadFactoryBuilder {
     private Thread.UncaughtExceptionHandler uncaughtExceptionHandler = null;
     private ThreadFactory backingThreadFactory = null;
 
-    public ThreadFactoryBuilder() {
-    }
-
     public ThreadFactoryBuilder setNameFormat(String nameFormat) {
         format(nameFormat, 0);
         this.nameFormat = nameFormat;

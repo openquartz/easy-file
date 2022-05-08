@@ -5,10 +5,11 @@ package org.svnee.easyfile.common.dictionary;
  *
  * @author svnee
  **/
-public enum EnableStatusEnum {
+public enum EnableStatusEnum implements BaseEnum<Integer> {
 
     ENABLE(0, "启用"),
     DISABLE(1, "禁用");
+
     private final Integer code;
     private final String desc;
 
@@ -17,10 +18,12 @@ public enum EnableStatusEnum {
         this.desc = desc;
     }
 
+    @Override
     public Integer getCode() {
         return code;
     }
 
+    @Override
     public String getDesc() {
         return desc;
     }

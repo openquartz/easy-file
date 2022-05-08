@@ -7,7 +7,7 @@ import java.util.stream.Stream;
  *
  * @author svnee
  */
-public enum UploadStatusEnum {
+public enum UploadStatusEnum implements BaseEnum<String> {
 
     /**
      * 未上传
@@ -56,10 +56,12 @@ public enum UploadStatusEnum {
             .orElse(null);
     }
 
+    @Override
     public String getCode() {
         return code;
     }
 
+    @Override
     public String getDesc() {
         return desc;
     }

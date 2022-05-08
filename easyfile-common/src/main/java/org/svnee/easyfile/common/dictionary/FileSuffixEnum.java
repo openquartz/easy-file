@@ -11,7 +11,7 @@ import org.svnee.easyfile.common.constants.Constants;
  */
 @Getter
 @AllArgsConstructor
-public enum FileSuffixEnum {
+public enum FileSuffixEnum implements BaseEnum<String> {
 
     EXCEL_07("xlsx", "2007版excel"),
     EXCEL_03("xls", "2003版excel"),

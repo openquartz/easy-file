@@ -1,7 +1,11 @@
 package org.svnee.easyfile.common.response;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
+import org.svnee.easyfile.common.serdes.BaseEnumDeserializer;
+import org.svnee.easyfile.common.serdes.BaseEnumSerializer;
 
 /**
  * 导出结果
@@ -19,6 +23,8 @@ public class ExportResult {
     /**
      * 上传状态
      */
+    @JsonSerialize(using = BaseEnumSerializer.class)
+    @JsonDeserialize(using = BaseEnumDeserializer.class)
     private UploadStatusEnum uploadStatus;
 
     /**

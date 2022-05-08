@@ -10,10 +10,18 @@ public enum LoginExceptionCode implements EasyFileErrorCode {
     ;
     private final String errorCode;
     private final String errorMsg;
+    private final boolean replacePlaceHold;
+
+    private static final String SIMPLE_BASE_CODE = "Login-";
 
     LoginExceptionCode(String errorCode, String errorMsg) {
-        this.errorCode = errorCode;
+        this(errorCode, errorMsg, false);
+    }
+
+    LoginExceptionCode(String errorCode, String errorMsg, boolean replacePlaceHold) {
+        this.errorCode = SIMPLE_BASE_CODE + errorCode;
         this.errorMsg = errorMsg;
+        this.replacePlaceHold = replacePlaceHold;
     }
 
     @Override

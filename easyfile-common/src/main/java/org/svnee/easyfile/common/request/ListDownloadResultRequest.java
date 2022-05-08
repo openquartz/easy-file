@@ -1,5 +1,6 @@
 package org.svnee.easyfile.common.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotBlank;
@@ -32,11 +33,13 @@ public class ListDownloadResultRequest {
      */
     private String downloadOperateBy;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date startDownloadTime;
 
     /**
      * 下载时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date endDownloadTime;
 
     /**

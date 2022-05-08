@@ -13,10 +13,14 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
+ * 集合工具类
+ *
  * @author svnee
- * @desc 集合工具类
  **/
-public class CollectionUtils {
+public final class CollectionUtils {
+
+    private CollectionUtils() {
+    }
 
     /**
      * Helper class to easily access cardinality properties of two collections.
@@ -82,7 +86,7 @@ public class CollectionUtils {
             return getFreq(obj, cardinalityB);
         }
 
-        private final int getFreq(final Object obj, final Map<?, Integer> freqMap) {
+        private int getFreq(final Object obj, final Map<?, Integer> freqMap) {
             final Integer count = freqMap.get(obj);
             if (count != null) {
                 return count;
@@ -220,7 +224,7 @@ public class CollectionUtils {
      */
     public static <T> List<T> newArrayList(Collection<T> collection) {
         if (Objects.isNull(collection)) {
-            return null;
+            return Collections.emptyList();
         }
         return new ArrayList<>(collection);
     }
@@ -228,20 +232,14 @@ public class CollectionUtils {
     public static <T> List<T> newArrayList(T... elements) {
         checkNotNull(elements);
         int capacity = computeArrayListCapacity(elements.length);
-        ArrayList<T> list = new ArrayList(capacity);
+        List<T> list = new ArrayList<>(capacity);
         Collections.addAll(list, elements);
         return list;
     }
 
     static int computeArrayListCapacity(int arraySize) {
         if (arraySize < 0) {
-            throw new IllegalArgumentException(
-                (new StringBuilder(40 + "arrayList".length()))
-                    .append("arrayList")
-                    .append(" cannot be negative but was: ")
-                    .append(arraySize)
-                    .toString()
-            );
+            throw new IllegalArgumentException("arrayList cannot be negative but was: " + arraySize);
         }
         return saturatedCast(5L + arraySize + (arraySize / 10));
     }
