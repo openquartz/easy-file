@@ -284,6 +284,71 @@ public interface ExportLimitingExecutor {
 }
 ```
 
+##### 缓存开启
+
+1、需要实现时,重写开启缓存方法
+
+```java
+    /**
+ * 开启导出缓存
+ *
+ * @param context context
+ * @return 是否开启缓存
+ */
+default boolean enableExportCache(BaseDownloaderRequestContext context){
+    return false;
+    }
+```
+
+2、提供需要判定缓存的key的结果-用于比较是否一致.如果cache-key 为空时,则缓存为匹配所有
+
+```java
+/**
+ * 文件导出执行器
+ *
+ * @author svnee
+ */
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Inherited
+public @interface FileExportExecutor {
+
+    /**
+     * 执行器code
+     */
+    String value();
+
+    /**
+     * 执行器中文解释
+     * 默认是{@link #value()}
+     */
+    String desc() default "";
+
+    /**
+     * 是否开启通知
+     */
+    boolean enableNotify() default false;
+
+    /**
+     * 最大服务端重试次数
+     * 小于等于0时不在执行重试。
+     */
+    int maxServerRetry() default 0;
+
+    /**
+     * cache-key
+     *
+     * @see BaseDownloaderRequestContext#getOtherMap() 中的key的对应的value值
+     * 如果有值则可以使用点使用指向最终的数据字段。例如：a.b.c
+     * 支持SpringEL表达式
+     */
+    String[] cacheKey() default {};
+}
+
+// 例如
+@FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出", cacheKey = {"age"})
+```
+
 #### easyfile-server 部署
 
 1、执行存储DB SQL \

@@ -15,7 +15,7 @@ import org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecu
  * @author svnee
  **/
 @Component
-@FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出")
+@FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出", cacheKey = {"age"})
 public class StudentStreamDownloadDemoExecutor extends
     AbstractStreamDownloadExcelExecutor<SqlSession, Cursor<Student>, Student> {
 
