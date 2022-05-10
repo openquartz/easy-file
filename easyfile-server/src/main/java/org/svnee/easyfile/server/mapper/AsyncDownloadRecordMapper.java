@@ -113,4 +113,15 @@ public interface AsyncDownloadRecordMapper {
     void download(@Param("id") Long id,
         @Param("uploadStatus") UploadStatusEnum uploadStatus);
 
+    /**
+     * 根据taskId和状态查询导出记录
+     *
+     * @param downloadTaskId 下载任务ID
+     * @param uploadStatus 导出状态
+     * @param offset 偏移量
+     * @return 导出结果
+     */
+    List<AsyncDownloadRecord> listByTaskIdAndStatus(@Param("downloadTaskId") Long downloadTaskId,
+        @Param("uploadStatus") UploadStatusEnum uploadStatus, @Param("offset") int offset);
+
 }

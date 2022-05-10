@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
-import org.springframework.expression.spel.standard.SpelExpression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
@@ -30,7 +29,6 @@ import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
-import org.svnee.easyfile.common.util.JsonFacade;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -78,7 +76,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
             .listByTaskIdAndStatus(request.getRegisterId(), UploadStatusEnum.SUCCESS, 500);
 
-        Optional.ofNullable(downloadRecordList)
+        ExportResult result = Optional.ofNullable(downloadRecordList)
             .orElse(Collections.emptyList())
             .stream()
             .filter(e -> matchCacheKey(request.getCacheKeyList(), request.getExportParamMap(), e))
@@ -89,6 +87,13 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
                 exportResult.setUploadStatus(UploadStatusEnum.FAIL);
                 return exportResult;
             });
+        if (UploadStatusEnum.SUCCESS.equals(result.getUploadStatus())) {
+            UploadInfoChangeCondition condition = buildUploadInfoConditionByResult(result, request.getRegisterId());
+            int affect = asyncDownloadRecordMapper.changeUploadInfo(condition);
+            if (affect > 0) {
+                return result;
+            }
+        }
         return null;
     }
 
@@ -143,7 +148,6 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         return exportResult;
     }
 
-
     @Override
     public void uploadCallback(UploadCallbackRequest request) {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
@@ -161,6 +165,19 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadInfoChangeCondition.setFileUrl(request.getFileUrl());
         uploadInfoChangeCondition.setFileSystem(request.getSystem());
         uploadInfoChangeCondition.setErrorMsg(request.getErrorMsg());
+        uploadInfoChangeCondition.setLastExecuteTime(new Date());
+        uploadInfoChangeCondition.setInvalidTime(new Date());
+        return uploadInfoChangeCondition;
+    }
+
+    private UploadInfoChangeCondition buildUploadInfoConditionByResult(ExportResult exportResult,
+        Long registerId) {
+        UploadInfoChangeCondition uploadInfoChangeCondition = new UploadInfoChangeCondition();
+        uploadInfoChangeCondition.setId(registerId);
+        uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
+        uploadInfoChangeCondition.setFileUrl(exportResult.getFileUrl());
+        uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
+        uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
         uploadInfoChangeCondition.setInvalidTime(new Date());
         return uploadInfoChangeCondition;

@@ -6,10 +6,12 @@ import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.ExportResult;
 
 /**
  * 异步下载任务服务
@@ -84,4 +86,12 @@ public interface AsyncDownloadService {
      * @return 撤销上传任务
      */
     CancelUploadResult cancel(CancelUploadRequest request);
+
+    /**
+     * 导出缓存结果
+     *
+     * @param request 导出缓存请求
+     * @return 导出结果
+     */
+    ExportResult loadingExportCacheResult(LoadingExportCacheRequest request);
 }

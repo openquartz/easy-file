@@ -11,10 +11,12 @@ import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 
 /**
@@ -113,6 +115,18 @@ public class DownloadController {
     public ResponseResult<String> download(@RequestBody @Valid DownloadRequest request) {
         String fileUrl = asyncDownloadService.download(request);
         return ResponseResult.ok(fileUrl);
+    }
+
+    /**
+     * 加载导出缓存服务
+     *
+     * @param request request
+     * @return 导出结果
+     */
+    @PostMapping("/loadingCache")
+    public ResponseResult<ExportResult> loadingCache(@RequestBody @Valid LoadingExportCacheRequest request) {
+        ExportResult exportResult = asyncDownloadService.loadingExportCacheResult(request);
+        return ResponseResult.ok(exportResult);
     }
 
 }

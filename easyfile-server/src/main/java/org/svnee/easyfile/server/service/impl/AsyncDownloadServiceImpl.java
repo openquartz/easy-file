@@ -3,10 +3,12 @@ package org.svnee.easyfile.server.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -14,6 +16,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
@@ -29,10 +34,12 @@ import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.common.util.MapUtils;
@@ -358,4 +365,101 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         }
         return bean;
     }
+
+    @Override
+    public ExportResult loadingExportCacheResult(LoadingExportCacheRequest request) {
+
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
+        Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
+
+        List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
+            .listByTaskIdAndStatus(request.getRegisterId(), UploadStatusEnum.SUCCESS, 500);
+
+        ExportResult result = Optional.ofNullable(downloadRecordList)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(e -> matchCacheKey(request.getCacheKeyList(), request.getExportParamMap(), e))
+            .findFirst().map(e -> convertRecord(e, request.getRegisterId()))
+            .orElseGet(() -> {
+                ExportResult exportResult = new ExportResult();
+                exportResult.setRegisterId(request.getRegisterId());
+                exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                return exportResult;
+            });
+
+        if (UploadStatusEnum.SUCCESS.equals(result.getUploadStatus())) {
+            // 刷新
+            UploadInfoChangeCondition condition = buildUploadInfoConditionByResult(result, request.getRegisterId());
+            int affect = asyncDownloadRecordMapper.changeUploadInfo(condition);
+            if (affect > 0) {
+                return result;
+            }
+        }
+        return null;
+    }
+
+    private boolean matchCacheKey(List<String> cacheKeyList, Map<String, Object> exportParamMap,
+        AsyncDownloadRecord downloadRecord) {
+        if (CollectionUtils.isEmpty(cacheKeyList)) {
+            return true;
+        }
+
+        BaseExecuteParam executeParam = JSONUtil.parseObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+        if (Objects.isNull(executeParam)) {
+            if (MapUtils.isEmpty(exportParamMap)) {
+                return true;
+            }
+        } else if (Objects.equals(executeParam.getOtherMap(), exportParamMap)) {
+            return true;
+        }
+        StandardEvaluationContext oriEvaluationContext = new StandardEvaluationContext();
+        oriEvaluationContext
+            .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
+
+        StandardEvaluationContext tarEvaluationContext = new StandardEvaluationContext();
+        tarEvaluationContext.setVariables(exportParamMap);
+
+        boolean matchedKey = true;
+        try {
+            for (String cacheKey : cacheKeyList) {
+                SpelExpressionParser expressionParser = new SpelExpressionParser();
+                Expression expression = expressionParser.parseExpression(cacheKey);
+                Object oriValue = expression.getValue(oriEvaluationContext);
+                Object targetValue = expression.getValue(tarEvaluationContext);
+                if (!Objects.equals(oriValue, targetValue)) {
+                    matchedKey = false;
+                }
+            }
+        } catch (Exception ex) {
+            log.error(
+                "[AsyncDownloadServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
+                cacheKeyList, exportParamMap, downloadRecord, ex);
+            matchedKey = false;
+        }
+        return matchedKey;
+    }
+
+    private ExportResult convertRecord(AsyncDownloadRecord downloadRecord, Long registerId) {
+        ExportResult exportResult = new ExportResult();
+        exportResult.setRegisterId(registerId);
+        exportResult.setUploadStatus(downloadRecord.getUploadStatus());
+        exportResult.setFileSystem(downloadRecord.getFileSystem());
+        exportResult.setFileUrl(downloadRecord.getFileUrl());
+        exportResult.setErrorMsg(downloadRecord.getErrorMsg());
+        return exportResult;
+    }
+
+    private UploadInfoChangeCondition buildUploadInfoConditionByResult(ExportResult exportResult,
+        Long registerId) {
+        UploadInfoChangeCondition uploadInfoChangeCondition = new UploadInfoChangeCondition();
+        uploadInfoChangeCondition.setId(registerId);
+        uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
+        uploadInfoChangeCondition.setFileUrl(exportResult.getFileUrl());
+        uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
+        uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
+        uploadInfoChangeCondition.setLastExecuteTime(new Date());
+        uploadInfoChangeCondition.setInvalidTime(new Date());
+        return uploadInfoChangeCondition;
+    }
+
 }

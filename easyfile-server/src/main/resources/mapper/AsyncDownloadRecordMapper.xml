@@ -269,5 +269,12 @@
         and upload_status = #{uploadStatus}
     </update>
 
-
+    <select id="listByTaskIdAndStatus" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from ef_async_download_record
+        where upload_status = #{uploadStatus.code}
+        and download_task_id = #{downloadTaskId}
+        order by update_time desc
+        limit #{offset}
+    </select>
 </mapper>

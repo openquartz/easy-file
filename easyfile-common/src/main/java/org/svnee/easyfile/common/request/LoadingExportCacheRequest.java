@@ -27,4 +27,9 @@ public class LoadingExportCacheRequest {
      */
     private Map<String, Object> exportParamMap;
 
+    /**
+     * 下载操作人
+     */
+    private String downloadOperateBy;
+
 }
