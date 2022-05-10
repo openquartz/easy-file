@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.mapper;
 
+import java.util.List;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
@@ -56,4 +57,13 @@ public interface AsyncDownloadRecordMapper {
      */
     int download(Long id, UploadStatusEnum uploadStatus);
 
+    /**
+     * 根据下载任务查询异步下载记录
+     *
+     * @param downloadTaskId 下载任务ID
+     * @param uploadStatus 上传状态
+     * @param offset 偏移量
+     * @return 异步导出下载记录
+     */
+    List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus, Integer offset);
 }

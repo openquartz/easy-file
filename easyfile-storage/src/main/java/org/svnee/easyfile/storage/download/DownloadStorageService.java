@@ -2,8 +2,10 @@ package org.svnee.easyfile.storage.download;
 
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.ExportResult;
 
 /**
  * 下载存储服务
@@ -19,6 +21,14 @@ public interface DownloadStorageService {
      * @return 是否启用运行成功
      */
     boolean enableRunning(Long registerId);
+
+    /**
+     * 加载导出缓存结果
+     *
+     * @param request 加载导出缓存请求
+     * @return 缓存结果
+     */
+    ExportResult loadingCacheExportResult(LoadingExportCacheRequest request);
 
     /**
      * 更新上传回调结果

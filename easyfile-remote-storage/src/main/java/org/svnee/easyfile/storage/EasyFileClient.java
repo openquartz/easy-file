@@ -8,10 +8,12 @@ import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.ExportResult;
 
 /**
  * EasyFileClient
@@ -82,5 +84,13 @@ public interface EasyFileClient {
      * @return 请求
      */
     ResponseResult<CancelUploadResult> cancelUpload(CancelUploadRequest request);
-    
+
+    /**
+     * 加载导出缓存结果
+     *
+     * @param request 请求
+     * @return 缓存导出结果
+     */
+    ResponseResult<ExportResult> loadingExportCacheResult(LoadingExportCacheRequest request);
+
 }

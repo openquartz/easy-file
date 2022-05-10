@@ -25,4 +25,6 @@ public final class RemoteUrlConstants {
     public static final String DOWNLOAD_FILE_URL = "/easyfile/download/file";
 
     public static final String DOWNLOAD_CANCEL_URL = "/easyfile/download/cancel";
+
+    public static final String LOADING_EXPORT_CACHE_RESULT_URL = "/easyfile/download/loadingCache";
 }

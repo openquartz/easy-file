@@ -22,6 +22,16 @@ public interface BaseDownloadExecutor {
     boolean enableAsync(DownloaderRequestContext context);
 
     /**
+     * 开启导出缓存
+     *
+     * @param context context
+     * @return 是否开启缓存
+     */
+    default boolean enableExportCache(BaseDownloaderRequestContext context) {
+        return false;
+    }
+
+    /**
      * 同步导出逻辑。用户实现
      * 只需实现,不需调用
      *

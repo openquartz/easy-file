@@ -6,10 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.expression.Expression;
+import org.springframework.expression.spel.standard.SpelExpression;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
+import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.svnee.easyfile.common.bean.BaseExecuteParam;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -18,10 +24,13 @@ import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
+import org.svnee.easyfile.common.util.JsonFacade;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -60,6 +69,80 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         }
         return false;
     }
+
+    @Override
+    public ExportResult loadingCacheExportResult(LoadingExportCacheRequest request) {
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
+        Asserts.notNull(downloadRecord, DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_EXIST);
+
+        List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
+            .listByTaskIdAndStatus(request.getRegisterId(), UploadStatusEnum.SUCCESS, 500);
+
+        Optional.ofNullable(downloadRecordList)
+            .orElse(Collections.emptyList())
+            .stream()
+            .filter(e -> matchCacheKey(request.getCacheKeyList(), request.getExportParamMap(), e))
+            .findFirst().map(e -> convertRecord(e, request.getRegisterId()))
+            .orElseGet(() -> {
+                ExportResult exportResult = new ExportResult();
+                exportResult.setRegisterId(request.getRegisterId());
+                exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                return exportResult;
+            });
+        return null;
+    }
+
+    private boolean matchCacheKey(List<String> cacheKeyList, Map<String, Object> exportParamMap,
+        AsyncDownloadRecord downloadRecord) {
+        if (CollectionUtils.isEmpty(cacheKeyList)) {
+            return true;
+        }
+
+        BaseExecuteParam executeParam = JSONUtil.parseObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+        if (Objects.isNull(executeParam)) {
+            if (MapUtils.isEmpty(exportParamMap)) {
+                return true;
+            }
+        } else if (Objects.equals(executeParam.getOtherMap(), exportParamMap)) {
+            return true;
+        }
+        StandardEvaluationContext oriEvaluationContext = new StandardEvaluationContext();
+        oriEvaluationContext
+            .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
+
+        StandardEvaluationContext tarEvaluationContext = new StandardEvaluationContext();
+        tarEvaluationContext.setVariables(exportParamMap);
+
+        boolean matchedKey = true;
+        try {
+            for (String cacheKey : cacheKeyList) {
+                SpelExpressionParser expressionParser = new SpelExpressionParser();
+                Expression expression = expressionParser.parseExpression(cacheKey);
+                Object oriValue = expression.getValue(oriEvaluationContext);
+                Object targetValue = expression.getValue(tarEvaluationContext);
+                if (!Objects.equals(oriValue, targetValue)) {
+                    matchedKey = false;
+                }
+            }
+        } catch (Exception ex) {
+            log.error(
+                "[LocalDownloadStorageServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
+                cacheKeyList, exportParamMap, downloadRecord, ex);
+            matchedKey = false;
+        }
+        return matchedKey;
+    }
+
+    private ExportResult convertRecord(AsyncDownloadRecord downloadRecord, Long registerId) {
+        ExportResult exportResult = new ExportResult();
+        exportResult.setRegisterId(registerId);
+        exportResult.setUploadStatus(downloadRecord.getUploadStatus());
+        exportResult.setFileSystem(downloadRecord.getFileSystem());
+        exportResult.setFileUrl(downloadRecord.getFileUrl());
+        exportResult.setErrorMsg(downloadRecord.getErrorMsg());
+        return exportResult;
+    }
+
 
     @Override
     public void uploadCallback(UploadCallbackRequest request) {
@@ -172,7 +255,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
 
     @Override
     public String download(DownloadRequest request) {
-        log.info("[AsyncDownload]#file download,request:{}", request);
+        log.info("[AsyncDownload##download]file download,request:{}", request);
 
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);

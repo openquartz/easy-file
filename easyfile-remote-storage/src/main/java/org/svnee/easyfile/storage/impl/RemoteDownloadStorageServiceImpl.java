@@ -18,12 +18,13 @@ import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
-import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
 import org.svnee.easyfile.storage.exception.RemoteUploadExceptionCode;
 
 /**
@@ -51,6 +52,22 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
             return result.getData();
         }
         return false;
+    }
+
+    @Override
+    public ExportResult loadingCacheExportResult(LoadingExportCacheRequest request) {
+        log.info("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{}", request);
+        try {
+            ResponseResult<ExportResult> result = easyFileClient.loadingExportCacheResult(request);
+            log.info("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{},response:{}", request,
+                result);
+            if (Objects.nonNull(result)) {
+                return result.getData();
+            }
+        } catch (Exception ex) {
+            log.warn("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{},ex:{}", request, ex);
+        }
+        return null;
     }
 
     @Override

@@ -5,6 +5,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 
 /**
  * 文件导出执行器
@@ -38,4 +39,12 @@ public @interface FileExportExecutor {
      */
     int maxServerRetry() default 0;
 
+    /**
+     * cache-key
+     *
+     * @see BaseDownloaderRequestContext#getOtherMap() 中的key的对应的value值
+     * 如果有值则可以使用点使用指向最终的数据字段。例如：a.b.c
+     * 支持SpringEL表达式
+     */
+    String[] cacheKey() default {};
 }

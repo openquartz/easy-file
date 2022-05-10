@@ -114,6 +114,19 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         return jdbcTemplate.update(sql, id, uploadStatus.getCode());
     }
 
+    @Override
+    public List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus,
+        Integer offset) {
+        final String sql =
+            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+                + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+                + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from ef_async_download_record "
+                + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
+        return jdbcTemplate
+            .query(sql, new Object[]{downloadTaskId, uploadStatus.getCode(), offset},
+                new AsyncDownloadRecordRowMapper());
+    }
+
     private static class AsyncDownloadRecordRowMapper implements RowMapper<AsyncDownloadRecord> {
 
         @Override

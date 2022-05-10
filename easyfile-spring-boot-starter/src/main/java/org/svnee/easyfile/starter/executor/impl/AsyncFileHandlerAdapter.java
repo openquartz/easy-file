@@ -23,8 +23,10 @@ import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.EasyFileException;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
+import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.CompressUtils;
 import org.svnee.easyfile.common.util.DateFormatUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
@@ -70,6 +72,18 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     @Override
     public ExportResult handleResult(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest,
         Long registerId) {
+        // 查询导出执行器FileExportExecutor
+        Class<?> clazz = SpringContextUtil.getRealClass(executor);
+        FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
+        // 如果开启缓存-调用远程服务查询缓存
+        if (executor.enableExportCache(baseRequest)) {
+            LoadingExportCacheRequest cacheRequest =
+                buildLoadingExportCacheRequest(baseRequest, exportExecutor, registerId);
+            ExportResult exportResult = downloadStorageService.loadingCacheExportResult(cacheRequest);
+            if (Objects.nonNull(exportResult) && UploadStatusEnum.SUCCESS.equals(exportResult.getUploadStatus())) {
+                return exportResult;
+            }
+        }
 
         // 校验是否可以执行运行
         if (!downloadStorageService.enableRunning(registerId)) {
@@ -77,8 +91,6 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                 registerId);
             return buildDefaultRejectExportResult(registerId);
         }
-        Class<?> clazz = SpringContextUtil.getRealClass(executor);
-        FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
 
         Pair<String, String> fileUrl;
         boolean handleBreakFlag;
@@ -110,6 +122,16 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         ExportResult exportResult = buildExportResult(request);
         executor.asyncCompleteCallback(exportResult, baseRequest);
         return exportResult;
+    }
+
+    private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseDownloaderRequestContext baseRequest,
+        FileExportExecutor exportExecutor,
+        Long registerId) {
+        LoadingExportCacheRequest loadingExportCacheRequest = new LoadingExportCacheRequest();
+        loadingExportCacheRequest.setRegisterId(registerId);
+        loadingExportCacheRequest.setCacheKeyList(CollectionUtils.newArrayList(exportExecutor.cacheKey()));
+        loadingExportCacheRequest.setExportParamMap(baseRequest.getOtherMap());
+        return loadingExportCacheRequest;
     }
 
     /**

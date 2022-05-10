@@ -9,10 +9,12 @@ import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.TypeReference;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.remote.HttpAgent;
@@ -71,5 +73,10 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     @Override
     public ResponseResult<CancelUploadResult> cancelUpload(CancelUploadRequest request) {
         return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CANCEL_URL, request, CancelUploadResult.class);
+    }
+
+    @Override
+    public ResponseResult<ExportResult> loadingExportCacheResult(LoadingExportCacheRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.LOADING_EXPORT_CACHE_RESULT_URL, request, ExportResult.class);
     }
 }
