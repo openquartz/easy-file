@@ -57,7 +57,7 @@ public enum LockKeyFormatter {
      * @return lockKey
      */
     public String generateLockKey(String applicationName, Object... placeHolder) {
-        StringJoiner joiner = new StringJoiner(Constants.COMMA_SPLITTER);
+        StringJoiner joiner = new StringJoiner(Constants.COLON_SPLITTER);
         joiner.add(applicationName);
         joiner.add(this.getKeyPrefix());
         joiner.add(MessageFormat.format(this.getPattern(), placeHolder));

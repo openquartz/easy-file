@@ -27,7 +27,7 @@ public class RegisterBaseEnumHandlerConfig implements ConfigurationCustomizer {
 
         if (StringUtils.isNotBlank(typeEnumsPackage)) {
             log.info("[RegisterEnumHandlerConfig] -------->>>>>>>>>> init mybatis self enum, dir:{}", typeEnumsPackage);
-            String[] enumPackagesDirArr = typeEnumsPackage.split(Constants.COMMA_SPLITTER);
+            String[] enumPackagesDirArr = typeEnumsPackage.split(Constants.COLON_SPLITTER);
             TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
             final Set<Class<? extends BaseEnum>> allSubEnumClassSet = ClassUtil
                 .getAllSubEnumClass(BaseEnum.class, enumPackagesDirArr);

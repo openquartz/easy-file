@@ -105,7 +105,12 @@ public final class Constants {
     /**
      * 分隔符
      */
-    public static final String COMMA_SPLITTER = ":";
+    public static final String COLON_SPLITTER = ":";
+
+    /**
+     * 逗号分割符号
+     */
+    public static final String COMMA_SPLITTER = ",";
 
     /**
      * 流式导出增强推荐长度
