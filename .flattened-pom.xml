@@ -2,29 +2,29 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.svnee</groupId>
-    <artifactId>easy-file</artifactId>
-    <version>1.0.0</version>
-    <packaging>pom</packaging>
-    <name>${project.artifactId}</name>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.svnee</groupId>
+  <artifactId>easy-file</artifactId>
+  <version>1.0.0</version>
+  <packaging>pom</packaging>
+  <name>${project.artifactId}</name>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
   </licenses>
-    <modules>
-        <module>easyfile-common</module>
-        <module>easyfile-server</module>
-        <module>easyfile-spring-boot-starter</module>
-        <module>easyfile-storage</module>
-        <module>easyfile-remote-storage</module>
-        <module>easyfile-local-storage</module>
-        <module>easyfile-local-example</module>
-        <module>easyfile-remote-example</module>
-    </modules>
+  <modules>
+    <module>easyfile-common</module>
+    <module>easyfile-server</module>
+    <module>easyfile-spring-boot-starter</module>
+    <module>easyfile-storage</module>
+    <module>easyfile-remote-storage</module>
+    <module>easyfile-local-storage</module>
+    <module>easyfile-local-example</module>
+    <module>easyfile-remote-example</module>
+  </modules>
   <distributionManagement>
     <repository>
       <id>ossrh</id>
@@ -39,13 +39,14 @@
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
     <hutool-all.version>5.4.7</hutool-all.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
-      <mybatis-plus.version>3.5.0</mybatis-plus.version>
+    <mybatis-plus.version>3.5.0</mybatis-plus.version>
     <slf4j-api.version>1.7.7</slf4j-api.version>
     <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    <reflections.version>0.9.10</reflections.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <mybatis.version>2.0.1</mybatis.version>
+    <mybatis.version>2.0.1</mybatis.version>
     <redisson.version>3.9.1</redisson.version>
     <javax.persistence.version>2.2</javax.persistence.version>
     <revision>1.0.0</revision>
@@ -106,30 +107,30 @@
         <artifactId>okhttp</artifactId>
         <version>${okhttp3.version}</version>
       </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>${hutool-all.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>${javax.persistence.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate.validator</groupId>
-            <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator.version}</version>
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-all</artifactId>
+        <version>${hutool-all.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.baomidou</groupId>
+        <artifactId>mybatis-plus-boot-starter</artifactId>
+        <version>${mybatis-plus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>${mybatis.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.persistence</groupId>
+        <artifactId>javax.persistence-api</artifactId>
+        <version>${javax.persistence.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>${hibernate-validator.version}</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
@@ -196,6 +197,11 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt</artifactId>
         <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>${reflections.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
