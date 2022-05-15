@@ -17,8 +17,7 @@ public class SpiSupport {
     }
 
     public static <T extends ServiceProvider> T getServiceProvider(Class<T> clazz, String providerName) {
-        T provider = (T) REGISTRY.getServiceProvider(clazz, providerName);
-        return provider;
+        return (T) REGISTRY.getServiceProvider(clazz, providerName);
     }
 
     public static <T extends ServiceProvider> List<T> getServiceProviders(Class<T> clazz) {

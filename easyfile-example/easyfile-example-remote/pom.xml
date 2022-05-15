@@ -1,66 +1,70 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.svnee</groupId>
-        <artifactId>easy-file</artifactId>
-        <version>1.0.0</version>
+        <artifactId>easyfile-example</artifactId>
+        <version>${revision}</version>
     </parent>
-    <groupId>org.svnee</groupId>
-    <artifactId>easyfile-remote-example</artifactId>
-    <version>1.0.0</version>
+
+    <artifactId>easyfile-example-remote</artifactId>
+    <packaging>jar</packaging>
+
     <name>${project.artifactId}</name>
     <description>Demo project for Spring Boot</description>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+
     <properties>
         <maven.deploy.skip>true</maven.deploy.skip>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>org.svnee</groupId>
             <artifactId>easyfile-spring-boot-starter</artifactId>
             <version>${revision}</version>
         </dependency>
+
         <dependency>
             <groupId>org.svnee</groupId>
             <artifactId>easyfile-remote-storage</artifactId>
-            <version>${revision}</version>
         </dependency>
+
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
         </dependency>
+
         <dependency>
             <groupId>javax.persistence</groupId>
             <artifactId>javax.persistence-api</artifactId>
         </dependency>
+
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>
+
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
@@ -77,4 +81,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

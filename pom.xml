@@ -16,8 +16,7 @@
         <module>easyfile-storage</module>
         <module>easyfile-remote-storage</module>
         <module>easyfile-local-storage</module>
-        <module>easyfile-local-example</module>
-        <module>easyfile-remote-example</module>
+        <module>easyfile-example</module>
     </modules>
 
     <name>${project.artifactId}</name>
@@ -58,6 +57,7 @@
         <maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
         <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
         <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+        <maven.deploy.version>2.8.2</maven.deploy.version>
         <license-maven-plugin.version>3.0</license-maven-plugin.version>
     </properties>
     <dependencyManagement>

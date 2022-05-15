@@ -5,11 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.svnee</groupId>
-        <artifactId>easy-file</artifactId>
+        <artifactId>easyfile-example</artifactId>
         <version>1.0.0</version>
     </parent>
     <groupId>org.svnee</groupId>
-    <artifactId>easyfile-local-example</artifactId>
+    <artifactId>easyfile-example-local</artifactId>
     <version>1.0.0</version>
     <name>${project.artifactId}</name>
     <description>Demo project for Spring Boot</description>
@@ -21,15 +21,15 @@
         </license>
     </licenses>
     <properties>
-    <maven.deploy.skip>true</maven.deploy.skip>
-  </properties>
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
     <dependency>
@@ -37,29 +37,28 @@
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-      <dependency>
-          <groupId>org.svnee</groupId>
-          <artifactId>easyfile-spring-boot-starter</artifactId>
-          <version>${revision}</version>
-      </dependency>
-      <dependency>
-          <groupId>org.svnee</groupId>
-          <artifactId>easyfile-local-storage</artifactId>
-          <version>${revision}</version>
-      </dependency>
-      <dependency>
-          <groupId>com.baomidou</groupId>
-          <artifactId>mybatis-plus-boot-starter</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>javax.persistence</groupId>
-          <artifactId>javax.persistence-api</artifactId>
-      </dependency>
-      <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <scope>runtime</scope>
-      </dependency>
+    <dependency>
+      <groupId>org.svnee</groupId>
+      <artifactId>easyfile-spring-boot-starter</artifactId>
+      <version>${revision}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.svnee</groupId>
+      <artifactId>easyfile-local-storage</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.persistence</groupId>
+      <artifactId>javax.persistence-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
   </dependencies>
   <build>
     <finalName>${project.artifactId}</finalName>

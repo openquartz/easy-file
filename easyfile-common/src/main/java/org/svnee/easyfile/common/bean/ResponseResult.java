@@ -3,7 +3,7 @@ package org.svnee.easyfile.common.bean;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.io.Serializable;
-import org.springframework.util.StringUtils;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * Result
@@ -36,6 +36,7 @@ public class ResponseResult<T> implements Serializable {
         this.code = code;
         this.success = success;
         this.data = data;
+        this.requestValue = requestValue;
         this.timestamp = String.valueOf(System.currentTimeMillis());
     }
 
@@ -45,6 +46,7 @@ public class ResponseResult<T> implements Serializable {
         this.code = code;
         this.success = success;
         this.data = data;
+        this.requestValue = requestValue;
         this.timestamp = String.valueOf(System.currentTimeMillis());
         this.errorInfo = errorInfo;
     }
@@ -101,31 +103,34 @@ public class ResponseResult<T> implements Serializable {
     }
 
     public String getMessage() {
-        return StringUtils.isEmpty(this.message) ? (this.isSuccess() ? "请求成功" : this.message) : this.message;
+        if (StringUtils.isBlank(this.message)) {
+            return this.isSuccess() ? "请求成功" : this.message;
+        }
+        return this.message;
     }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
-    public static ResponseResult ok() {
-        return new ResponseResult(true, "200", (String) null, (Object) null);
+    public static <T> ResponseResult<T> ok() {
+        return new ResponseResult<>(true, "200", null, null);
     }
 
     public static <T> ResponseResult<T> ok(T data) {
-        return new ResponseResult(true, "200", (String) null, data);
+        return new ResponseResult<>(true, "200", null, data);
     }
 
-    public static ResponseResult fail(String errorCode, String message) {
-        return new ResponseResult(false, errorCode, message, (Object) null);
+    public static <T> ResponseResult<T> fail(String errorCode, String message) {
+        return new ResponseResult<>(false, errorCode, message, null);
     }
 
     public static <T> ResponseResult<T> fail(String errorCode, String message, T data) {
-        return new ResponseResult(false, errorCode, message, data);
+        return new ResponseResult<>(false, errorCode, message, data);
     }
 
     public static <T> ResponseResult<T> fail(String errorCode, String message, T data, String errorInfo) {
-        return new ResponseResult(false, errorCode, message, data, (Object) null, errorInfo);
+        return new ResponseResult<>(false, errorCode, message, data, null, errorInfo);
     }
 
     @Override
