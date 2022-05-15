@@ -45,7 +45,7 @@ public class SecurityProxy {
     public boolean applyToken(List<String> servers) {
         try {
             if ((System.currentTimeMillis() - lastRefreshTime) < TimeUnit.SECONDS
-                    .toMillis(tokenTtl - tokenRefreshWindow)) {
+                .toMillis(tokenTtl - tokenRefreshWindow)) {
                 return true;
             }
 
@@ -55,9 +55,9 @@ public class SecurityProxy {
                     return true;
                 }
             }
-        } catch (Throwable ignore) {
+        } catch (Throwable ex) {
             // ignore
-            log.warn("[SecurityProxy#applyToken] servers:{},handle error!", servers, ignore);
+            log.warn("[SecurityProxy#applyToken] servers:{},handle error,errorMsg:{}!", servers, ex.getMessage());
         }
 
         return false;
