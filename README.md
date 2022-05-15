@@ -348,7 +348,7 @@ public @interface FileExportExecutor {
 }
 
 // 例如
-@FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出", cacheKey = {"age"})
+@FileExportExecutor(value = "studentStreamDownloadDemo", desc = "Student导出", cacheKey = {"#request.age"})
 ```
 
 #### easyfile-server 部署
