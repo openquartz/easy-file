@@ -25,7 +25,7 @@ public enum RemoteUploadExceptionCode implements EasyFileErrorCode {
     private static final String SIMPLE_BASE_CODE = "RemoteUploadError-";
 
     RemoteUploadExceptionCode(String errorCode, String errorMsg) {
-        this.errorCode = errorCode;
+        this.errorCode = SIMPLE_BASE_CODE + errorCode;
         this.errorMsg = errorMsg;
     }
 

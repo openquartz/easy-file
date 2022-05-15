@@ -6,6 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * 文件导出执行器
@@ -26,7 +27,7 @@ public @interface FileExportExecutor {
      * 执行器中文解释
      * 默认是{@link #value()}
      */
-    String desc() default "";
+    String desc() default StringUtils.EMPTY;
 
     /**
      * 是否开启通知
@@ -43,7 +44,7 @@ public @interface FileExportExecutor {
      * cache-key
      *
      * @see BaseDownloaderRequestContext#getOtherMap() 中的key的对应的value值
-     * 如果有值则可以使用点使用指向最终的数据字段。例如：a.b.c
+     * 如果有值则可以使用点使用指向最终的数据字段。例如：#a.b.c
      * 支持SpringEL表达式
      */
     String[] cacheKey() default {};
