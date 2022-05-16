@@ -1,7 +1,6 @@
 package org.svnee.easyfile.starter.executor.impl;
 
 import java.io.Closeable;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +9,7 @@ import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
+import org.svnee.easyfile.common.bean.excel.ExcelFiled;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.GenericUtils;
@@ -62,8 +62,8 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
         // 创建workbook
         try (ExcelBean excelBean = ExcelExports
             .createWorkbook(ExcelGenProperty.getRowAccessWindowSize(), ExcelGenProperty.getSegmentationSheetRows())) {
-            List<Field> fieldList = ExcelBeanUtils
-                .getFieldsByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
+            List<ExcelFiled> fieldList = ExcelBeanUtils
+                .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
             // 设置表头header
             ExcelExports.writeHeader(excelBean, fieldList);
 

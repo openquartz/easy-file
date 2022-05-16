@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
+import org.svnee.easyfile.common.bean.excel.ExcelFiled;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.common.util.PageUtil;
@@ -51,8 +52,8 @@ public abstract class AbstractPageDownloadExcelExecutor<T> implements PageShardi
         }
         try (ExcelBean excelBean = ExcelExports
             .createWorkbook(ExcelGenProperty.getRowAccessWindowSize(), ExcelGenProperty.getSegmentationSheetRows())) {
-            List<Field> fieldList = ExcelBeanUtils
-                .getFieldsByGroup(GenericUtils.getClassT(this, 0), exportGroup(context));
+            List<ExcelFiled> fieldList = ExcelBeanUtils
+                .getExcelFiledByGroup(GenericUtils.getClassT(this, 0), exportGroup(context));
 
             if (total.getTotal() <= 0) {
                 // 无结果导出

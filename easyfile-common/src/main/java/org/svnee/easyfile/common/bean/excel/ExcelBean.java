@@ -44,7 +44,7 @@ public class ExcelBean implements Closeable {
     private int sumRow;
 
     /**
-     *
+     * 当前行下标
      */
     private int currentRowIndex;
 
@@ -61,7 +61,7 @@ public class ExcelBean implements Closeable {
         if (Objects.nonNull(workbook)) {
             try {
                 workbook.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
     }

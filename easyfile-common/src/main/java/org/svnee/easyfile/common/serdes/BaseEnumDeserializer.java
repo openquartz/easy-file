@@ -14,7 +14,7 @@ import org.svnee.easyfile.common.util.StringUtils;
 /**
  * BaseEnum反序列化
  *
- * @author xuzhao
+ * @author svnee
  */
 @Data
 public class BaseEnumDeserializer extends JsonDeserializer<BaseEnum<?>> implements ContextualDeserializer {

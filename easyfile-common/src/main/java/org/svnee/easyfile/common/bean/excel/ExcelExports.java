@@ -65,14 +65,19 @@ public final class ExcelExports {
         return excelBean;
     }
 
-    public static void writeHeader(ExcelBean excelBean, List<Field> exportFieldList) {
-        if (Objects.nonNull(exportFieldList) && !exportFieldList.isEmpty() && excelBean.getCurrentRowIndex() == 0) {
+    /**
+     * 写入表头
+     *
+     * @param excelBean excelBean
+     * @param exportFieldList 导出字段
+     */
+    public static void writeHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList) {
+        if (CollectionUtils.isNotEmpty(exportFieldList) && excelBean.getCurrentRowIndex() == 0) {
             setHeader(excelBean, exportFieldList);
-            excelBean.writeRow(1);
         }
     }
 
-    public static <T> void writeData(ExcelBean excelBean, List<Field> exportFieldList, List<T> rowList) {
+    public static <T> void writeData(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> rowList) {
         if (CollectionUtils.isEmpty(rowList)) {
             return;
         }
@@ -102,7 +107,7 @@ public final class ExcelExports {
         }
     }
 
-    private static <T> void setRowsWithHeader(ExcelBean excelBean, List<Field> exportFieldList, List<T> dataRows) {
+    private static <T> void setRowsWithHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> dataRows) {
         writeHeader(excelBean, exportFieldList);
         setRows(excelBean.getCurrentSheet(),
             exportFieldList, dataRows,
@@ -111,25 +116,66 @@ public final class ExcelExports {
         excelBean.writeRow(dataRows.size());
     }
 
-    private static void setHeader(ExcelBean excelBean, List<Field> exportFields) {
+    private static void setHeader(ExcelBean excelBean, List<ExcelFiled> exportFields) {
         if (CollectionUtils.isEmpty(exportFields)) {
             return;
         }
         Sheet sheet = excelBean.getCurrentSheet();
+
         Row headerRow = sheet.createRow(0);
+        excelBean.writeRow(1);
+
+        boolean needSubTitle = exportFields.stream()
+            .anyMatch(e -> CollectionUtils.isNotEmpty(e.getSubFiledList())
+                && StringUtils.isNotBlank(e.getExcelProperty().value()));
+        Row subHeaderRow = needSubTitle ? sheet.createRow(1) : headerRow;
+        excelBean.writeRow(needSubTitle ? 1 : 0);
+
         CellStyle cellStyle = decorateHeader(excelBean);
         int index = 0;
-        for (Field field : exportFields) {
-            ExcelProperty excelProperty = Objects
-                .requireNonNull(AnnotatedElementUtils.findMergedAnnotation(field, ExcelProperty.class));
-            sheet.setColumnWidth(index, excelProperty.width());
-            String headerName = excelProperty.value();
-            Cell cell = headerRow.createCell(index++);
-            cell.setCellStyle(cellStyle);
-            if (StringUtils.isNotBlank(headerName)) {
-                setCellValue(cell, headerName, field);
+        excelBean.writeRow(1);
+        for (ExcelFiled field : exportFields) {
+            if (!field.isCollection() && CollectionUtils.isEmpty(field.getSubFiledList())) {
+                ExcelProperty excelProperty = field.getExcelProperty();
+                sheet.setColumnWidth(index, excelProperty.width());
+                String headerName = excelProperty.value();
+                Cell cell = headerRow.createCell(index);
+                cell.setCellStyle(cellStyle);
+                if (StringUtils.isNotBlank(headerName)) {
+                    setCellValue(cell, headerName, field);
+                } else {
+                    setCellValue(cell, field.getField().getName(), field);
+                }
+
+                if (needSubTitle) {
+                    Cell subCell = subHeaderRow.createCell(index);
+                    subCell.setCellStyle(cellStyle);
+                    // 合并单元格到列
+                    // 设置单元格并做合并 (index-->index+subIndex)
+                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 1, index, index);
+                }
+                index++;
             } else {
-                setCellValue(cell, field, field);
+                // 如果设置的单元格属性的为空则不设置子表头
+                if (StringUtils.isNotBlank(field.getExcelProperty().value())) {
+                    int subIndex = index;
+                    for (ExcelFiled subField : field.getSubFiledList()) {
+                        Cell cell = headerRow.createCell(subIndex++);
+                        cell.setCellStyle(cellStyle);
+                        setCellValue(cell, field.getExcelProperty().value(), field);
+                    }
+                    // 设置单元格并做合并 (index-->index+subIndex)
+                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() + index);
+                }
+                for (ExcelFiled subField : field.getSubFiledList()) {
+                    Cell cell = subHeaderRow.createCell(index++);
+                    cell.setCellStyle(cellStyle);
+                    if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
+                        setCellValue(cell, subField.getExcelProperty().value(), field);
+                    } else {
+                        setCellValue(cell, subField.getField().getName(), field);
+                    }
+                }
             }
         }
     }
@@ -142,14 +188,14 @@ public final class ExcelExports {
         return cellStyle;
     }
 
-    private static <T> void setRows(Sheet sheet, List<Field> exportFields, List<T> dataRows, CellStyle cellStyle,
+    private static <T> void setRows(Sheet sheet, List<ExcelFiled> exportFields, List<T> dataRows, CellStyle cellStyle,
         int startRowNum) {
         int rowIndex = startRowNum;
         for (Object dataRow : dataRows) {
             Row row = sheet.createRow(rowIndex++);
             int columnIndex = 0;
-            for (Field field : exportFields) {
-                Object value = reflectiveGetFieldValue(dataRow, field);
+            for (ExcelFiled field : exportFields) {
+                Object value = reflectiveGetFieldValue(dataRow, field.getField());
                 Cell cell = row.createCell(columnIndex++);
                 cell.setCellStyle(cellStyle);
                 setCellValue(cell, value, field);
@@ -190,8 +236,8 @@ public final class ExcelExports {
         return str.replaceFirst(first, first.toUpperCase());
     }
 
-    private static void setCellValue(Cell cell, Object obj, Field field) {
-        String value = getValue(obj, field);
+    private static void setCellValue(Cell cell, Object obj, ExcelFiled field) {
+        String value = getValue(obj, field.getField());
         // 过滤 null 值转换为 空格
         if (Objects.isNull(value) || "null".equals(value)) {
             cell.setCellValue(StringUtils.EMPTY);
