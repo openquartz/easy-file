@@ -19,7 +19,7 @@ import org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecuto
  * @author svnee
  */
 @Component
-@FileExportExecutor(value = "excelDownloaderDemo", maxServerRetry = 1, desc = "Excel导出")
+@FileExportExecutor(value = "excelDownloaderDemo", maxServerRetry = 1, desc = "Excel导出", cacheKey = {"#request.id"})
 public class ExcelDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor<ExcelModel> {
 
     @Override
