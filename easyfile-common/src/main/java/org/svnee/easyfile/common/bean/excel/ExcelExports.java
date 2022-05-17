@@ -5,6 +5,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -22,6 +23,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.CollectionUtils;
@@ -70,70 +72,57 @@ public final class ExcelExports {
      *
      * @param excelBean excelBean
      * @param exportFieldList 导出字段
+     * @return 占用行数
      */
-    public static void writeHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList) {
+    public static int writeHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList) {
         if (CollectionUtils.isNotEmpty(exportFieldList) && excelBean.getCurrentRowIndex() == 0) {
-            setHeader(excelBean, exportFieldList);
+            return setHeader(excelBean, exportFieldList);
         }
+        return 0;
     }
 
+    /**
+     * 写入数据
+     *
+     * @param excelBean bean
+     * @param exportFieldList exportFiledList
+     * @param rowList rowList
+     * @param <T> T
+     */
     public static <T> void writeData(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> rowList) {
         if (CollectionUtils.isEmpty(rowList)) {
             return;
         }
         excelBean.getCurrentSheet();
-        int rowIndex = excelBean.getCurrentRowIndex();
-        int remainSegmentationSheetRows = excelBean.getSegmentationSheetRows();
-        // 不存在标题行则去掉一行
-        if (rowIndex == 0) {
-            remainSegmentationSheetRows = remainSegmentationSheetRows - 1;
-        }
-
-        if (rowIndex + rowList.size() > remainSegmentationSheetRows) {
-            // 针对标题行进行预留一行
-            if (excelBean.getCurrentRowIndex() == 0) {
-                setRowsWithHeader(excelBean, exportFieldList,
-                    rowList.subList(0, remainSegmentationSheetRows - rowIndex - 1));
-                writeData(excelBean, exportFieldList,
-                    rowList.subList(remainSegmentationSheetRows - rowIndex - 1, rowList.size()));
-            } else {
-                setRowsWithHeader(excelBean, exportFieldList,
-                    rowList.subList(0, remainSegmentationSheetRows - rowIndex));
-                writeData(excelBean, exportFieldList,
-                    rowList.subList(remainSegmentationSheetRows - rowIndex, rowList.size()));
-            }
-        } else {
-            setRowsWithHeader(excelBean, exportFieldList, rowList);
-        }
+        writeRows(excelBean, exportFieldList, rowList);
     }
 
-    private static <T> void setRowsWithHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> dataRows) {
-        writeHeader(excelBean, exportFieldList);
-        setRows(excelBean.getCurrentSheet(),
-            exportFieldList, dataRows,
-            excelBean.getBaseStyle(),
-            excelBean.getCurrentRowIndex());
-        excelBean.writeRow(dataRows.size());
-    }
-
-    private static void setHeader(ExcelBean excelBean, List<ExcelFiled> exportFields) {
+    /**
+     * 设置表头
+     *
+     * @param excelBean excelBean
+     * @param exportFields exportFields
+     * @return 表头占用的行数
+     */
+    private static int setHeader(ExcelBean excelBean, List<ExcelFiled> exportFields) {
+        int titleRow = 0;
         if (CollectionUtils.isEmpty(exportFields)) {
-            return;
+            return titleRow;
         }
         Sheet sheet = excelBean.getCurrentSheet();
 
         Row headerRow = sheet.createRow(0);
-        excelBean.writeRow(1);
+        titleRow += 1;
 
         boolean needSubTitle = exportFields.stream()
             .anyMatch(e -> CollectionUtils.isNotEmpty(e.getSubFiledList())
                 && StringUtils.isNotBlank(e.getExcelProperty().value()));
         Row subHeaderRow = needSubTitle ? sheet.createRow(1) : headerRow;
-        excelBean.writeRow(needSubTitle ? 1 : 0);
+        titleRow = needSubTitle ? titleRow + 1 : titleRow;
+        excelBean.writeRow(titleRow);
 
         CellStyle cellStyle = decorateHeader(excelBean);
         int index = 0;
-        excelBean.writeRow(1);
         for (ExcelFiled field : exportFields) {
             if (!field.isCollection() && CollectionUtils.isEmpty(field.getSubFiledList())) {
                 ExcelProperty excelProperty = field.getExcelProperty();
@@ -162,7 +151,7 @@ public final class ExcelExports {
                     for (ExcelFiled subField : field.getSubFiledList()) {
                         Cell cell = headerRow.createCell(subIndex++);
                         cell.setCellStyle(cellStyle);
-                        setCellValue(cell, field.getExcelProperty().value(), field);
+                        setCellValue(cell, subField.getExcelProperty().value(), subField);
                     }
                     // 设置单元格并做合并 (index-->index+subIndex)
                     PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() + index);
@@ -171,13 +160,14 @@ public final class ExcelExports {
                     Cell cell = subHeaderRow.createCell(index++);
                     cell.setCellStyle(cellStyle);
                     if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
-                        setCellValue(cell, subField.getExcelProperty().value(), field);
+                        setCellValue(cell, subField.getExcelProperty().value(), subField);
                     } else {
-                        setCellValue(cell, subField.getField().getName(), field);
+                        setCellValue(cell, subField.getField().getName(), subField);
                     }
                 }
             }
         }
+        return titleRow;
     }
 
     private static CellStyle decorateHeader(ExcelBean excelBean) {
@@ -188,19 +178,91 @@ public final class ExcelExports {
         return cellStyle;
     }
 
-    private static <T> void setRows(Sheet sheet, List<ExcelFiled> exportFields, List<T> dataRows, CellStyle cellStyle,
-        int startRowNum) {
-        int rowIndex = startRowNum;
+    private static <T> void writeRows(ExcelBean excelBean, List<ExcelFiled> exportFields, List<T> dataRows) {
+        CellStyle cellStyle = excelBean.getBaseStyle();
         for (Object dataRow : dataRows) {
-            Row row = sheet.createRow(rowIndex++);
+            writeHeader(excelBean, exportFields);
+            int rowIndex = excelBean.getCurrentRowIndex();
+
+            Sheet sheet = excelBean.getCurrentSheet();
+            Row row = sheet.createRow(rowIndex);
             int columnIndex = 0;
+            int maxCurrentSubRowIndex = rowIndex;
             for (ExcelFiled field : exportFields) {
-                Object value = reflectiveGetFieldValue(dataRow, field.getField());
-                Cell cell = row.createCell(columnIndex++);
-                cell.setCellStyle(cellStyle);
-                setCellValue(cell, value, field);
+                if (!field.isCollection()
+                    && org.svnee.easyfile.common.bean.excel.ReflectionUtils.isJavaClass(field.getField().getType())) {
+                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+
+                    field.setColumnIndex(columnIndex);
+
+                    Cell cell = row.createCell(columnIndex++);
+                    cell.setCellStyle(cellStyle);
+                    setCellValue(cell, value, field);
+                } else if (field.isCustomBean()) {
+                    // 用户自定义类型
+                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+                    columnIndex = setSubCell(cellStyle, row, columnIndex, field, value);
+                } else {
+                    // 集合类型
+                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+                    if (value != null) {
+                        Collection<?> subDataCollection = (Collection<?>) value;
+                        if (CollectionUtils.isNotEmpty(subDataCollection)) {
+                            Row subRow = row;
+                            int currentSubRowIndex = rowIndex;
+                            for (Object subRowData : subDataCollection) {
+                                if (currentSubRowIndex > rowIndex) {
+                                    subRow = sheet.createRow(currentSubRowIndex);
+                                }
+
+                                currentSubRowIndex++;
+                                columnIndex = setSubCell(cellStyle, subRow, columnIndex, field, subRowData);
+                            }
+                            // 取最大的下标,第一行共用父列的第一行
+                            maxCurrentSubRowIndex = Math.max(currentSubRowIndex - 1, maxCurrentSubRowIndex);
+                        }
+                    }
+                }
             }
+
+            // 当前存在子行列时需要做合并单元格操作
+            if (maxCurrentSubRowIndex > rowIndex) {
+                for (ExcelFiled exportField : exportFields) {
+                    if (!exportField.isCollection()) {
+                        PoiMergeCellUtil
+                            .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex, exportField.getColumnIndex(),
+                                exportField.getColumnIndex());
+                    }
+                }
+            }
+
+            // 如果此时已经大于当前sheet页则重新创建sheet
+            excelBean.writeRow(maxCurrentSubRowIndex - rowIndex + 1);
+            excelBean.getCurrentSheet();
         }
+    }
+
+    /**
+     * 设置当前子列单元格的值
+     *
+     * @param cellStyle 单元格式
+     * @param row 行
+     * @param columnIndex 列
+     * @param field 字段
+     * @param value 值
+     * @return 当前下表
+     */
+    private static int setSubCell(CellStyle cellStyle, Row row, int columnIndex, ExcelFiled field, Object value) {
+        for (ExcelFiled subField : field.getSubFiledList()) {
+
+            subField.setColumnIndex(columnIndex);
+
+            Object subData = reflectiveGetFieldValue(value, subField.getField());
+            Cell cell = row.createCell(columnIndex++);
+            cell.setCellStyle(cellStyle);
+            setCellValue(cell, subData, subField);
+        }
+        return columnIndex;
     }
 
     private static Object reflectiveGetFieldValue(Object obj, Field filed) {
@@ -212,7 +274,7 @@ public final class ExcelExports {
             } else {
                 getterMethod = ReflectionUtils.findMethod(clazz, commonGetterMethodName(filed.getName()));
             }
-            assert Objects.nonNull(getterMethod);
+            assert getterMethod != null;
             return getterMethod.invoke(obj);
         } catch (Exception e) {
             log.error("ExcelExports#reflectiveGetFieldValue,excel生成异常", e);

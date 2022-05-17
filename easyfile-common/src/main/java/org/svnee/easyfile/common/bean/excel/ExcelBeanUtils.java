@@ -1,13 +1,17 @@
 package org.svnee.easyfile.common.bean.excel;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -69,8 +73,25 @@ public final class ExcelBeanUtils {
                         return null;
                     }
                     ExcelFiled excelFiled = new ExcelFiled(field, excelProperty);
-                    if (!ReflectionUtils.isJavaClass(field.getType())) {
-                        List<ExcelFiled> subFieldList = getClassFields(field.getType())
+                    Class<?> subClass = null;
+                    boolean existedSub = false;
+                    if (ReflectionUtils.isCollection(field.getType())) {
+                        existedSub = true;
+                        if (ReflectionUtils.isCollection(field.getType()) &&
+                            field.getGenericType() instanceof ParameterizedType) {
+                            ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+                            Type[] types = genericType.getActualTypeArguments();
+                            if (Objects.nonNull(types) && types.length == 1 && types[0] instanceof Class) {
+                                subClass = (Class<?>) types[0];
+                            }
+                        }
+                    } else if (!ReflectionUtils.isBaseJavaClass(field.getType())) {
+                        subClass = field.getType();
+                        existedSub = true;
+                    }
+                    if (existedSub && Objects.nonNull(subClass)) {
+
+                        List<ExcelFiled> subFieldList = getClassFields(subClass)
                             .stream()
                             .map(e -> {
                                 ExcelProperty subProperty = getAnnotatedExcelProperty(e);
@@ -103,17 +124,19 @@ public final class ExcelBeanUtils {
             groupSet = new HashSet<>(CollectionUtils.newArrayList(group));
         }
         //获取所有的包含分组的字段
-        return excelFiledList.stream()
-            .filter(e -> {
-                // 如果当前符合条件了直接进行判断子字段是否符合
-                boolean groupField = isBelongGroup(e, groupSet);
-                if (groupField) {
-                    List<ExcelFiled> subFieldList = e.getSubFiledList().stream()
-                        .filter(subFiled -> isBelongGroup(subFiled, groupSet)).collect(Collectors.toList());
-                    e.setSubFiledList(subFieldList);
-                }
-                return groupField;
-            })
+        return excelFiledList.stream().filter(e -> {
+            // 如果当前符合条件了直接进行判断子字段是否符合
+            boolean groupField = isBelongGroup(e, groupSet);
+            if (groupField) {
+                List<ExcelFiled> subFieldList = Optional.ofNullable(e.getSubFiledList())
+                    .orElse(Collections.emptyList())
+                    .stream()
+                    .filter(subFiled -> isBelongGroup(subFiled, groupSet))
+                    .collect(Collectors.toList());
+                e.setSubFiledList(subFieldList);
+            }
+            return groupField;
+        })
             .sorted(Comparator.comparingInt(o -> o.getExcelProperty().order()))
             .collect(Collectors.toList());
     }

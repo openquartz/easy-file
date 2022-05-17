@@ -14,6 +14,7 @@ public enum CommonErrorCode implements EasyFileErrorCode {
     THREAD_PRIORITY_SETTER_LESS_THAN_ERROR("04", "Thread priority ({0}) must be <= {1}", true),
     THREAD_EXECUTE_EXCEPTION_NULLABLE_ERROR("05", "Handle Exception must not be null!"),
     THREAD_POOL_FACTORY_NULLABLE_ERROR("06", "ThreadPoolFactory must not be null!"),
+    METHOD_NOT_EXIST_ERROR("07", "Method not exist"),
     ;
     private final String errorCode;
     private final String errorMsg;

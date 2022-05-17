@@ -10,7 +10,7 @@ public class Pagination<T> implements Serializable {
     private Long page = 1L;
     private Long pageSize = 0L;
     private Long totalRecords = -1L;
-    private List<T> models = new ArrayList();
+    private List<T> modelList = new ArrayList<>();
     private int extendsSize = 0;
     private Object information;
 
@@ -42,12 +42,12 @@ public class Pagination<T> implements Serializable {
         this.totalRecords = totalRecords;
     }
 
-    public List<T> getModels() {
-        return this.models;
+    public List<T> getModelList() {
+        return this.modelList;
     }
 
-    public void setModels(List<T> models) {
-        this.models = models;
+    public void setModelList(List<T> modelList) {
+        this.modelList = modelList;
     }
 
     public Long getPageSize() {
@@ -59,7 +59,7 @@ public class Pagination<T> implements Serializable {
     }
 
     public Long getTotalPages() {
-        Long totalPages = -1L;
+        long totalPages = -1L;
         if (this.getTotalRecords().compareTo(-1L) > 0 && this.getPageSize().compareTo(0L) > 0) {
             totalPages = (long) Math.ceil((double) this.getTotalRecords() / (double) this.getPageSize());
         }
@@ -87,7 +87,7 @@ public class Pagination<T> implements Serializable {
     }
 
     public Long getStartIndex() {
-        Long startIndex = 0L;
+        long startIndex = 0;
         if (this.getPageSize().compareTo(0L) > 0 && this.getPage().compareTo(0L) > 0) {
             startIndex = (this.getPage() - 1L) * this.getPageSize();
         }

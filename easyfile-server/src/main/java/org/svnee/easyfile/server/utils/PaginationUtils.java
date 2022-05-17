@@ -21,7 +21,7 @@ public final class PaginationUtils {
         pagination.setTotalRecords(0L);
         pagination.setPageSize(Long.valueOf(pageSize));
         pagination.setPage(Long.valueOf(pageNo));
-        pagination.setModels(Collections.emptyList());
+        pagination.setModelList(Collections.emptyList());
         return pagination;
     }
 

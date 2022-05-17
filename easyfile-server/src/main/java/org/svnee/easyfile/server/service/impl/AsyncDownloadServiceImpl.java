@@ -255,7 +255,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
             .collect(Collectors.toList());
         Pagination<DownloadResult> pagination = new Pagination<>();
-        pagination.setModels(resultList);
+        pagination.setModelList(resultList);
         pagination.setTotalRecords(pageInfo.getTotal());
         pagination.setPage((long) pageInfo.getPageNum());
         pagination.setPageSize(Long.valueOf(pageSize));

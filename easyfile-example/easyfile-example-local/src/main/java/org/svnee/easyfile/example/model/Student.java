@@ -1,5 +1,6 @@
 package org.svnee.easyfile.example.model;
 
+import java.util.List;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,7 +9,6 @@ import org.svnee.easyfile.common.annotation.ExcelProperty;
 
 /**
  * @author svnee
- * @desc
  **/
 @Table(name = "test_student")
 public class Student {
@@ -29,6 +29,9 @@ public class Student {
 
     @ExcelProperty("地址")
     private String address;
+
+    @ExcelProperty("特征")
+    private List<Feature> featureList;
 
     public Long getId() {
         return id;
@@ -68,5 +71,13 @@ public class Student {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public List<Feature> getFeatureList() {
+        return featureList;
+    }
+
+    public void setFeatureList(List<Feature> featureList) {
+        this.featureList = featureList;
     }
 }

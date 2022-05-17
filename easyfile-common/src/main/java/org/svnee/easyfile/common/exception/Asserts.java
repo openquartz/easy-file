@@ -2,12 +2,14 @@ package org.svnee.easyfile.common.exception;
 
 import java.lang.reflect.Constructor;
 import java.util.Objects;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 断言工具类
  *
  * @author svnee
  */
+@Slf4j
 public final class Asserts {
 
     private Asserts() {
@@ -53,8 +55,7 @@ public final class Asserts {
                 Constructor<E> constructor = exceptionClazz.getConstructor(errorCode.getClass());
                 throw constructor.newInstance(errorCode);
             } catch (Exception ex) {
-                throw new RuntimeException(
-                    String.format("Class: %s No Such Constructor Method ERROR!", exceptionClazz));
+                throw new EasyFileException(CommonErrorCode.METHOD_NOT_EXIST_ERROR);
             }
         }
     }
@@ -66,7 +67,9 @@ public final class Asserts {
      * @param code code
      */
     public static void notNull(Object obj, EasyFileErrorCode code) {
-        isTrue(Objects.nonNull(obj), code);
+        if (obj == null) {
+            throw new EasyFileException(code);
+        }
     }
 
     /**
@@ -76,7 +79,9 @@ public final class Asserts {
      * @param code code
      */
     public static void notNull(Object obj, EasyFileErrorCode code, Object... placeHold) {
-        isTrue(Objects.nonNull(obj), code, placeHold);
+        if (obj == null) {
+            throw EasyFileException.replacePlaceHold(code, placeHold);
+        }
     }
 
     /**
