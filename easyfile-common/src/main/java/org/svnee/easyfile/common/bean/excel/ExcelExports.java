@@ -124,14 +124,13 @@ public final class ExcelExports {
         CellStyle cellStyle = decorateHeader(excelBean);
         int index = 0;
         for (ExcelFiled field : exportFields) {
+            ExcelProperty excelProperty = field.getExcelProperty();
+            sheet.setColumnWidth(index, excelProperty.width());
             if (!field.isCollection() && CollectionUtils.isEmpty(field.getSubFiledList())) {
-                ExcelProperty excelProperty = field.getExcelProperty();
-                sheet.setColumnWidth(index, excelProperty.width());
-                String headerName = excelProperty.value();
                 Cell cell = headerRow.createCell(index);
                 cell.setCellStyle(cellStyle);
-                if (StringUtils.isNotBlank(headerName)) {
-                    setCellValue(cell, headerName, field);
+                if (StringUtils.isNotBlank(excelProperty.value())) {
+                    setCellValue(cell, excelProperty.value(), field);
                 } else {
                     setCellValue(cell, field.getField().getName(), field);
                 }
@@ -154,6 +153,7 @@ public final class ExcelExports {
                     PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() - 1 + index);
                 }
                 for (ExcelFiled subField : field.getSubFiledList()) {
+                    sheet.setColumnWidth(index, subField.getExcelProperty().width());
                     Cell cell = subHeaderRow.createCell(index++);
                     cell.setCellStyle(cellStyle);
                     if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
