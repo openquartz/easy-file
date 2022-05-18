@@ -10,9 +10,9 @@ import org.svnee.easyfile.common.annotation.ExcelProperty;
 @Data
 public class Address {
 
-    @ExcelProperty("地址")
+    @ExcelProperty(value = "地址", width = 8 * 512)
     private String address;
 
-    @ExcelProperty(value = "过期时间")
+    @ExcelProperty(value = "过期时间", width = 8 * 1024)
     private Date expireTime;
 }

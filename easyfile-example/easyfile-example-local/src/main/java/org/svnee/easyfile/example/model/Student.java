@@ -18,16 +18,16 @@ public class Student {
     @ExcelProperty("ID")
     private Long id;
 
-    @ExcelProperty("姓名")
+    @ExcelProperty(value = "姓名", width = 8 * 512)
     private String name;
 
     @ExcelProperty("年龄")
     private Integer age;
 
-    @ExcelProperty("学校")
+    @ExcelProperty(value = "学校", width = 8 * 1024)
     private String school;
 
-    @ExcelProperty("地址")
+    @ExcelProperty(value = "地址", width = 8 * 1024)
     private String address;
 
     @ExcelProperty("特征")

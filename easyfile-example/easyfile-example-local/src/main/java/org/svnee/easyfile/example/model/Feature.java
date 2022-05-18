@@ -15,7 +15,7 @@ public class Feature {
     private String code;
     @ExcelProperty("名字")
     private String name;
-    @ExcelProperty("描述")
+    @ExcelProperty(value = "描述", width = 8 * 512)
     private String desc;
 
 }
