@@ -33,7 +33,7 @@ public class Student {
     @ExcelProperty("特征")
     private List<Feature> featureList;
 
-    @ExcelProperty("新地址信息")
+    @ExcelProperty
     private Address addr;
 
     public Long getId() {

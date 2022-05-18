@@ -153,14 +153,21 @@ public final class ExcelExports {
                     PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() - 1 + index);
                 }
                 for (ExcelFiled subField : field.getSubFiledList()) {
+                    Row customTitleRow =
+                        StringUtils.isBlank(field.getExcelProperty().value()) ? headerRow : subHeaderRow;
                     sheet.setColumnWidth(index, subField.getExcelProperty().width());
-                    Cell cell = subHeaderRow.createCell(index++);
+                    Cell cell = customTitleRow.createCell(index);
                     cell.setCellStyle(cellStyle);
                     if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
                         setCellValue(cell, subField.getExcelProperty().value(), subField);
                     } else {
                         setCellValue(cell, subField.getField().getName(), subField);
                     }
+                    if (StringUtils.isBlank(field.getExcelProperty().value()) && needSubTitle) {
+                        // 设置单元格并做合并 (0,index-->1,index)
+                        PoiMergeCellUtil.addMergedRegion(sheet, 0, 1, index, index);
+                    }
+                    index++;
                 }
             }
         }
