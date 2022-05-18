@@ -147,12 +147,9 @@ public final class ExcelExports {
             } else {
                 // 如果设置的单元格属性的为空则不设置子表头
                 if (StringUtils.isNotBlank(field.getExcelProperty().value())) {
-                    int subIndex = index;
-                    for (ExcelFiled subField : field.getSubFiledList()) {
-                        Cell cell = headerRow.createCell(subIndex++);
-                        cell.setCellStyle(cellStyle);
-                        setCellValue(cell, subField.getExcelProperty().value(), subField);
-                    }
+                    Cell cell = headerRow.createCell(index);
+                    cell.setCellStyle(cellStyle);
+                    setCellValue(cell, field.getExcelProperty().value(), field);
                     // 设置单元格并做合并 (index-->index+subIndex)
                     PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() - 1 + index);
                 }
