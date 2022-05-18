@@ -1,7 +1,6 @@
 package org.svnee.easyfile.example.downloader;
 
 import com.google.common.collect.Lists;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import javax.annotation.Resource;
@@ -40,7 +39,7 @@ public class StudentStreamDownloadDemoExecutor extends
 
     @Override
     public Cursor<Student> streamQuery(SqlSession session, DownloaderRequestContext context) {
-        return session.getMapper(StudentMapper.class).scan(10000);
+        return session.getMapper(StudentMapper.class).scan(1000);
     }
 
     @Override
