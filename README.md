@@ -361,7 +361,7 @@ public @interface FileExportExecutor {
 ##### 子列单元格导出支持
 
 excel的导出支持1:* 的数据单元行列的导出。例如：\
-![MergeCellSheet](./doc/MergeCellSheet.png)
+![MergeCellSheet](./doc/img.png)
 但是针对\
 1、1：* 的导出数据时,不建议导出过多数据,由于需要merge 单元格的原因,导致导出生成excel时很慢,建议数量小于 2K行
 
