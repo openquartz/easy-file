@@ -31,7 +31,7 @@ public @interface ExcelProperty {
     /**
      * 列宽
      */
-    int width() default 8 * 256;
+    int width() default 2048;
 
     /**
      * 日期格式
