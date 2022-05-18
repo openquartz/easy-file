@@ -154,7 +154,7 @@ public final class ExcelExports {
                         setCellValue(cell, subField.getExcelProperty().value(), subField);
                     }
                     // 设置单元格并做合并 (index-->index+subIndex)
-                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() + index);
+                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() - 1 + index);
                 }
                 for (ExcelFiled subField : field.getSubFiledList()) {
                     Cell cell = subHeaderRow.createCell(index++);
@@ -178,6 +178,14 @@ public final class ExcelExports {
         return cellStyle;
     }
 
+    /**
+     * 写入数据
+     *
+     * @param excelBean excelBean
+     * @param exportFields exportFields
+     * @param dataRows dataRows
+     * @param <T> T
+     */
     private static <T> void writeRows(ExcelBean excelBean, List<ExcelFiled> exportFields, List<T> dataRows) {
         CellStyle cellStyle = excelBean.getBaseStyle();
         for (Object dataRow : dataRows) {
@@ -216,8 +224,9 @@ public final class ExcelExports {
                                 }
 
                                 currentSubRowIndex++;
-                                columnIndex = setSubCell(cellStyle, subRow, columnIndex, field, subRowData);
+                                setSubCell(cellStyle, subRow, columnIndex, field, subRowData);
                             }
+                            columnIndex += field.getSubFiledList().size();
                             // 取最大的下标,第一行共用父列的第一行
                             maxCurrentSubRowIndex = Math.max(currentSubRowIndex - 1, maxCurrentSubRowIndex);
                         }
@@ -229,9 +238,18 @@ public final class ExcelExports {
             if (maxCurrentSubRowIndex > rowIndex) {
                 for (ExcelFiled exportField : exportFields) {
                     if (!exportField.isCollection()) {
-                        PoiMergeCellUtil
-                            .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex, exportField.getColumnIndex(),
-                                exportField.getColumnIndex());
+                        if (!exportField.isCustomBean()) {
+                            PoiMergeCellUtil
+                                .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex, exportField.getColumnIndex(),
+                                    exportField.getColumnIndex());
+                        } else {
+                            for (ExcelFiled subExcelFiled : exportField.getSubFiledList()) {
+                                PoiMergeCellUtil
+                                    .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
+                                        subExcelFiled.getColumnIndex(),
+                                        subExcelFiled.getColumnIndex());
+                            }
+                        }
                     }
                 }
             }

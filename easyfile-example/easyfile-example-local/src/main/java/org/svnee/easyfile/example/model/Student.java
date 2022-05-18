@@ -33,6 +33,9 @@ public class Student {
     @ExcelProperty("特征")
     private List<Feature> featureList;
 
+    @ExcelProperty("新地址信息")
+    private Address addr;
+
     public Long getId() {
         return id;
     }
@@ -79,5 +82,13 @@ public class Student {
 
     public void setFeatureList(List<Feature> featureList) {
         this.featureList = featureList;
+    }
+
+    public Address getAddr() {
+        return addr;
+    }
+
+    public void setAddr(Address addr) {
+        this.addr = addr;
     }
 }

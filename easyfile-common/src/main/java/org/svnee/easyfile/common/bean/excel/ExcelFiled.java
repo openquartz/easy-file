@@ -44,7 +44,7 @@ public class ExcelFiled {
      * 对应的列ID
      * 非父列存在
      */
-    private int columnIndex = 0;
+    private int columnIndex = -1;
 
     public ExcelFiled(Field field, ExcelProperty excelProperty) {
         this.field = field;
