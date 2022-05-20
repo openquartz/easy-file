@@ -1,5 +1,6 @@
 package org.svnee.easyfile.common.util;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -8,9 +9,12 @@ import java.util.Set;
  *
  * @author svnee
  */
-public class JSONUtil {
+public final class JSONUtil {
 
     private static final JsonFacade JSON_FACADE = new JacksonHandler();
+
+    private JSONUtil() {
+    }
 
     /**
      * 返回Json
@@ -68,7 +72,7 @@ public class JSONUtil {
      */
     public static <T> List<T> parseArray(String text, Class<T> clazz) {
         if (StringUtils.isBlank(text)) {
-            return null;
+            return Collections.emptyList();
         }
 
         return JSON_FACADE.parseArray(text, clazz);
@@ -84,7 +88,7 @@ public class JSONUtil {
      */
     public static <T> Set<T> parseSet(String json, Class<T> clazz) {
         if (StringUtils.isBlank(json)) {
-            return null;
+            return Collections.emptySet();
         }
         return JSON_FACADE.parseSet(json, clazz);
     }

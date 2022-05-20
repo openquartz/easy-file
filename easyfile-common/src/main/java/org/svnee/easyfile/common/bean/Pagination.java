@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author svnee
+ */
 public class Pagination<T> implements Serializable {
 
     private static final long serialVersionUID = -7445003904869332858L;

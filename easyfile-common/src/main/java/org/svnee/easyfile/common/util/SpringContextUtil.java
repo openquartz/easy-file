@@ -14,7 +14,7 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class SpringContextUtil implements ApplicationContextAware {
 
-    private static ApplicationContext CONTEXT;
+    private static ApplicationContext context;
 
     private SpringContextUtil() {
     }
@@ -25,42 +25,42 @@ public class SpringContextUtil implements ApplicationContextAware {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringContextUtil.CONTEXT = applicationContext;
+        SpringContextUtil.context = applicationContext;
     }
 
     /**
      * Get ioc container bean by type.
      */
     public static <T> T getBean(Class<T> clazz) {
-        return CONTEXT.getBean(clazz);
+        return context.getBean(clazz);
     }
 
     /**
      * Get ioc container bean by name and type.
      */
     public static <T> T getBean(String name, Class<T> clazz) {
-        return CONTEXT.getBean(name, clazz);
+        return context.getBean(name, clazz);
     }
 
     /**
      * Get a set of ioc container beans by type.
      */
     public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {
-        return CONTEXT.getBeansOfType(clazz);
+        return context.getBeansOfType(clazz);
     }
 
     /**
      * Find whether the bean has annotations.
      */
     public static <A extends Annotation> A findAnnotationOnBean(String beanName, Class<A> annotationType) {
-        return CONTEXT.findAnnotationOnBean(beanName, annotationType);
+        return context.findAnnotationOnBean(beanName, annotationType);
     }
 
     /**
      * Get ApplicationContext.
      */
     public static ApplicationContext getInstance() {
-        return CONTEXT;
+        return context;
     }
 
 }

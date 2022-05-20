@@ -29,7 +29,7 @@ public class TaskController {
      * @return 结果
      */
     @PostMapping("/autoRegister")
-    public ResponseResult<?> autoRegister(@RequestBody @Valid AutoTaskRegisterRequest request) {
+    public ResponseResult<Void> autoRegister(@RequestBody @Valid AutoTaskRegisterRequest request) {
         asyncDownloadTaskService.autoRegister(request);
         return ResponseResult.ok();
     }

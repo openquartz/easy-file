@@ -28,8 +28,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
         final String sql =
-            "insert into ef_async_download_record (download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
-                + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+            "insert into ef_async_download_record (download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
                 + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         return jdbcTemplate.update(sql, downloadRecord.getDownloadTaskId(),
             downloadRecord.getAppId(),

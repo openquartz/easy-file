@@ -1,12 +1,14 @@
 package org.svnee.easyfile.common.response;
 
 import java.util.Date;
+import lombok.Data;
 
 /**
  * 下载结果
  *
  * @author svnee
  */
+@Data
 public class DownloadResult extends ExportResult {
 
     /**
@@ -59,85 +61,4 @@ public class DownloadResult extends ExportResult {
      */
     private String updateBy;
 
-    public String getDownloadCode() {
-        return downloadCode;
-    }
-
-    public void setDownloadCode(String downloadCode) {
-        this.downloadCode = downloadCode;
-    }
-
-    public String getDownloadCodeDesc() {
-        return downloadCodeDesc;
-    }
-
-    public void setDownloadCodeDesc(String downloadCodeDesc) {
-        this.downloadCodeDesc = downloadCodeDesc;
-    }
-
-    public String getDownloadOperateBy() {
-        return downloadOperateBy;
-    }
-
-    public void setDownloadOperateBy(String downloadOperateBy) {
-        this.downloadOperateBy = downloadOperateBy;
-    }
-
-    public String getDownloadOperateName() {
-        return downloadOperateName;
-    }
-
-    public void setDownloadOperateName(String downloadOperateName) {
-        this.downloadOperateName = downloadOperateName;
-    }
-
-    public Date getExportTime() {
-        return exportTime;
-    }
-
-    public void setExportTime(Date exportTime) {
-        this.exportTime = exportTime;
-    }
-
-    public Date getLastExecuteTime() {
-        return lastExecuteTime;
-    }
-
-    public void setLastExecuteTime(Date lastExecuteTime) {
-        this.lastExecuteTime = lastExecuteTime;
-    }
-
-    @Override
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    @Override
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
-
-    public Date getInvalidTime() {
-        return invalidTime;
-    }
-
-    public void setInvalidTime(Date invalidTime) {
-        this.invalidTime = invalidTime;
-    }
-
-    public Integer getDownloadNum() {
-        return downloadNum;
-    }
-
-    public void setDownloadNum(Integer downloadNum) {
-        this.downloadNum = downloadNum;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
 }

@@ -11,7 +11,10 @@ import org.springframework.core.NamedThreadLocal;
  *
  * @author svnee
  */
-public class UserContext {
+public final class UserContext {
+
+    private UserContext() {
+    }
 
     private static final ThreadLocal<User> USER_THREAD_LOCAL = new NamedThreadLocal<>("User");
 

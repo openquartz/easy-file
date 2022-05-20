@@ -8,6 +8,9 @@ import org.svnee.easyfile.common.bean.Pagination;
  **/
 public final class PaginationUtils {
 
+    private PaginationUtils() {
+    }
+
     /**
      * 空数据集
      *

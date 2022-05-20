@@ -22,7 +22,7 @@ public final class IpUtil {
         String ip = null;
         try {
             ip = InetAddress.getLocalHost().getHostAddress();
-        } catch (Exception ex) {
+        } catch (Exception ignored) {
         }
         return ip;
     }

@@ -23,7 +23,7 @@ public enum ExpandExecutorErrorCode implements EasyFileErrorCode {
     }
 
     ExpandExecutorErrorCode(String errorCode, String errorMsg, boolean replacePlaceHold) {
-        this.errorCode = errorCode;
+        this.errorCode = SIMPLE_BASE_CODE + errorCode;
         this.errorMsg = errorMsg;
         this.replacePlaceHold = replacePlaceHold;
     }

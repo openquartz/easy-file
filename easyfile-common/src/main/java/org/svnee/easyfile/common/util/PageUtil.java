@@ -5,7 +5,10 @@ package org.svnee.easyfile.common.util;
  *
  * @author svnee
  */
-public class PageUtil {
+public final class PageUtil {
+
+	private PageUtil() {
+	}
 
 	/**
 	 * 根据总数计算总页数

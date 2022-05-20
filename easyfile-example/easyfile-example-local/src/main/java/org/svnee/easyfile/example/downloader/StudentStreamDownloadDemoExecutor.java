@@ -57,7 +57,7 @@ public class StudentStreamDownloadDemoExecutor extends
         feature1.setCode("B");
 
         Address address = new Address();
-        address.setAddress("上海古北路");
+        address.setAddressName("上海古北路");
         address.setExpireTime(new Date());
 
         for (Student student : students) {

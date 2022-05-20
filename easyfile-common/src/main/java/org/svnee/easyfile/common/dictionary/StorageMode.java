@@ -2,9 +2,13 @@ package org.svnee.easyfile.common.dictionary;
 
 /**
  * 存储模式枚举
+ *
  * @author svnee
  */
 public final class StorageMode {
+
+    private StorageMode() {
+    }
 
     /**
      * 本地存储模式

@@ -12,6 +12,9 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
  */
 public final class BeanRegistrar {
 
+    private BeanRegistrar() {
+    }
+
     /**
      * Register Infrastructure Bean
      *

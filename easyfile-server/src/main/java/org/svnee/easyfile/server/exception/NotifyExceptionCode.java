@@ -25,7 +25,7 @@ public enum NotifyExceptionCode implements EasyFileErrorCode {
     }
 
     NotifyExceptionCode(String errorCode, String errorMsg, boolean replacePlaceHold) {
-        this.errorCode = errorCode;
+        this.errorCode = SIMPLE_BASE_CODE + errorCode;
         this.errorMsg = errorMsg;
         this.replacePlaceHold = replacePlaceHold;
     }
