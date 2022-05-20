@@ -359,7 +359,7 @@ public @interface FileExportExecutor {
 ```
 
 ##### 子列单元格导出支持
-
+目前针对 1:* 的映射导出 只支持及到两级,暂时不支持三级及以上(即：1：* ：* ) \
 excel的导出支持1:* 的数据单元行列的导出。例如：\
 ![MergeCellSheet](./doc/img.png)
 但是针对\
