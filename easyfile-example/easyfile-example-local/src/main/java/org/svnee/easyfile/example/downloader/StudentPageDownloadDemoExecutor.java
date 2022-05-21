@@ -41,12 +41,12 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
     }
 
     @Override
-    public Pair<Long, List<Student>> shardingData(DownloaderRequestContext context, Page page, Long maxId) {
-        List<Student> studentList = studentMapper.findByMinIdLimit(maxId, page.getPageNum());
+    public Pair<Long, List<Student>> shardingData(DownloaderRequestContext context, Page page, Long cursorId) {
+        List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageNum());
         if (CollectionUtils.isEmpty(studentList)) {
-            return Pair.of(maxId, studentList);
+            return Pair.of(cursorId, studentList);
         }
-        maxId = studentList.get(studentList.size() - 1).getId();
-        return Pair.of(maxId, studentList);
+        cursorId = studentList.get(studentList.size() - 1).getId();
+        return Pair.of(cursorId, studentList);
     }
 }

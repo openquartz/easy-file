@@ -63,12 +63,12 @@ public abstract class AbstractPageDownloadExcelExecutor<T> implements PageShardi
             }
             int totalPage = PageUtil.totalPage(total.getTotal(), total.getPageSize());
             Page page = new Page(1, total.getPageSize(), total.getTotal());
-            Long maxId = 0L;
+            Long cursorId = 0L;
             for (int i = 0; i < totalPage; i++) {
                 page.setPageNum(i + 1);
-                Pair<Long, List<T>> pair = shardingData(context, page, maxId);
+                Pair<Long, List<T>> pair = shardingData(context, page, cursorId);
                 if (Objects.nonNull(pair)) {
-                    maxId = pair.getKey();
+                    cursorId = pair.getKey();
                     ExcelExports.writeData(excelBean, fieldList, pair.getValue());
                 }
             }

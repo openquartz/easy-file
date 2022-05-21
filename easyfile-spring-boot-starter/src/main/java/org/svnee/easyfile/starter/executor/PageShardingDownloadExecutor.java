@@ -28,9 +28,9 @@ public interface PageShardingDownloadExecutor<T> extends BaseDownloadExecutor {
      *
      * @param context 上下文请求
      * @param page 页
-     * @param maxId 上一页的最大的ID
-     * @return 当前最大ID maxId --> resultList
+     * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
+     * @return 当前最大ID cursorId --> resultList
      */
-    Pair<Long, List<T>> shardingData(DownloaderRequestContext context, Page page, Long maxId);
+    Pair<Long, List<T>> shardingData(DownloaderRequestContext context, Page page, Long cursorId);
 
 }

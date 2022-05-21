@@ -28,7 +28,7 @@ public class ExcelDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor
     }
 
     @Override
-    public Pair<Long, List<ExcelModel>> shardingData(DownloaderRequestContext context, Page page, Long maxId) {
+    public Pair<Long, List<ExcelModel>> shardingData(DownloaderRequestContext context, Page page, Long cursorId) {
 
         ArrayList<ExcelModel> list = Lists.newArrayList();
         for (int i = 0; i < page.getTotal(); i++) {
