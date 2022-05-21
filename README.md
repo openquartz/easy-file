@@ -190,6 +190,7 @@ Client 配置
 | easyfile.download.export-advisor-order      | Client下载切面顺序                                           | Integer.MAX_VALUE |
 | easyfile.download.excel-max-sheet-rows  |Client 导出Excel 单Sheet最大行数|1000000|
 | easyfile.download.excel-row-access-window-size |Client 导出Excel 缓存最大行数|1000|
+| easyfile.download.clean-file-after-upload |Client 导出Excel 后是否删除源文件|true|
 
 #### 五、实现下载器
 
