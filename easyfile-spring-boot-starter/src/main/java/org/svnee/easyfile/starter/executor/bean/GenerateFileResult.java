@@ -101,10 +101,10 @@ public class GenerateFileResult {
      * 注销时,删除文件
      * 删除原文件与压缩文件
      */
-    public void destroy(Logger logger) {
+    public void destroy(Logger logger, boolean cleanFileAfterUpload) {
         try {
             // 上传完成时执行文件删除操作
-            if (Objects.nonNull(genFile) && genFile.exists()) {
+            if (Objects.nonNull(genFile) && genFile.exists() && cleanFileAfterUpload) {
                 Files.delete(genFile.toPath());
             }
         } catch (Exception exception) {

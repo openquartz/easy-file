@@ -103,7 +103,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         } finally {
             // 上传完成时执行文件删除操作
             if (Objects.nonNull(genFileResult)) {
-                genFileResult.destroy(logger);
+                genFileResult.destroy(logger, downloadProperties.isCleanFileAfterUpload());
             }
         }
 

@@ -86,6 +86,13 @@ public class EasyFileDownloadProperties {
      */
     private Integer excelRowAccessWindowSize = 1000;
 
+    /**
+     * 上传完成后删除文件
+     * clean-file-after-upload
+     * 默认为：true. 建议设置成true。本地测试时不需要上传到远程服务时可以为false
+     */
+    private boolean cleanFileAfterUpload = true;
+
     public void setExcelMaxSheetRows(Integer excelMaxSheetRows) {
         ExcelGenProperty.setSegmentationSheetRows(excelMaxSheetRows);
         this.excelMaxSheetRows = excelMaxSheetRows;

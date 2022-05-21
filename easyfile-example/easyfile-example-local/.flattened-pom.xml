@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.svnee</groupId>
         <artifactId>easyfile-example</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
     </parent>
     <groupId>org.svnee</groupId>
     <artifactId>easyfile-example-local</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>${project.artifactId}</name>
     <description>Demo project for Spring Boot</description>
     <licenses>
@@ -40,16 +40,16 @@
         <dependency>
             <groupId>org.svnee</groupId>
             <artifactId>easyfile-spring-boot-starter</artifactId>
-      <version>${revision}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.svnee</groupId>
-      <artifactId>easyfile-local-storage</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.baomidou</groupId>
-      <artifactId>mybatis-plus-boot-starter</artifactId>
-    </dependency>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-local-storage</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+        </dependency>
     <dependency>
       <groupId>javax.persistence</groupId>
       <artifactId>javax.persistence-api</artifactId>
