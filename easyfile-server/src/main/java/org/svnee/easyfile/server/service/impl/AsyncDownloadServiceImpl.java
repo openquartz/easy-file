@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -79,12 +80,11 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     /**
      * 限流导出执行器
      */
-    private final Map<String, ExportLimitingExecutor> exportLimitingExecutorMap = MapUtils
-        .newHashMapWithExpectedSize(10);
+    private final Map<String, ExportLimitingExecutor> exportLimitingExecutorMap = new ConcurrentHashMap<>();
     /**
      * 文件转换器
      */
-    private final Map<String, FileUrlTransformer> fileUrlTransformerMap = MapUtils.newHashMapWithExpectedSize(5);
+    private final Map<String, FileUrlTransformer> fileUrlTransformerMap = new ConcurrentHashMap<>();
 
     public AsyncDownloadServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
         AsyncDownloadRecordMapper asyncDownloadRecordMapper, NotifyService notifyService,
