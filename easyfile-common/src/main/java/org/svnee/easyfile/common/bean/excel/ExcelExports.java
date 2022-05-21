@@ -275,6 +275,11 @@ public final class ExcelExports {
      * @return 当前下表
      */
     private static int setSubCell(CellStyle cellStyle, Row row, int columnIndex, ExcelFiled field, Object value) {
+
+        if (Objects.isNull(value)) {
+            return columnIndex;
+        }
+
         for (ExcelFiled subField : field.getSubFiledList()) {
 
             subField.setColumnIndex(columnIndex);

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.svnee.easyfile.example.mapper.StudentMapper">
+    <sql id="Base_Column_List">
+        id,
+        `name`,
+        age,
+        school,
+        address
+    </sql>
+    <resultMap id="BaseResultMap" type="org.svnee.easyfile.example.model.Student">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="age" property="age"/>
+        <result column="school" property="school"/>
+        <result column="address" property="address"/>
+    </resultMap>
+
+    <select id="findById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from test_student
+        where id=#{id}
+    </select>
+
+    <select id="count" resultType="int">
+        select count(*)
+        from test_student
+    </select>
+
+    <select id="findByMinIdLimit" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        from test_student
+        where id > #{id}
+        order by id
+        limit #{offset}
+    </select>
+</mapper>

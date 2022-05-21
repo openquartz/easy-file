@@ -1,7 +1,10 @@
 package org.svnee.easyfile.storage.mapper.impl;
 
+import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -9,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
@@ -30,29 +35,43 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         final String sql =
             "insert into ef_async_download_record (download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
                 + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-        return jdbcTemplate.update(sql, downloadRecord.getDownloadTaskId(),
-            downloadRecord.getAppId(),
-            downloadRecord.getDownloadCode(),
-            downloadRecord.getUploadStatus(),
-            downloadRecord.getFileUrl(),
-            downloadRecord.getFileSystem(),
-            downloadRecord.getDownloadOperateBy(),
-            downloadRecord.getDownloadOperateName(),
-            downloadRecord.getRemark(),
-            downloadRecord.getNotifyEnableStatus(),
-            downloadRecord.getNotifyEmail(),
-            downloadRecord.getMaxServerRetry(),
-            downloadRecord.getCurrentRetry(),
-            downloadRecord.getDownloadNum(),
-            downloadRecord.getLastExecuteTime(),
-            downloadRecord.getInvalidTime(),
-            downloadRecord.getExecuteParam(),
-            downloadRecord.getErrorMsg(),
-            downloadRecord.getVersion(),
-            downloadRecord.getCreateTime(),
-            downloadRecord.getUpdateTime(),
-            downloadRecord.getCreateBy(),
-            downloadRecord.getUpdateBy());
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        jdbcTemplate.update(connection -> {
+
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            ps.setLong(1, downloadRecord.getDownloadTaskId());
+            ps.setString(2, downloadRecord.getAppId());
+            ps.setString(3, downloadRecord.getDownloadCode());
+            ps.setString(4, downloadRecord.getUploadStatus().getCode());
+            ps.setString(5, downloadRecord.getFileUrl());
+            ps.setString(6, downloadRecord.getFileSystem());
+            ps.setString(7, downloadRecord.getDownloadOperateBy());
+            ps.setString(8, downloadRecord.getDownloadOperateName());
+            ps.setString(9, downloadRecord.getRemark());
+            ps.setInt(10, downloadRecord.getNotifyEnableStatus());
+            ps.setString(11, downloadRecord.getNotifyEmail());
+            ps.setInt(12, downloadRecord.getMaxServerRetry());
+            ps.setInt(13, downloadRecord.getCurrentRetry());
+            ps.setInt(14, downloadRecord.getDownloadNum());
+            ps.setDate(15, new Date(downloadRecord.getLastExecuteTime().getTime()));
+            ps.setDate(16, new Date(downloadRecord.getInvalidTime().getTime()));
+            ps.setString(17, downloadRecord.getExecuteParam());
+            ps.setString(18, downloadRecord.getErrorMsg());
+            ps.setInt(19, downloadRecord.getVersion());
+            ps.setDate(20, new Date(downloadRecord.getCreateTime().getTime()));
+            ps.setDate(21, new Date(downloadRecord.getUpdateTime().getTime()));
+            ps.setString(22, downloadRecord.getCreateBy());
+            ps.setString(23, downloadRecord.getUpdateBy());
+            return ps;
+        }, keyHolder);
+
+        Number key = keyHolder.getKey();
+        if (Objects.nonNull(key)) {
+            downloadRecord.setId(key.longValue());
+            return 1;
+        }
+        return 0;
     }
 
     @Override

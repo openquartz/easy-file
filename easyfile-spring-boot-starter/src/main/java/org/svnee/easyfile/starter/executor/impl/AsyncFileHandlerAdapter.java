@@ -109,10 +109,10 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
 
         UploadCallbackRequest request = new UploadCallbackRequest();
         request.setRegisterId(registerId);
-        request.setSystem(fileUrl.getKey());
+        request.setSystem(Objects.nonNull(fileUrl) ? fileUrl.getKey() : Constants.NONE_FILE_SYSTEM);
         if (!handleBreakFlag) {
             request.setUploadStatus(UploadStatusEnum.SUCCESS);
-            request.setFileUrl(fileUrl.getValue());
+            request.setFileUrl(Objects.nonNull(fileUrl) ? fileUrl.getValue() : StringUtils.EMPTY);
         } else {
             request.setUploadStatus(UploadStatusEnum.FAIL);
             Optional.ofNullable(genFileResult).ifPresent(k -> request.setErrorMsg(lessErrorMsg(k.getErrorMsg())));
