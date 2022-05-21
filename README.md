@@ -127,7 +127,7 @@ CREATE TABLE ef_async_download_record
     app_id                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT 'app ID',
     download_code         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载code',
     upload_status         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '上传状态',
-    file_url              VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件路径',
+    file_url              VARCHAR(512) NOT NULL DEFAULT '' COMMENT '文件路径',
     file_system           VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件所在系统',
     download_operate_by   VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
     download_operate_name VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
