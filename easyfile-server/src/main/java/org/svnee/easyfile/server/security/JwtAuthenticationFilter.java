@@ -20,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.JSONUtil;
+import org.svnee.easyfile.server.exception.AuthenticationExceptionCode;
 
 /**
  * JWT authentication filter.
@@ -35,7 +36,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
-        super.setFilterProcessesUrl(Constants.BASE_PATH + "/auth/user/token");
+        super.setFilterProcessesUrl(Constants.BASE_PATH + "/auth/users/apply/token");
     }
 
     @Override
@@ -81,7 +82,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
         AuthenticationException failed) throws IOException {
         response.setCharacterEncoding(Constants.UTF_8);
-        response.getWriter().write(JSONUtil.toJson(ResponseResult.fail("-1", "Server Error")));
+        response.getWriter().write(JSONUtil.toJson(ResponseResult.fail(AuthenticationExceptionCode.AUTH_FAILED_ERROR
+            .getErrorCode(), AuthenticationExceptionCode.AUTH_FAILED_ERROR.getErrorMsg())));
     }
 
 }

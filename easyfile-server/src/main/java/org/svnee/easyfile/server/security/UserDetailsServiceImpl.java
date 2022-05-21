@@ -9,7 +9,9 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.Set;
 import org.springframework.stereotype.Service;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.server.entity.UserInfo;
+import org.svnee.easyfile.server.exception.AuthenticationExceptionCode;
 import org.svnee.easyfile.server.service.UserService;
 
 /**
@@ -26,6 +28,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserInfo userInfo = userService.getByUsername(username);
+
+        Asserts.notNull(userInfo, AuthenticationExceptionCode.USER_NOT_EXISTED_ERROR);
 
         JwtUser jwtUser = new JwtUser();
         jwtUser.setId(userInfo.getId());
