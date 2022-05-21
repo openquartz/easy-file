@@ -105,7 +105,7 @@ public class GenerateFileResult {
         try {
             // 上传完成时执行文件删除操作
             if (Objects.nonNull(genFile) && genFile.exists()) {
-//                Files.delete(genFile.toPath());
+                Files.delete(genFile.toPath());
             }
         } catch (Exception exception) {
             logger.error("[AbstractAsyncFileHandlerAdapter#handle] delete file error", exception);
