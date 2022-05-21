@@ -74,7 +74,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         Asserts.notNull(downloadRecord, DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_EXIST);
 
         List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
-            .listByTaskIdAndStatus(request.getRegisterId(), UploadStatusEnum.SUCCESS, 500);
+            .listByTaskIdAndStatus(downloadRecord.getDownloadTaskId(), UploadStatusEnum.SUCCESS, 500);
 
         ExportResult result = Optional.ofNullable(downloadRecordList)
             .orElse(Collections.emptyList())

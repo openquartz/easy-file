@@ -373,7 +373,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
 
         List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
-            .listByTaskIdAndStatus(request.getRegisterId(), UploadStatusEnum.SUCCESS, 500);
+            .listByTaskIdAndStatus(downloadRecord.getDownloadTaskId(), UploadStatusEnum.SUCCESS, 500);
 
         ExportResult result = Optional.ofNullable(downloadRecordList)
             .orElse(Collections.emptyList())

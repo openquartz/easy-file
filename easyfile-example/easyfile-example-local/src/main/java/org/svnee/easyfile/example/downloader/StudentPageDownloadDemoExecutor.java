@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -25,9 +26,13 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
     @Resource
     private StudentMapper studentMapper;
 
-
     @Override
     public boolean enableAsync(DownloaderRequestContext context) {
+        return true;
+    }
+
+    @Override
+    public boolean enableExportCache(BaseDownloaderRequestContext context) {
         return true;
     }
 
