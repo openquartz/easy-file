@@ -381,6 +381,23 @@ excel的导出支持1:* 的数据单元行列的导出。例如：\
 分页导出时,需要注意分页的分页大小的设置 \
 流式导出时,需要注意增强数据缓存的长度即方法`org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor.enhanceLength`
 
+##### 内存性能验证
+
+使用本地存储模式 启动参数`-Xms512M -Xmx512M -Xmn512M -Xss1M -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M` \
+导出数据行数100w,生成文件大小30079kb excel(2007版本) \
+设置分页/流式buf 一次长度设置100 \
+使用配置：
+
+```properties
+easyfile.download.excel-max-sheet-rows=10000000
+easyfile.download.excel-row-access-window-size=100
+```
+
+使用分页导出CPU/内存情况 \
+![分页导出内存消耗情况](./doc/PageExport.png)
+使用流式导出CPU/内存情况 \
+![流式导出内存消耗情况](./doc/StreamExport.png)
+
 #### easyfile-server 部署
 
 1、执行存储DB SQL \

@@ -24,7 +24,7 @@ public class StudentStreamDownloadDemoExecutor extends
 
     @Override
     public Integer enhanceLength() {
-        return 10;
+        return 100;
     }
 
     @Override
@@ -39,6 +39,6 @@ public class StudentStreamDownloadDemoExecutor extends
 
     @Override
     public Cursor<Student> streamQuery(SqlSession session, DownloaderRequestContext context) {
-        return session.getMapper(StudentMapper.class).scan(1000000);
+        return session.getMapper(StudentMapper.class).scan(10000000);
     }
 }
