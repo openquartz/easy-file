@@ -372,7 +372,7 @@ excel的导出支持1:* 的数据单元行列的导出。例如：\
 
 ##### 优化建议
 
-针对大文件导出功能目前easyfile 提供两种处理方式 分页导出/流式导出。
+针对大文件导出功能目前easyfile 提供两种处理方式 分页导出/流式导出。\
 1、但是针对大文件导出时建议将单sheet的最大行数设置的比较大,甚至设置成07版本excel的单sheet最大行数,避免频繁创建单Sheet导致内存无法回收OOM
 配置为: `easyfile.download.excel-max-sheet-rows` \
 2、针对大文件导出时可适量的根据内存本身的大小做设定excel缓存在内存中的行数。不建议设置特别大 配置为: `easyfile.download.excel-row-access-window-size` \
