@@ -394,7 +394,7 @@ easyfile.download.excel-row-access-window-size=100
 ```
 
 使用分页导出CPU/内存情况 \
-![分页导出内存消耗情况](./doc/PageExport.png)
+![分页导出内存消耗情况](./doc/PageExport.png) \
 使用流式导出CPU/内存情况 \
 ![流式导出内存消耗情况](./doc/StreamExport.png)
 
