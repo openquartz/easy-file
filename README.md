@@ -359,6 +359,7 @@ public @interface FileExportExecutor {
 ```
 
 ##### 子列单元格导出支持
+
 目前针对 1:* 的映射导出 只支持及到两级,暂时不支持三级及以上(即：1：* ：* ) \
 excel的导出支持1:* 的数据单元行列的导出。例如：\
 ![MergeCellSheet](./doc/img.png)
@@ -367,6 +368,17 @@ excel的导出支持1:* 的数据单元行列的导出。例如：\
 
 2、针对特别大的数据时,建议使用1:1的单元格导出 \
 ![MergeCellSheet](./doc/one2one.png)
+
+##### 优化建议
+
+针对大文件导出功能目前easyfile 提供两种处理方式 分页导出/流式导出。
+1、但是针对大文件导出时建议将单sheet的最大行数设置的比较大,甚至设置成07版本excel的单sheet最大行数,避免频繁创建单Sheet导致内存无法回收OOM
+配置为: `easyfile.download.excel-max-sheet-rows` \
+2、针对大文件导出时可适量的根据内存本身的大小做设定excel缓存在内存中的行数。不建议设置特别大 配置为: `easyfile.download.excel-row-access-window-size` \
+设置过大,会对内存有一定的压力。过小则会频繁的刷新数据到磁盘中,CPU容器上升。\
+3、针对分页/流式导出 使用时设置一次查询行数,需要合理设置 \
+分页导出时,需要注意分页的分页大小的设置 \
+流式导出时,需要注意增强数据缓存的长度即方法`org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor.enhanceLength`
 
 #### easyfile-server 部署
 
