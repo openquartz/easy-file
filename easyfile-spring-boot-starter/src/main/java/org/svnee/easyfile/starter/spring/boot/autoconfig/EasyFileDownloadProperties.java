@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
-import org.svnee.easyfile.common.dictionary.StorageMode;
 
 /**
  * 下载配置参数
@@ -66,13 +65,6 @@ public class EasyFileDownloadProperties {
      * export-advisor-order
      */
     private Integer exportAdvisorOrder = Integer.MAX_VALUE;
-
-    /**
-     * 下载存储模式
-     * storage-mode
-     * 默认：本地处理存储
-     */
-    private String storageMode = StorageMode.LOCAL_MODE;
 
     /**
      * excel 最大Sheet行数
