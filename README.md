@@ -12,6 +12,18 @@ EasyFile-是为了提供更加便捷的文件服务,可以提供统一的操作�
 
 提供给开发者更加通用、快捷、统一的实现的API方案；
 
+### 解决问题
+
+1、瞬时加载数据过大导致内存飙高不够平滑机器宕机风险很大
+
+2、生成较大文件容易出现HTTP 超时，造成导出失败
+
+3、相同条件的导出结果无法做到复用，需要继续生成导出文件资源浪费
+
+4、导出任务集中出现没有可监控机制
+
+5、开发者不仅需要关心数据查询逻辑同时需要关心文件生成逻辑
+
 ### 软件架构
 
 EasyFile 提供两种模式
@@ -20,6 +32,16 @@ local 模式:  需要提供本地的api 存储Mapper. 将数据存储到本地�
 
 remote模式：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
 
+### 代码结构
+
+easyfile-common: 公共模块服务  
+easyfile-storage: 存储服务API  
+easyfile-remote-storage: 远程调用存储 easyfile-local-storage: 本地数据源存储 easyfile-spring-boot-starter: easyfile starter 包  
+easyfile-server: easyfile 远程存储服务端  
+easyfile-example: 样例工程  
+easyfile-example-local: 本地储存样样例工程  
+easyfile-example-remote: 远程存储样例工程
+
 ### 使用教程
 
 #### 一、引入maven依赖
@@ -27,8 +49,9 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 如果使用本地模式 引入maven
 
 ```xml
+
 <dependency>
-   <groupId>org.svnee</groupId>
+    <groupId>org.svnee</groupId>
     <artifactId>easyfile-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
