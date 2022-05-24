@@ -169,12 +169,6 @@
 
             <dependency>
                 <groupId>org.svnee</groupId>
-                <artifactId>easyfile-core</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.svnee</groupId>
                 <artifactId>easyfile-storage</artifactId>
                 <version>${revision}</version>
             </dependency>
