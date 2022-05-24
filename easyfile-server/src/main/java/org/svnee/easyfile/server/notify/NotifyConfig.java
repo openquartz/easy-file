@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.StringUtils;
 
@@ -16,7 +16,7 @@ import org.svnee.easyfile.common.util.StringUtils;
  * @author svnee
  **/
 @Data
-@EnableConfigurationProperties(NotifyConfig.class)
+@Configuration
 @ConfigurationProperties(prefix = "easyfile.server.notify")
 public class NotifyConfig {
 

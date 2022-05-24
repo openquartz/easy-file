@@ -2,15 +2,15 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <modelVersion>4.0.0</modelVersion>
-    <groupId>org.svnee</groupId>
-    <artifactId>easy-file</artifactId>
-    <version>1.1.0</version>
-    <packaging>pom</packaging>
-    <name>${project.artifactId}</name>
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.svnee</groupId>
+  <artifactId>easy-file</artifactId>
+  <version>1.1.0</version>
+  <packaging>pom</packaging>
+  <name>${project.artifactId}</name>
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
@@ -36,7 +36,6 @@
   </distributionManagement>
   <properties>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <hutool-all.version>5.4.7</hutool-all.version>
     <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
     <mybatis-plus.version>3.5.0</mybatis-plus.version>
     <slf4j-api.version>1.7.7</slf4j-api.version>
@@ -45,20 +44,17 @@
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
     <reflections.version>0.9.10</reflections.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mybatis.version>2.0.1</mybatis.version>
     <redisson.version>3.9.1</redisson.version>
     <javax.persistence.version>2.2</javax.persistence.version>
-      <revision>1.1.0</revision>
+    <revision>1.1.0</revision>
     <fastjson.version>1.2.75</fastjson.version>
     <druid.version>1.1.6</druid.version>
-    <dozer.version>6.5.0</dozer.version>
     <maven.deploy.version>2.8.2</maven.deploy.version>
     <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
     <java.version>1.8</java.version>
     <logback.version>1.2.3</logback.version>
     <poi.version>3.17</poi.version>
     <maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
-    <commons-lang3.version>3.12.0</commons-lang3.version>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <pagehelper.version>1.2.10</pagehelper.version>
     <jjwt.version>0.9.0</jjwt.version>
@@ -108,19 +104,9 @@
         <version>${okhttp3.version}</version>
       </dependency>
       <dependency>
-        <groupId>cn.hutool</groupId>
-        <artifactId>hutool-all</artifactId>
-        <version>${hutool-all.version}</version>
-      </dependency>
-      <dependency>
         <groupId>com.baomidou</groupId>
         <artifactId>mybatis-plus-boot-starter</artifactId>
         <version>${mybatis-plus.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.mybatis.spring.boot</groupId>
-        <artifactId>mybatis-spring-boot-starter</artifactId>
-        <version>${mybatis.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.persistence</groupId>
@@ -156,27 +142,22 @@
       <dependency>
         <groupId>org.svnee</groupId>
         <artifactId>easyfile-common</artifactId>
-          <version>1.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.svnee</groupId>
-        <artifactId>easyfile-core</artifactId>
-          <version>1.1.0</version>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
         <artifactId>easyfile-storage</artifactId>
-          <version>1.1.0</version>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
         <artifactId>easyfile-remote-storage</artifactId>
-          <version>1.1.0</version>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
         <artifactId>easyfile-local-storage</artifactId>
-          <version>1.1.0</version>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>com.github.rholder</groupId>
