@@ -34,13 +34,15 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 
 ### 代码结构
 
-easyfile-common: 公共模块服务  
-easyfile-storage: 存储服务API  
-easyfile-remote-storage: 远程调用存储 easyfile-local-storage: 本地数据源存储 easyfile-spring-boot-starter: easyfile starter 包  
-easyfile-server: easyfile 远程存储服务端  
-easyfile-example: 样例工程  
-easyfile-example-local: 本地储存样样例工程  
-easyfile-example-remote: 远程存储样例工程
+- easyfile-common: 公共模块服务
+- easyfile-storage: 存储服务API
+- easyfile-remote-storage: 远程调用存储
+- easyfile-local-storage: 本地数据源存储
+- easyfile-spring-boot-starter: easyfile starter 包
+- easyfile-server: easyfile 远程存储服务端
+- easyfile-example: 样例工程
+- easyfile-example-local: 本地储存样样例工程
+- easyfile-example-remote: 远程存储样例工程
 
 ### 使用教程
 
