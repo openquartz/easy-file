@@ -55,7 +55,6 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 如果使用本地模式 引入maven
 
 ```xml
-
 <dependency>
     <groupId>org.svnee</groupId>
     <artifactId>easyfile-spring-boot-starter</artifactId>
