@@ -6,11 +6,11 @@
 
     <parent>
         <groupId>org.svnee</groupId>
-        <artifactId>easy-file</artifactId>
+        <artifactId>easyfile-storage</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>easyfile-local-storage</artifactId>
+    <artifactId>easyfile-storage-local</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
@@ -24,7 +24,7 @@
 
         <dependency>
             <groupId>org.svnee</groupId>
-            <artifactId>easyfile-storage</artifactId>
+            <artifactId>easyfile-storage-api</artifactId>
         </dependency>
 
         <dependency>

@@ -2,15 +2,15 @@
 <project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
     xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>org.svnee</groupId>
-  <artifactId>easy-file</artifactId>
-  <version>1.1.0</version>
-  <packaging>pom</packaging>
-  <name>${project.artifactId}</name>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.svnee</groupId>
+    <artifactId>easy-file</artifactId>
+    <version>1.1.0</version>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}</name>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>repo</distribution>
     </license>
@@ -20,8 +20,6 @@
     <module>easyfile-server</module>
     <module>easyfile-spring-boot-starter</module>
     <module>easyfile-storage</module>
-    <module>easyfile-remote-storage</module>
-    <module>easyfile-local-storage</module>
     <module>easyfile-example</module>
   </modules>
   <distributionManagement>
@@ -36,9 +34,8 @@
   </distributionManagement>
   <properties>
     <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
     <mybatis-plus.version>3.5.0</mybatis-plus.version>
-    <slf4j-api.version>1.7.7</slf4j-api.version>
+      <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
     <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
     <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -52,7 +49,6 @@
     <maven.deploy.version>2.8.2</maven.deploy.version>
     <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
     <java.version>1.8</java.version>
-    <logback.version>1.2.3</logback.version>
     <poi.version>3.17</poi.version>
     <maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -119,21 +115,6 @@
         <version>${hibernate-validator.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j-api.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-core</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>ch.qos.logback</groupId>
-        <artifactId>logback-classic</artifactId>
-        <version>${logback.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-json</artifactId>
         <version>${spring-boot.version}</version>
@@ -146,17 +127,17 @@
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
-        <artifactId>easyfile-storage</artifactId>
+          <artifactId>easyfile-storage-api</artifactId>
         <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
-        <artifactId>easyfile-remote-storage</artifactId>
+          <artifactId>easyfile-storage-remote</artifactId>
         <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>org.svnee</groupId>
-        <artifactId>easyfile-local-storage</artifactId>
+          <artifactId>easyfile-storage-local</artifactId>
         <version>1.1.0</version>
       </dependency>
       <dependency>

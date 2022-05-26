@@ -36,8 +36,8 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 
 - easyfile-common: 公共模块服务
 - easyfile-storage: 存储服务API
-- easyfile-remote-storage: 远程调用存储
-- easyfile-local-storage: 本地数据源存储
+- easyfile-storage-remote: 远程调用存储
+- easyfile-storage-local: 本地数据源存储
 - easyfile-spring-boot-starter: easyfile starter 包
 - easyfile-server: easyfile 远程存储服务端
 - easyfile-example: 样例工程
@@ -59,7 +59,7 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 </dependency>
 <dependency>
    <groupId>org.svnee</groupId>
-   <artifactId>easyfile-local-storage</artifactId>
+   <artifactId>easyfile-storage-local</artifactId>
    <version>1.0.0</version>
 </dependency>
 ```
@@ -74,7 +74,7 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 </dependency>
 <dependency>
    <groupId>org.svnee</groupId>
-   <artifactId>easyfile-remote-storage</artifactId>
+   <artifactId>easyfile-storage-remote</artifactId>
    <version>1.0.0</version>
 </dependency>
 ```
@@ -181,7 +181,7 @@ CREATE TABLE ef_async_download_record
 如果是使用remote服务，需要部署easyfile-server 服务,Client提供配置
 
 ```properties
-#### easyfile-remote-storage
+#### easyfile-storage-remote
 easyfile.remote.username=example
 easyfile.remote.password=example
 easyfile.remote.server-addr=127.0.0.1:8080

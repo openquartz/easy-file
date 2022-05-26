@@ -5,14 +5,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.svnee</groupId>
-        <artifactId>easy-file</artifactId>
+        <artifactId>easyfile-storage</artifactId>
         <version>1.1.0</version>
     </parent>
     <groupId>org.svnee</groupId>
-    <artifactId>easyfile-remote-storage</artifactId>
+    <artifactId>easyfile-storage-api</artifactId>
     <version>1.1.0</version>
     <name>${project.artifactId}</name>
-    <description>${project.artifactId}</description>
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -20,22 +19,17 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
     <dependencies>
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-common</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.svnee</groupId>
-            <artifactId>easyfile-storage</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.rholder</groupId>
-            <artifactId>guava-retrying</artifactId>
         </dependency>
     </dependencies>
     <build>

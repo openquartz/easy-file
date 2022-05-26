@@ -14,8 +14,6 @@
         <module>easyfile-server</module>
         <module>easyfile-spring-boot-starter</module>
         <module>easyfile-storage</module>
-        <module>easyfile-remote-storage</module>
-        <module>easyfile-local-storage</module>
         <module>easyfile-example</module>
     </modules>
 
@@ -37,8 +35,6 @@
         <jjwt.version>0.9.0</jjwt.version>
         <reflections.version>0.9.10</reflections.version>
 
-        <slf4j-api.version>1.7.7</slf4j-api.version>
-        <logback.version>1.2.3</logback.version>
         <mybatis-plus.version>3.5.0</mybatis-plus.version>
         <pagehelper.version>1.2.10</pagehelper.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
@@ -121,24 +117,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>${slf4j-api.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>${logback.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-json</artifactId>
                 <version>${spring-boot.version}</version>
@@ -153,19 +131,19 @@
 
             <dependency>
                 <groupId>org.svnee</groupId>
-                <artifactId>easyfile-storage</artifactId>
+                <artifactId>easyfile-storage-api</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.svnee</groupId>
-                <artifactId>easyfile-remote-storage</artifactId>
+                <artifactId>easyfile-storage-remote</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.svnee</groupId>
-                <artifactId>easyfile-local-storage</artifactId>
+                <artifactId>easyfile-storage-local</artifactId>
                 <version>${revision}</version>
             </dependency>
 

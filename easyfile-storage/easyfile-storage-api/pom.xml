@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.svnee</groupId>
-        <artifactId>easy-file</artifactId>
+        <artifactId>easyfile-storage</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>easyfile-remote-storage</artifactId>
+    <artifactId>easyfile-storage-api</artifactId>
     <packaging>jar</packaging>
 
     <name>${project.artifactId}</name>
-    <description>${project.artifactId}</description>
+    <properties>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-common</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.svnee</groupId>
-            <artifactId>easyfile-storage</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.rholder</groupId>
-            <artifactId>guava-retrying</artifactId>
         </dependency>
 
     </dependencies>
@@ -69,6 +61,7 @@
                         </execution>
                     </executions>
                 </plugin>
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-gpg-plugin</artifactId>
@@ -80,5 +73,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>

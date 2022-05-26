@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.svnee</groupId>
-            <artifactId>easyfile-remote-storage</artifactId>
+            <artifactId>easyfile-storage-remote</artifactId>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
