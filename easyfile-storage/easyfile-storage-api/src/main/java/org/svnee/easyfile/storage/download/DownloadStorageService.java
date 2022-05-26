@@ -1,10 +1,12 @@
 package org.svnee.easyfile.storage.download;
 
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
+import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -59,4 +61,12 @@ public interface DownloadStorageService {
      * @return 下载文件url
      */
     String download(DownloadRequest request);
+
+    /**
+     * 用户撤销任务上传
+     *
+     * @param request 请求
+     * @return 请求
+     */
+    CancelUploadResult cancelUpload(CancelUploadRequest request);
 }

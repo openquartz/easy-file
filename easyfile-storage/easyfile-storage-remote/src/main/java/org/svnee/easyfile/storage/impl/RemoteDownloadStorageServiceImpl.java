@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.impl;
 
 import static org.svnee.easyfile.storage.exception.RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR;
+import static org.svnee.easyfile.storage.exception.RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR;
 
 import com.github.rholder.retry.Attempt;
 import com.github.rholder.retry.RetryListener;
@@ -16,11 +17,13 @@ import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
+import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.storage.EasyFileClient;
@@ -120,6 +123,14 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
         ResponseResult<String> responseResult = easyFileClient.download(request);
         Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_ERROR);
+        return responseResult.getData();
+    }
+
+    @Override
+    public CancelUploadResult cancelUpload(CancelUploadRequest request) {
+        ResponseResult<CancelUploadResult> responseResult = easyFileClient.cancelUpload(request);
+        Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
         return responseResult.getData();
     }
 }

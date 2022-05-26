@@ -22,10 +22,12 @@ import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
+import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
@@ -284,4 +286,24 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         return downloadRecord.getFileUrl();
     }
 
+    @Override
+    public CancelUploadResult cancelUpload(CancelUploadRequest request) {
+        CancelUploadResult uploadResult = new CancelUploadResult();
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
+        if (Objects.isNull(downloadRecord)) {
+            uploadResult.setCancelResult(false);
+            uploadResult.setCancelMsg("任务不存在");
+            return uploadResult;
+        }
+        if (downloadRecord.getUploadStatus() != UploadStatusEnum.NONE) {
+            uploadResult.setCancelResult(false);
+            uploadResult.setCancelMsg("已经执行开始执行无法撤销");
+            return uploadResult;
+        }
+        int affect = asyncDownloadRecordMapper.refreshUploadStatus(request.getRegisterId(),
+            UploadStatusEnum.NONE, UploadStatusEnum.CANCEL, request.getCancelBy());
+        uploadResult.setCancelResult(affect > 0);
+        uploadResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
+        return uploadResult;
+    }
 }
