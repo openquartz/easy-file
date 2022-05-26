@@ -1,6 +1,7 @@
 package org.svnee.easyfile.starter.executor;
 
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -20,8 +21,8 @@ public interface BaseAsyncFileHandler {
      * @return 处理结果 成功/失败
      */
     default boolean handle(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
-        handleResult(executor, baseRequest, registerId);
-        return true;
+        ExportResult exportResult = handleResult(executor, baseRequest, registerId);
+        return UploadStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
     }
 
     /**
