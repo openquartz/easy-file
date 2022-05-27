@@ -1,5 +1,6 @@
 package org.svnee.easyfile.common.constants;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -116,5 +117,11 @@ public final class Constants {
      * 流式导出增强推荐长度
      */
     public static final Integer STREAM_EXPORT_ENHANCE_RECOMMEND_LEN = 500;
+
+    /**
+     * one MB
+     */
+    public static BigInteger ONE_MB = BigInteger.valueOf(1048576);
+
 
 }

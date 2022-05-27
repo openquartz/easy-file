@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,6 +30,7 @@ import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.CompressUtils;
 import org.svnee.easyfile.common.util.DateFormatUtils;
+import org.svnee.easyfile.common.util.FileUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.common.exception.Asserts;
@@ -219,7 +221,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         }
         if (file.exists() && file.isFile() && !isZipCompress(file)) {
             if (downloadProperties.getMinEnableCompressMbSize() <= 0
-                || file.length() >= downloadProperties.getMinEnableCompressMbSize()) {
+                || FileUtils.sizeOfMB(file) >= downloadProperties.getMinEnableCompressMbSize()) {
                 // 直接执行压缩
                 // 获取文件的绝对路径
                 try {
