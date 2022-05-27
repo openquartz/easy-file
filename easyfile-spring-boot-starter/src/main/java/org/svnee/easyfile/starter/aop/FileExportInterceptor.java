@@ -4,11 +4,13 @@ import static org.svnee.easyfile.starter.exception.DownloadErrorCode.FILE_GENERA
 import static org.svnee.easyfile.starter.exception.DownloadErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
 import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.context.ApplicationContext;
+import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.svnee.easyfile.common.annotation.FileExportExecutor;
@@ -121,9 +123,15 @@ public class FileExportInterceptor implements MethodInterceptor {
     private Object executeSync(MethodInvocation invocation) throws Throwable {
         if (invocation.getThis() instanceof BaseWrapperSyncResponseHeader) {
             BaseWrapperSyncResponseHeader header = (BaseWrapperSyncResponseHeader) invocation.getThis();
-            HttpServletResponse response =
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
-            header.setSyncResponseHeader(response);
+
+            RequestAttributes attributes = RequestContextHolder.getRequestAttributes();
+            if (attributes instanceof ServletRequestAttributes) {
+                ServletRequestAttributes requestAttributes = (ServletRequestAttributes) attributes;
+                HttpServletResponse response = requestAttributes.getResponse();
+                if (Objects.nonNull(response)) {
+                    header.setSyncResponseHeader(response);
+                }
+            }
         }
         return invocation.proceed();
     }
