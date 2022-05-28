@@ -2,8 +2,6 @@ package org.svnee.easyfile.common.bean.excel;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
@@ -13,18 +11,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.util.ReflectionUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
-import org.svnee.easyfile.common.exception.CommonErrorCode;
-import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 
@@ -135,7 +128,8 @@ public final class ExcelExports {
         titleRow = needSubTitle ? titleRow + 1 : titleRow;
         excelBean.writeRow(titleRow, sheetGroup);
 
-        CellStyle cellStyle = decorateHeader(excelBean);
+        // 装饰表头标题格式
+        CellStyle cellStyle = excelBean.decorateHeader();
         int index = 0;
         for (ExcelFiled field : exportFields) {
             ExcelProperty excelProperty = field.getExcelProperty();
@@ -185,15 +179,9 @@ public final class ExcelExports {
                 }
             }
         }
+        //冻结标题行
+        sheet.createFreezePane(0, titleRow);
         return titleRow;
-    }
-
-    private static CellStyle decorateHeader(ExcelBean excelBean) {
-        CellStyle cellStyle = excelBean.cloneStyleByBase();
-        Font font = excelBean.getWorkbook().createFont();
-        font.setBold(true);
-        cellStyle.setFont(font);
-        return cellStyle;
     }
 
     /**
@@ -219,7 +207,7 @@ public final class ExcelExports {
                 // 基本类型数据
                 if (!field.isCollection()
                     && org.svnee.easyfile.common.bean.excel.ReflectionUtils.isJavaClass(field.getField().getType())) {
-                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+                    Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
 
                     field.setColumnIndex(columnIndex);
 
@@ -228,11 +216,11 @@ public final class ExcelExports {
                     setCellValue(cell, value, field);
                 } else if (field.isCustomBean()) {
                     // 用户自定义类型
-                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+                    Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
                     columnIndex = setSubCell(cellStyle, row, columnIndex, field, value);
                 } else {
                     // 集合类型
-                    Object value = reflectiveGetFieldValue(dataRow, field.getField());
+                    Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
                     if (value != null) {
                         Collection<?> subDataCollection = (Collection<?>) value;
                         if (CollectionUtils.isNotEmpty(subDataCollection)) {
@@ -296,7 +284,8 @@ public final class ExcelExports {
 
             subField.setColumnIndex(columnIndex);
 
-            Object subData = Objects.nonNull(value) ? reflectiveGetFieldValue(value, subField.getField()) : null;
+            Object subData =
+                Objects.nonNull(value) ? ReflectionUtils.reflectiveGetFieldValue(value, subField.getField()) : null;
             Cell cell = row.createCell(columnIndex++);
             cell.setCellStyle(cellStyle);
             setCellValue(cell, subData, subField);
@@ -304,41 +293,8 @@ public final class ExcelExports {
         return columnIndex;
     }
 
-    private static Object reflectiveGetFieldValue(Object obj, Field filed) {
-        Class<?> clazz = obj.getClass();
-        try {
-            Method getterMethod;
-            if (boolean.class.isAssignableFrom((filed.getType()))) {
-                getterMethod = ReflectionUtils.findMethod(clazz, booleanGetterMethodName(filed.getName()));
-            } else {
-                getterMethod = ReflectionUtils.findMethod(clazz, commonGetterMethodName(filed.getName()));
-            }
-            assert getterMethod != null;
-            return getterMethod.invoke(obj);
-        } catch (Exception e) {
-            log.error("ExcelExports#reflectiveGetFieldValue,excel生成异常", e);
-            throw new EasyFileException(CommonErrorCode.DOWNLOAD_EXECUTE_REFLECT_ERROR);
-        }
-    }
-
-    private static String booleanGetterMethodName(String fieldName) {
-        return "is" + firstIndexToUpper(fieldName);
-    }
-
-    private static String commonGetterMethodName(String fieldName) {
-        return "get" + firstIndexToUpper(fieldName);
-    }
-
-    private static String firstIndexToUpper(String str) {
-        if (str == null || str.length() <= 0) {
-            return StringUtils.EMPTY;
-        }
-        String first = str.charAt(0) + StringUtils.EMPTY;
-        return str.replaceFirst(first, first.toUpperCase());
-    }
-
     private static void setCellValue(Cell cell, Object obj, ExcelFiled field) {
-        String value = getValue(obj, field.getField());
+        String value = getValue(obj, field);
         // 过滤 null 值转换为 空格
         if (Objects.isNull(value) || "null".equals(value)) {
             cell.setCellValue(StringUtils.EMPTY);
@@ -354,7 +310,7 @@ public final class ExcelExports {
      * @param obj obj
      * @return {@link String}
      */
-    private static String getValue(Object obj, Field filed) {
+    private static String getValue(Object obj, ExcelFiled filed) {
         if (Objects.isNull(obj)) {
             return StringUtils.EMPTY;
         }
@@ -367,8 +323,8 @@ public final class ExcelExports {
         }
     }
 
-    private static String formatDate(Date date, Field field) {
-        ExcelProperty excelProperty = AnnotatedElementUtils.findMergedAnnotation(field, ExcelProperty.class);
+    private static String formatDate(Date date, ExcelFiled field) {
+        ExcelProperty excelProperty = field.getExcelProperty();
         assert Objects.nonNull(excelProperty);
         return new SimpleDateFormat(excelProperty.dateFormatter()).format(date);
     }

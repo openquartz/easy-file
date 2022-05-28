@@ -8,6 +8,7 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
@@ -158,5 +159,19 @@ public class ExcelBean implements Closeable {
             builder.append("] ");
         }
         log.info("[ExcelBean#executeFinish] totalRows:{},Sheet:{}", totalRows, builder);
+    }
+
+    /**
+     * 设置基本的表头标题格式
+     *
+     * @return cellStyle
+     */
+    public CellStyle decorateHeader() {
+        CellStyle cellStyle = this.cloneStyleByBase();
+        Font font = this.getWorkbook().createFont();
+        font.setBold(true);
+        cellStyle.setFont(font);
+        cellStyle.setWrapText(true);
+        return cellStyle;
     }
 }
