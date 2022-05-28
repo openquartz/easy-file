@@ -54,14 +54,14 @@ public final class ExcelExports {
         }
     }
 
-    public static ExcelBean createWorkbook(Integer rowAccessWindowSize, Integer segmentationSheetRows) {
-        Workbook workbook = new SXSSFWorkbook(rowAccessWindowSize);
+    public static ExcelBean createWorkbook() {
+        Workbook workbook = new SXSSFWorkbook(ExcelGenProperty.getRowAccessWindowSize());
 
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
         cellStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        ExcelBean excelBean = new ExcelBean(segmentationSheetRows);
+        ExcelBean excelBean = new ExcelBean(ExcelGenProperty.getSegmentationSheetRows());
         excelBean.setWorkbook(workbook);
         excelBean.setBaseStyle(cellStyle);
         return excelBean;

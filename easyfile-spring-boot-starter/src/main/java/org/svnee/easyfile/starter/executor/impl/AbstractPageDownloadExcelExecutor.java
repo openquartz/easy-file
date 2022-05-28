@@ -50,8 +50,7 @@ public abstract class AbstractPageDownloadExcelExecutor<T> implements PageShardi
             // 执行 PageTotal 查询
             total = count(context.getOtherMap());
         }
-        try (ExcelBean excelBean = ExcelExports
-            .createWorkbook(ExcelGenProperty.getRowAccessWindowSize(), ExcelGenProperty.getSegmentationSheetRows())) {
+        try (ExcelBean excelBean = ExcelExports.createWorkbook()) {
             List<ExcelFiled> fieldList = ExcelBeanUtils
                 .getExcelFiledByGroup(GenericUtils.getClassT(this, 0), exportGroup(context));
 

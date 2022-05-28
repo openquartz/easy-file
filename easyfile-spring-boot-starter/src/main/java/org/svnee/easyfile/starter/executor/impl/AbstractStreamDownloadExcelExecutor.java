@@ -60,8 +60,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
     @Override
     public void export(DownloaderRequestContext context) {
         // 创建workbook
-        try (ExcelBean excelBean = ExcelExports
-            .createWorkbook(ExcelGenProperty.getRowAccessWindowSize(), ExcelGenProperty.getSegmentationSheetRows())) {
+        try (ExcelBean excelBean = ExcelExports.createWorkbook()) {
             List<ExcelFiled> fieldList = ExcelBeanUtils
                 .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
             // 设置表头header

@@ -2,7 +2,9 @@ package org.svnee.easyfile.common.bean.excel;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -16,6 +18,8 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
  */
 @Data
 public class ExcelBean implements Closeable {
+
+    private static final String DEFAULT_SHEET_GROUP = "SHEET";
 
     /**
      * 切分sheet 最大行数
@@ -34,24 +38,15 @@ public class ExcelBean implements Closeable {
     private Workbook workbook;
 
     /**
-     * 当前页
+     * 当前Sheet
+     * key: sheet-group ---> value: currentSheet
      */
-    private Sheet currentSheet;
+    private Map<String, SheetBean> currentSheetMap = new ConcurrentHashMap<>();
 
     /**
-     * 总行数
+     * 当前workbook 总行数
      */
-    private int sumRow;
-
-    /**
-     * 当前行下标
-     */
-    private int currentRowIndex;
-
-    /**
-     * sheet 下标
-     */
-    private int sheetIndex;
+    private int totalRows;
 
     /**
      * 关闭流
@@ -74,36 +69,69 @@ public class ExcelBean implements Closeable {
     }
 
     public Workbook getWorkbook() {
-        return Objects.nonNull(workbook) ? workbook : new SXSSFWorkbook(1000);
+        return Objects.nonNull(workbook) ? workbook : new SXSSFWorkbook(ExcelGenProperty.getRowAccessWindowSize());
+    }
+
+    /**
+     * 获取当前执行的Sheet
+     */
+    public Sheet getCurrentSheet(String sheetGroup) {
+
+        SheetBean sheetBean = getSheetBean(sheetGroup);
+        if (Objects.isNull(sheetBean.getCurrentSheet()) || sheetBean.getCurrentRowIndex() >= segmentationSheetRows) {
+            return nextSheet(sheetGroup);
+        }
+        return sheetBean.getCurrentSheet();
     }
 
     /**
      * 获取当前执行的Sheet
      */
     public Sheet getCurrentSheet() {
-        if (Objects.isNull(currentSheet) || currentRowIndex >= segmentationSheetRows) {
-            return nextSheet();
-        }
-        return currentSheet;
+        return getCurrentSheet(DEFAULT_SHEET_GROUP);
     }
 
     /**
      * 获取下一页
      */
-    private Sheet nextSheet() {
-        sheetIndex++;
-        Sheet sheet = workbook.createSheet("SHEET" + sheetIndex);
-        currentSheet = sheet;
-        currentRowIndex = 0;
+    private Sheet nextSheet(String sheetGroup) {
+        SheetBean sheetBean = getSheetBean(sheetGroup);
+        Sheet sheet = workbook
+            .createSheet(sheetGroup + (sheetBean.getSheetIndex() > 0 ? sheetBean.getSheetIndex() + "" : ""));
+        sheetBean.nextSheet(sheet);
         return sheet;
     }
 
     /**
      * 写入行数
      */
+    public void writeRow(int rows, String sheetGroup) {
+        SheetBean sheetBean = getSheetBean(sheetGroup);
+        totalRows += rows;
+        sheetBean.writeRows(rows);
+    }
+
+    /**
+     * 获取SheetBean
+     *
+     * @param sheetGroup sheetGroup
+     * @return SheetBean
+     */
+    private SheetBean getSheetBean(String sheetGroup) {
+        SheetBean sheetBean = currentSheetMap.get(sheetGroup);
+        if (Objects.nonNull(sheetBean)) {
+            return sheetBean;
+        }
+        sheetBean = new SheetBean();
+        currentSheetMap.put(sheetGroup, sheetBean);
+        return sheetBean;
+    }
+
+    /**
+     * 写入行数
+     */
     public void writeRow(int rows) {
-        sumRow += rows;
-        currentRowIndex += rows;
+        writeRow(rows, DEFAULT_SHEET_GROUP);
     }
 
     /**
@@ -115,12 +143,24 @@ public class ExcelBean implements Closeable {
         return cellStyle;
     }
 
+    public int getCurrentRowIndex(String sheetGroup) {
+        return getSheetBean(sheetGroup).getCurrentRowIndex();
+    }
+
+    public int getCurrentRowIndex() {
+        return getCurrentRowIndex(DEFAULT_SHEET_GROUP);
+    }
+
     @Override
     public String toString() {
         return "ExcelBean{" +
-            "sumRow=" + sumRow +
-            ", currentRowIndex=" + currentRowIndex +
-            ", sheetIndex=" + sheetIndex +
+            "segmentationSheetRows=" + segmentationSheetRows +
+            ", baseStyle=" + baseStyle +
+            ", workbook=" + workbook +
+            ", currentSheetMap=" + currentSheetMap +
+            ", totalRows=" + totalRows +
             '}';
     }
+
+
 }
