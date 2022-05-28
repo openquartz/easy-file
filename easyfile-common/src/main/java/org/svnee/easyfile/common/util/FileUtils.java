@@ -12,6 +12,9 @@ import org.svnee.easyfile.common.exception.CommonErrorCode;
  **/
 public final class FileUtils {
 
+    private FileUtils() {
+    }
+
     /**
      * sizeOfByte
      *
