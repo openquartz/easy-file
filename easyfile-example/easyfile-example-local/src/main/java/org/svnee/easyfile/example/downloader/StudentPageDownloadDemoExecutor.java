@@ -31,6 +31,11 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
     }
 
     @Override
+    public String sheetPrefix() {
+        return "学生信息";
+    }
+
+    @Override
     public PageTotal count(Map<String, Object> othersMap) {
         if (PageTotalContext.currentPageToTal() != null) {
             return PageTotalContext.currentPageToTal();

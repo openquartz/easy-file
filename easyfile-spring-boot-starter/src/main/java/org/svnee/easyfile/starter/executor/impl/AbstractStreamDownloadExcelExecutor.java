@@ -10,7 +10,6 @@ import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
-import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
@@ -39,6 +38,15 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
     }
 
     /**
+     * SheetName Prefix
+     *
+     * @return sheetPrefix
+     */
+    public String sheetPrefix() {
+        return ExcelBean.DEFAULT_SHEET_GROUP;
+    }
+
+    /**
      * 增强类的字段
      *
      * @param tList t
@@ -64,7 +72,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
             List<ExcelFiled> fieldList = ExcelBeanUtils
                 .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
             // 设置表头header
-            ExcelExports.writeHeader(excelBean, fieldList);
+            ExcelExports.writeHeader(excelBean, fieldList, sheetPrefix());
 
             // 调用流式查询
             S session = null;
@@ -78,14 +86,15 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
                     .forEach(t -> {
                         if (tempList.size() >= enhanceLength()) {
                             // 写入数据
-                            ExcelExports.writeData(excelBean, fieldList, enhance(tempList));
+                            ExcelExports
+                                .writeData(excelBean, fieldList, enhance(tempList), sheetPrefix());
                             // 清除临时数据
                             tempList.clear();
                         }
                         tempList.add(t);
                     });
                 if (!tempList.isEmpty()) {
-                    ExcelExports.writeData(excelBean, fieldList, enhance(tempList));
+                    ExcelExports.writeData(excelBean, fieldList, enhance(tempList), sheetPrefix());
                     // 清除临时数据
                     tempList.clear();
                 }

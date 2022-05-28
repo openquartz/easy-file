@@ -19,7 +19,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 @Data
 public class ExcelBean implements Closeable {
 
-    private static final String DEFAULT_SHEET_GROUP = "SHEET";
+    public static final String DEFAULT_SHEET_GROUP = "SHEET";
 
     /**
      * 切分sheet 最大行数
@@ -85,19 +85,12 @@ public class ExcelBean implements Closeable {
     }
 
     /**
-     * 获取当前执行的Sheet
-     */
-    public Sheet getCurrentSheet() {
-        return getCurrentSheet(DEFAULT_SHEET_GROUP);
-    }
-
-    /**
      * 获取下一页
      */
     private Sheet nextSheet(String sheetGroup) {
         SheetBean sheetBean = getSheetBean(sheetGroup);
         Sheet sheet = workbook
-            .createSheet(sheetGroup + (sheetBean.getSheetIndex() > 0 ? sheetBean.getSheetIndex() + "" : ""));
+            .createSheet(sheetGroup + (sheetBean.getSheetIndex() > 0 ? "-" + sheetBean.getSheetIndex() : ""));
         sheetBean.nextSheet(sheet);
         return sheet;
     }
@@ -128,13 +121,6 @@ public class ExcelBean implements Closeable {
     }
 
     /**
-     * 写入行数
-     */
-    public void writeRow(int rows) {
-        writeRow(rows, DEFAULT_SHEET_GROUP);
-    }
-
-    /**
      * 克隆style
      */
     public CellStyle cloneStyleByBase() {
@@ -145,10 +131,6 @@ public class ExcelBean implements Closeable {
 
     public int getCurrentRowIndex(String sheetGroup) {
         return getSheetBean(sheetGroup).getCurrentRowIndex();
-    }
-
-    public int getCurrentRowIndex() {
-        return getCurrentRowIndex(DEFAULT_SHEET_GROUP);
     }
 
     @Override

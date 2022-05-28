@@ -74,9 +74,9 @@ public final class ExcelExports {
      * @param exportFieldList 导出字段
      * @return 占用行数
      */
-    public static int writeHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList) {
-        if (CollectionUtils.isNotEmpty(exportFieldList) && excelBean.getCurrentRowIndex() == 0) {
-            return setHeader(excelBean, exportFieldList);
+    public static int writeHeader(ExcelBean excelBean, List<ExcelFiled> exportFieldList, String sheetGroup) {
+        if (CollectionUtils.isNotEmpty(exportFieldList) && excelBean.getCurrentRowIndex(sheetGroup) == 0) {
+            return setHeader(excelBean, exportFieldList, sheetGroup);
         }
         return 0;
     }
@@ -89,12 +89,13 @@ public final class ExcelExports {
      * @param rowList rowList
      * @param <T> T
      */
-    public static <T> void writeData(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> rowList) {
+    public static <T> void writeData(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> rowList,
+        String sheetGroup) {
         if (CollectionUtils.isEmpty(rowList)) {
             return;
         }
-        excelBean.getCurrentSheet();
-        writeRows(excelBean, exportFieldList, rowList);
+        excelBean.getCurrentSheet(sheetGroup);
+        writeRows(excelBean, exportFieldList, rowList, sheetGroup);
     }
 
     /**
@@ -104,12 +105,12 @@ public final class ExcelExports {
      * @param exportFields exportFields
      * @return 表头占用的行数
      */
-    private static int setHeader(ExcelBean excelBean, List<ExcelFiled> exportFields) {
+    private static int setHeader(ExcelBean excelBean, List<ExcelFiled> exportFields, String sheetGroup) {
         int titleRow = 0;
         if (CollectionUtils.isEmpty(exportFields)) {
             return titleRow;
         }
-        Sheet sheet = excelBean.getCurrentSheet();
+        Sheet sheet = excelBean.getCurrentSheet(sheetGroup);
 
         Row headerRow = sheet.createRow(0);
         titleRow += 1;
@@ -119,7 +120,7 @@ public final class ExcelExports {
                 && StringUtils.isNotBlank(e.getExcelProperty().value()));
         Row subHeaderRow = needSubTitle ? sheet.createRow(1) : headerRow;
         titleRow = needSubTitle ? titleRow + 1 : titleRow;
-        excelBean.writeRow(titleRow);
+        excelBean.writeRow(titleRow, sheetGroup);
 
         CellStyle cellStyle = decorateHeader(excelBean);
         int index = 0;
@@ -190,13 +191,14 @@ public final class ExcelExports {
      * @param dataRows dataRows
      * @param <T> T
      */
-    private static <T> void writeRows(ExcelBean excelBean, List<ExcelFiled> exportFields, List<T> dataRows) {
+    private static <T> void writeRows(ExcelBean excelBean, List<ExcelFiled> exportFields, List<T> dataRows,
+        String sheetGroup) {
         CellStyle cellStyle = excelBean.getBaseStyle();
         for (Object dataRow : dataRows) {
-            writeHeader(excelBean, exportFields);
-            int rowIndex = excelBean.getCurrentRowIndex();
+            writeHeader(excelBean, exportFields, sheetGroup);
+            int rowIndex = excelBean.getCurrentRowIndex(sheetGroup);
 
-            Sheet sheet = excelBean.getCurrentSheet();
+            Sheet sheet = excelBean.getCurrentSheet(sheetGroup);
             Row row = sheet.createRow(rowIndex);
             int columnIndex = 0;
             int maxCurrentSubRowIndex = rowIndex;
@@ -259,8 +261,8 @@ public final class ExcelExports {
             }
 
             // 如果此时已经大于当前sheet页则重新创建sheet
-            excelBean.writeRow(maxCurrentSubRowIndex - rowIndex + 1);
-            excelBean.getCurrentSheet();
+            excelBean.writeRow(maxCurrentSubRowIndex - rowIndex + 1, sheetGroup);
+            excelBean.getCurrentSheet(sheetGroup);
         }
     }
 
