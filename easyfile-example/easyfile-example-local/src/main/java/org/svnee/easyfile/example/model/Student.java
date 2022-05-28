@@ -27,6 +27,8 @@ public class Student {
     @ExcelProperty(value = "学校", width = 8 * 1024)
     private String school;
 
+    private Integer schoolId;
+
     @ExcelProperty(value = "地址", width = 8 * 1024)
     private String address;
 

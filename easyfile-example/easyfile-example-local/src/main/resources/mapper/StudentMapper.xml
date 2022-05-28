@@ -5,6 +5,7 @@
         id,
         `name`,
         age,
+        school_id,
         school,
         address
     </sql>
@@ -12,6 +13,7 @@
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="age" property="age"/>
+        <result column="school_id" property="schoolId"/>
         <result column="school" property="school"/>
         <result column="address" property="address"/>
     </resultMap>
@@ -33,6 +35,21 @@
         from test_student
         where id > #{id}
         order by id
+        limit #{offset}
+    </select>
+
+    <select id="countBySchool" resultType="int">
+        select count(*)
+        from test_student
+        where school_id = #{schoolId}
+    </select>
+
+    <select id="findByMinIdAndSchoolIdLimit" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        from test_student
+        where id > #{id}
+        and school_id = #{schoolId}
+        order by school_id, id
         limit #{offset}
     </select>
 </mapper>

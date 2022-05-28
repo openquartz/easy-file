@@ -23,7 +23,6 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.util.ReflectionUtils;
 import org.svnee.easyfile.common.annotation.ExcelProperty;
-import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.CollectionUtils;
@@ -51,6 +50,20 @@ public final class ExcelExports {
             excelBean.getWorkbook().write(outputStream);
         } catch (IOException e) {
             log.error("[ExcelExports#writeWorkbook] write data to workbook error,excelBean:{}", excelBean, e);
+        }
+    }
+
+    /**
+     * 写出空workbook
+     *
+     * @param outputStream 输出流
+     */
+    public static void writeEmptyWorkbook(OutputStream outputStream) {
+        try {
+            ExcelBean excelBean = createWorkbook();
+            excelBean.getWorkbook().write(outputStream);
+        } catch (IOException e) {
+            log.error("[ExcelExports#writeEmptyWorkbook] write data to workbook error", e);
         }
     }
 

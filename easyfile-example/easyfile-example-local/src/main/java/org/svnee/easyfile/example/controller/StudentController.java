@@ -10,6 +10,8 @@ import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
+import org.svnee.easyfile.example.downloader.StudentMultiSheetPageDownloadDemoExecutor;
+import org.svnee.easyfile.example.downloader.StudentMultiSheetStreamDownloadDemoExecutor;
 import org.svnee.easyfile.example.downloader.StudentPageDownloadDemoExecutor;
 import org.svnee.easyfile.example.downloader.StudentStreamDownloadDemoExecutor;
 import org.svnee.easyfile.example.entity.response.ExportResultVO;
@@ -24,6 +26,8 @@ public class StudentController {
 
     private final StudentStreamDownloadDemoExecutor studentStreamDownloadDemoExecutor;
     private final StudentPageDownloadDemoExecutor studentPageDownloadDemoExecutor;
+    private final StudentMultiSheetPageDownloadDemoExecutor studentMultiSheetPageDownloadDemoExecutor;
+    private final StudentMultiSheetStreamDownloadDemoExecutor studentMultiSheetStreamDownloadDemoExecutor;
 
     @GetMapping("/export/stream")
     public ResponseResult<ExportResultVO> export(HttpServletResponse response) throws IOException {
@@ -53,5 +57,32 @@ public class StudentController {
         return null;
     }
 
+    @GetMapping("/export/multiSheet/page")
+    public ResponseResult<ExportResultVO> exportPageMultiSheet(HttpServletResponse response) throws IOException {
+
+        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        requestContext.setOut(response.getOutputStream());
+        requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
+        requestContext.setExportRemark("StudentExport备注");
+        Pair<Boolean, Long> exportResult = studentMultiSheetPageDownloadDemoExecutor.exportResult(requestContext);
+        if (Boolean.TRUE.equals(exportResult.getKey())) {
+            return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
+        }
+        return null;
+    }
+
+    @GetMapping("/export/multiSheet/stream")
+    public ResponseResult<ExportResultVO> exportStreamMultiSheet(HttpServletResponse response) throws IOException {
+
+        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        requestContext.setOut(response.getOutputStream());
+        requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
+        requestContext.setExportRemark("StudentExport备注");
+        Pair<Boolean, Long> exportResult = studentMultiSheetStreamDownloadDemoExecutor.exportResult(requestContext);
+        if (Boolean.TRUE.equals(exportResult.getKey())) {
+            return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
+        }
+        return null;
+    }
 
 }

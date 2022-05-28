@@ -3,6 +3,7 @@ package org.svnee.easyfile.starter.executor.impl;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
+import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -24,6 +25,7 @@ import org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor;
  *
  * @author svnee
  */
+@Slf4j
 public abstract class AbstractPageDownloadExcelExecutor<T>
     extends AbstractDownloadExcel07Executor
     implements PageShardingDownloadExecutor<T> {
@@ -53,8 +55,8 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
     @Override
     public void export(DownloaderRequestContext context) {
         PageTotal total;
-        if (PageTotalContext.currentPageToTal() != null) {
-            total = PageTotalContext.currentPageToTal();
+        if (PageTotalContext.currentPageToTal(sheetPrefix()) != null) {
+            total = PageTotalContext.currentPageToTal(sheetPrefix());
         } else {
             // 执行 PageTotal 查询
             total = count(context.getOtherMap());
@@ -80,6 +82,7 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
                     ExcelExports.writeData(excelBean, fieldList, pair.getValue(), sheetPrefix());
                 }
             }
+            excelBean.logExportInfo(log);
             ExcelExports.writeWorkbook(excelBean, context.getOut());
         }
     }

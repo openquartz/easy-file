@@ -11,20 +11,17 @@ import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
+import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 
 /**
- * 流式下载导出-支持Mybatis 流式查询。查询出结果数据，进行不停的将数据导出到磁盘上
- * 用户使用导出文件时,必须对模版类使用{@link org.svnee.easyfile.common.annotation.ExcelProperty} 注解,用来标识excel需要导出的标题字段
+ * 多Sheet流式导出
  *
- * @param <S> Session - 流式查询会话对象
- * @param <R> 流式查询的结果集合-需要支持为迭代器
- * @param <T> 导出实体模版类对象
- * @author svnee
+ * @author snvee
  **/
 @Slf4j
-public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T>
+public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T, G>
     extends AbstractDownloadExcel07Executor
     implements StreamDownloadExecutor<S> {
 
@@ -43,16 +40,14 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
      *
      * @return sheetPrefix
      */
-    public String sheetPrefix() {
-        return ExcelBean.DEFAULT_SHEET_GROUP;
-    }
+    public abstract List<G> sheetPrefix();
 
     /**
      * 增强类的字段
      *
      * @param tList t
      */
-    public List<T> enhance(List<T> tList) {
+    public List<T> enhance(List<T> tList, G sheetGroup) {
         return tList;
     }
 
@@ -61,42 +56,53 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
      *
      * @param context context
      * @param session session会话
+     * @param sheetGroup sheetGroup
      * @return 流式查询结果
      */
-    public abstract R streamQuery(S session, DownloaderRequestContext context);
+    public abstract R streamQuery(S session, DownloaderRequestContext context, G sheetGroup);
 
     @Override
     public void export(DownloaderRequestContext context) {
+
+        List<G> sheetGroupList = sheetPrefix();
+        if (CollectionUtils.isEmpty(sheetGroupList)) {
+            ExcelExports.writeEmptyWorkbook(context.getOut());
+            return;
+        }
+
         // 创建workbook
         try (ExcelBean excelBean = ExcelExports.createWorkbook()) {
             List<ExcelFiled> fieldList = ExcelBeanUtils
                 .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
-            // 设置表头header
-            ExcelExports.writeHeader(excelBean, fieldList, sheetPrefix());
 
             // 调用流式查询
-            S session = null;
+            S session = openSession();
             R iterable = null;
             try {
-                session = openSession();
-                iterable = streamQuery(session, context);
-                // 流式的进行数据导出,并对相关字段做增强操作
-                List<T> tempList = new ArrayList<>();
-                iterable
-                    .forEach(t -> {
-                        if (tempList.size() >= enhanceLength()) {
-                            // 写入数据
-                            ExcelExports
-                                .writeData(excelBean, fieldList, enhance(tempList), sheetPrefix());
-                            // 清除临时数据
-                            tempList.clear();
-                        }
-                        tempList.add(t);
-                    });
-                if (!tempList.isEmpty()) {
-                    ExcelExports.writeData(excelBean, fieldList, enhance(tempList), sheetPrefix());
-                    // 清除临时数据
-                    tempList.clear();
+                for (G sheetGroup : sheetGroupList) {
+                    // 设置表头header
+                    ExcelExports.writeHeader(excelBean, fieldList, sheetGroup.toString());
+
+                    iterable = streamQuery(session, context, sheetGroup);
+                    // 流式的进行数据导出,并对相关字段做增强操作
+                    List<T> tempList = new ArrayList<>();
+                    iterable
+                        .forEach(t -> {
+                            if (tempList.size() >= enhanceLength()) {
+                                // 写入数据
+                                ExcelExports.writeData(excelBean, fieldList, enhance(tempList, sheetGroup),
+                                    sheetGroup.toString());
+                                // 清除临时数据
+                                tempList.clear();
+                            }
+                            tempList.add(t);
+                        });
+                    if (!tempList.isEmpty()) {
+                        ExcelExports
+                            .writeData(excelBean, fieldList, enhance(tempList, sheetGroup), sheetGroup.toString());
+                        // 清除临时数据
+                        tempList.clear();
+                    }
                 }
                 excelBean.logExportInfo(log);
                 ExcelExports.writeWorkbook(excelBean, context.getOut());
@@ -116,5 +122,4 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
             }
         }
     }
-
 }

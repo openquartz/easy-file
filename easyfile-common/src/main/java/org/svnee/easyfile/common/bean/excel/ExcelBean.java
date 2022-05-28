@@ -3,6 +3,7 @@ package org.svnee.easyfile.common.bean.excel;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
 
 /**
  * ExcelBean
@@ -144,5 +146,17 @@ public class ExcelBean implements Closeable {
             '}';
     }
 
+    public void logExportInfo(Logger log) {
+        StringBuilder builder = new StringBuilder();
 
+        for (Entry<String, SheetBean> entry : this.currentSheetMap.entrySet()) {
+            builder.append(" [sheet:");
+            builder.append(entry.getKey());
+            builder.append(",");
+            builder.append("sumRow:");
+            builder.append(entry.getValue().getSumRow());
+            builder.append("] ");
+        }
+        log.info("[ExcelBean#executeFinish] totalRows:{},Sheet:{}", totalRows, builder);
+    }
 }

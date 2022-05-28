@@ -1,17 +1,15 @@
 package org.svnee.easyfile.starter.executor;
 
 import java.io.Closeable;
-import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.constants.Constants;
 
 /**
  * 流式导出支持
  *
  * @param <S> session 对象
- * @param <R> 对象结果集合
- * @param <T> T 导出对象
  * @author svnee
  */
-public interface StreamDownloadExecutor<S extends Closeable, R extends Iterable<T>, T> extends BaseDownloadExecutor {
+public interface StreamDownloadExecutor<S extends Closeable> extends BaseDownloadExecutor {
 
     /**
      * 返回会话
@@ -21,12 +19,12 @@ public interface StreamDownloadExecutor<S extends Closeable, R extends Iterable<
     S openSession();
 
     /**
-     * 查询结果
+     * 一次增强长度-buffer 到内存长度
+     * 用户可以自主覆盖
      *
-     * @param context context
-     * @param session session会话
-     * @return 流式查询结果
+     * @return 500
      */
-    R streamQuery(S session, DownloaderRequestContext context);
-
+    default Integer enhanceLength() {
+        return Constants.STREAM_EXPORT_ENHANCE_RECOMMEND_LEN;
+    }
 }

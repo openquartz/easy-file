@@ -20,9 +20,22 @@ public interface StudentMapper extends BaseMapper<Student> {
     @ResultType(Student.class)
     Cursor<Student> scan(@Param("limit") int limit);
 
+    /**
+     * 查询
+     */
+    @Select("select * from test_student where school_id =#{schoolId} limit #{limit} ")
+    @Options(resultSetType = ResultSetType.FORWARD_ONLY, fetchSize = Integer.MIN_VALUE)
+    @ResultType(Student.class)
+    Cursor<Student> scanBySchool(@Param("limit") int limit, @Param("schoolId") Long schoolId);
+
     Student findById(@Param("id") Long id);
 
     List<Student> findByMinIdLimit(@Param("id") Long id, @Param("offset") Integer offset);
 
+    List<Student> findByMinIdAndSchoolIdLimit(@Param("id") Long id, @Param("schoolId") Long schoolId,
+        @Param("offset") Integer offset);
+
     int count();
+
+    int countBySchool(Long schoolId);
 }

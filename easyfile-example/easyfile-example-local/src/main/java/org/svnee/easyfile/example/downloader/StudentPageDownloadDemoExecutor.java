@@ -37,17 +37,17 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
 
     @Override
     public PageTotal count(Map<String, Object> othersMap) {
-        if (PageTotalContext.currentPageToTal() != null) {
-            return PageTotalContext.currentPageToTal();
+        if (PageTotalContext.currentPageToTal(sheetPrefix()) != null) {
+            return PageTotalContext.currentPageToTal(sheetPrefix());
         }
         int count = studentMapper.count();
-        PageTotalContext.cache(PageTotal.of(count, 100));
-        return PageTotalContext.currentPageToTal();
+        PageTotalContext.cache(sheetPrefix(), PageTotal.of(count, 100));
+        return PageTotalContext.currentPageToTal(sheetPrefix());
     }
 
     @Override
     public Pair<Long, List<Student>> shardingData(DownloaderRequestContext context, Page page, Long cursorId) {
-        List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageNum());
+        List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageSize());
         if (CollectionUtils.isEmpty(studentList)) {
             return Pair.of(cursorId, studentList);
         }
