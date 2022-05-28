@@ -3,11 +3,13 @@
 <mapper namespace="org.svnee.easyfile.example.mapper.SchoolMapper">
     <sql id="Base_Column_List">
         id,
-        `name`
+        `name`,
+        grade
     </sql>
     <resultMap id="BaseResultMap" type="org.svnee.easyfile.example.model.School">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
+        <result column="grade" property="grade"/>
     </resultMap>
 
     <insert id="insertSelective">
@@ -17,7 +19,10 @@
                 id,
             </if>
             <if test="name != null">
-                name
+                `name`,
+            </if>
+            <if test="grade != null and grade != ''">
+                grade
             </if>
         </trim>
         VALUES
@@ -26,7 +31,10 @@
                 #{id},
             </if>
             <if test="name != null">
-                #{name}
+                #{name},
+            </if>
+            <if test="grade != null and grade != ''">
+                #{grade}
             </if>
         </trim>
     </insert>
@@ -35,5 +43,22 @@
         select
         <include refid="Base_Column_List"/>
         from test_school
+    </select>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from test_school
+        where id = #{id}
+    </select>
+
+    <select id="selectByIdList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from test_school
+        where id in
+        <foreach collection="idList" index="index" open="(" close=")" item="item" separator="," nullable="false">
+            #{item}
+        </foreach>
     </select>
 </mapper>

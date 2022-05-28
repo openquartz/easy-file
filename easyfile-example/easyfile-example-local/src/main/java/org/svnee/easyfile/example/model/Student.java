@@ -27,7 +27,7 @@ public class Student {
     @ExcelProperty(value = "学校", width = 8 * 1024)
     private String school;
 
-    private Integer schoolId;
+    private Long schoolId;
 
     @ExcelProperty(value = "地址", width = 8 * 1024)
     private String address;
@@ -37,6 +37,9 @@ public class Student {
 
     @ExcelProperty("新地址信息")
     private Address addr;
+
+    @ExcelProperty("學校等級")
+    private String schoolGrade;
 
     public Long getId() {
         return id;
@@ -92,5 +95,21 @@ public class Student {
 
     public void setAddr(Address addr) {
         this.addr = addr;
+    }
+
+    public Long getSchoolId() {
+        return schoolId;
+    }
+
+    public void setSchoolId(Long schoolId) {
+        this.schoolId = schoolId;
+    }
+
+    public String getSchoolGrade() {
+        return schoolGrade;
+    }
+
+    public void setSchoolGrade(String schoolGrade) {
+        this.schoolGrade = schoolGrade;
     }
 }

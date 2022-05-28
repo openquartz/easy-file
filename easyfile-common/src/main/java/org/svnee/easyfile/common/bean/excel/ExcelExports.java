@@ -216,6 +216,7 @@ public final class ExcelExports {
             int columnIndex = 0;
             int maxCurrentSubRowIndex = rowIndex;
             for (ExcelFiled field : exportFields) {
+                // 基本类型数据
                 if (!field.isCollection()
                     && org.svnee.easyfile.common.bean.excel.ReflectionUtils.isJavaClass(field.getField().getType())) {
                     Object value = reflectiveGetFieldValue(dataRow, field.getField());
@@ -241,15 +242,15 @@ public final class ExcelExports {
                                 if (currentSubRowIndex > rowIndex) {
                                     subRow = sheet.createRow(currentSubRowIndex);
                                 }
-
                                 currentSubRowIndex++;
                                 setSubCell(cellStyle, subRow, columnIndex, field, subRowData);
                             }
-                            columnIndex += field.getSubFiledList().size();
                             // 取最大的下标,第一行共用父列的第一行
                             maxCurrentSubRowIndex = Math.max(currentSubRowIndex - 1, maxCurrentSubRowIndex);
                         }
                     }
+                    // 直接移动到子列的所有的跨度
+                    columnIndex += field.getSubFiledList().size();
                 }
             }
 
@@ -291,15 +292,11 @@ public final class ExcelExports {
      */
     private static int setSubCell(CellStyle cellStyle, Row row, int columnIndex, ExcelFiled field, Object value) {
 
-        if (Objects.isNull(value)) {
-            return columnIndex;
-        }
-
         for (ExcelFiled subField : field.getSubFiledList()) {
 
             subField.setColumnIndex(columnIndex);
 
-            Object subData = reflectiveGetFieldValue(value, subField.getField());
+            Object subData = Objects.nonNull(value) ? reflectiveGetFieldValue(value, subField.getField()) : null;
             Cell cell = row.createCell(columnIndex++);
             cell.setCellStyle(cellStyle);
             setCellValue(cell, subData, subField);
