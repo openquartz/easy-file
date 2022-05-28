@@ -398,6 +398,19 @@ excel的导出支持1:* 的数据单元行列的导出。例如：\
 2、针对特别大的数据时,建议使用1:1的单元格导出 \
 ![MergeCellSheet](./doc/one2one.png)
 
+##### 多Sheet分组导出支持
+
+需要按照多个Sheet进行分组查询导出 导出数据形如,
+![MultiSheetExport](./doc/MultiSheetExport.png)
+
+EasyFile 提供两个执行器
+
+- 流式-多Sheet组导出
+  `org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetStreamDownloadExcelExecutor`
+
+- 分页-多Sheet组导出
+  `org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor`
+
 ##### 优化建议
 
 针对大文件导出功能目前easyfile 提供两种处理方式 分页导出/流式导出。\
