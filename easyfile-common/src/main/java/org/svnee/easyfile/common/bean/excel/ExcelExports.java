@@ -41,6 +41,7 @@ public final class ExcelExports {
     public static void writeWorkbook(ExcelBean excelBean, OutputStream outputStream) {
         try {
             excelBean.getWorkbook().write(outputStream);
+            outputStream.flush();
         } catch (IOException e) {
             log.error("[ExcelExports#writeWorkbook] write data to workbook error,excelBean:{}", excelBean, e);
         }
@@ -55,6 +56,7 @@ public final class ExcelExports {
         try {
             ExcelBean excelBean = createWorkbook();
             excelBean.getWorkbook().write(outputStream);
+            outputStream.flush();
         } catch (IOException e) {
             log.error("[ExcelExports#writeEmptyWorkbook] write data to workbook error", e);
         }
