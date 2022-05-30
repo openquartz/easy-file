@@ -271,6 +271,9 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 
 需要配合使用（`org.svnee.easyfile.common.annotation.ExcelProperty`）
 
+多Sheet组下载支持
+`org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor`
+
 2、流式下载支持
 
 `org.svnee.easyfile.starter.executor.StreamDownloadExecutor`
@@ -278,6 +281,9 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 提供更加方便的流式支持
 
 `org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor`
+
+多Sheet组下载支持
+`org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetStreamDownloadExcelExecutor`
 
 需要配合使用(`org.svnee.easyfile.common.annotation.ExcelProperty`)
 
