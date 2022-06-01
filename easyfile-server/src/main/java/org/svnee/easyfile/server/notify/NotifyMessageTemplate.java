@@ -1,6 +1,8 @@
 package org.svnee.easyfile.server.notify;
 
+import java.util.Date;
 import lombok.Data;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 
 /**
  * 通知消息模版
@@ -25,4 +27,28 @@ public class NotifyMessageTemplate {
      */
     private String remark;
 
+    /**
+     * 下载时间
+     */
+    private Date downloadTime;
+
+    /**
+     * 下载完成时间
+     */
+    private Date downloadFinishedTime;
+
+    /**
+     * 注册ID
+     */
+    private Long registerId;
+
+    /**
+     * 失败信息
+     */
+    private String errorMsg;
+
+    /**
+     * 上传状态
+     */
+    private UploadStatusEnum uploadStatus;
 }

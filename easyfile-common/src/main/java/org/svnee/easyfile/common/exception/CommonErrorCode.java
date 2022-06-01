@@ -16,6 +16,7 @@ public enum CommonErrorCode implements EasyFileErrorCode {
     THREAD_POOL_FACTORY_NULLABLE_ERROR("06", "ThreadPoolFactory must not be null!"),
     METHOD_NOT_EXIST_ERROR("07", "Method not exist"),
     FILE_NOT_EXIST_ERROR("08", "file not exist error!"),
+    PROPERTY_NOT_EXIST_ERROR("09", "Property Not Exist!"),
     ;
     private final String errorCode;
     private final String errorMsg;

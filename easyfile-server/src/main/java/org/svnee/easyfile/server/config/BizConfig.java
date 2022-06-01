@@ -1,6 +1,7 @@
 package org.svnee.easyfile.server.config;
 
 import java.util.Map;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.common.util.JSONUtil;
@@ -11,11 +12,18 @@ import org.svnee.easyfile.common.util.TypeReference;
  *
  * @author svnee
  **/
+@Data
 @Configuration
 public class BizConfig {
 
     @Value("${easyfile.server.file.invalid.time:{}}")
     private String fileInvalidTimeMap;
+
+    @Value("${easyfile.server.email.from:}")
+    private String emailFrom;
+
+    @Value("${easyfile.server.email.admin:}")
+    private String emailAdminName;
 
     @Value("${spring.application.name}")
     private String appId;
@@ -28,9 +36,5 @@ public class BizConfig {
     public Map<String, Integer> getFileInvalidTimeMap() {
         return JSONUtil.parseObject(fileInvalidTimeMap, new TypeReference<Map<String, Integer>>() {
         });
-    }
-
-    public String getAppId() {
-        return appId;
     }
 }

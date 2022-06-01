@@ -13,8 +13,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.Expression;
@@ -67,10 +66,9 @@ import org.svnee.easyfile.server.utils.PaginationUtils;
  *
  * @author svnee
  */
+@Slf4j
 @Service
 public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostProcessor {
-
-    private static final Logger log = LoggerFactory.getLogger(AsyncDownloadServiceImpl.class);
 
     private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
     private final AsyncDownloadRecordMapper asyncDownloadRecordMapper;
@@ -202,6 +200,11 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
                 template.setContent(downloadRecord.getFileUrl());
                 template.setTitle(task.getTaskDesc());
                 template.setRemark(downloadRecord.getRemark());
+                template.setRegisterId(downloadRecord.getId());
+                template.setDownloadTime(downloadRecord.getCreateTime());
+                template.setDownloadFinishedTime(downloadRecord.getLastExecuteTime());
+                template.setErrorMsg(request.getErrorMsg());
+                template.setUploadStatus(downloadRecord.getUploadStatus());
                 notifyService.notify(notifier, template);
             }
         }

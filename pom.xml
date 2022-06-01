@@ -36,7 +36,7 @@
         <reflections.version>0.9.10</reflections.version>
 
         <mybatis-plus.version>3.5.0</mybatis-plus.version>
-        <pagehelper.version>1.2.10</pagehelper.version>
+        <pagehelper.version>5.1.10</pagehelper.version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
 
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
@@ -102,6 +102,12 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
             </dependency>
 
             <dependency>
