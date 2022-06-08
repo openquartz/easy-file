@@ -1,7 +1,7 @@
 package org.svnee.easyfile.example.model;
 
 import lombok.Data;
-import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.annotations.ExcelProperty;
 
 /**
  * @author svnee

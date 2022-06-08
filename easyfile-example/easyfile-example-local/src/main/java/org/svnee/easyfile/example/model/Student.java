@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.annotations.ExcelProperty;
 
 /**
  * @author svnee

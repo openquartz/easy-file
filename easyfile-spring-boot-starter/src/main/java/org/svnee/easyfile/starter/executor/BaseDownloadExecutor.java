@@ -7,7 +7,7 @@ import org.svnee.easyfile.common.response.ExportResult;
 
 /**
  * 下载模版
- * 实现类需要提供注解{@link org.svnee.easyfile.common.annotation.FileExportExecutor}
+ * 实现类需要提供注解{@link org.svnee.easyfile.common.annotations.FileExportExecutor}
  *
  * @author svnee
  */

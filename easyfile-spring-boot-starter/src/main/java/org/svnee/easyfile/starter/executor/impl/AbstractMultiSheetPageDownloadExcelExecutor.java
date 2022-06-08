@@ -30,7 +30,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
     implements BaseDownloadExecutor {
 
     /**
-     * 导出模板类分组 {@link org.svnee.easyfile.common.annotation.ExcelProperty#group()}
+     * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
      *
      * @param context context
      * @return Class<?>

@@ -224,7 +224,7 @@ Client 配置
 
 实现接口：`org.svnee.easyfile.starter.executor.BaseDownloadExecutor`
 
-并注入到Spring ApplicationContext中，并使用注解 `org.svnee.easyfile.common.annotation.FileExportExecutor`
+并注入到Spring ApplicationContext中，并使用注解 `org.svnee.easyfile.common.annotations.FileExportExecutor`
 
 如果需要支持同步导出，需要设置文件的HttpResponse 请求头，需要实现接口 `org.svnee.easyfile.starter.executor.BaseWrapperSyncResponseHeader`
 
@@ -232,7 +232,7 @@ Client 配置
 
 ```java
 import org.springframework.stereotype.Component;
-import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.executor.BaseWrapperSyncResponseHeader;
@@ -269,7 +269,7 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 
 `org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor`
 
-需要配合使用（`org.svnee.easyfile.common.annotation.ExcelProperty`）
+需要配合使用（`org.svnee.easyfile.common.annotations.ExcelProperty`）
 
 多Sheet组下载支持
 `org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor`
@@ -285,7 +285,7 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 多Sheet组下载支持
 `org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetStreamDownloadExcelExecutor`
 
-需要配合使用(`org.svnee.easyfile.common.annotation.ExcelProperty`)
+需要配合使用(`org.svnee.easyfile.common.annotations.ExcelProperty`)
 
 ##### 限流执行器
 

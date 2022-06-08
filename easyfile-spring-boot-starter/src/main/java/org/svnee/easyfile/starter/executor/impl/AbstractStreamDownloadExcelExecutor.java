@@ -16,7 +16,7 @@ import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 
 /**
  * 流式下载导出-支持Mybatis 流式查询。查询出结果数据，进行不停的将数据导出到磁盘上
- * 用户使用导出文件时,必须对模版类使用{@link org.svnee.easyfile.common.annotation.ExcelProperty} 注解,用来标识excel需要导出的标题字段
+ * 用户使用导出文件时,必须对模版类使用{@link org.svnee.easyfile.common.annotations.ExcelProperty} 注解,用来标识excel需要导出的标题字段
  *
  * @param <S> Session - 流式查询会话对象
  * @param <R> 流式查询的结果集合-需要支持为迭代器
@@ -29,7 +29,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
     implements StreamDownloadExecutor<S> {
 
     /**
-     * 导出模板类分组 {@link org.svnee.easyfile.common.annotation.ExcelProperty#group()}
+     * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
      *
      * @param context context
      * @return Class<?>

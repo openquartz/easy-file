@@ -13,7 +13,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;

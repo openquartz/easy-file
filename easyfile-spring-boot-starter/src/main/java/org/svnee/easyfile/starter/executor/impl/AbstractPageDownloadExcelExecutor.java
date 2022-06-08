@@ -21,7 +21,7 @@ import org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor;
  * 分页下载Excel执行器
  * 主要用于大 Excel 文件的导出。目前仅支持07版excel
  * 同时 <T> 泛型为导出实体类对象
- * 对象导出需要配合注解使用{@link org.svnee.easyfile.common.annotation.ExcelProperty}
+ * 对象导出需要配合注解使用{@link org.svnee.easyfile.common.annotations.ExcelProperty}
  *
  * @author svnee
  */
@@ -31,7 +31,7 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
     implements PageShardingDownloadExecutor<T> {
 
     /**
-     * 导出模板类分组 {@link org.svnee.easyfile.common.annotation.ExcelProperty#group()}
+     * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
      *
      * @param context context
      * @return Class<?>

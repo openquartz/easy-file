@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import javax.validation.groups.Default;
 import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.svnee.easyfile.common.annotation.ExcelProperty;
+import org.svnee.easyfile.common.annotations.ExcelProperty;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.util.CollectionUtils;

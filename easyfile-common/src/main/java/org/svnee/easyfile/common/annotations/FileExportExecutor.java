@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.annotation;
+package org.svnee.easyfile.common.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;

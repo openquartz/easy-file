@@ -12,7 +12,7 @@ import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 
 /**

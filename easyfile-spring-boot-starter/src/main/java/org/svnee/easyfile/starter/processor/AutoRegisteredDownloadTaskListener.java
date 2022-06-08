@@ -7,7 +7,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.svnee.easyfile.common.annotation.FileExportExecutor;
+import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;

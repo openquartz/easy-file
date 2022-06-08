@@ -26,7 +26,7 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
     implements StreamDownloadExecutor<S> {
 
     /**
-     * 导出模板类分组 {@link org.svnee.easyfile.common.annotation.ExcelProperty#group()}
+     * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
      *
      * @param context context
      * @return Class<?>
