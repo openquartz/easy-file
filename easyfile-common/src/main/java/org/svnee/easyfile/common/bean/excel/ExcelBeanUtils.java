@@ -124,7 +124,7 @@ public final class ExcelBeanUtils {
             groupSet = new HashSet<>(CollectionUtils.newArrayList(group));
         }
         //获取所有的包含分组的字段
-        return excelFiledList.stream().filter(e -> {
+        List<ExcelFiled> filedList = excelFiledList.stream().filter(e -> {
             // 如果当前符合条件了直接进行判断子字段是否符合
             boolean groupField = isBelongGroup(e, groupSet);
             if (groupField) {
@@ -139,6 +139,35 @@ public final class ExcelBeanUtils {
         })
             .sorted(Comparator.comparingInt(o -> o.getExcelProperty().order()))
             .collect(Collectors.toList());
+
+        // 計算下标
+        calculateColumnIndex(filedList);
+        return filedList;
+    }
+
+    /**
+     * 计算ExcelFiled 对应的下标
+     *
+     * @param filedList 属性字段
+     */
+    private static void calculateColumnIndex(List<ExcelFiled> filedList) {
+        if (CollectionUtils.isEmpty(filedList)) {
+            return;
+        }
+
+        int currentColumnIndex = -1;
+        for (ExcelFiled excelFiled : filedList) {
+            excelFiled.setFrmColumnIndex(++currentColumnIndex);
+            if (CollectionUtils.isNotEmpty(excelFiled.getSubFiledList())) {
+                excelFiled.setToColumnIndex(excelFiled.getFrmColumnIndex() + excelFiled.getSubFiledList().size() - 1);
+                int subFrmColumnIndex = excelFiled.getFrmColumnIndex() - 1;
+                for (ExcelFiled subField : excelFiled.getSubFiledList()) {
+                    subField.setFrmColumnIndex(++subFrmColumnIndex);
+                    subField.setToColumnIndex(subField.getFrmColumnIndex());
+                }
+                currentColumnIndex += excelFiled.getSubFiledList().size() - 1;
+            }
+        }
     }
 
     private static boolean isBelongGroup(ExcelFiled filed, Set<?> groupSet) {
@@ -182,6 +211,4 @@ public final class ExcelBeanUtils {
         } while (clazz != Object.class && clazz != null);
         return list;
     }
-
-
 }

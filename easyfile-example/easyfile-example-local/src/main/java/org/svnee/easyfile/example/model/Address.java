@@ -15,4 +15,12 @@ public class Address {
 
     @ExcelProperty(value = "过期时间", width = 8 * 1024)
     private Date expireTime;
+
+    public Address() {
+    }
+
+    public Address(String addressName, Date expireTime) {
+        this.addressName = addressName;
+        this.expireTime = expireTime;
+    }
 }

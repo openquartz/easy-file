@@ -132,12 +132,11 @@ public final class ExcelExports {
 
         // 装饰表头标题格式
         CellStyle cellStyle = excelBean.decorateHeader();
-        int index = 0;
         for (ExcelFiled field : exportFields) {
             ExcelProperty excelProperty = field.getExcelProperty();
-            sheet.setColumnWidth(index, excelProperty.width());
+            sheet.setColumnWidth(field.getFrmColumnIndex(), excelProperty.width());
             if (!field.isCollection() && CollectionUtils.isEmpty(field.getSubFiledList())) {
-                Cell cell = headerRow.createCell(index);
+                Cell cell = headerRow.createCell(field.getFrmColumnIndex());
                 cell.setCellStyle(cellStyle);
                 if (StringUtils.isNotBlank(excelProperty.value())) {
                     setCellValue(cell, excelProperty.value(), field);
@@ -146,27 +145,26 @@ public final class ExcelExports {
                 }
 
                 if (needSubTitle) {
-                    Cell subCell = subHeaderRow.createCell(index);
+                    Cell subCell = subHeaderRow.createCell(field.getFrmColumnIndex());
                     subCell.setCellStyle(cellStyle);
                     // 合并单元格到列
                     // 设置单元格并做合并 (index-->index+subIndex)
-                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 1, index, index);
+                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 1, field.getFrmColumnIndex(), field.getFrmColumnIndex());
                 }
-                index++;
             } else {
                 // 如果设置的单元格属性的为空则不设置子表头
                 if (StringUtils.isNotBlank(field.getExcelProperty().value())) {
-                    Cell cell = headerRow.createCell(index);
+                    Cell cell = headerRow.createCell(field.getFrmColumnIndex());
                     cell.setCellStyle(cellStyle);
                     setCellValue(cell, field.getExcelProperty().value(), field);
                     // 设置单元格并做合并 (index-->index+subIndex)
-                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, index, field.getSubFiledList().size() - 1 + index);
+                    PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, field.getFrmColumnIndex(), field.getToColumnIndex());
                 }
                 for (ExcelFiled subField : field.getSubFiledList()) {
                     Row customTitleRow =
                         StringUtils.isBlank(field.getExcelProperty().value()) ? headerRow : subHeaderRow;
-                    sheet.setColumnWidth(index, subField.getExcelProperty().width());
-                    Cell cell = customTitleRow.createCell(index);
+                    sheet.setColumnWidth(subField.getFrmColumnIndex(), subField.getExcelProperty().width());
+                    Cell cell = customTitleRow.createCell(subField.getFrmColumnIndex());
                     cell.setCellStyle(cellStyle);
                     if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
                         setCellValue(cell, subField.getExcelProperty().value(), subField);
@@ -175,9 +173,9 @@ public final class ExcelExports {
                     }
                     if (StringUtils.isBlank(field.getExcelProperty().value()) && needSubTitle) {
                         // 设置单元格并做合并 (0,index-->1,index)
-                        PoiMergeCellUtil.addMergedRegion(sheet, 0, 1, index, index);
+                        PoiMergeCellUtil
+                            .addMergedRegion(sheet, 0, 1, subField.getFrmColumnIndex(), subField.getToColumnIndex());
                     }
-                    index++;
                 }
             }
         }
@@ -203,7 +201,6 @@ public final class ExcelExports {
 
             Sheet sheet = excelBean.getCurrentSheet(sheetGroup);
             Row row = sheet.createRow(rowIndex);
-            int columnIndex = 0;
             int maxCurrentSubRowIndex = rowIndex;
             for (ExcelFiled field : exportFields) {
                 // 基本类型数据
@@ -211,15 +208,13 @@ public final class ExcelExports {
                     && org.svnee.easyfile.common.bean.excel.ReflectionUtils.isJavaClass(field.getField().getType())) {
                     Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
 
-                    field.setColumnIndex(columnIndex);
-
-                    Cell cell = row.createCell(columnIndex++);
+                    Cell cell = row.createCell(field.getFrmColumnIndex());
                     cell.setCellStyle(cellStyle);
                     setCellValue(cell, value, field);
                 } else if (field.isCustomBean()) {
                     // 用户自定义类型
                     Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
-                    columnIndex = setSubCell(cellStyle, row, columnIndex, field, value);
+                    setSubCell(cellStyle, row, field, value);
                 } else {
                     // 集合类型
                     Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
@@ -233,14 +228,12 @@ public final class ExcelExports {
                                     subRow = sheet.createRow(currentSubRowIndex);
                                 }
                                 currentSubRowIndex++;
-                                setSubCell(cellStyle, subRow, columnIndex, field, subRowData);
+                                setSubCell(cellStyle, subRow, field, subRowData);
                             }
                             // 取最大的下标,第一行共用父列的第一行
                             maxCurrentSubRowIndex = Math.max(currentSubRowIndex - 1, maxCurrentSubRowIndex);
                         }
                     }
-                    // 直接移动到子列的所有的跨度
-                    columnIndex += field.getSubFiledList().size();
                 }
             }
 
@@ -250,14 +243,15 @@ public final class ExcelExports {
                     if (!exportField.isCollection()) {
                         if (!exportField.isCustomBean()) {
                             PoiMergeCellUtil
-                                .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex, exportField.getColumnIndex(),
-                                    exportField.getColumnIndex());
+                                .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
+                                    exportField.getFrmColumnIndex(),
+                                    exportField.getFrmColumnIndex());
                         } else {
                             for (ExcelFiled subExcelFiled : exportField.getSubFiledList()) {
                                 PoiMergeCellUtil
                                     .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
-                                        subExcelFiled.getColumnIndex(),
-                                        subExcelFiled.getColumnIndex());
+                                        subExcelFiled.getFrmColumnIndex(),
+                                        subExcelFiled.getFrmColumnIndex());
                             }
                         }
                     }
@@ -275,24 +269,19 @@ public final class ExcelExports {
      *
      * @param cellStyle 单元格式
      * @param row 行
-     * @param columnIndex 列
      * @param field 字段
      * @param value 值
      * @return 当前下表
      */
-    private static int setSubCell(CellStyle cellStyle, Row row, int columnIndex, ExcelFiled field, Object value) {
+    private static void setSubCell(CellStyle cellStyle, Row row, ExcelFiled field, Object value) {
 
         for (ExcelFiled subField : field.getSubFiledList()) {
-
-            subField.setColumnIndex(columnIndex);
-
             Object subData =
                 Objects.nonNull(value) ? ReflectionUtils.reflectiveGetFieldValue(value, subField.getField()) : null;
-            Cell cell = row.createCell(columnIndex++);
+            Cell cell = row.createCell(subField.getFrmColumnIndex());
             cell.setCellStyle(cellStyle);
             setCellValue(cell, subData, subField);
         }
-        return columnIndex;
     }
 
     private static void setCellValue(Cell cell, Object obj, ExcelFiled field) {
