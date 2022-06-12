@@ -19,6 +19,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
@@ -238,9 +239,11 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
     private Pagination<DownloadResult> getDownloadResultPagination(Integer pageNum, Integer pageSize,
         BaseRecordQueryCondition condition) {
+
         PageHelper.startPage(pageNum, pageSize);
         List<AsyncDownloadRecord> recordList = asyncDownloadRecordMapper.selectByCondition(condition);
         PageInfo<AsyncDownloadRecord> pageInfo = PageInfo.of(recordList);
+
         List<String> downloadCodeList = pageInfo.getList().parallelStream()
             .map(AsyncDownloadRecord::getDownloadCode)
             .filter(StringUtils::isNotBlank).distinct()
@@ -257,6 +260,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         List<DownloadResult> resultList = pageInfo.getList().stream()
             .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
             .collect(Collectors.toList());
+
+        // 分页结果
         Pagination<DownloadResult> pagination = new Pagination<>();
         pagination.setModelList(resultList);
         pagination.setTotalRecords(pageInfo.getTotal());
@@ -349,15 +354,16 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if (bean instanceof ExportLimitingExecutor) {
+    public Object postProcessAfterInitialization(@Nullable Object bean, @Nullable String beanName)
+        throws BeansException {
+        if (Objects.nonNull(bean) && bean instanceof ExportLimitingExecutor) {
             ExportLimitingExecutor executor = (ExportLimitingExecutor) bean;
             ExportLimitingExecutor existExecutor = exportLimitingExecutorMap.putIfAbsent(executor.strategy(), executor);
             Asserts.isTrue(existExecutor == null || executor == existExecutor,
                 ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
                 executor.strategy());
         }
-        if (bean instanceof FileUrlTransformer) {
+        if (Objects.nonNull(bean) && bean instanceof FileUrlTransformer) {
             FileUrlTransformer transformer = (FileUrlTransformer) bean;
             FileUrlTransformer fileUrlTransformer = fileUrlTransformerMap
                 .putIfAbsent(transformer.fileSystem(), transformer);

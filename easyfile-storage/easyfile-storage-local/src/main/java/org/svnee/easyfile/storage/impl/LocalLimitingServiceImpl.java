@@ -6,6 +6,7 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.lang.Nullable;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.exception.ExpandExecutorErrorCode;
@@ -55,9 +56,10 @@ public class LocalLimitingServiceImpl implements LimitingService, BeanPostProces
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@Nullable Object bean, @Nullable String beanName)
+        throws BeansException {
 
-        if (bean instanceof ExportLimitingExecutor) {
+        if (Objects.nonNull(bean) && bean instanceof ExportLimitingExecutor) {
             ExportLimitingExecutor executor = (ExportLimitingExecutor) bean;
             ExportLimitingExecutor existExecutor = limitingExecutorMap.putIfAbsent(executor.strategy(), executor);
             Asserts.isTrue(executor == existExecutor,

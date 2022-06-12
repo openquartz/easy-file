@@ -43,7 +43,7 @@ public class GlobalExceptionHandler {
         FieldError firstFieldError = CollectionUtils.getFirst(bindingResult.getFieldErrors());
         String exceptionStr = Optional.ofNullable(firstFieldError)
             .map(FieldError::getDefaultMessage)
-            .orElse(org.svnee.easyfile.common.util.StringUtils.EMPTY);
+            .orElse(StringUtils.EMPTY);
 
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
         return ResponseResult.fail(CommonExceptionCode.ILLEGAL_PARAM_ERROR.getErrorCode(),
