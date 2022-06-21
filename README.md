@@ -210,7 +210,7 @@ Client 配置
 | ----------------------------------------- | ------------------------------------------------------------ | ----------------- |
 | easyfile.download.enabled                 | EasyFile是否启用                                             | true              |
 | easyfile.download.app-id                   | Client端 AppId                                               |                   |
-| easyfile.download.unified-app-id            | Client端统一AppId                                            |                   |
+| easyfile.download.unified-app-id            | Client端统一AppId                                            |  默认是 用appId    |
 | easyfile.download.local-file-temp-path       | Client端下载文件本地临时目录                                 | /tmp              |
 | easyfile.download.enable-auto-register      | Client端自动注册下载任务开关                                 | false             |
 | easyfile.download.enable-compress-file      | Client 是否开启文件压缩优化                                  | false             |

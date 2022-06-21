@@ -4,9 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * 下载配置参数
+ *
  * @author svnee
  **/
 @Getter
@@ -29,7 +31,7 @@ public class EasyFileDownloadProperties {
 
     /**
      * 服务统一标识
-     * unified-app-id
+     * unified-app-id 默认使用{@link #appId}
      */
     private String unifiedAppId;
 
@@ -84,6 +86,10 @@ public class EasyFileDownloadProperties {
      * 默认为：true. 建议设置成true。本地测试时不需要上传到远程服务时可以为false
      */
     private boolean cleanFileAfterUpload = true;
+
+    public String getUnifiedAppId() {
+        return StringUtils.isBlank(unifiedAppId) ? appId : unifiedAppId;
+    }
 
     public void setExcelMaxSheetRows(Integer excelMaxSheetRows) {
         ExcelGenProperty.setSegmentationSheetRows(excelMaxSheetRows);
