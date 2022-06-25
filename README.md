@@ -24,6 +24,14 @@ EasyFile-是为了提供更加便捷的文件服务,可以提供统一的操作�
 
 5、开发者不仅需要关心数据查询逻辑同时需要关心文件生成逻辑
 
+### 框架对比
+
+与 Alibaba 的EasyExcel 相比,两者侧重点不同。\
+Alibaba EasyExcel 是一个Excel文件生成导出、导入 解析工具。\
+EasyFile 是一个大文件导出的解决方案。用于解决大文件导出时遇到的，文件复用，文件导出超时，内存溢出，瞬时CPU 内存飙高等等问题的一整套解决方案。 \
+同时EasyFile 不仅可以用于Excel 文件的导出,也可以用于csv,pdf,word 等文件导出的管理（暂时需要用户自己集成基础导出下载类BaseDownloadExecutor 实现文件生成逻辑）。 \
+而且,EasyFile和Alibaba EasyExcel 并不冲突，依然可以结合EasyExcel 使用,文件生成逻辑使用Alibaba EasyExcel 做自行拓展使用。\
+
 ### 软件架构
 
 EasyFile 提供两种模式
