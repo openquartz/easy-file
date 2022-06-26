@@ -22,8 +22,8 @@ import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
  */
 public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor implements BeanFactoryAware {
 
-    private final Advice advice;
-    private final Pointcut pointcut;
+    private final transient Advice advice;
+    private final transient Pointcut pointcut;
 
     private static final String EXPORT_METHOD_NAME = "export";
     private static final String EXPORT_RESULT_METHOD_NAME = "exportResult";
