@@ -59,7 +59,7 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(type = "easyFileLocalStorageDataSource", value = DataSource.class)
     public DataSource easyFileLocalStorageDataSource(EasyFileLocalProperties easyFileLocalProperties,
         Environment environment) {
 
