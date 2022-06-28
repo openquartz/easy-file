@@ -114,7 +114,7 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean
+    @ConditionalOnMissingBean(type = "localStorageJdbcTemplate", value = JdbcTemplate.class)
     public JdbcTemplate localStorageJdbcTemplate(@Qualifier("easyFileLocalStorageDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
