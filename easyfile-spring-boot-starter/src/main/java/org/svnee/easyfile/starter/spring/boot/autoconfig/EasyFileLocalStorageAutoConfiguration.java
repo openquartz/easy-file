@@ -106,24 +106,25 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(AsyncDownloadTaskMapper.class)
-    @ConditionalOnClass(AsyncDownloadTaskMapper.class)
-    public AsyncDownloadTaskMapper asyncDownloadTaskMapper(
-        @Qualifier("localStorageJdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new AsyncDownloadTaskMapperImpl(jdbcTemplate);
-    }
-
-    @Bean
     @ConditionalOnMissingBean(type = "localStorageJdbcTemplate", value = JdbcTemplate.class)
     public JdbcTemplate localStorageJdbcTemplate(@Qualifier("easyFileLocalStorageDataSource") DataSource dataSource) {
         return new JdbcTemplate(dataSource);
     }
 
     @Bean
+    @ConditionalOnMissingBean(AsyncDownloadTaskMapper.class)
+    @ConditionalOnClass(AsyncDownloadTaskMapper.class)
+    public AsyncDownloadTaskMapper asyncDownloadTaskMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncDownloadTaskMapperImpl(localStorageJdbcTemplate);
+    }
+
+    @Bean
     @ConditionalOnMissingBean(AsyncDownloadRecordMapper.class)
     @ConditionalOnClass(AsyncDownloadRecordMapper.class)
-    public AsyncDownloadRecordMapper asyncDownloadRecordMapper(JdbcTemplate jdbcTemplate) {
-        return new AsyncDownloadRecordMapperImpl(jdbcTemplate);
+    public AsyncDownloadRecordMapper asyncDownloadRecordMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncDownloadRecordMapperImpl(localStorageJdbcTemplate);
     }
 
     @Bean
