@@ -30,16 +30,32 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     private final JdbcTemplate jdbcTemplate;
 
+    private static final String INSERT_SQL =
+        "insert into ef_async_download_record (download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    private static final String FIND_BY_ID_SQL =
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from ef_async_download_record where id = ?";
+
+    private static final String REFRESH_UPLOAD_STATUS_SQL = "update ef_async_download_record set upload_status = ?,update_by = ? where id = ? AND upload_status = ?";
+
+    private static final String UPDATE_DOWNLOAD_SQL = "update ef_async_download_record set download_num = download_num + 1 where id = ? and upload_status = ?";
+
+    private static final String LIST_SQL =
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from ef_async_download_record "
+            + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
+
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
-        final String sql =
-            "insert into ef_async_download_record (download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-                + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
 
-            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, downloadRecord.getDownloadTaskId());
             ps.setString(2, downloadRecord.getAppId());
             ps.setString(3, downloadRecord.getDownloadCode());
@@ -76,12 +92,8 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     @Override
     public AsyncDownloadRecord findById(Long id) {
-        final String sql =
-            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
-                + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-                + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from ef_async_download_record where id = ?";
         List<AsyncDownloadRecord> downloadRecordList = jdbcTemplate
-            .query(sql, new Object[]{id}, new AsyncDownloadRecordRowMapper());
+            .query(FIND_BY_ID_SQL, new Object[]{id}, new AsyncDownloadRecordRowMapper());
         if (CollectionUtils.isNotEmpty(downloadRecordList)) {
             return downloadRecordList.get(0);
         }
@@ -122,26 +134,20 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     @Override
     public int refreshUploadStatus(Long id, UploadStatusEnum oriUploadStatus, UploadStatusEnum tagUploadStatus,
         String updateBy) {
-        final String sql = "update ef_async_download_record set upload_status = ?,update_by = ? where id = ? AND upload_status = ?";
-        return jdbcTemplate.update(sql, tagUploadStatus.getCode(), updateBy, id, oriUploadStatus.getCode());
+        return jdbcTemplate
+            .update(REFRESH_UPLOAD_STATUS_SQL, tagUploadStatus.getCode(), updateBy, id, oriUploadStatus.getCode());
     }
 
     @Override
     public int download(Long id, UploadStatusEnum uploadStatus) {
-        final String sql = "update ef_async_download_record set download_num = download_num + 1 where id = ? and upload_status = ?";
-        return jdbcTemplate.update(sql, id, uploadStatus.getCode());
+        return jdbcTemplate.update(UPDATE_DOWNLOAD_SQL, id, uploadStatus.getCode());
     }
 
     @Override
     public List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus,
         Integer offset) {
-        final String sql =
-            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
-                + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-                + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from ef_async_download_record "
-                + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
         return jdbcTemplate
-            .query(sql, new Object[]{downloadTaskId, uploadStatus.getCode(), offset},
+            .query(LIST_SQL, new Object[]{downloadTaskId, uploadStatus.getCode(), offset},
                 new AsyncDownloadRecordRowMapper());
     }
 

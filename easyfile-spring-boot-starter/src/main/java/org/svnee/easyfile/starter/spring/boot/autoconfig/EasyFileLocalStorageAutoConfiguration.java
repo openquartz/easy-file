@@ -19,16 +19,25 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
+import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
+import org.svnee.easyfile.starter.executor.impl.DefaultAsyncFileHandler;
+import org.svnee.easyfile.starter.executor.impl.ScheduleTriggerAsyncFileHandler;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
+import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.expand.ExportLimitingExecutor;
 import org.svnee.easyfile.storage.expand.NoneExportLimitingExecutor;
+import org.svnee.easyfile.storage.file.UploadService;
 import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
+import org.svnee.easyfile.storage.impl.LocalDownloadTriggerServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper;
+import org.svnee.easyfile.storage.mapper.AsyncDownloadTriggerMapper;
 import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadRecordMapperImpl;
 import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTaskMapperImpl;
+import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
 
 /**
  * EasyFileLocalStorageAutoConfiguration
@@ -37,7 +46,7 @@ import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTaskMapperImpl;
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties(EasyFileLocalProperties.class)
+@EnableConfigurationProperties({EasyFileLocalProperties.class, ScheduleAsyncHandlerProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
 public class EasyFileLocalStorageAutoConfiguration {
 
@@ -71,6 +80,26 @@ public class EasyFileLocalStorageAutoConfiguration {
         DataSource dataSource = buildDataSource(easyFileLocalProperties);
         buildDataSourceProperties(dataSource, properties);
         return dataSource;
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
+    public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
+        UploadService uploadService,
+        DownloadStorageService downloadStorageService,
+        DownloadTriggerService downloadTriggerService,
+        BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
+        ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
+        return new ScheduleTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
+            downloadTriggerService,
+            scheduleAsyncHandlerProperties,
+            baseDefaultDownloadRejectExecutionHandler);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(DownloadTriggerService.class)
+    public DownloadTriggerService localDownloadTriggerService(AsyncDownloadTriggerMapper asyncDownloadTriggerMapper) {
+        return new LocalDownloadTriggerServiceImpl(asyncDownloadTriggerMapper);
     }
 
     private void buildDataSourceProperties(DataSource dataSource, Map<Object, Object> dsMap) {
@@ -128,9 +157,18 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean(AsyncDownloadTriggerMapper.class)
+    @ConditionalOnClass(AsyncDownloadTriggerMapper.class)
+    public AsyncDownloadTriggerMapper asyncDownloadTriggerMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncDownloadTriggerMapperImpl(localStorageJdbcTemplate);
+    }
+
+    @Bean
     @ConditionalOnClass(ExportLimitingExecutor.class)
     public ExportLimitingExecutor noneExportLimitingExecutor() {
         return new NoneExportLimitingExecutor();
     }
+
 
 }

@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
@@ -80,5 +81,9 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
         return httpAgent.httpPost(RemoteUrlConstants.LOADING_EXPORT_CACHE_RESULT_URL, request, ExportResult.class);
     }
 
-
+    @Override
+    public ResponseResult<DownloadRequestInfo> getRequestInfoByRegisterId(Long registerId) {
+        return httpAgent
+            .httpPost(RemoteUrlConstants.GET_REQUEST_INFO_RESULT_URL, registerId, DownloadRequestInfo.class);
+    }
 }

@@ -14,7 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -305,5 +307,19 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadResult.setCancelResult(affect > 0);
         uploadResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
         return uploadResult;
+    }
+
+    @Override
+    public DownloadRequestInfo getRequestInfoByRegisterId(Long registerId) {
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(registerId);
+        if (Objects.isNull(downloadRecord)) {
+            return null;
+        }
+        BaseDownloaderRequestContext requestContext = JSONUtil
+            .parseObject(downloadRecord.getExecuteParam(), BaseDownloaderRequestContext.class);
+        DownloadRequestInfo requestInfo = new DownloadRequestInfo();
+        requestInfo.setRequestContext(requestContext);
+        requestInfo.setDownloadCode(downloadRecord.getDownloadCode());
+        return requestInfo;
     }
 }

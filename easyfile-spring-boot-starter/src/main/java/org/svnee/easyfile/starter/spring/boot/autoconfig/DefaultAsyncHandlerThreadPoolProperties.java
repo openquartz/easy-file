@@ -19,6 +19,11 @@ public class DefaultAsyncHandlerThreadPoolProperties {
     public static final String PREFIX = "easyfile.default.async.download.handler.thread-pool";
 
     /**
+     * 线程名前缀
+     */
+    private String threadPrefix = "DefaultAsyncHandler";
+
+    /**
      * 核心线程数
      * core-pool-size
      */

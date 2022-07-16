@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
@@ -129,6 +130,14 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     @Override
     public CancelUploadResult cancelUpload(CancelUploadRequest request) {
         ResponseResult<CancelUploadResult> responseResult = easyFileClient.cancelUpload(request);
+        Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
+        return responseResult.getData();
+    }
+
+    @Override
+    public DownloadRequestInfo getRequestInfoByRegisterId(Long registerId) {
+        ResponseResult<DownloadRequestInfo> responseResult = easyFileClient.getRequestInfoByRegisterId(registerId);
         Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
         return responseResult.getData();

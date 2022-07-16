@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage;
 
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
@@ -93,4 +94,11 @@ public interface EasyFileClient {
      */
     ResponseResult<ExportResult> loadingExportCacheResult(LoadingExportCacheRequest request);
 
+    /**
+     * 根据registerId查询下载请求信息
+     *
+     * @param registerId 注册ID
+     * @return 下载请求信息
+     */
+    ResponseResult<DownloadRequestInfo> getRequestInfoByRegisterId(Long registerId);
 }

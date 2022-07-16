@@ -1,0 +1,54 @@
+package org.svnee.easyfile.storage.download;
+
+import java.util.List;
+import org.svnee.easyfile.common.request.DownloadTriggerRequest;
+import org.svnee.easyfile.common.response.DownloadTriggerResult;
+
+/**
+ * 异步下载触发服务
+ *
+ * @author svnee
+ */
+public interface DownloadTriggerService {
+
+    /**
+     * 执行下载请求
+     *
+     * @param request 请求
+     */
+    void trigger(DownloadTriggerRequest request);
+
+    /**
+     * 需要触发注册ID
+     *
+     * @param lookBackHours 回溯时间
+     * @param triggerOffset 触发偏移量
+     * @param maxTriggerCount 最大触发次数
+     * @return 注册ID
+     */
+    List<DownloadTriggerResult> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
+        Integer triggerOffset);
+
+    /**
+     * 开始执行
+     *
+     * @param registerId 注册ID
+     * @param triggerCount 原有的触发数
+     * @return 是否成功
+     */
+    boolean startExecute(Long registerId, Integer triggerCount);
+
+    /**
+     * 执行成功
+     *
+     * @param registerId 注册ID
+     */
+    void exeSuccess(Long registerId);
+
+    /**
+     * 执行失败
+     *
+     * @param registerId 注册ID
+     */
+    void exeFail(Long registerId);
+}

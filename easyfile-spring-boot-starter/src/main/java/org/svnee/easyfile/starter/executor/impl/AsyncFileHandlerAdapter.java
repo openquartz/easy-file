@@ -8,16 +8,19 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
@@ -40,6 +43,9 @@ import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.executor.bean.GenerateFileResult;
 import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
+import org.svnee.easyfile.starter.intercept.DownloadExecutorInterceptor;
+import org.svnee.easyfile.starter.intercept.ExecutorInterceptorSupport;
+import org.svnee.easyfile.starter.intercept.InterceptorContext;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.file.UploadService;
@@ -50,6 +56,7 @@ import org.svnee.easyfile.storage.file.UploadService;
  *
  * @author svnee
  */
+@Slf4j
 public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(AsyncFileHandlerAdapter.class);
@@ -123,6 +130,47 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         ExportResult exportResult = buildExportResult(request);
         executor.asyncCompleteCallback(exportResult, baseRequest);
         return exportResult;
+    }
+
+    private void afterHandle(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest,
+        ExportResult result, InterceptorContext interceptorContext) {
+        ExecutorInterceptorSupport.getInterceptors().stream()
+            .sorted(((o1, o2) -> o2.order() - o1.order()))
+            .forEach(interceptor -> interceptor.afterExecute(executor, baseRequest, result, interceptorContext));
+    }
+
+    private void beforeHandle(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest,
+        Long registerId, InterceptorContext interceptorContext) {
+        ExecutorInterceptorSupport.getInterceptors().stream()
+            .sorted((Comparator.comparingInt(DownloadExecutorInterceptor::order)))
+            .forEach(interceptor -> interceptor.beforeExecute(executor, baseRequest, registerId, interceptorContext));
+    }
+
+    /**
+     * 做执行执行器
+     *
+     * @param executor 执行器
+     * @param baseRequest 请求
+     * @param registerId 注册ID
+     */
+    public void doExecute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
+        log.info("[AsyncFileHandlerAdapter#execute]start,execute!registerId:{}", registerId);
+        ExportResult result = null;
+        InterceptorContext interceptorContext = InterceptorContext.newInstance();
+        try {
+            // 执行拦截前置处理
+            beforeHandle(executor, baseRequest, registerId, interceptorContext);
+            // 执行拦截
+            result = handleResult(executor, baseRequest, registerId);
+        } catch (Exception ex) {
+            log.error("[AsyncFileHandlerAdapter#execute]end,execute error!registerId:{}", registerId, ex);
+            throw ex;
+        } finally {
+            // 执行拦截后置处理
+            afterHandle(executor, baseRequest, result, interceptorContext);
+            PageTotalContext.clear();
+        }
+        log.info("[AsyncFileHandlerAdapter#execute]end,execute!registerId:{}", registerId);
     }
 
     private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseDownloaderRequestContext baseRequest,
