@@ -34,10 +34,10 @@ public class RegisterDownloadRequest extends BaseExecuteParam {
     private Notifier notifier;
 
     /**
-     * 备注
-     * 可选
+     * 导出备注
+     * 非必须
      */
-    private String remark;
+    private String exportRemark;
 
     /**
      * 当前服务最大的重试次数
@@ -68,12 +68,12 @@ public class RegisterDownloadRequest extends BaseExecuteParam {
         this.notifier = notifier;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getExportRemark() {
+        return exportRemark;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
+    public void setExportRemark(String exportRemark) {
+        this.exportRemark = exportRemark;
     }
 
     public Integer getMaxServerRetry() {

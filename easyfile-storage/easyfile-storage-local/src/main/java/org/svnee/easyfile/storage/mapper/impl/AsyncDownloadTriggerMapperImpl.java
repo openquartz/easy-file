@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -73,9 +74,12 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         List<DownloadTriggerStatusEnum> delineateStatusList) {
         LocalDateTime now = LocalDateTime.now();
 
+        List<String> taskStatusList = delineateStatusList.stream().map(DownloadTriggerStatusEnum::getCode)
+            .collect(Collectors.toList());
+
         Map<String, Object> paramMap = new HashMap<>(4);
-        paramMap.put("taskStatusList", delineateStatusList);
-        paramMap.put("triggerStatus", triggerStatus);
+        paramMap.put("taskStatusList", taskStatusList);
+        paramMap.put("triggerStatus", triggerStatus.getCode());
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
         return new NamedParameterJdbcTemplate(jdbcTemplate).update(REFRESH_STATUS_SQL, paramMap);
@@ -86,9 +90,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         List<DownloadTriggerStatusEnum> delineateStatusList, Integer triggerCount) {
         LocalDateTime now = LocalDateTime.now();
 
+        List<String> taskStatusList = delineateStatusList.stream().map(DownloadTriggerStatusEnum::getCode)
+            .collect(Collectors.toList());
         Map<String, Object> paramMap = new HashMap<>(5);
-        paramMap.put("taskStatusList", delineateStatusList);
-        paramMap.put("triggerStatus", triggerStatus);
+        paramMap.put("taskStatusList", taskStatusList);
+        paramMap.put("triggerStatus", triggerStatus.getCode());
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
         paramMap.put("triggerCount", triggerCount);
@@ -98,8 +104,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     @Override
     public List<AsyncDownloadTrigger> select(QueryDownloadTriggerCondition condition) {
 
+        List<String> taskStatusList = condition.getTriggerStatusList().stream().map(DownloadTriggerStatusEnum::getCode)
+            .collect(Collectors.toList());
+
         Map<String, Object> paramMap = new HashMap<>(5);
-        paramMap.put("taskStatusList", condition.getTriggerStatusList());
+        paramMap.put("taskStatusList", taskStatusList);
         paramMap.put("lastExecuteStartTime", condition.getLastExecuteStartTime());
         paramMap.put("lastExecuteEndTime", condition.getLastExecuteEndTime());
         paramMap.put("maxTriggerCount", condition.getMaxTriggerCount());

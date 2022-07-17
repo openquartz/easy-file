@@ -45,7 +45,7 @@ public class ScheduleAsyncHandlerProperties {
     /**
      * 调度周期 单位：秒
      */
-    private Integer schedulePeriod = 500;
+    private Integer schedulePeriod = 10;
 
     /**
      * 一次触发处理条数

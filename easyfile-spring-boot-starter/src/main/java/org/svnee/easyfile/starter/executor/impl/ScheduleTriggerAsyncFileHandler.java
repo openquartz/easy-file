@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.request.DownloadTriggerRequest;
 import org.svnee.easyfile.common.response.DownloadTriggerResult;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.processor.FileExportExecutorSupport;
@@ -85,7 +86,9 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
                     DownloadRequestInfo requestInfo = downloadStorageService
                         .getRequestInfoByRegisterId(k.getRegisterId());
                     try {
-                        doExecute(FileExportExecutorSupport.get(requestInfo.getDownloadCode()),
+                        BaseDownloadExecutor executor = FileExportExecutorSupport
+                            .get(requestInfo.getDownloadCode());
+                        doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
                             requestInfo.getRequestContext(), k.getRegisterId());
                         downloadTriggerService.exeSuccess(k.getRegisterId());
                     } catch (Exception ex) {

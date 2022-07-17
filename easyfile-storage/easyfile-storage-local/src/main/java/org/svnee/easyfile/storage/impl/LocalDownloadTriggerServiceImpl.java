@@ -100,6 +100,7 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
 
         triggerCondition.setLastExecuteEndTime(beforeSeconds);
+        triggerCondition.setLastExecuteStartTime(now.plusHours(-48));
 
         List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
 

@@ -213,7 +213,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserBy() : StringUtils.EMPTY);
         downloadRecord.setDownloadOperateName(
             Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserName() : StringUtils.EMPTY);
-        downloadRecord.setRemark(request.getRemark());
+        downloadRecord.setRemark(request.getExportRemark());
         downloadRecord.setNotifyEnableStatus(Boolean.TRUE.equals(request.getEnableNotify())
             ? EnableStatusEnum.ENABLE.getCode() : EnableStatusEnum.DISABLE.getCode());
         downloadRecord.setNotifyEmail(

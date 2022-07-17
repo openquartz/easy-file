@@ -214,7 +214,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         registerRequest.setDownloadCode(executor.value());
         registerRequest.setEnableNotify(executor.enableNotify());
         registerRequest.setNotifier(requestContext.getNotifier());
-        registerRequest.setRemark(requestContext.getExportRemark());
+        registerRequest.setExportRemark(requestContext.getExportRemark());
         registerRequest.setFileSuffix(requestContext.getFileSuffix());
         registerRequest.setOtherMap(requestContext.getOtherMap());
         registerRequest.setMaxServerRetry(executor.maxServerRetry());

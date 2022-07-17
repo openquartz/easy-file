@@ -122,7 +122,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setFileSystem(Constants.NONE_FILE_SYSTEM);
         downloadRecord.setDownloadOperateBy(request.getNotifier().getUserBy());
         downloadRecord.setDownloadOperateName(request.getNotifier().getUserName());
-        downloadRecord.setRemark(request.getRemark());
+        downloadRecord.setRemark(request.getExportRemark());
         downloadRecord.setNotifyEnableStatus(Boolean.TRUE.equals(request.getEnableNotify()) ?
             EnableStatusEnum.ENABLE.getCode() : EnableStatusEnum.DISABLE.getCode());
         downloadRecord.setNotifyEmail(request.getNotifier().getEmail());
