@@ -116,7 +116,7 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     public void afterPropertiesSet() {
 
         compensateScheduleExecutorService
-            .scheduleAtFixedRate(this::doCompensate, 10,
+            .scheduleAtFixedRate(this::doCompensate, handlerProperties.getSchedulePeriod(),
                 handlerProperties.getMaxExecuteTimeout(), TimeUnit.SECONDS);
 
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
