@@ -215,6 +215,33 @@ easyfile.remote.namespace=remote-example
 | easyfile.default.async.download.handler.thread-pool.keep-alive-time | 默认下载线程池最大空闲时间 单位：秒 | 30     |
 | easyfile.default.async.download.handler.thread-pool.max-blocking-queue-size | 默认下载线程池阻塞队列最大长度      | 2048   |
 
+如果使用Job调度式的文件下载处理器(`org.svnee.easyfile.starter.executor.impl.ScheduleTriggerAsyncFileHandler`)
+提供出了一些配置
+
+```properties
+easyfile.schedule.async.download.handler.enable=true
+easyfile.schedule.async.download.handler.thread-pool-core-pool-size=2
+easyfile.schedule.async.download.handler.thread-pool-thread-prefix=ScheduleAsyncHandler
+easyfile.schedule.async.download.handler.max-execute-timeout=1600
+easyfile.schedule.async.download.handler.max-trigger-count=5
+easyfile.schedule.async.download.handler.schedule-period=10
+easyfile.schedule.async.download.handler.trigger-offset=50
+easyfile.schedule.async.download.handler.look-back-hours=2
+easyfile.schedule.async.download.handler.max-archive-hours=24
+```
+
+| 配置key                                                      | 描述                                | 默认值 |
+| ------------------------------------------------------------ | ----------------------------------- | ------ |
+| easyfile.schedule.async.download.handler.enable | 是否启用调度式异步处理器            | false    |
+| easyfile.schedule.async.download.handler.thread-pool-core-pool-size | 调度处理器单机核心线程数          | 2     |
+| easyfile.schedule.async.download.handler.thread-pool-thread-prefix | 调度处理器线程前缀  |    ScheduleAsyncHandler  |
+| easyfile.schedule.async.download.handler.max-execute-timeout | 调度处理一次最大超时 单位：秒 | 1600   |
+| easyfile.schedule.async.download.handler.max-trigger-count | 最大调度重试次数  | 5   |
+| easyfile.schedule.async.download.handler.schedule-period | 调度周期 单位：秒 | 10   |
+| eeasyfile.schedule.async.download.handler.trigger-offset | 触发调度一次触发量   |  50   |
+| easyfile.schedule.async.download.handler.look-back-hours | 一次回溯处理时间 单位：小时 | 2   |
+| easyfile.schedule.async.download.handler.max-archive-hours | 已经执行完成的归档保持时间 单位：小时 | 24   |
+
 Client 配置
 
 | 配置key                                   | 描述                                                         | 默认值            |

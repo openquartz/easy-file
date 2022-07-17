@@ -34,7 +34,7 @@ public class ScheduleAsyncHandlerProperties {
      * 核心线程数
      * core-pool-size
      */
-    private Integer threadPoolCorePoolSize = 10;
+    private Integer threadPoolCorePoolSize = 2;
 
     /**
      * 最大执行超时时间 单位秒

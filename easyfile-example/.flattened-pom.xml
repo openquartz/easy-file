@@ -21,16 +21,16 @@
         </license>
     </licenses>
     <modules>
-    <module>easyfile-example-local</module>
-    <module>easyfile-example-remote</module>
-  </modules>
-  <dependencies>
-    <dependency>
-      <groupId>org.svnee</groupId>
-      <artifactId>easyfile-spring-boot-starter</artifactId>
-      <version>${revision}</version>
-    </dependency>
-  </dependencies>
+        <module>easyfile-example-local</module>
+        <module>easyfile-example-remote</module>
+    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-spring-boot-starter</artifactId>
+            <version>${revision}</version>
+        </dependency>
+    </dependencies>
   <build>
     <plugins>
       <plugin>
