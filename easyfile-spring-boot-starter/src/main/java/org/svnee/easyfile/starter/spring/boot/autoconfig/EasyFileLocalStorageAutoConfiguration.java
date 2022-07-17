@@ -9,6 +9,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
@@ -82,8 +83,17 @@ public class EasyFileLocalStorageAutoConfiguration {
         return dataSource;
     }
 
+    private void buildDataSourceProperties(DataSource dataSource, Map<Object, Object> dsMap) {
+        try {
+            BeanUtils.copyProperties(dataSource, dsMap);
+        } catch (Exception e) {
+            log.error("error copy properties", e);
+        }
+    }
+
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
+    @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
@@ -100,14 +110,6 @@ public class EasyFileLocalStorageAutoConfiguration {
     @ConditionalOnMissingBean(DownloadTriggerService.class)
     public DownloadTriggerService localDownloadTriggerService(AsyncDownloadTriggerMapper asyncDownloadTriggerMapper) {
         return new LocalDownloadTriggerServiceImpl(asyncDownloadTriggerMapper);
-    }
-
-    private void buildDataSourceProperties(DataSource dataSource, Map<Object, Object> dsMap) {
-        try {
-            BeanUtils.copyProperties(dataSource, dsMap);
-        } catch (Exception e) {
-            log.error("error copy properties", e);
-        }
     }
 
     private DataSource buildDataSource(EasyFileLocalProperties easyFileLocalProperties) {

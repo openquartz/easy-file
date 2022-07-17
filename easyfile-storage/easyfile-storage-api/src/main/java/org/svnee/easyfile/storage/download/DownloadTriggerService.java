@@ -51,4 +51,11 @@ public interface DownloadTriggerService {
      * @param registerId 注册ID
      */
     void exeFail(Long registerId);
+
+    /**
+     * 最大过期时间
+     *
+     * @param maxExpireSeconds 过期时间
+     */
+    void handleExpirationTrigger(Integer maxExpireSeconds);
 }

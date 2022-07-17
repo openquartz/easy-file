@@ -37,10 +37,10 @@ public class ScheduleAsyncHandlerProperties {
     private Integer threadPoolCorePoolSize = 10;
 
     /**
-     * 最大执行超时时间 单位分钟
+     * 最大执行超时时间 单位秒
      * 超出此时间认定为执行失败。重新执行
      */
-    private Integer maxExecuteTimeout = 30;
+    private Integer maxExecuteTimeout = 1600;
 
     /**
      * 调度周期 单位：秒

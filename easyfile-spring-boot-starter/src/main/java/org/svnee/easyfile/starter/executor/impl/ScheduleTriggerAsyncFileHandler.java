@@ -1,6 +1,7 @@
 package org.svnee.easyfile.starter.executor.impl;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.InitializingBean;
@@ -30,6 +31,11 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     private final DownloadStorageService downloadStorageService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
     private final ScheduleAsyncHandlerProperties handlerProperties;
+
+    private final ScheduledThreadPoolExecutor compensateScheduleExecutorService = new ScheduledThreadPoolExecutor(1,
+        new ThreadFactoryBuilder()
+            .setNameFormat("CompensateScheduleAsyncHandler-thread-%d")
+            .build());
 
     private ScheduledThreadPoolExecutor init(ScheduleAsyncHandlerProperties handlerProperties,
         BaseDefaultDownloadRejectExecutionHandler rejectHandler) {
@@ -83,10 +89,21 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
         });
     }
 
+    private void doCompensate() {
+        downloadTriggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
+    }
+
     @Override
     public void afterPropertiesSet() {
+
+        compensateScheduleExecutorService
+            .scheduleAtFixedRate(this::doCompensate, handlerProperties.getSchedulePeriod(),
+                handlerProperties.getMaxExecuteTimeout(), TimeUnit.SECONDS);
+
+        double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
-            .scheduleAtFixedRate(this::doTrigger, 0, handlerProperties.getSchedulePeriod(), TimeUnit.SECONDS);
+            .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
+                TimeUnit.SECONDS);
     }
 
 }

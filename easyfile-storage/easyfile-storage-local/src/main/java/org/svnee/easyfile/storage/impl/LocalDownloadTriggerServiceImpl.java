@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -87,5 +88,24 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
     public void exeFail(Long registerId) {
         asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.FAIL,
             CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.INIT));
+    }
+
+    @Override
+    public void handleExpirationTrigger(Integer maxExpireSeconds) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        LocalDateTime beforeSeconds = now.plusSeconds(-maxExpireSeconds);
+
+        QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
+        triggerCondition.setOffset(10);
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
+
+        triggerCondition.setLastExecuteEndTime(beforeSeconds);
+
+        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+
+        for (AsyncDownloadTrigger trigger : triggerList) {
+            asyncDownloadTriggerMapper.refreshStatus(trigger.getRegisterId(), DownloadTriggerStatusEnum.FAIL,
+                CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
+        }
     }
 }
