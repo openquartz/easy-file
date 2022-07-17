@@ -38,7 +38,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String INSERT_SQL =
         "insert into ef_async_download_trigger(register_id, trigger_status, start_time, last_execute_time,trigger_count) values (?,?,?,?,?)";
     private static final String REFRESH_STATUS_SQL =
-        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1 where register_id = :registerId and trigger_status in (:taskStatusList) ";
+        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime where register_id = :registerId and trigger_status in (:taskStatusList) ";
     private static final String TRIGGER_EXECUTE_SQL =
         "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1 where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
     private static final String SELECT_SQL =
