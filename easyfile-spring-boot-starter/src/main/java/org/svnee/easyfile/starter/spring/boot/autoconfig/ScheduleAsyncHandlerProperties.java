@@ -63,4 +63,9 @@ public class ScheduleAsyncHandlerProperties {
      */
     private Integer maxTriggerCount = 5;
 
+    /**
+     * 最大归档小时
+     */
+    private Integer maxArchiveHours = 24;
+
 }

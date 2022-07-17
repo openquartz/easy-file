@@ -34,6 +34,11 @@ public class QueryDownloadTriggerCondition {
     private Integer maxTriggerCount;
 
     /**
+     * 最小触发次数
+     */
+    private Integer minTriggerCount;
+
+    /**
      * 一次请求多少量
      */
     private Integer offset;

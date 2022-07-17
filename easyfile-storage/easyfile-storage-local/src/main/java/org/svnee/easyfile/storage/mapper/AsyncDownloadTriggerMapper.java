@@ -59,4 +59,12 @@ public interface AsyncDownloadTriggerMapper {
      */
     AsyncDownloadTrigger selectByRegisterId(Long registerId);
 
+    /**
+     * 根据
+     *
+     * @param id ID
+     * @return id
+     */
+    int deleteById(Long id);
+
 }

@@ -109,4 +109,29 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
                 CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
         }
     }
+
+    @Override
+    public void archiveHistoryTrigger(Integer archiveHours, Integer maxTriggerCount) {
+        LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
+        LocalDateTime beforeTime = now.plusHours(-archiveHours);
+
+        QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
+        triggerCondition.setOffset(100);
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.SUCCESS));
+
+        triggerCondition.setLastExecuteEndTime(beforeTime);
+
+        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+
+        for (AsyncDownloadTrigger trigger : triggerList) {
+            asyncDownloadTriggerMapper.deleteById(trigger.getId());
+        }
+
+        triggerCondition.setMinTriggerCount(maxTriggerCount);
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.FAIL));
+        triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        for (AsyncDownloadTrigger trigger : triggerList) {
+            asyncDownloadTriggerMapper.deleteById(trigger.getId());
+        }
+    }
 }

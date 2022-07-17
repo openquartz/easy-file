@@ -106,6 +106,8 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
         log.info("[ScheduleTriggerAsyncFileHandler#doCompensate] start...");
         try {
             downloadTriggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
+            downloadTriggerService
+                .archiveHistoryTrigger(handlerProperties.getMaxArchiveHours(), handlerProperties.getMaxTriggerCount());
         } catch (Exception ex) {
             log.error("[ScheduleTriggerAsyncFileHandler#doCompensate] error!...", ex);
         }

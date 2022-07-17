@@ -16,4 +16,6 @@ public class ActualUploadServiceImpl implements UploadService {
         log.info("[ActualUploadService#upload] file:{},fileName:{},appId:{}", file.getName(), fileName, appId);
         return Pair.of("LOCAL", file.getAbsolutePath());
     }
+
+
 }

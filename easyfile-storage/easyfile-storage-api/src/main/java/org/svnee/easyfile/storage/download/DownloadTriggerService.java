@@ -58,4 +58,12 @@ public interface DownloadTriggerService {
      * @param maxExpireSeconds 过期时间
      */
     void handleExpirationTrigger(Integer maxExpireSeconds);
+
+    /**
+     * 多久归档
+     *
+     * @param archiveHours 归档时间
+     * @param maxTriggerCount 最大触发次数
+     */
+    void archiveHistoryTrigger(Integer archiveHours, Integer maxTriggerCount);
 }

@@ -42,9 +42,10 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String TRIGGER_EXECUTE_SQL =
         "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1 where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
     private static final String SELECT_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger where trigger_status in (:taskStatusList) and last_execute_time>= :lastExecuteStartTime and last_execute_time< :lastExecuteEndTime and trigger_count<= :maxTriggerCount order by register_id limit :offset";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger";
     private static final String SELECT_BY_ID_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger where id = ?";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger where register_id = ?";
+    private static final String DELETE_BY_ID_SQL = "delete from ef_async_download_trigger where id = ?";
 
     @Override
     public int insert(AsyncDownloadTrigger trigger) {
@@ -112,10 +113,27 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("lastExecuteStartTime", condition.getLastExecuteStartTime());
         paramMap.put("lastExecuteEndTime", condition.getLastExecuteEndTime());
         paramMap.put("maxTriggerCount", condition.getMaxTriggerCount());
+        paramMap.put("minTriggerCount", condition.getMinTriggerCount());
         paramMap.put("offset", condition.getOffset());
 
+        StringBuilder sqlBuilder = new StringBuilder(SELECT_SQL);
+        sqlBuilder.append(" where trigger_status in (:taskStatusList)");
+        if (Objects.nonNull(condition.getLastExecuteStartTime())) {
+            sqlBuilder.append(" and last_execute_time>= :lastExecuteStartTime");
+        }
+        if (Objects.nonNull(condition.getLastExecuteEndTime())) {
+            sqlBuilder.append(" and last_execute_time< :lastExecuteEndTime");
+        }
+        if (Objects.nonNull(condition.getMaxTriggerCount())) {
+            sqlBuilder.append(" and trigger_count<= :maxTriggerCount");
+        }
+        if (Objects.nonNull(condition.getMinTriggerCount())) {
+            sqlBuilder.append(" and trigger_count> :minTriggerCount");
+        }
+        sqlBuilder.append(" order by register_id limit :offset");
+
         return new NamedParameterJdbcTemplate(jdbcTemplate)
-            .query(SELECT_SQL, paramMap, new AsyncDownloadTriggerRowMapper());
+            .query(sqlBuilder.toString(), paramMap, new AsyncDownloadTriggerRowMapper());
     }
 
     @Override
@@ -138,5 +156,10 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
             downloadTrigger.setTriggerCount(resultSet.getInt("trigger_count"));
             return downloadTrigger;
         }
+    }
+
+    @Override
+    public int deleteById(Long id) {
+        return jdbcTemplate.update(DELETE_BY_ID_SQL, id);
     }
 }
