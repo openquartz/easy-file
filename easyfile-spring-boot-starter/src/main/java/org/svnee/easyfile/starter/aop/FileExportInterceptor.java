@@ -10,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.context.ApplicationContext;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -150,11 +151,15 @@ public class FileExportInterceptor implements MethodInterceptor {
         DownloaderRequestContext requestContext, FileExportExecutor exportExecutor) {
         // 先执行同步注册
         RegisterDownloadRequest downloadRequest = buildDownloadRequest(exportExecutor, requestContext);
-        Long registerId = downloadStorageService.register(downloadRequest);
+        TransactionTemplate template = context.getBean(TransactionTemplate.class);
+        Long downloadRegisterId = template.execute(action -> {
+            Long registerId = downloadStorageService.register(downloadRequest);
+            handler.execute(executor, requestContext, registerId);
+            return registerId;
+        });
 
-        handler.execute(executor, requestContext, registerId);
         if (EXPORT_RESULT_METHOD_NAME.equals(pjp.getMethod().getName())) {
-            return Pair.of(Boolean.TRUE, registerId);
+            return Pair.of(Boolean.TRUE, downloadRegisterId);
         } else {
             return null;
         }
