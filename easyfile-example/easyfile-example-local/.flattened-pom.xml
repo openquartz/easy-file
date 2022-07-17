@@ -11,16 +11,16 @@
     <groupId>org.svnee</groupId>
     <artifactId>easyfile-example-local</artifactId>
     <version>1.1.0</version>
-  <name>${project.artifactId}</name>
-  <description>Demo project for Spring Boot</description>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <properties>
+    <name>${project.artifactId}</name>
+    <description>Demo project for Spring Boot</description>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <properties>
     <maven.deploy.skip>true</maven.deploy.skip>
   </properties>
   <dependencies>

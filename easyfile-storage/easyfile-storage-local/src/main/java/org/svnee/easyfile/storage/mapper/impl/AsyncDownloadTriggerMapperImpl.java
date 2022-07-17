@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.svnee.easyfile.common.util.CollectionUtils;
@@ -77,7 +78,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("triggerStatus", triggerStatus);
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
-        return jdbcTemplate.update(REFRESH_STATUS_SQL, paramMap);
+        return new NamedParameterJdbcTemplate(jdbcTemplate).update(REFRESH_STATUS_SQL, paramMap);
     }
 
     @Override
@@ -91,7 +92,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
         paramMap.put("triggerCount", triggerCount);
-        return jdbcTemplate.update(TRIGGER_EXECUTE_SQL, paramMap);
+        return new NamedParameterJdbcTemplate(jdbcTemplate).update(TRIGGER_EXECUTE_SQL, paramMap);
     }
 
     @Override
@@ -104,7 +105,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("maxTriggerCount", condition.getMaxTriggerCount());
         paramMap.put("offset", condition.getOffset());
 
-        return jdbcTemplate.query(SELECT_SQL, new AsyncDownloadTriggerRowMapper(), paramMap);
+        return new NamedParameterJdbcTemplate(jdbcTemplate)
+            .query(SELECT_SQL, paramMap, new AsyncDownloadTriggerRowMapper());
     }
 
     @Override

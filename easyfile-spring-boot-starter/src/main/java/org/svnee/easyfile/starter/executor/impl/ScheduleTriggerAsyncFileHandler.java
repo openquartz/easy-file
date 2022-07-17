@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
@@ -25,6 +26,7 @@ import org.svnee.easyfile.storage.file.UploadService;
  *
  * @author svnee
  **/
+@Slf4j
 public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter implements InitializingBean {
 
     private final DownloadTriggerService downloadTriggerService;
@@ -68,25 +70,32 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     }
 
     public void doTrigger() {
-        List<DownloadTriggerResult> registerIdList = downloadTriggerService
-            .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
-                handlerProperties.getTriggerOffset());
-        if (CollectionUtils.isEmpty(registerIdList)) {
-            return;
-        }
-        registerIdList.forEach(k -> {
-            boolean execute = downloadTriggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
-            if (execute) {
-                DownloadRequestInfo requestInfo = downloadStorageService.getRequestInfoByRegisterId(k.getRegisterId());
-                try {
-                    doExecute(FileExportExecutorSupport.get(requestInfo.getDownloadCode()),
-                        requestInfo.getRequestContext(), k.getRegisterId());
-                    downloadTriggerService.exeSuccess(k.getRegisterId());
-                } catch (Exception ex) {
-                    downloadTriggerService.exeFail(k.getRegisterId());
-                }
+        log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] start.....");
+        try {
+            List<DownloadTriggerResult> registerIdList = downloadTriggerService
+                .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
+                    handlerProperties.getTriggerOffset());
+            if (CollectionUtils.isEmpty(registerIdList)) {
+                return;
             }
-        });
+            registerIdList.forEach(k -> {
+                boolean execute = downloadTriggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
+                if (execute) {
+                    DownloadRequestInfo requestInfo = downloadStorageService
+                        .getRequestInfoByRegisterId(k.getRegisterId());
+                    try {
+                        doExecute(FileExportExecutorSupport.get(requestInfo.getDownloadCode()),
+                            requestInfo.getRequestContext(), k.getRegisterId());
+                        downloadTriggerService.exeSuccess(k.getRegisterId());
+                    } catch (Exception ex) {
+                        downloadTriggerService.exeFail(k.getRegisterId());
+                    }
+                }
+            });
+        } catch (Exception ex) {
+            log.error("[ScheduleTriggerAsyncFileHandler#doTrigger] error!", ex);
+        }
+        log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
     }
 
     private void doCompensate() {
@@ -97,12 +106,12 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     public void afterPropertiesSet() {
 
         compensateScheduleExecutorService
-            .scheduleAtFixedRate(this::doCompensate, handlerProperties.getSchedulePeriod(),
+            .scheduleAtFixedRate(this::doCompensate, 10,
                 handlerProperties.getMaxExecuteTimeout(), TimeUnit.SECONDS);
 
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
-            .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
+            .scheduleAtFixedRate(this::doTrigger, 0, handlerProperties.getSchedulePeriod(),
                 TimeUnit.SECONDS);
     }
 

@@ -17,6 +17,7 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyS
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
@@ -92,6 +93,7 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     @Bean
+    @Primary
     @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
     @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,

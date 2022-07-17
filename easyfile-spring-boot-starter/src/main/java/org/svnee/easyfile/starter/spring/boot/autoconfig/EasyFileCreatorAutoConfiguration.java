@@ -74,6 +74,7 @@ public class EasyFileCreatorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
+    @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "false")
     public BaseAsyncFileHandler defaultAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
