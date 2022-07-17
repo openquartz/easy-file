@@ -13,7 +13,7 @@ import org.svnee.easyfile.storage.dictionary.DownloadTriggerStatusEnum;
  * @author svnee
  **/
 @Data
-@Table(name = "ef_async_download_register")
+@Table(name = "ef_async_download_trigger")
 public class AsyncDownloadTrigger {
 
     /**

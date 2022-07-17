@@ -49,7 +49,7 @@ CREATE TABLE ef_async_download_record
     KEY                  `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 
-CREATE TABLE ef_async_download_register
+CREATE TABLE ef_async_download_trigger
 (
     id                BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT 'Id',
     register_id       BIGINT (20) NOT NULL DEFAULT -1 COMMENT '注册ID',
