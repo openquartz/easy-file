@@ -1,10 +1,10 @@
 package org.svnee.easyfile.storage.mapper.impl;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -54,8 +54,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
             PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, trigger.getRegisterId());
             ps.setString(2, trigger.getTriggerStatus().getCode());
-            ps.setDate(3, new Date(trigger.getStartTime().getTime()));
-            ps.setDate(4, new Date(trigger.getLastExecuteTime().getTime()));
+            ps.setTimestamp(3, new Timestamp(trigger.getStartTime().getTime()));
+            ps.setTimestamp(4, new Timestamp(trigger.getLastExecuteTime().getTime()));
             ps.setInt(5, trigger.getTriggerCount());
             return ps;
         }, keyHolder);

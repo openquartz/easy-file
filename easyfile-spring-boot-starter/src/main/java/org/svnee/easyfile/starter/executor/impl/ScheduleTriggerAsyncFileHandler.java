@@ -76,6 +76,7 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
                 .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
                     handlerProperties.getTriggerOffset());
             if (CollectionUtils.isEmpty(registerIdList)) {
+                log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
                 return;
             }
             registerIdList.forEach(k -> {
@@ -99,7 +100,13 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     }
 
     private void doCompensate() {
-        downloadTriggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
+        log.info("[ScheduleTriggerAsyncFileHandler#doCompensate] start...");
+        try {
+            downloadTriggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
+        } catch (Exception ex) {
+            log.error("[ScheduleTriggerAsyncFileHandler#doCompensate] error!...", ex);
+        }
+        log.info("[ScheduleTriggerAsyncFileHandler#doCompensate] end...");
     }
 
     @Override
@@ -111,7 +118,7 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
 
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
-            .scheduleAtFixedRate(this::doTrigger, 0, handlerProperties.getSchedulePeriod(),
+            .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
                 TimeUnit.SECONDS);
     }
 

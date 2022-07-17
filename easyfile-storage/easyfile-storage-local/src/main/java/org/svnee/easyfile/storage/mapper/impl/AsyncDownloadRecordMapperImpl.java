@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -70,8 +71,8 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             ps.setInt(12, downloadRecord.getMaxServerRetry());
             ps.setInt(13, downloadRecord.getCurrentRetry());
             ps.setInt(14, downloadRecord.getDownloadNum());
-            ps.setDate(15, new Date(downloadRecord.getLastExecuteTime().getTime()));
-            ps.setDate(16, new Date(downloadRecord.getInvalidTime().getTime()));
+            ps.setTimestamp(15, new Timestamp(downloadRecord.getLastExecuteTime().getTime()));
+            ps.setTimestamp(16, new Timestamp(downloadRecord.getInvalidTime().getTime()));
             ps.setString(17, downloadRecord.getExecuteParam());
             ps.setString(18, downloadRecord.getErrorMsg());
             ps.setInt(19, downloadRecord.getVersion());
