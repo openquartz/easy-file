@@ -22,18 +22,18 @@ import org.svnee.easyfile.storage.file.UploadService;
 @Slf4j
 public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements MQTriggerHandler {
 
-    private final DownloadTriggerService triggerMessage;
+    private final DownloadTriggerService triggerService;
     private final MQTriggerProducer mqTriggerProducer;
 
     public MqTriggerAsyncFileHandler(
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,
-        DownloadTriggerService triggerMessage,
+        DownloadTriggerService triggerService,
         MqAsyncHandlerProperties handlerProperties,
         MQTriggerProducer mqProducer) {
-        super(downloadProperties, uploadService, storageService, triggerMessage, handlerProperties);
-        this.triggerMessage = triggerMessage;
+        super(downloadProperties, uploadService, storageService, triggerService, handlerProperties);
+        this.triggerService = triggerService;
         this.mqTriggerProducer = mqProducer;
     }
 
@@ -53,7 +53,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
     }
 
     @Override
-    public void handle(org.svnee.easyfile.starter.executor.trigger.DownloadTriggerMessage message) {
-
+    public void handle(DownloadTriggerMessage message) {
+        // TODO: 2022/7/18 待处理
     }
 }
