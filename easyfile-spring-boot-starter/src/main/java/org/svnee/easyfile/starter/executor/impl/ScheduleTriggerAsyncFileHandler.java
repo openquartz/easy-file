@@ -28,17 +28,12 @@ import org.svnee.easyfile.storage.file.UploadService;
  * @author svnee
  **/
 @Slf4j
-public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter implements InitializingBean {
+public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements InitializingBean {
 
-    private final DownloadTriggerService downloadTriggerService;
+    private final DownloadTriggerService triggerService;
     private final DownloadStorageService downloadStorageService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
     private final ScheduleAsyncHandlerProperties handlerProperties;
-
-    private final ScheduledThreadPoolExecutor compensateScheduleExecutorService = new ScheduledThreadPoolExecutor(1,
-        new ThreadFactoryBuilder()
-            .setNameFormat("CompensateScheduleAsyncHandler-thread-%d")
-            .build());
 
     private ScheduledThreadPoolExecutor init(ScheduleAsyncHandlerProperties handlerProperties,
         BaseDefaultDownloadRejectExecutionHandler rejectHandler) {
@@ -53,11 +48,11 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,
-        DownloadTriggerService downloadTriggerService,
+        DownloadTriggerService triggerService,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
         BaseDefaultDownloadRejectExecutionHandler rejectExecutionHandler) {
-        super(downloadProperties, uploadService, storageService);
-        this.downloadTriggerService = downloadTriggerService;
+        super(downloadProperties, uploadService, storageService, triggerService, scheduleAsyncHandlerProperties);
+        this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;
         this.scheduleExecutorService = init(scheduleAsyncHandlerProperties, rejectExecutionHandler);
         this.downloadStorageService = storageService;
@@ -67,13 +62,13 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
     public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
         DownloadTriggerRequest triggerRequest = new DownloadTriggerRequest();
         triggerRequest.setRegisterId(registerId);
-        downloadTriggerService.trigger(triggerRequest);
+        triggerService.trigger(triggerRequest);
     }
 
     public void doTrigger() {
         log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] start.....");
         try {
-            List<DownloadTriggerResult> registerIdList = downloadTriggerService
+            List<DownloadTriggerResult> registerIdList = triggerService
                 .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
                     handlerProperties.getTriggerOffset());
             if (CollectionUtils.isEmpty(registerIdList)) {
@@ -81,7 +76,7 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
                 return;
             }
             registerIdList.forEach(k -> {
-                boolean execute = downloadTriggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
+                boolean execute = triggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
                 if (execute) {
                     DownloadRequestInfo requestInfo = downloadStorageService
                         .getRequestInfoByRegisterId(k.getRegisterId());
@@ -90,9 +85,9 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
                             .get(requestInfo.getDownloadCode());
                         doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
                             requestInfo.getRequestContext(), k.getRegisterId());
-                        downloadTriggerService.exeSuccess(k.getRegisterId());
+                        triggerService.exeSuccess(k.getRegisterId());
                     } catch (Exception ex) {
-                        downloadTriggerService.exeFail(k.getRegisterId());
+                        triggerService.exeFail(k.getRegisterId());
                     }
                 }
             });
@@ -102,25 +97,10 @@ public class ScheduleTriggerAsyncFileHandler extends AsyncFileHandlerAdapter imp
         log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
     }
 
-    private void doCompensate() {
-        log.info("[ScheduleTriggerAsyncFileHandler#doCompensate] start...");
-        try {
-            downloadTriggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
-            downloadTriggerService
-                .archiveHistoryTrigger(handlerProperties.getMaxArchiveHours(), handlerProperties.getMaxTriggerCount());
-        } catch (Exception ex) {
-            log.error("[ScheduleTriggerAsyncFileHandler#doCompensate] error!...", ex);
-        }
-        log.info("[ScheduleTriggerAsyncFileHandler#doCompensate] end...");
-    }
 
     @Override
     public void afterPropertiesSet() {
-
-        compensateScheduleExecutorService
-            .scheduleAtFixedRate(this::doCompensate, handlerProperties.getSchedulePeriod(),
-                handlerProperties.getMaxExecuteTimeout(), TimeUnit.SECONDS);
-
+        super.afterPropertiesSet();
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
             .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),

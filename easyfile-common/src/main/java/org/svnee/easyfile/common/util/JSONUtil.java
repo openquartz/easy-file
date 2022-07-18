@@ -1,8 +1,11 @@
 package org.svnee.easyfile.common.util;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import org.svnee.easyfile.common.bean.Pair;
 
 /**
  * JSON util.
@@ -44,6 +47,36 @@ public final class JSONUtil {
         }
 
         return JSON_FACADE.parseObject(text, clazz);
+    }
+
+    /**
+     * 反序列化成对象
+     *
+     * @param json json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 对象
+     */
+    public static <T> T parseObject(byte[] json, Class<T> clazz) {
+        if (Objects.isNull(json) || json.length <= 0) {
+            return null;
+        }
+        return JSON_FACADE.parseObject(json, clazz);
+    }
+
+    /**
+     * 反序列化成对象
+     *
+     * @param json json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 对象
+     */
+    public static <T> T parseObject(byte[] json, TypeReference<T> clazz) {
+        if (Objects.isNull(json) || json.length <= 0) {
+            return null;
+        }
+        return JSON_FACADE.parseObject(json, clazz);
     }
 
     /**
@@ -93,5 +126,11 @@ public final class JSONUtil {
         return JSON_FACADE.parseSet(json, clazz);
     }
 
+    public static byte[] toJsonAsBytes(Object obj) {
+        if (Objects.isNull(obj)) {
+            return new byte[]{};
+        }
+        return JSON_FACADE.toJsonAsBytes(obj);
+    }
 
 }

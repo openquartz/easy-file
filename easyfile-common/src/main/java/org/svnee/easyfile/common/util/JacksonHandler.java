@@ -82,11 +82,31 @@ public final class JacksonHandler implements JsonFacade {
     }
 
     @Override
+    public <T> T parseObject(byte[] json, Class<T> type) {
+        try {
+            return mapper.readValue(json, type);
+        } catch (IOException e) {
+            return rethrow(e);
+        }
+    }
+
+    @Override
     public <T> T parseObject(String text, TypeReference<T> typeReference) {
         try {
             Type type = typeReference.getType();
             JavaType javaType = mapper.getTypeFactory().constructType(type);
             return mapper.readValue(text, javaType);
+        } catch (IOException e) {
+            return rethrow(e);
+        }
+    }
+
+    @Override
+    public <T> T parseObject(byte[] json, TypeReference<T> typeReference) {
+        try {
+            Type type = typeReference.getType();
+            JavaType javaType = mapper.getTypeFactory().constructType(type);
+            return mapper.readValue(json, javaType);
         } catch (IOException e) {
             return rethrow(e);
         }
@@ -100,6 +120,15 @@ public final class JacksonHandler implements JsonFacade {
     @Override
     public <T> Set<T> parseSet(String json, Class<T> type) {
         return parseCollection(json, Set.class, type);
+    }
+
+    @Override
+    public byte[] toJsonAsBytes(Object obj) {
+        try {
+            return mapper.writeValueAsBytes(obj);
+        } catch (JsonProcessingException e) {
+            return rethrow(e);
+        }
     }
 
     private <V, C extends Collection<?>, T> V parseCollection(String json, Class<C> collectionType,

@@ -6,35 +6,57 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * 定时调度异步处理器配置
+ * RocketMQ AsyncHandlerProperties
  *
  * @author svnee
  **/
 @Slf4j
 @Getter
 @Setter
-@ConfigurationProperties(prefix = ScheduleAsyncHandlerProperties.PREFIX)
-public class ScheduleAsyncHandlerProperties implements DatabaseAsyncHandlerProperties {
+@ConfigurationProperties(prefix = MqAsyncHandlerProperties.PREFIX)
+public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties {
 
-    public static final String PREFIX = "easyfile.schedule.async.download.handler";
-
-    ///////////////////// ThreadPool //////////////////////
+    public static final String PREFIX = "easyfile.mq.async.download.handler";
 
     /**
-     * 开启
+     * 是否启用
      */
     private boolean enable = false;
 
     /**
-     * 线程名前缀
+     * Topic
      */
-    private String threadPoolThreadPrefix = "ScheduleAsyncHandler";
+    private String topic;
 
     /**
-     * 核心线程数
-     * core-pool-size
+     * host
      */
-    private Integer threadPoolCorePoolSize = 2;
+    private String host;
+
+    /**
+     * 发送超时
+     */
+    private Integer sendTimeout;
+
+    /**
+     * 消費組
+     */
+    private String consumerGroup = "c_async_handler_group";
+
+    /**
+     * 最大消费者数
+     */
+    private Integer consumerMaxThread = 3;
+
+    /**
+     * 最小消费者数
+     */
+    private Integer consumerMinThread = 1;
+
+    /**
+     *
+     */
+    private Integer consumeConcurrentlyMaxSpan = 10;
 
     /**
      * 最大执行超时时间 单位秒
@@ -46,11 +68,6 @@ public class ScheduleAsyncHandlerProperties implements DatabaseAsyncHandlerPrope
      * 调度周期 单位：秒
      */
     private Integer schedulePeriod = 10;
-
-    /**
-     * 一次触发处理条数
-     */
-    private Integer triggerOffset = 50;
 
     /**
      * 回溯时间
