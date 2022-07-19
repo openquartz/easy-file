@@ -55,4 +55,7 @@ public class AsyncDownloadTrigger {
     @Column(name = "trigger_count")
     private Integer triggerCount;
 
+    public boolean isSuccess() {
+        return triggerStatus == DownloadTriggerStatusEnum.SUCCESS;
+    }
 }

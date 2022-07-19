@@ -9,7 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
-import org.svnee.easyfile.common.response.DownloadTriggerResult;
+import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
@@ -31,7 +31,6 @@ import org.svnee.easyfile.storage.file.UploadService;
 public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements InitializingBean {
 
     private final DownloadTriggerService triggerService;
-    private final DownloadStorageService downloadStorageService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
     private final ScheduleAsyncHandlerProperties handlerProperties;
 
@@ -55,7 +54,6 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;
         this.scheduleExecutorService = init(scheduleAsyncHandlerProperties, rejectExecutionHandler);
-        this.downloadStorageService = storageService;
     }
 
     @Override
@@ -68,29 +66,14 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
     public void doTrigger() {
         log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] start.....");
         try {
-            List<DownloadTriggerResult> registerIdList = triggerService
+            List<DownloadTriggerEntry> registerIdList = triggerService
                 .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
                     handlerProperties.getTriggerOffset());
             if (CollectionUtils.isEmpty(registerIdList)) {
                 log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
                 return;
             }
-            registerIdList.forEach(k -> {
-                boolean execute = triggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
-                if (execute) {
-                    DownloadRequestInfo requestInfo = downloadStorageService
-                        .getRequestInfoByRegisterId(k.getRegisterId());
-                    try {
-                        BaseDownloadExecutor executor = FileExportExecutorSupport
-                            .get(requestInfo.getDownloadCode());
-                        doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
-                            requestInfo.getRequestContext(), k.getRegisterId());
-                        triggerService.exeSuccess(k.getRegisterId());
-                    } catch (Exception ex) {
-                        triggerService.exeFail(k.getRegisterId());
-                    }
-                }
-            });
+            registerIdList.stream().sorted().forEach(this::doTrigger);
         } catch (Exception ex) {
             log.error("[ScheduleTriggerAsyncFileHandler#doTrigger] error!", ex);
         }

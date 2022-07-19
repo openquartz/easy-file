@@ -65,6 +65,13 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
     private Integer maxExecuteTimeout = 1600;
 
     /**
+     * 等待超时
+     * 单位：秒
+     * 超时将重新触发执行
+     */
+    private Integer maxWaitingTimeout = 1600;
+
+    /**
      * 调度周期 单位：秒
      */
     private Integer schedulePeriod = 10;
@@ -84,5 +91,10 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
      * 最大归档小时
      */
     private Integer maxArchiveHours = 24;
+
+    /**
+     * offset
+     */
+    private Integer offset;
 
 }

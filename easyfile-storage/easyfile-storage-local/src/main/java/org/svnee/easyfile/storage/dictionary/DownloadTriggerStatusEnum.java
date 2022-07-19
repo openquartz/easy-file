@@ -21,6 +21,11 @@ public enum DownloadTriggerStatusEnum implements BaseEnum<String> {
     INIT("init", "初始化"),
 
     /**
+     * 排队中
+     */
+    WAITING("waiting", "排队中"),
+
+    /**
      * 执行中
      */
     EXECUTING("executing", "执行中"),

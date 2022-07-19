@@ -1,12 +1,8 @@
 package org.svnee.easyfile.starter.executor.trigger;
 
-import java.text.MessageFormat;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
-import org.apache.rocketmq.client.producer.SendStatus;
 import org.apache.rocketmq.common.message.Message;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.MqAsyncHandlerProperties;
@@ -29,22 +25,19 @@ public class RocketMQTriggerProducer implements MQTriggerProducer {
     }
 
     @Override
-    public void send(DownloadTriggerMessage triggerMessage) {
+    public boolean send(DownloadTriggerMessage triggerMessage) {
         String topic = properties.getTopic();
         Message message = new Message();
         message.setBody(JSONUtil.toJsonAsBytes(triggerMessage));
         message.setTopic(topic);
-        SendResult result = null;
+        SendResult result;
         try {
             result = producer.send(message, properties.getSendTimeout());
         } catch (Exception ex) {
-            ExceptionUtils.rethrow(ex);
+            log.error("[RocketMQTriggerProducer#send] send error!message:{}", message, ex);
+            return false;
         }
-        if (!SendStatus.SEND_OK.equals(result.getSendStatus())) {
-            throw new RuntimeException(
-                MessageFormat.format("rocket send error,sendStatus:{0},msgId:{1},topic:{2}",
-                    result.getSendStatus(),
-                    result.getMsgId(), topic));
-        }
+        log.info("[RocketMQTriggerProducer#send]send result!message:{},result:{}", message, result);
+        return true;
     }
 }

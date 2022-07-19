@@ -5,9 +5,13 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
+import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.starter.processor.FileExportExecutorSupport;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.DatabaseAsyncHandlerProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -23,6 +27,7 @@ import org.svnee.easyfile.storage.file.UploadService;
 public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAdapter implements InitializingBean {
 
     private final DownloadTriggerService triggerService;
+    private final DownloadStorageService storageService;
     private final DatabaseAsyncHandlerProperties handlerProperties;
 
     private final ScheduledThreadPoolExecutor compensateScheduleExecutorService = new ScheduledThreadPoolExecutor(1,
@@ -39,6 +44,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
         super(downloadProperties, uploadService, storageService);
         this.triggerService = triggerService;
         this.handlerProperties = handlerProperties;
+        this.storageService = storageService;
     }
 
     @Override
@@ -48,7 +54,10 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
         triggerService.trigger(triggerRequest);
     }
 
-    private void doCompensate() {
+    /**
+     * 做补偿
+     */
+    public void doCompensate() {
         log.info("[DatabaseAsyncFileHandlerAdapter#doCompensate] start...");
         try {
             triggerService.handleExpirationTrigger(handlerProperties.getMaxExecuteTimeout());
@@ -58,6 +67,22 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
             log.error("[DatabaseAsyncFileHandlerAdapter#doCompensate] error!...", ex);
         }
         log.info("[DatabaseAsyncFileHandlerAdapter#doCompensate] end...");
+    }
+
+    public void doTrigger(DownloadTriggerEntry k) {
+        boolean execute = triggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
+        if (execute) {
+            DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
+            try {
+                BaseDownloadExecutor executor = FileExportExecutorSupport
+                    .get(requestInfo.getDownloadCode());
+                doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
+                    requestInfo.getRequestContext(), k.getRegisterId());
+                triggerService.exeSuccess(k.getRegisterId());
+            } catch (Exception ex) {
+                triggerService.exeFail(k.getRegisterId());
+            }
+        }
     }
 
     @Override

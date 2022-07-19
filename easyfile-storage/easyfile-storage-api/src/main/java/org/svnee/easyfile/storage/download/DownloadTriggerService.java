@@ -2,7 +2,7 @@ package org.svnee.easyfile.storage.download;
 
 import java.util.List;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
-import org.svnee.easyfile.common.response.DownloadTriggerResult;
+import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 
 /**
  * 异步下载触发服务
@@ -26,8 +26,28 @@ public interface DownloadTriggerService {
      * @param maxTriggerCount 最大触发次数
      * @return 注册ID
      */
-    List<DownloadTriggerResult> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
+    List<DownloadTriggerEntry> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
         Integer triggerOffset);
+
+    /**
+     * 需要触发注册ID
+     *
+     * @param lookBackHours 回溯时间
+     * @param triggerOffset 触发偏移量
+     * @param maxTriggerCount 最大触发次数
+     * @return 注册ID
+     */
+    List<DownloadTriggerEntry> getTriggerCompensate(Integer lookBackHours, Integer maxTriggerCount,
+        Integer triggerOffset);
+
+    /**
+     * 根据registerId 查询DownloadTriggerEntry
+     *
+     * @param registerId registerId
+     * @param maxTriggerCount 最大触发次数
+     * @return entry
+     */
+    DownloadTriggerEntry getTriggerRegisterId(Long registerId, Integer maxTriggerCount);
 
     /**
      * 开始执行
@@ -53,11 +73,25 @@ public interface DownloadTriggerService {
     void exeFail(Long registerId);
 
     /**
+     * 进入排队
+     *
+     * @param registerId 注册ID
+     */
+    void enterWaiting(Long registerId);
+
+    /**
      * 最大过期时间
      *
      * @param maxExpireSeconds 过期时间
      */
     void handleExpirationTrigger(Integer maxExpireSeconds);
+
+    /**
+     * 触发最大等待过期时间处理
+     *
+     * @param maxWaitingSeconds 最大等待时间超时
+     */
+    void handleWaitingExpirationTrigger(Integer maxWaitingSeconds);
 
     /**
      * 多久归档
@@ -66,4 +100,5 @@ public interface DownloadTriggerService {
      * @param maxTriggerCount 最大触发次数
      */
     void archiveHistoryTrigger(Integer archiveHours, Integer maxTriggerCount);
+
 }
