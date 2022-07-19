@@ -15,7 +15,6 @@ import org.svnee.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import org.svnee.easyfile.starter.aop.FileExportInterceptor;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
-import org.svnee.easyfile.starter.executor.impl.DefaultAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.impl.DefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.processor.ApplicationContentPostProcessor;
 import org.svnee.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
@@ -32,8 +31,7 @@ import org.svnee.easyfile.storage.file.local.LocalUploadServiceImpl;
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({DefaultAsyncHandlerThreadPoolProperties.class, EasyFileDownloadProperties.class,
-    EasyFileRemoteProperties.class})
+@EnableConfigurationProperties({EasyFileDownloadProperties.class, EasyFileRemoteProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @Import({EasyFileLocalStorageAutoConfiguration.class, EasyFileRemoteStorageAutoConfiguration.class})
 public class EasyFileCreatorAutoConfiguration {
@@ -70,19 +68,6 @@ public class EasyFileCreatorAutoConfiguration {
     @ConditionalOnMissingBean(BaseDefaultDownloadRejectExecutionHandler.class)
     public BaseDefaultDownloadRejectExecutionHandler defaultDownloadRejectExecutionHandler() {
         return new DefaultDownloadRejectExecutionHandler();
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
-    @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "false")
-    public BaseAsyncFileHandler defaultAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
-        UploadService uploadService,
-        DownloadStorageService downloadStorageService,
-        BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
-        DefaultAsyncHandlerThreadPoolProperties defaultAsyncHandlerThreadPoolProperties) {
-        return new DefaultAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-            baseDefaultDownloadRejectExecutionHandler,
-            defaultAsyncHandlerThreadPoolProperties);
     }
 
     @Bean

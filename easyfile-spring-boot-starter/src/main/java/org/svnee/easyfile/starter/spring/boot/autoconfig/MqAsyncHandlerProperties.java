@@ -34,9 +34,24 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
     private String host;
 
     /**
+     * 生产组
+     */
+    private String produceGroup;
+
+    /**
      * 发送超时
      */
-    private Integer sendTimeout;
+    private Integer produceTimeout;
+
+    /**
+     * 重试次数
+     */
+    private int produceTryTimes = 5;
+
+    /**
+     * 故障轉移
+     */
+    private boolean produceLatencyFaultEnable;
 
     /**
      * 消費組

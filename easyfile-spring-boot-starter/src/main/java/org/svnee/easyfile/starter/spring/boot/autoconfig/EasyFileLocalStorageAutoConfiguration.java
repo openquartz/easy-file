@@ -9,7 +9,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
@@ -17,20 +16,14 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyS
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
-import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
-import org.svnee.easyfile.starter.executor.impl.DefaultAsyncFileHandler;
-import org.svnee.easyfile.starter.executor.impl.ScheduleTriggerAsyncFileHandler;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.expand.ExportLimitingExecutor;
 import org.svnee.easyfile.storage.expand.NoneExportLimitingExecutor;
-import org.svnee.easyfile.storage.file.UploadService;
 import org.svnee.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalDownloadTriggerServiceImpl;
 import org.svnee.easyfile.storage.impl.LocalLimitingServiceImpl;
@@ -48,7 +41,7 @@ import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({EasyFileLocalProperties.class, ScheduleAsyncHandlerProperties.class})
+@EnableConfigurationProperties({EasyFileLocalProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
 public class EasyFileLocalStorageAutoConfiguration {
 
@@ -90,22 +83,6 @@ public class EasyFileLocalStorageAutoConfiguration {
         } catch (Exception e) {
             log.error("error copy properties", e);
         }
-    }
-
-    @Bean
-    @Primary
-    @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
-    @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
-    public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
-        UploadService uploadService,
-        DownloadStorageService downloadStorageService,
-        DownloadTriggerService downloadTriggerService,
-        BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
-        ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
-        return new ScheduleTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-            downloadTriggerService,
-            scheduleAsyncHandlerProperties,
-            baseDefaultDownloadRejectExecutionHandler);
     }
 
     @Bean

@@ -32,7 +32,7 @@ public class RocketMQTriggerProducer implements MQTriggerProducer {
         message.setTopic(topic);
         SendResult result;
         try {
-            result = producer.send(message, properties.getSendTimeout());
+            result = producer.send(message, properties.getProduceTimeout());
         } catch (Exception ex) {
             log.error("[RocketMQTriggerProducer#send] send error!message:{}", message, ex);
             return false;
