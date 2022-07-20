@@ -40,7 +40,8 @@ public class AsyncFileHandlerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
     @ConditionalOnClass(MQProducer.class)
-    public BaseAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
+    @ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
+    public MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
         DownloadTriggerService downloadTriggerService,
@@ -55,6 +56,7 @@ public class AsyncFileHandlerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(value = MQTriggerProducer.class, name = "easyFileTriggerMQProducer")
     @ConditionalOnClass(MQProducer.class)
+    @ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public MQTriggerProducer mqTriggerProducer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
         MQProducer easyFileTriggerMQProducer) {
         return new RocketMQTriggerProducer(mqAsyncHandlerProperties, easyFileTriggerMQProducer);
@@ -63,6 +65,7 @@ public class AsyncFileHandlerAutoConfiguration {
     @Bean
     @ConditionalOnMissingBean(RocketMQTriggerConsumer.class)
     @ConditionalOnClass(MQConsumer.class)
+    @ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public RocketMQTriggerConsumer rocketMQTriggerConsumer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
         EasyFileDownloadProperties downloadProperties,
         MQTriggerHandler mqTriggerHandler) {
@@ -70,15 +73,9 @@ public class AsyncFileHandlerAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(MQTriggerHandler.class)
-    public MQTriggerHandler mqTriggerHandler() {
-        // TODO: 2022/7/19 待处理
-        return null;
-    }
-
-    @Bean
     @ConditionalOnMissingBean(MQProducer.class)
     @ConditionalOnClass(MQProducer.class)
+    @ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public MQProducer easyFileTriggerMQProducer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
         EasyFileDownloadProperties easyFileDownloadProperties) {
         DefaultMQProducer producer = new DefaultMQProducer(mqAsyncHandlerProperties.getProduceGroup());
@@ -86,14 +83,16 @@ public class AsyncFileHandlerAutoConfiguration {
         producer.setVipChannelEnabled(false);
         producer.setRetryTimesWhenSendAsyncFailed(mqAsyncHandlerProperties.getProduceTryTimes());
         producer.setSendLatencyFaultEnable(mqAsyncHandlerProperties.isProduceLatencyFaultEnable());
-        producer.setInstanceName(
-            Constants.EASY_FILE_SENDER + "@" + easyFileDownloadProperties.getAppId() + "@" + UtilAll.getPid());
         String ipAddress = IpUtil.getIp();
+        String[] split = ipAddress.split("\\.");
+        producer.setInstanceName(
+            Constants.EASY_FILE_SENDER + "@" + easyFileDownloadProperties.getAppId() + "@" + split[split.length - 1]
+                + "@" + UtilAll.getPid());
         producer.setClientIP(ipAddress);
         try {
             producer.start();
         } catch (MQClientException ex) {
-            log.error("ThorRocketBuilder producer start error", ex);
+            log.error("EasyFileTriggerMQProducer producer start error", ex);
             ExceptionUtils.rethrow(ex);
         }
         return producer;

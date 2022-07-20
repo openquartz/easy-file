@@ -11,26 +11,26 @@
     <groupId>org.svnee</groupId>
     <artifactId>easyfile-storage</artifactId>
     <version>1.1.0</version>
-  <packaging>pom</packaging>
-  <name>easyfile-storage</name>
-  <licenses>
-    <license>
-      <name>The Apache Software License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-  <modules>
-    <module>easyfile-storage-api</module>
-    <module>easyfile-storage-remote</module>
-    <module>easyfile-storage-local</module>
-  </modules>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${maven.deploy.version}</version>
-        <configuration>
+    <packaging>pom</packaging>
+    <name>easyfile-storage</name>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <modules>
+        <module>easyfile-storage-api</module>
+        <module>easyfile-storage-remote</module>
+        <module>easyfile-storage-local</module>
+    </modules>
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>${maven.deploy.version}</version>
+                <configuration>
           <skip>true</skip>
         </configuration>
       </plugin>
