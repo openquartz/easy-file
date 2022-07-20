@@ -6,6 +6,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.common.UtilAll;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,6 +30,7 @@ import org.svnee.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
+@ConditionalOnBean(DownloadTriggerService.class)
 @ConditionalOnClass(MQProducer.class)
 @EnableConfigurationProperties(MqAsyncHandlerProperties.class)
 @ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
