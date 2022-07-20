@@ -26,22 +26,23 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
     /**
      * Topic
      */
-    private String topic;
+    private String topic = "easyfile_mq_trigger";
 
     /**
      * host
      */
-    private String host;
+    private String host = "127.0.0.1:9876";
 
     /**
      * 生产组
      */
-    private String produceGroup;
+    private String produceGroup = "p_async_handler_group";
 
     /**
      * 发送超时
+     * 单位：秒
      */
-    private Integer produceTimeout;
+    private Integer produceTimeout = 1000;
 
     /**
      * 重试次数
@@ -51,7 +52,7 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
     /**
      * 故障轉移
      */
-    private boolean produceLatencyFaultEnable;
+    private boolean produceLatencyFaultEnable = true;
 
     /**
      * 消費組
@@ -110,6 +111,6 @@ public class MqAsyncHandlerProperties implements DatabaseAsyncHandlerProperties 
     /**
      * offset
      */
-    private Integer offset;
+    private Integer offset = 500;
 
 }
