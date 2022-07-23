@@ -76,9 +76,9 @@ rocket-client)
 
 ```properties
 <dependency>
-<groupId>org.apache.rocketmq</groupId>
-<artifactId>rocketmq-client</artifactId>
-<version>4.9.3</version>
+    <groupId>org.apache.rocketmq</groupId>
+    <artifactId>rocketmq-client</artifactId>
+    <version>4.9.3</version>
 </dependency>
 ```
 
