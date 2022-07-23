@@ -74,7 +74,7 @@ easyfile.schedule.async.download.handler.max-archive-hours=24
 使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。因此需要提供依赖jar (
 rocket-client)
 
-```properties
+```xml
 <dependency>
     <groupId>org.apache.rocketmq</groupId>
     <artifactId>rocketmq-client</artifactId>
