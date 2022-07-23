@@ -119,7 +119,8 @@ easyfile.mq.async.download.handler.max-trigger-count=5
 easyfile.mq.async.download.handler.max-waiting-timeout=1600
 ```
 
-#####如果用户使用其他MQ 触发实现
+##### 使用其他MQ 触发实现
+
 1、基于通过实现`org.svnee.easyfile.starter.executor.trigger.MQTriggerProducer`
 实现基于其他MQ的触发。
 
