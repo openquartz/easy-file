@@ -119,15 +119,15 @@ easyfile.mq.async.download.handler.max-trigger-count=5
 easyfile.mq.async.download.handler.max-waiting-timeout=1600
 ```
 
-##### 使用其他MQ 触发实现
+##### 使用其他MQ触发实现
 
 1、基于通过实现`org.svnee.easyfile.starter.executor.trigger.MQTriggerProducer`
 实现基于其他MQ的触发。
 
 2 、实现自定义监听MQ-触发消息处理逻辑
 
-3、手动注入相关类到spring context 中。包括：(`org.svnee.easyfile.starter.spring.boot.autoconfig.MqAsyncFileHandlerAutoConfiguration`)中的
-相关类的实现。
+3、手动注入相关类到spring context 中。
+包括：(`org.svnee.easyfile.starter.spring.boot.autoconfig.MqAsyncFileHandlerAutoConfiguration`)中的相关类的实现。
 
 
 
