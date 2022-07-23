@@ -202,61 +202,9 @@ easyfile.remote.server-addr=127.0.0.1:8080
 easyfile.remote.namespace=remote-example
 ```
 
-#### 四、客户端配置
+#### 四、异步文件处理器
 
-如果使用默认异步文件处理器(`org.svnee.easyfile.starter.executor.impl.DefaultAsyncFileHandler`)
-
-提供了一些配置
-
-| 配置key                                                      | 描述                                | 默认值 |
-| ------------------------------------------------------------ | ----------------------------------- | ------ |
-| easyfile.default.async.download.handler.thread-pool.core-pool-size | 默认下载线程池核心线程数            | 10     |
-| easyfile.default.async.download.handler.thread-pool.maximum-pool-size | 默认下载线程池最大线程池数          | 20     |
-| easyfile.default.async.download.handler.thread-pool.keep-alive-time | 默认下载线程池最大空闲时间 单位：秒 | 30     |
-| easyfile.default.async.download.handler.thread-pool.max-blocking-queue-size | 默认下载线程池阻塞队列最大长度      | 2048   |
-
-如果使用Job调度式的文件下载处理器(`org.svnee.easyfile.starter.executor.impl.ScheduleTriggerAsyncFileHandler`)
-提供出了一些配置
-
-```properties
-easyfile.schedule.async.download.handler.enable=true
-easyfile.schedule.async.download.handler.thread-pool-core-pool-size=2
-easyfile.schedule.async.download.handler.thread-pool-thread-prefix=ScheduleAsyncHandler
-easyfile.schedule.async.download.handler.max-execute-timeout=1600
-easyfile.schedule.async.download.handler.max-trigger-count=5
-easyfile.schedule.async.download.handler.schedule-period=10
-easyfile.schedule.async.download.handler.trigger-offset=50
-easyfile.schedule.async.download.handler.look-back-hours=2
-easyfile.schedule.async.download.handler.max-archive-hours=24
-```
-
-| 配置key                                                      | 描述                                | 默认值 |
-| ------------------------------------------------------------ | ----------------------------------- | ------ |
-| easyfile.schedule.async.download.handler.enable | 是否启用调度式异步处理器            | false    |
-| easyfile.schedule.async.download.handler.thread-pool-core-pool-size | 调度处理器单机核心线程数          | 2     |
-| easyfile.schedule.async.download.handler.thread-pool-thread-prefix | 调度处理器线程前缀  |    ScheduleAsyncHandler  |
-| easyfile.schedule.async.download.handler.max-execute-timeout | 调度处理一次最大超时 单位：秒 | 1600   |
-| easyfile.schedule.async.download.handler.max-trigger-count | 最大调度重试次数  | 5   |
-| easyfile.schedule.async.download.handler.schedule-period | 调度周期 单位：秒 | 10   |
-| eeasyfile.schedule.async.download.handler.trigger-offset | 触发调度一次触发量   |  50   |
-| easyfile.schedule.async.download.handler.look-back-hours | 一次回溯处理时间 单位：小时 | 2   |
-| easyfile.schedule.async.download.handler.max-archive-hours | 已经执行完成的归档保持时间 单位：小时 | 24   |
-
-Client 配置
-
-| 配置key                                   | 描述                                                         | 默认值            |
-| ----------------------------------------- | ------------------------------------------------------------ | ----------------- |
-| easyfile.download.enabled                 | EasyFile是否启用                                             | true              |
-| easyfile.download.app-id                   | Client端 AppId                                               |                   |
-| easyfile.download.unified-app-id            | Client端统一AppId                                            |  默认是 用appId    |
-| easyfile.download.local-file-temp-path       | Client端下载文件本地临时目录                                 | /tmp              |
-| easyfile.download.enable-auto-register      | Client端自动注册下载任务开关                                 | false             |
-| easyfile.download.enable-compress-file      | Client 是否开启文件压缩优化                                  | false             |
-| easyfile.download.min-enable-compress-mb-size | Client 启用文件压缩最小的大小，单位:MB 在启用文件压缩后生效 | 1                 |
-| easyfile.download.export-advisor-order      | Client下载切面顺序                                           | Integer.MAX_VALUE |
-| easyfile.download.excel-max-sheet-rows  |Client 导出Excel 单Sheet最大行数|1000000|
-| easyfile.download.excel-row-access-window-size |Client 导出Excel 缓存最大行数|1000|
-| easyfile.download.clean-file-after-upload |Client 导出Excel 后是否删除源文件|true|
+[异步文件处理器配置](doc/AsyncFileHandler.md)
 
 #### 五、实现下载器
 
@@ -295,7 +243,7 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor,BaseWrapperSyn
 #### 拓展
 
 类继承关系图
-![AbstractStreamDownloadExcelExecutor](./doc/AbstractStreamDownloadExcelExecutor.png)
+![AbstractStreamDownloadExcelExecutor](doc/image/AbstractStreamDownloadExcelExecutor.png)
 
 ##### 下载器
 
@@ -435,17 +383,17 @@ public @interface FileExportExecutor {
 
 目前针对 1:* 的映射导出 只支持及到两级,暂时不支持三级及以上(即：1：* ：* ) \
 excel的导出支持1:* 的数据单元行列的导出。例如：\
-![MergeCellSheet](./doc/img.png)
+![MergeCellSheet](doc/image/img.png)
 但是针对\
 1、1：* 的导出数据时,不建议导出过多数据,由于需要merge 单元格的原因,导致导出生成excel时很慢,建议数量小于 2K行
 
 2、针对特别大的数据时,建议使用1:1的单元格导出 \
-![MergeCellSheet](./doc/one2one.png)
+![MergeCellSheet](doc/image/one2one.png)
 
 ##### 多Sheet分组导出支持
 
 需要按照多个Sheet进行分组查询导出 导出数据形如,
-![MultiSheetExport](./doc/MultiSheetExport.png)
+![MultiSheetExport](doc/image/MultiSheetExport.png)
 
 EasyFile 提供两个执行器
 
@@ -479,9 +427,9 @@ easyfile.download.excel-row-access-window-size=100
 ```
 
 使用分页导出CPU/内存情况 \
-![分页导出内存消耗情况](./doc/PageExport.png) \
+![分页导出内存消耗情况](doc/image/PageExport.png) \
 使用流式导出CPU/内存情况 \
-![流式导出内存消耗情况](./doc/StreamExport.png)
+![流式导出内存消耗情况](doc/image/StreamExport.png)
 
 #### easyfile-server 部署
 
