@@ -78,7 +78,7 @@ remote模式：需要部署easyfile-server 服务，并设置客户端调用远�
 </dependency>
 ```
 
-如果使用远程模式引入maven 依赖
+如果使用remote模式引入maven 依赖
 
 ```xml
 <dependency>

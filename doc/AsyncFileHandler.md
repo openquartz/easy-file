@@ -23,6 +23,20 @@
 
 ### DB 触发器
 
+目前仅支持文件处理器使用**本地模式**。暂不支持**remote模式**。如果使用需要依赖maven pom 为
+```xml
+<dependency>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
+<dependency>
+   <groupId>org.svnee</groupId>
+   <artifactId>easyfile-storage-local</artifactId>
+   <version>1.0.0</version>
+</dependency>
+```
+
 使用DB触发处理器。需要依赖DB使用。 因此需要DB数据源执行建表-SQL
 
 ```sql
