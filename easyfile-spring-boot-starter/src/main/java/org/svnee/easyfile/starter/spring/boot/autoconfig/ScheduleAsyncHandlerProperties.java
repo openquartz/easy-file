@@ -31,10 +31,26 @@ public class ScheduleAsyncHandlerProperties implements DatabaseAsyncHandlerPrope
     private String threadPoolThreadPrefix = "ScheduleAsyncHandler";
 
     /**
+     * reaper-线程调度前缀
+     */
+    private String reaperThreadPoolThreadPrefix = "ReaperScheduleAsyncHandler";
+
+    /**
      * 核心线程数
      * core-pool-size
      */
-    private Integer threadPoolCorePoolSize = 2;
+    private Integer threadPoolCoreSize = 2;
+
+    /**
+     * reaper-线程池核心数
+     */
+    private Integer reaperTheadPoolCoreSize = 1;
+
+    /**
+     * 最小收割时间
+     * 处理时间为：lookBackHours->minReaperSeconds
+     */
+    private Integer minReaperSeconds = 3600;
 
     /**
      * 最大执行超时时间 单位秒

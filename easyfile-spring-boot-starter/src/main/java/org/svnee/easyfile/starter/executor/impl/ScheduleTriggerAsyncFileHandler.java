@@ -7,15 +7,12 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
 import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
 import org.svnee.easyfile.common.util.CollectionUtils;
-import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
-import org.svnee.easyfile.starter.processor.FileExportExecutorSupport;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncHandlerProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -33,10 +30,11 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
     private final DownloadTriggerService triggerService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
     private final ScheduleAsyncHandlerProperties handlerProperties;
+    private final ScheduledThreadPoolExecutor reaperScheduleExecutorService;
 
     private ScheduledThreadPoolExecutor init(ScheduleAsyncHandlerProperties handlerProperties,
         BaseDefaultDownloadRejectExecutionHandler rejectHandler) {
-        return new ScheduledThreadPoolExecutor(handlerProperties.getThreadPoolCorePoolSize(),
+        return new ScheduledThreadPoolExecutor(handlerProperties.getThreadPoolCoreSize(),
             new ThreadFactoryBuilder()
                 .setNameFormat(handlerProperties.getThreadPoolThreadPrefix() + "-thread-%d")
                 .build(),
@@ -54,6 +52,13 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;
         this.scheduleExecutorService = init(scheduleAsyncHandlerProperties, rejectExecutionHandler);
+        // reaper
+        this.reaperScheduleExecutorService = new ScheduledThreadPoolExecutor(
+            handlerProperties.getReaperTheadPoolCoreSize(),
+            new ThreadFactoryBuilder()
+                .setNameFormat(handlerProperties.getReaperThreadPoolThreadPrefix() + "-thread-%d")
+                .build(),
+            rejectExecutionHandler);
     }
 
     @Override
@@ -64,11 +69,23 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
     }
 
     public void doTrigger() {
+        List<DownloadTriggerEntry> registerIdList = triggerService
+            .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
+                handlerProperties.getTriggerOffset());
+        doActualTrigger(registerIdList);
+    }
+
+    public void doReaperTrigger() {
+        List<DownloadTriggerEntry> registerIdList = triggerService
+            .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
+                handlerProperties.getMinReaperSeconds(), handlerProperties.getTriggerOffset());
+        doActualTrigger(registerIdList);
+    }
+
+    private void doActualTrigger(List<DownloadTriggerEntry> registerIdList) {
         log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] start.....");
         try {
-            List<DownloadTriggerEntry> registerIdList = triggerService
-                .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
-                    handlerProperties.getTriggerOffset());
+
             if (CollectionUtils.isEmpty(registerIdList)) {
                 log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
                 return;
@@ -87,6 +104,10 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
             .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
+                TimeUnit.SECONDS);
+        // do reaper
+        reaperScheduleExecutorService
+            .scheduleAtFixedRate(this::doReaperTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
                 TimeUnit.SECONDS);
     }
 

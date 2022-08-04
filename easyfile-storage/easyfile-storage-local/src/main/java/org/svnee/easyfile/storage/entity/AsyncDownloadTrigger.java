@@ -55,6 +55,18 @@ public class AsyncDownloadTrigger {
     @Column(name = "trigger_count")
     private Integer triggerCount;
 
+    /**
+     * 创建者-owner (IP)
+     */
+    @Column(name = "creating_owner")
+    private String creatingOwner;
+
+    /**
+     * 正在执行owner (IP)
+     */
+    @Column(name = "processing_owner")
+    private String processingOwner;
+
     public boolean isSuccess() {
         return triggerStatus == DownloadTriggerStatusEnum.SUCCESS;
     }

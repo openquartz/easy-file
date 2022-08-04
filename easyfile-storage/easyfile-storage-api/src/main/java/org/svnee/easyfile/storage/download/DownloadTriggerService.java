@@ -34,6 +34,18 @@ public interface DownloadTriggerService {
      *
      * @param lookBackHours 回溯时间
      * @param triggerOffset 触发偏移量
+     * @param minReaperSeconds 最小收割时间
+     * @param maxTriggerCount 最大触发次数
+     * @return 注册ID
+     */
+    List<DownloadTriggerEntry> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
+        Integer minReaperSeconds, Integer triggerOffset);
+
+    /**
+     * 需要触发注册ID
+     *
+     * @param lookBackHours 回溯时间
+     * @param triggerOffset 触发偏移量
      * @param maxTriggerCount 最大触发次数
      * @return 注册ID
      */

@@ -48,6 +48,8 @@ CREATE TABLE ef_async_download_trigger
     start_time        DATETIME    NOT NULL COMMENT '开始时间',
     last_execute_time DATETIME    NOT NULL COMMENT '最新执行时间',
     trigger_count     INT (3) NOT NULL DEFAULT 0 COMMENT '触发次数',
+    creating_owner    varchar(50) not null default '' comment '触发者',
+    processing_owner  varchar(50) not null default '' comment '执行者',
     UNIQUE `ux_register_id`(register_id),
     PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '触发执行';

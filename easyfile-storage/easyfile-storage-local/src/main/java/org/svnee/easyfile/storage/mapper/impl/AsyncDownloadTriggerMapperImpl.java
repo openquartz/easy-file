@@ -19,6 +19,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.IpUtil;
+import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.dictionary.DownloadTriggerStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTrigger;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTriggerMapper;
@@ -36,11 +38,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private final JdbcTemplate jdbcTemplate;
 
     private static final String INSERT_SQL =
-        "insert into ef_async_download_trigger(register_id, trigger_status, start_time, last_execute_time,trigger_count) values (?,?,?,?,?)";
+        "insert into ef_async_download_trigger(register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner) values (?,?,?,?,?,?,?)";
     private static final String REFRESH_STATUS_SQL =
         "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime where register_id = :registerId and trigger_status in (:taskStatusList) ";
     private static final String TRIGGER_EXECUTE_SQL =
-        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1 where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
+        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1,processing_owner= :processingOwner where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
     private static final String SELECT_SQL =
         "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger";
     private static final String SELECT_BY_ID_SQL =
@@ -59,6 +61,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
             ps.setTimestamp(3, new Timestamp(trigger.getStartTime().getTime()));
             ps.setTimestamp(4, new Timestamp(trigger.getLastExecuteTime().getTime()));
             ps.setInt(5, trigger.getTriggerCount());
+            ps.setString(6, trigger.getCreatingOwner());
+            ps.setString(7, trigger.getProcessingOwner());
             return ps;
         }, keyHolder);
 
@@ -99,6 +103,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
         paramMap.put("triggerCount", triggerCount);
+        paramMap.put("processingOwner", Objects.nonNull(IpUtil.getIp()) ? IpUtil.getIp() : "hostname-unknow");
         return new NamedParameterJdbcTemplate(jdbcTemplate).update(TRIGGER_EXECUTE_SQL, paramMap);
     }
 
@@ -110,6 +115,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
 
         Map<String, Object> paramMap = new HashMap<>(5);
         paramMap.put("taskStatusList", taskStatusList);
+        paramMap.put("creatingOwner", condition.getCreatingOwner());
         paramMap.put("lastExecuteStartTime", condition.getLastExecuteStartTime());
         paramMap.put("lastExecuteEndTime", condition.getLastExecuteEndTime());
         paramMap.put("maxTriggerCount", condition.getMaxTriggerCount());
@@ -130,8 +136,10 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         if (Objects.nonNull(condition.getMinTriggerCount())) {
             sqlBuilder.append(" and trigger_count> :minTriggerCount");
         }
+        if (StringUtils.isNotBlank(condition.getCreatingOwner())) {
+            sqlBuilder.append(" and creating_owner= :creatingOwner");
+        }
         sqlBuilder.append(" order by register_id limit :offset");
-
         return new NamedParameterJdbcTemplate(jdbcTemplate)
             .query(sqlBuilder.toString(), paramMap, new AsyncDownloadTriggerRowMapper());
     }
@@ -154,6 +162,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
             downloadTrigger.setStartTime(resultSet.getDate("start_time"));
             downloadTrigger.setLastExecuteTime(resultSet.getDate("last_execute_time"));
             downloadTrigger.setTriggerCount(resultSet.getInt("trigger_count"));
+            downloadTrigger.setCreatingOwner(resultSet.getString("creating_owner"));
+            downloadTrigger.setProcessingOwner(resultSet.getString("processing_owner"));
             return downloadTrigger;
         }
     }

@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
 import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.IpUtil;
+import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.dictionary.DownloadTriggerStatusEnum;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTrigger;
@@ -42,6 +44,8 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
             trigger.setStartTime(new Date());
             trigger.setLastExecuteTime(new Date());
             trigger.setRegisterId(request.getRegisterId());
+            trigger.setCreatingOwner(Objects.nonNull(IpUtil.getIp()) ? IpUtil.getIp() : "hostname-unknown");
+            trigger.setProcessingOwner(StringUtils.EMPTY);
             asyncDownloadTriggerMapper.insert(trigger);
         } catch (Exception ex) {
             log.error("[LocalDownloadTriggerServiceImpl#trigger] save error! request:{}", request);
@@ -60,6 +64,30 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         LocalDateTime lookBackTime = now.plusHours(-lookBackHours);
         triggerCondition.setLastExecuteStartTime(lookBackTime);
         triggerCondition.setLastExecuteEndTime(now);
+        // 触发专属IP
+        triggerCondition.setCreatingOwner(IpUtil.getIp());
+
+        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        return triggerList.stream().map(e -> {
+            DownloadTriggerEntry triggerResult = new DownloadTriggerEntry();
+            triggerResult.setRegisterId(e.getRegisterId());
+            triggerResult.setTriggerCount(e.getTriggerCount());
+            return triggerResult;
+        }).distinct().collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DownloadTriggerEntry> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
+        Integer minReaperSeconds, Integer triggerOffset) {
+        QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
+        triggerCondition.setOffset(triggerOffset);
+        triggerCondition.setMaxTriggerCount(maxTriggerCount);
+        triggerCondition.setTriggerStatusList(DownloadTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
+
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime lookBackTime = now.plusHours(-lookBackHours);
+        triggerCondition.setLastExecuteStartTime(lookBackTime);
+        triggerCondition.setLastExecuteEndTime(now.plusSeconds(-minReaperSeconds));
 
         List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
         return triggerList.stream().map(e -> {

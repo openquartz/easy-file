@@ -19,6 +19,11 @@ public class QueryDownloadTriggerCondition {
     private List<DownloadTriggerStatusEnum> triggerStatusList;
 
     /**
+     * 创建者
+     */
+    private String creatingOwner;
+
+    /**
      * 最后执行时间范围-开始时间
      */
     private LocalDateTime lastExecuteStartTime;
