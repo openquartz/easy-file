@@ -76,7 +76,7 @@ easyfile.schedule.async.download.handler.max-archive-hours=24
 | 配置key                                                      | 描述                                | 默认值 |
 | ------------------------------------------------------------ | ----------------------------------- | ------ |
 | easyfile.schedule.async.download.handler.enable | 是否启用调度式异步处理器            | false    |
-| easyfile.schedule.async.download.handler.thread-pool-core-pool-size | 调度处理器单机核心线程数          | 2     |
+| easyfile.schedule.async.download.handler.thread-pool-core-size | 调度处理器单机核心线程数          | 2     |
 | easyfile.schedule.async.download.handler.thread-pool-thread-prefix | 调度处理器线程前缀  |    ScheduleAsyncHandler  |
 | easyfile.schedule.async.download.handler.max-execute-timeout | 调度处理一次最大超时 单位：秒 | 1600   |
 | easyfile.schedule.async.download.handler.max-trigger-count | 最大调度重试次数  | 5   |
@@ -85,12 +85,19 @@ easyfile.schedule.async.download.handler.max-archive-hours=24
 | easyfile.schedule.async.download.handler.look-back-hours | 一次回溯处理时间 单位：小时 | 2   |
 | easyfile.schedule.async.download.handler.max-archive-hours | 已经执行完成的归档保持时间 单位：小时 | 24   |
 
+**Reaper机制**
+
+![Reaper-Schedule](image/ReaperSchedule.png)
+
+DB-调度使用Reaper线程进行调度,增加高可用以及调度效率。避免重复调度冲突
+
 #### DB-MQ处理器
 
 使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。因此需要提供依赖jar (
 rocket-client)
 
 ```xml
+
 <dependency>
     <groupId>org.apache.rocketmq</groupId>
     <artifactId>rocketmq-client</artifactId>
