@@ -1,7 +1,7 @@
 package org.svnee.easyfile.starter.spring.boot.autoconfig;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,10 +23,10 @@ import org.svnee.easyfile.storage.file.UploadService;
 @Configuration
 @EnableConfigurationProperties({DefaultAsyncHandlerThreadPoolProperties.class, ScheduleAsyncHandlerProperties.class})
 @Import(MqAsyncFileHandlerAutoConfiguration.class)
+@AutoConfigureAfter({EasyFileCreatorAutoConfiguration.class})
 public class AsyncFileHandlerAutoConfiguration {
 
     @Bean
-    @ConditionalOnBean(DownloadTriggerService.class)
     @ConditionalOnMissingBean(BaseAsyncFileHandler.class)
     @ConditionalOnProperty(prefix = ScheduleAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
     public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,

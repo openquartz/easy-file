@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration
+org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.AsyncFileHandlerAutoConfiguration
