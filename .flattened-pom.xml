@@ -33,33 +33,33 @@
     </snapshotRepository>
   </distributionManagement>
   <properties>
-    <license-maven-plugin.version>3.0</license-maven-plugin.version>
-    <mybatis-plus.version>3.5.0</mybatis-plus.version>
-    <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
-    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
-    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-    <reflections.version>0.9.10</reflections.version>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <redisson.version>3.9.1</redisson.version>
-    <javax.persistence.version>2.2</javax.persistence.version>
-    <revision>1.1.0</revision>
-    <fastjson.version>1.2.75</fastjson.version>
-    <druid.version>1.1.6</druid.version>
-    <maven.deploy.version>2.8.2</maven.deploy.version>
-    <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-    <java.version>1.8</java.version>
-    <poi.version>3.17</poi.version>
-    <maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <pagehelper.version>5.1.10</pagehelper.version>
-    <jjwt.version>0.9.0</jjwt.version>
-    <rocketmq.version>4.9.3</rocketmq.version>
-    <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
-    <okhttp3.version>3.12.0</okhttp3.version>
-    <guava.retry.version>2.0.0</guava.retry.version>
     <compress.version>1.18</compress.version>
+    <reflections.version>0.9.10</reflections.version>
+    <maven.javadoc.plugin.version>3.0.0</maven.javadoc.plugin.version>
+    <fastjson.version>1.2.75</fastjson.version>
+    <guava.retry.version>2.0.0</guava.retry.version>
     <maven.jar.plugin.version>3.0.2</maven.jar.plugin.version>
+    <revision>1.1.0</revision>
+    <redisson.version>3.9.1</redisson.version>
+    <license-maven-plugin.version>3.0</license-maven-plugin.version>
+    <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
+    <maven.source.plugin.version>3.0.1</maven.source.plugin.version>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+    <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
+    <poi.version>3.17</poi.version>
+    <jjwt.version>0.9.0</jjwt.version>
+    <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
+    <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <rocketmq.version>4.9.3</rocketmq.version>
+    <java.version>1.8</java.version>
+    <javax.persistence.version>2.2</javax.persistence.version>
+    <okhttp3.version>3.12.0</okhttp3.version>
+    <mybatis-plus.version>3.5.0</mybatis-plus.version>
+    <maven.deploy.version>2.8.2</maven.deploy.version>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <druid.version>1.1.6</druid.version>
+    <pagehelper.version>5.1.10</pagehelper.version>
   </properties>
   <dependencyManagement>
     <dependencies>

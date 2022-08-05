@@ -44,9 +44,9 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String TRIGGER_EXECUTE_SQL =
         "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1,processing_owner= :processingOwner where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
     private static final String SELECT_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger";
     private static final String SELECT_BY_ID_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count from ef_async_download_trigger where register_id = ?";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger where register_id = ?";
     private static final String DELETE_BY_ID_SQL = "delete from ef_async_download_trigger where id = ?";
 
     @Override
