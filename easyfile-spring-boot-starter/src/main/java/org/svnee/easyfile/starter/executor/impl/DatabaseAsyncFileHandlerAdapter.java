@@ -35,7 +35,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
             .setNameFormat("CompensateScheduleAsyncHandler-thread-%d")
             .build());
 
-    public DatabaseAsyncFileHandlerAdapter(
+    protected DatabaseAsyncFileHandlerAdapter(
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,

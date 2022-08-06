@@ -264,22 +264,25 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         if (handleBreakFlag || !downloadProperties.isEnableCompressFile()) {
             return Pair.of(false, null);
         }
-        if (file.exists() && file.isFile() && !isZipCompress(file)) {
-            if (downloadProperties.getMinEnableCompressMbSize() <= 0
-                || FileUtils.sizeOfMB(file) >= downloadProperties.getMinEnableCompressMbSize()) {
-                // 直接执行压缩
-                // 获取文件的绝对路径
-                try {
-                    String path = file.getAbsolutePath();
-                    CompressUtils.zip(path, path + FileSuffixEnum.ZIP.getFullFileSuffix());
-                    return Pair.of(Boolean.TRUE, new File(path + FileSuffixEnum.ZIP.getFullFileSuffix()));
-                } catch (Exception ex) {
-                    logger
-                        .warn("[AsyncFileHandleAdapter#compress] compress file fail! path:{}", file.getAbsolutePath());
-                }
+        // 是正常未压缩的文件.且文件当前的大小大于文件压缩的阀值
+        boolean isExeCompress = file.exists()
+            && file.isFile()
+            && !isZipCompress(file)
+            && (downloadProperties.getMinEnableCompressMbSize() <= 0
+            || FileUtils.sizeOfMB(file) >= downloadProperties.getMinEnableCompressMbSize());
+        if (isExeCompress) {
+            // 直接执行压缩
+            // 获取文件的绝对路径
+            try {
+                String path = file.getAbsolutePath();
+                CompressUtils.zip(path, path + FileSuffixEnum.ZIP.getFullFileSuffix());
+                return Pair.of(Boolean.TRUE, new File(path + FileSuffixEnum.ZIP.getFullFileSuffix()));
+            } catch (Exception ex) {
+                logger
+                    .error("[AsyncFileHandleAdapter#compress] compress file fail! path:{}", file.getAbsolutePath(), ex);
             }
         }
-        return Pair.of(false, null);
+        return Pair.of(Boolean.FALSE, null);
     }
 
     /**
