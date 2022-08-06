@@ -33,7 +33,7 @@ public final class FileUtils {
      * @param file file
      * @return MB byte
      */
-    public static int sizeOfMB(File file) {
+    public static int sizeOfMb(File file) {
         long byteSize = sizeOf(file);
         return BigInteger.valueOf(byteSize).divide(Constants.ONE_MB).intValue();
     }

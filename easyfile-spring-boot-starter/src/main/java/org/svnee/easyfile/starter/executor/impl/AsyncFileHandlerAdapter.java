@@ -269,7 +269,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             && file.isFile()
             && !isZipCompress(file)
             && (downloadProperties.getMinEnableCompressMbSize() <= 0
-            || FileUtils.sizeOfMB(file) >= downloadProperties.getMinEnableCompressMbSize());
+            || FileUtils.sizeOfMb(file) >= downloadProperties.getMinEnableCompressMbSize());
         if (isExeCompress) {
             // 直接执行压缩
             // 获取文件的绝对路径
