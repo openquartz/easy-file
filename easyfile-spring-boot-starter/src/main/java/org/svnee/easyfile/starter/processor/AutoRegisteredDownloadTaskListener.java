@@ -12,7 +12,7 @@ import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**

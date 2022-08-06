@@ -3,6 +3,7 @@ package org.svnee.easyfile.starter.processor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.lang.NonNull;
 import org.svnee.easyfile.common.event.ApplicationCompleteEvent;
 
 /**
@@ -21,7 +22,7 @@ public class ApplicationContentPostProcessor implements ApplicationListener<Cont
     }
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
         synchronized (ApplicationContentPostProcessor.class) {
             if (executeOnlyOnce) {
                 applicationContext.publishEvent(new ApplicationCompleteEvent(this));

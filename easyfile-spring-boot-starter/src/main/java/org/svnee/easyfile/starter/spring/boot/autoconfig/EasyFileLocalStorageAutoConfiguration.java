@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileLocalProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.download.LimitingService;

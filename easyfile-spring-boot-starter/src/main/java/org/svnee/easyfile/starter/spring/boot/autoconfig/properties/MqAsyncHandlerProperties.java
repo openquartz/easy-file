@@ -1,4 +1,4 @@
-package org.svnee.easyfile.starter.spring.boot.autoconfig;
+package org.svnee.easyfile.starter.spring.boot.autoconfig.properties;
 
 import lombok.Getter;
 import lombok.Setter;

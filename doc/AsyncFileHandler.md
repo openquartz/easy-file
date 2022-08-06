@@ -57,7 +57,8 @@ CREATE TABLE ef_async_download_trigger
 
 #### DB-Schedule处理器
 
-用户使用基于DB 的实现(`org.svnee.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncHandlerProperties`)可以 配置对应的properties 即可使用
+用户使用基于DB 的实现(`org.svnee.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties`)可以
+配置对应的properties 即可使用
 
 默认配置有 需要开启`easyfile.schedule.async.download.handler.enable=true`
 

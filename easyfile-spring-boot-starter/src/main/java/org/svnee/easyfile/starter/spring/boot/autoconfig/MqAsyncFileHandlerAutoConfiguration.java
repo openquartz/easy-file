@@ -21,6 +21,8 @@ import org.svnee.easyfile.starter.executor.trigger.MQTriggerHandler;
 import org.svnee.easyfile.starter.executor.trigger.MQTriggerProducer;
 import org.svnee.easyfile.starter.executor.trigger.RocketMQTriggerConsumer;
 import org.svnee.easyfile.starter.executor.trigger.RocketMQTriggerProducer;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.file.UploadService;

@@ -2,6 +2,7 @@ package org.svnee.easyfile.starter.processor;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.lang.NonNull;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.SpringContextUtil;
@@ -16,7 +17,7 @@ import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 public class FileExportExecutorPostProcessor implements BeanPostProcessor {
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(@NonNull Object bean, @NonNull String beanName) throws BeansException {
 
         Class<?> clazz = SpringContextUtil.getRealClass(bean);
 

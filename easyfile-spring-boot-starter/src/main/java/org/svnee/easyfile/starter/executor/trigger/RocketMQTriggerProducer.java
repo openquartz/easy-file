@@ -5,7 +5,7 @@ import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.svnee.easyfile.common.util.JSONUtil;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.MqAsyncHandlerProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
 
 /**
  * RocketMQ 消息发送方
@@ -33,6 +33,10 @@ public class RocketMQTriggerProducer implements MQTriggerProducer {
         SendResult result;
         try {
             result = producer.send(message, properties.getProduceTimeout());
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+            log.error("[RocketMQTriggerProducer#send] Interrupt,send error!message:{}", message, ex);
+            return false;
         } catch (Exception ex) {
             log.error("[RocketMQTriggerProducer#send] send error!message:{}", message, ex);
             return false;

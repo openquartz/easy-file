@@ -19,6 +19,8 @@ import org.svnee.easyfile.starter.executor.impl.DefaultDownloadRejectExecutionHa
 import org.svnee.easyfile.starter.processor.ApplicationContentPostProcessor;
 import org.svnee.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
 import org.svnee.easyfile.starter.processor.FileExportExecutorPostProcessor;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 import org.svnee.easyfile.storage.file.UploadService;

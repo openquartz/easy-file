@@ -45,7 +45,7 @@ import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
 import org.svnee.easyfile.starter.intercept.DownloadExecutorInterceptor;
 import org.svnee.easyfile.starter.intercept.ExecutorInterceptorSupport;
 import org.svnee.easyfile.starter.intercept.InterceptorContext;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.file.UploadService;
 

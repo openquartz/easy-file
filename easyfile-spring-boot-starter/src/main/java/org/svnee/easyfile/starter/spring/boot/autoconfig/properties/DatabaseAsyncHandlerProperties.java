@@ -1,4 +1,4 @@
-package org.svnee.easyfile.starter.spring.boot.autoconfig;
+package org.svnee.easyfile.starter.spring.boot.autoconfig.properties;
 
 /**
  * 数据库异步处理器Properties

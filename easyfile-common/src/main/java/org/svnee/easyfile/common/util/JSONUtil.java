@@ -126,6 +126,12 @@ public final class JSONUtil {
         return JSON_FACADE.parseSet(json, clazz);
     }
 
+    /**
+     * toJsonAsBytes
+     *
+     * @param obj obj
+     * @return byte[]
+     */
     public static byte[] toJsonAsBytes(Object obj) {
         if (Objects.isNull(obj)) {
             return new byte[]{};

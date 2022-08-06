@@ -31,7 +31,7 @@ import org.svnee.easyfile.starter.intercept.listener.DownloadEndEvent;
 import org.svnee.easyfile.starter.intercept.listener.DownloadEndListener;
 import org.svnee.easyfile.starter.intercept.listener.DownloadStartEvent;
 import org.svnee.easyfile.starter.intercept.listener.DownloadStartListener;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 

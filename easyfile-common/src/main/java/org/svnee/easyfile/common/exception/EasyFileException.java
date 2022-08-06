@@ -9,7 +9,7 @@ import java.text.MessageFormat;
  */
 public class EasyFileException extends RuntimeException {
 
-    private final EasyFileErrorCode errorCode;
+    private final transient EasyFileErrorCode errorCode;
 
     public EasyFileException(EasyFileErrorCode errorCode) {
         super(errorCode.getErrorMsg());

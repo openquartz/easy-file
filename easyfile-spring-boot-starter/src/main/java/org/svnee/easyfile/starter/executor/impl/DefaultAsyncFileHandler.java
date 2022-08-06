@@ -11,8 +11,8 @@ import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.DefaultAsyncHandlerThreadPoolProperties;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileDownloadProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncHandlerThreadPoolProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.file.UploadService;
 

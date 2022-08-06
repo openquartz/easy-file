@@ -14,6 +14,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.common.constants.Constants;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
