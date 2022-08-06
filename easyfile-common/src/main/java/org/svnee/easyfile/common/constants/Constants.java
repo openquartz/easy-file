@@ -121,7 +121,7 @@ public final class Constants {
     /**
      * one MB
      */
-    public static BigInteger ONE_MB = BigInteger.valueOf(1048576);
+    public static final BigInteger ONE_MB = BigInteger.valueOf(1048576);
 
     /**
      * easy-file sender
