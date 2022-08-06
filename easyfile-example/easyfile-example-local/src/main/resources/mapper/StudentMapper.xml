@@ -9,6 +9,7 @@
         school,
         address
     </sql>
+
     <resultMap id="BaseResultMap" type="org.svnee.easyfile.example.model.Student">
         <result column="id" property="id"/>
         <result column="name" property="name"/>

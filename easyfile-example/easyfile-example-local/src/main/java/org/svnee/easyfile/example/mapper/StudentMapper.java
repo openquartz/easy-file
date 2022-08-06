@@ -10,6 +10,9 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.ResultSetType;
 import org.svnee.easyfile.example.model.Student;
 
+/**
+ * @author svnee
+ */
 public interface StudentMapper extends BaseMapper<Student> {
 
     /**
