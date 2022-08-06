@@ -158,7 +158,9 @@ public class ExcelBean implements Closeable {
             builder.append(entry.getValue().getSumRow());
             builder.append("] ");
         }
-        log.info("[ExcelBean#executeFinish] totalRows:{},Sheet:{}", totalRows, builder);
+        if (log.isDebugEnabled()) {
+            log.debug("[ExcelBean#executeFinish] totalRows:{},Sheet:{}", totalRows, builder);
+        }
     }
 
     /**
