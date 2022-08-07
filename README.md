@@ -39,9 +39,9 @@ EasyFile 是一个大文件导出的解决方案。用于解决大文件导出�
 
 EasyFile 提供两种模式
 
-local 模式:  需要提供本地的api 存储Mapper. 将数据存储到本地数据库中管理。
+**local 模式**(**推荐**):  需要提供本地的api 存储Mapper. 将数据存储到本地数据库中管理。
 
-remote模式：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
+**remote模式**：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
 
 ### 代码结构
 
@@ -210,7 +210,11 @@ easyfile.remote.namespace=remote-example
 
 [下载器](doc/BaseDownloadExecutror.md)
 
-#### easyfile-server 部署
+#### 六、easyfile-server 部署
+
+如果使用**Remote模式**时,需要部署easyfile-server服务;
+
+否则不需要进行部署
 
 1、执行存储DB SQL \
 2、部署服务
