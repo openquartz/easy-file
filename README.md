@@ -208,7 +208,7 @@ easyfile.remote.namespace=remote-example
 
 #### 五、实现下载器
 
-[下载器](doc/BaseDownloadExecutor.md)
+[下载器](doc/BaseDownloadExecutror.md)
 
 #### easyfile-server 部署
 
