@@ -7,6 +7,7 @@ import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -44,6 +45,7 @@ import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
 @Configuration
 @EnableConfigurationProperties({EasyFileLocalProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
+@AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
 public class EasyFileLocalStorageAutoConfiguration {
 
     private static final String DEFAULT_DATASOURCE_TYPE = "org.apache.tomcat.jdbc.pool.DataSource";

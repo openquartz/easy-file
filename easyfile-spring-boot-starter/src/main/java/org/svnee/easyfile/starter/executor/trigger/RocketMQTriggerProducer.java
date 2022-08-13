@@ -6,6 +6,7 @@ import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.RocketMqAsyncHandlerProperties;
 
 /**
  * RocketMQ 消息发送方
@@ -15,10 +16,10 @@ import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandl
 @Slf4j
 public class RocketMQTriggerProducer implements MQTriggerProducer {
 
-    private final MqAsyncHandlerProperties properties;
+    private final RocketMqAsyncHandlerProperties properties;
     private final MQProducer producer;
 
-    public RocketMQTriggerProducer(MqAsyncHandlerProperties properties,
+    public RocketMQTriggerProducer(RocketMqAsyncHandlerProperties properties,
         MQProducer producer) {
         this.properties = properties;
         this.producer = producer;

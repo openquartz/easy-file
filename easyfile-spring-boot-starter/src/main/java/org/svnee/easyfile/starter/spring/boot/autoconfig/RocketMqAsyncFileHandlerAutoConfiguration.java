@@ -6,6 +6,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
 import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.common.UtilAll;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,7 +23,7 @@ import org.svnee.easyfile.starter.executor.trigger.MQTriggerProducer;
 import org.svnee.easyfile.starter.executor.trigger.RocketMQTriggerConsumer;
 import org.svnee.easyfile.starter.executor.trigger.RocketMQTriggerProducer;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.RocketMqAsyncHandlerProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
 import org.svnee.easyfile.storage.file.UploadService;
@@ -34,9 +35,10 @@ import org.svnee.easyfile.storage.file.UploadService;
 @Configuration
 @ConditionalOnBean(DownloadTriggerService.class)
 @ConditionalOnClass(MQProducer.class)
-@EnableConfigurationProperties(MqAsyncHandlerProperties.class)
-@ConditionalOnProperty(prefix = MqAsyncHandlerProperties.PREFIX, name = "enable", havingValue = "true")
-public class MqAsyncFileHandlerAutoConfiguration {
+@EnableConfigurationProperties({RocketMqAsyncHandlerProperties.class})
+@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "rocketmq")
+@AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
+public class RocketMqAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @Primary
@@ -45,7 +47,7 @@ public class MqAsyncFileHandlerAutoConfiguration {
         DownloadStorageService downloadStorageService,
         DownloadTriggerService downloadTriggerService,
         MQTriggerProducer mqTriggerProducer,
-        MqAsyncHandlerProperties mqAsyncHandlerProperties) {
+        RocketMqAsyncHandlerProperties mqAsyncHandlerProperties) {
         return new MqTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
             downloadTriggerService,
             mqAsyncHandlerProperties,
@@ -59,23 +61,23 @@ public class MqAsyncFileHandlerAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(value = MQTriggerProducer.class, name = "easyFileTriggerMQProducer")
-    public MQTriggerProducer mqTriggerProducer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
+    @ConditionalOnMissingBean(value = MQTriggerProducer.class, name = "mqTriggerProducer")
+    public MQTriggerProducer mqTriggerProducer(RocketMqAsyncHandlerProperties mqAsyncHandlerProperties,
         MQProducer easyFileTriggerMQProducer) {
         return new RocketMQTriggerProducer(mqAsyncHandlerProperties, easyFileTriggerMQProducer);
     }
 
     @Bean
     @ConditionalOnMissingBean(RocketMQTriggerConsumer.class)
-    public RocketMQTriggerConsumer rocketMQTriggerConsumer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
+    public RocketMQTriggerConsumer rocketMQTriggerConsumer(RocketMqAsyncHandlerProperties mqAsyncHandlerProperties,
         EasyFileDownloadProperties downloadProperties,
         MQTriggerHandler mqTriggerHandler) {
         return new RocketMQTriggerConsumer(mqAsyncHandlerProperties, downloadProperties, mqTriggerHandler);
     }
 
     @Bean
-    @ConditionalOnMissingBean(MQProducer.class)
-    public MQProducer easyFileTriggerMQProducer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
+    @ConditionalOnMissingBean(value = MQProducer.class, name = "easyFileTriggerMQProducer")
+    public MQProducer easyFileTriggerMQProducer(RocketMqAsyncHandlerProperties mqAsyncHandlerProperties,
         EasyFileDownloadProperties easyFileDownloadProperties) {
         DefaultMQProducer producer = new DefaultMQProducer(mqAsyncHandlerProperties.getProduceGroup());
         producer.setNamesrvAddr(mqAsyncHandlerProperties.getHost());

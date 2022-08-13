@@ -21,11 +21,6 @@ public class ScheduleAsyncHandlerProperties implements DatabaseAsyncHandlerPrope
     ///////////////////// ThreadPool //////////////////////
 
     /**
-     * 开启
-     */
-    private boolean enable = false;
-
-    /**
      * 线程名前缀
      */
     private String threadPoolThreadPrefix = "ScheduleAsyncHandler";

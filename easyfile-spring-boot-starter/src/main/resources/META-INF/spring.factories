@@ -1,3 +1,7 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration,\
-org.svnee.easyfile.starter.spring.boot.autoconfig.AsyncFileHandlerAutoConfiguration
+org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileEnhanceCreatorAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.DefaultAsyncFileHandlerAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.DisruptorAsyncFileHandlerAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncFileHandlerAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration

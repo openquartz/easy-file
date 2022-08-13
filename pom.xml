@@ -34,6 +34,7 @@
         <redisson.version>3.9.1</redisson.version>
         <jjwt.version>0.9.0</jjwt.version>
         <reflections.version>0.9.10</reflections.version>
+        <disruptor.version>3.4.2</disruptor.version>
 
         <rocketmq.version>4.9.3</rocketmq.version>
 
@@ -183,6 +184,12 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-client</artifactId>
                 <version>${rocketmq.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.lmax</groupId>
+                <artifactId>disruptor</artifactId>
+                <version>${disruptor.version}</version>
             </dependency>
 
         </dependencies>

@@ -17,6 +17,7 @@ import org.svnee.easyfile.common.util.IpUtil;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.RocketMqAsyncHandlerProperties;
 
 /**
  * RocketMQ 触发消费者
@@ -26,11 +27,11 @@ import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandl
 @Slf4j
 public class RocketMQTriggerConsumer implements InitializingBean {
 
-    private final MqAsyncHandlerProperties mqAsyncHandlerProperties;
+    private final RocketMqAsyncHandlerProperties mqAsyncHandlerProperties;
     private final EasyFileDownloadProperties downloadProperties;
     private final MQTriggerHandler mqTriggerHandler;
 
-    public RocketMQTriggerConsumer(MqAsyncHandlerProperties mqAsyncHandlerProperties,
+    public RocketMQTriggerConsumer(RocketMqAsyncHandlerProperties mqAsyncHandlerProperties,
         EasyFileDownloadProperties downloadProperties,
         MQTriggerHandler mqTriggerHandler) {
         this.mqAsyncHandlerProperties = mqAsyncHandlerProperties;
@@ -44,7 +45,7 @@ public class RocketMQTriggerConsumer implements InitializingBean {
         consumer.start();
     }
 
-    public MQPushConsumer create(MqAsyncHandlerProperties properties) {
+    public MQPushConsumer create(RocketMqAsyncHandlerProperties properties) {
         DefaultMQPushConsumer consumer = null;
         log.info("[RocketMQTriggerConsumer#create],properties:{}", properties);
         try {

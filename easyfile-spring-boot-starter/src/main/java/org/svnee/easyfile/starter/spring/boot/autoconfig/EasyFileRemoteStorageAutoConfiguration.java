@@ -8,6 +8,7 @@ import javax.net.ssl.X509TrustManager;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.OkHttpClient;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -37,6 +38,7 @@ import org.svnee.easyfile.storage.remote.ServerHttpAgent;
 @Configuration
 @EnableConfigurationProperties({EasyFileRemoteProperties.class})
 @ConditionalOnClass({RemoteDownloadStorageServiceImpl.class, RemoteLimitingServiceImpl.class})
+@AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
 public class EasyFileRemoteStorageAutoConfiguration {
 
     @Bean

@@ -131,7 +131,8 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
     @Override
     public boolean startExecute(Long registerId, Integer triggerCount) {
         int execute = asyncDownloadTriggerMapper.execute(registerId, DownloadTriggerStatusEnum.EXECUTING,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.INIT, DownloadTriggerStatusEnum.FAIL), triggerCount);
+            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.INIT, DownloadTriggerStatusEnum.WAITING,
+                DownloadTriggerStatusEnum.FAIL), triggerCount);
         return execute > 0;
     }
 
@@ -139,13 +140,15 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
     public void exeSuccess(Long registerId) {
         asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.SUCCESS,
             CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.FAIL,
+                DownloadTriggerStatusEnum.WAITING,
                 DownloadTriggerStatusEnum.INIT));
     }
 
     @Override
     public void exeFail(Long registerId) {
         asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.FAIL,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.INIT));
+            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.INIT,
+                DownloadTriggerStatusEnum.WAITING));
     }
 
     @Override

@@ -49,7 +49,11 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
             @Override
             public void afterCommit() {
-                doSend(registerId);
+                try {
+                    doSend(registerId);
+                } catch (Exception ex) {
+                    log.error("[MqTriggerAsyncFileHandler#execute] doSend,Error! registerId:{}", registerId, ex);
+                }
             }
         });
     }

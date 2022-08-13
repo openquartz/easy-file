@@ -61,13 +61,6 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
             rejectExecutionHandler);
     }
 
-    @Override
-    public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
-        DownloadTriggerRequest triggerRequest = new DownloadTriggerRequest();
-        triggerRequest.setRegisterId(registerId);
-        triggerService.trigger(triggerRequest);
-    }
-
     public void doTrigger() {
         List<DownloadTriggerEntry> registerIdList = triggerService
             .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),

@@ -51,6 +51,7 @@
     <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
     <maven.compiler.plugin.version>3.6.1</maven.compiler.plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <disruptor.version>3.4.2</disruptor.version>
     <rocketmq.version>4.9.3</rocketmq.version>
     <java.version>1.8</java.version>
     <javax.persistence.version>2.2</javax.persistence.version>
@@ -170,6 +171,11 @@
         <groupId>org.apache.rocketmq</groupId>
         <artifactId>rocketmq-client</artifactId>
         <version>${rocketmq.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.lmax</groupId>
+        <artifactId>disruptor</artifactId>
+        <version>${disruptor.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
