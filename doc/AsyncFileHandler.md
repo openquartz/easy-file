@@ -12,7 +12,7 @@
 ### 线程池处理器
 
 同时EasyFile 提供了默认实现(`org.svnee.easyfile.starter.executor.impl.DefaultAsyncFileHandler`),使用线程池触发做异步文件处理器 \
-同时提供对应的Client配置
+同时提供对应的Client配置,需要配置(`easyfile.download.async-trigger-type=default`)
 
 | 配置key                                                      | 描述                                | 默认值 |
 | ------------------------------------------------------------ | ----------------------------------- | ------ |
@@ -60,7 +60,7 @@ CREATE TABLE ef_async_download_trigger
 用户使用基于DB 的实现(`org.svnee.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties`)可以
 配置对应的properties 即可使用
 
-默认配置有 需要开启`easyfile.schedule.async.download.handler.enable=true`
+默认配置有 需要开启`easyfile.download.async-trigger-type=schedule`
 
 ```properties
 easyfile.schedule.async.download.handler.enable=true
@@ -94,6 +94,19 @@ DB-调度使用Reaper线程进行调度,增加高可用以及调度效率。避�
 
 #### DB-MQ处理器
 
+使用disruptor+补偿模式,系统提供基于Disruptor的触发处理器(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。\
+需要开启配置为`easyfile.download.async-trigger-type=rocketmq`
+
+```properties
+easyfile.disruptor.async.download.handler.look-back-hours=2
+easyfile.disruptor.async.download.handler.max-archive-hours=24
+easyfile.disruptor.async.download.handler.max-execute-timeout=1600
+easyfile.disruptor.async.download.handler.max-trigger-count=5
+easyfile.disruptor.async.download.handler.ring-buffer-size=64
+easyfile.disruptor.async.download.handler.schedule-period=10
+easyfile.disruptor.async.download.handler.thread-pool-thread-prefix=DisruptorAsyncHandler
+```
+
 使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。因此需要提供依赖jar (
 rocket-client)
 
@@ -106,27 +119,26 @@ rocket-client)
 </dependency>
 ```
 
-同时开启配置`easyfile.mq.async.download.handler.enable=true`
+同时开启配置`easyfile.download.async-trigger-type=rocketmq`
 
 ```properties
-easyfile.mq.async.download.handler.enable=false
-easyfile.mq.async.download.handler.host=127.0.0.1.9876
-easyfile.mq.async.download.handler.topic=easyfile_mq_trigger
-easyfile.mq.async.download.handler.produce-group=p_async_handler_group
-easyfile.mq.async.download.handler.produce-latency-fault-enable=true
-easyfile.mq.async.download.handler.produce-timeout=1000
-easyfile.mq.async.download.handler.produce-try-times=5
-easyfile.mq.async.download.handler.consumer-group=c_async_handler_group
-easyfile.mq.async.download.handler.consumer-max-thread=3
-easyfile.mq.async.download.handler.consumer-min-thread=1
-easyfile.mq.async.download.handler.consume-concurrently-max-span=10
-easyfile.mq.async.download.handler.look-back-hours=2
-easyfile.mq.async.download.handler.offset=500
-easyfile.mq.async.download.handler.schedule-period=10
-easyfile.mq.async.download.handler.max-archive-hours=24
-easyfile.mq.async.download.handler.max-execute-timeout=1600
-easyfile.mq.async.download.handler.max-trigger-count=5
-easyfile.mq.async.download.handler.max-waiting-timeout=1600
+easyfile.rocketmq.async.download.handler.host=127.0.0.1.9876
+easyfile.rocketmq.async.download.handler.topic=easyfile_mq_trigger
+easyfile.rocketmq.async.download.handler.produce-group=p_async_handler_group
+easyfile.rocketmq.async.download.handler.produce-latency-fault-enable=true
+easyfile.rocketmq.async.download.handler.produce-timeout=1000
+easyfile.rocketmq.async.download.handler.produce-try-times=5
+easyfile.rocketmq.async.download.handler.consumer-group=c_async_handler_group
+easyfile.rocketmq.async.download.handler.consumer-max-thread=3
+easyfile.rocketmq.async.download.handler.consumer-min-thread=1
+easyfile.rocketmq.async.download.handler.consume-concurrently-max-span=10
+easyfile.rocketmq.async.download.handler.look-back-hours=2
+easyfile.rocketmq.async.download.handler.offset=500
+easyfile.rocketmq.async.download.handler.schedule-period=10
+easyfile.rocketmq.async.download.handler.max-archive-hours=24
+easyfile.rocketmq.async.download.handler.max-execute-timeout=1600
+easyfile.rocketmq.async.download.handler.max-trigger-count=5
+easyfile.rocketmq.async.download.handler.max-waiting-timeout=1600
 ```
 
 ##### 使用其他MQ触发实现
