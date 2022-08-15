@@ -1,4 +1,4 @@
-![LOGO]([/doc/image/logo.jpg]#pic_center)
+<div align=center><img src="/doc/image/logo.jpg"/></div>
 
 <div align=center> Make BigData Export Easier!!! </div>
 
