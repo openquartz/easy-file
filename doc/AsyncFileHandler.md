@@ -57,6 +57,7 @@ CREATE TABLE ef_async_download_trigger
 
 #### DB-Schedule处理器
 
+##### DB+Schedule
 用户使用基于DB 的实现(`org.svnee.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties`)可以
 配置对应的properties 即可使用
 
@@ -94,8 +95,10 @@ DB-调度使用Reaper线程进行调度,增加高可用以及调度效率。避�
 
 #### DB-MQ处理器
 
+##### disruptor+补偿模式
+
 使用disruptor+补偿模式,系统提供基于Disruptor的触发处理器(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。\
-需要开启配置为`easyfile.download.async-trigger-type=rocketmq`
+需要开启配置为`easyfile.download.async-trigger-type=disruptor`
 
 ```properties
 easyfile.disruptor.async.download.handler.look-back-hours=2
@@ -107,6 +110,7 @@ easyfile.disruptor.async.download.handler.schedule-period=10
 easyfile.disruptor.async.download.handler.thread-pool-thread-prefix=DisruptorAsyncHandler
 ```
 
+##### RocketMQ
 使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler`)。因此需要提供依赖jar (
 rocket-client)
 
