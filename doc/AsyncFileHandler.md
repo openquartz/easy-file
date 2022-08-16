@@ -87,7 +87,7 @@ easyfile.schedule.async.download.handler.max-archive-hours=24
 | easyfile.schedule.async.download.handler.look-back-hours | 一次回溯处理时间 单位：小时 | 2   |
 | easyfile.schedule.async.download.handler.max-archive-hours | 已经执行完成的归档保持时间 单位：小时 | 24   |
 
-######　Reaper机制
+##### Reaper机制
 
 ![Reaper-Schedule](image/ReaperSchedule.png)
 
