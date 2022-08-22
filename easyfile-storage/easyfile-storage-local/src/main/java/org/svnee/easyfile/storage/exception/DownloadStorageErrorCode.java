@@ -13,13 +13,13 @@ public enum DownloadStorageErrorCode implements EasyFileErrorCode {
     ;
 
     private final String errorCode;
-    private final String desc;
+    private final String errorMsg;
 
     public static final String SIMPLE_BASE_CODE = "DownloadStorageError-";
 
     DownloadStorageErrorCode(String errorCode, String desc) {
         this.errorCode = SIMPLE_BASE_CODE + errorCode;
-        this.desc = desc;
+        this.errorMsg = desc;
     }
 
     @Override
@@ -29,6 +29,6 @@ public enum DownloadStorageErrorCode implements EasyFileErrorCode {
 
     @Override
     public final String getErrorMsg() {
-        return desc;
+        return errorMsg;
     }
 }
