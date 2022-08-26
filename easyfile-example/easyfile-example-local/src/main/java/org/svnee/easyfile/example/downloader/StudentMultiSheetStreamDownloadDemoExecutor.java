@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
-import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.example.mapper.SchoolMapper;
 import org.svnee.easyfile.example.mapper.StudentMapper;
 import org.svnee.easyfile.example.model.School;
@@ -36,7 +36,7 @@ public class StudentMultiSheetStreamDownloadDemoExecutor extends
     }
 
     @Override
-    public boolean enableAsync(DownloaderRequestContext context) {
+    public boolean enableAsync(BaseDownloaderRequestContext context) {
         return true;
     }
 
@@ -53,7 +53,7 @@ public class StudentMultiSheetStreamDownloadDemoExecutor extends
     }
 
     @Override
-    public Cursor<Student> streamQuery(SqlSession session, DownloaderRequestContext context, School sheetGroup) {
+    public Cursor<Student> streamQuery(SqlSession session, BaseDownloaderRequestContext context, School sheetGroup) {
         return session.getMapper(StudentMapper.class).scanBySchool(10000000, sheetGroup.getId());
     }
 }

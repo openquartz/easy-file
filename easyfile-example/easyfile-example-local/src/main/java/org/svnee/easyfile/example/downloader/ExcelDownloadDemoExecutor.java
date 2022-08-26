@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -28,7 +29,7 @@ public class ExcelDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor
     }
 
     @Override
-    public Pair<Long, List<ExcelModel>> shardingData(DownloaderRequestContext context, Page page, Long cursorId) {
+    public Pair<Long, List<ExcelModel>> shardingData(BaseDownloaderRequestContext context, Page page, Long cursorId) {
 
         ArrayList<ExcelModel> list = Lists.newArrayList();
         for (int i = 0; i < page.getTotal(); i++) {
@@ -40,7 +41,7 @@ public class ExcelDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor
     }
 
     @Override
-    public boolean enableAsync(DownloaderRequestContext context) {
+    public boolean enableAsync(BaseDownloaderRequestContext context) {
         return false;
     }
 }

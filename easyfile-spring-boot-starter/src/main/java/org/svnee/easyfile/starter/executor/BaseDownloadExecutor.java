@@ -19,7 +19,7 @@ public interface BaseDownloadExecutor {
      * @param context 上下文请求对象
      * @return 开启异步
      */
-    boolean enableAsync(DownloaderRequestContext context);
+    boolean enableAsync(BaseDownloaderRequestContext context);
 
     /**
      * 开启导出缓存
@@ -44,7 +44,7 @@ public interface BaseDownloadExecutor {
      * 用于调用
      * 实现时是同步下载逻辑
      * <p>
-     * 当{@link #enableAsync(DownloaderRequestContext)} 为true 时,
+     * 当{@link #enableAsync(BaseDownloaderRequestContext)} 为true 时,
      * key: true, value: 为 registerId
      *
      * @param context 上下文请求对象

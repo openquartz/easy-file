@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -36,7 +37,7 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
      * @param context context
      * @return Class<?>
      */
-    public Class<?>[] exportGroup(DownloaderRequestContext context) {
+    public Class<?>[] exportGroup(BaseDownloaderRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 

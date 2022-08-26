@@ -2,7 +2,7 @@ package org.svnee.easyfile.starter.executor;
 
 import java.util.List;
 import java.util.Map;
-import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
 import org.svnee.easyfile.common.bean.Pair;
@@ -31,6 +31,6 @@ public interface PageShardingDownloadExecutor<T> extends BaseDownloadExecutor {
      * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
      * @return 当前最大ID cursorId --> resultList
      */
-    Pair<Long, List<T>> shardingData(DownloaderRequestContext context, Page page, Long cursorId);
+    Pair<Long, List<T>> shardingData(BaseDownloaderRequestContext context, Page page, Long cursorId);
 
 }

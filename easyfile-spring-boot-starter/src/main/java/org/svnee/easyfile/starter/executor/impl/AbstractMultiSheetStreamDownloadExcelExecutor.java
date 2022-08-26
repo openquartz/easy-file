@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
@@ -31,7 +32,7 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
      * @param context context
      * @return Class<?>
      */
-    public Class<?>[] exportGroup(DownloaderRequestContext context) {
+    public Class<?>[] exportGroup(BaseDownloaderRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -59,7 +60,7 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
      * @param sheetGroup sheetGroup
      * @return 流式查询结果
      */
-    public abstract R streamQuery(S session, DownloaderRequestContext context, G sheetGroup);
+    public abstract R streamQuery(S session, BaseDownloaderRequestContext context, G sheetGroup);
 
     @Override
     public void export(DownloaderRequestContext context) {

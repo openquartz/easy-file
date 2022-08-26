@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
@@ -34,7 +35,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
      * @param context context
      * @return Class<?>
      */
-    public Class<?>[] exportGroup(DownloaderRequestContext context) {
+    public Class<?>[] exportGroup(BaseDownloaderRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -63,7 +64,7 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
      * @param session session会话
      * @return 流式查询结果
      */
-    public abstract R streamQuery(S session, DownloaderRequestContext context);
+    public abstract R streamQuery(S session, BaseDownloaderRequestContext context);
 
     @Override
     public void export(DownloaderRequestContext context) {

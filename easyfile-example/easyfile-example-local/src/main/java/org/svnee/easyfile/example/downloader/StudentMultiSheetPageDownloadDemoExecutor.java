@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -34,12 +35,12 @@ public class StudentMultiSheetPageDownloadDemoExecutor extends
     private final StudentMapper studentMapper;
 
     @Override
-    public boolean enableAsync(DownloaderRequestContext context) {
+    public boolean enableAsync(BaseDownloaderRequestContext context) {
         return true;
     }
 
     @Override
-    public List<School> sheetPrefix(DownloaderRequestContext context) {
+    public List<School> sheetPrefix(BaseDownloaderRequestContext context) {
         return schoolMapper.selectAll().stream()
             .sorted((Comparator.comparing(School::getId)))
             .collect(Collectors.toList());
@@ -54,7 +55,7 @@ public class StudentMultiSheetPageDownloadDemoExecutor extends
     }
 
     @Override
-    public Pair<Long, List<Student>> shardingData(DownloaderRequestContext context, School sheetGroup, Page page,
+    public Pair<Long, List<Student>> shardingData(BaseDownloaderRequestContext context, School sheetGroup, Page page,
         Long cursorId) {
         List<Student> studentList = studentMapper
             .findByMinIdAndSchoolIdLimit(cursorId, sheetGroup.getId(), page.getPageSize());

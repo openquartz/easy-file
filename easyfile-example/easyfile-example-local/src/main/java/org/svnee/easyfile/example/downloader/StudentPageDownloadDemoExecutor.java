@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
-import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
 import org.svnee.easyfile.common.bean.PageTotalContext;
@@ -26,7 +26,7 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
     private StudentMapper studentMapper;
 
     @Override
-    public boolean enableAsync(DownloaderRequestContext context) {
+    public boolean enableAsync(BaseDownloaderRequestContext context) {
         return true;
     }
 
@@ -46,7 +46,7 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
     }
 
     @Override
-    public Pair<Long, List<Student>> shardingData(DownloaderRequestContext context, Page page, Long cursorId) {
+    public Pair<Long, List<Student>> shardingData(BaseDownloaderRequestContext context, Page page, Long cursorId) {
         List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageSize());
         if (CollectionUtils.isEmpty(studentList)) {
             return Pair.of(cursorId, studentList);

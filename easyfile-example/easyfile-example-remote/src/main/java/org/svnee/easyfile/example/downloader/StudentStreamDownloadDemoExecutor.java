@@ -6,6 +6,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
 import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.example.mapper.StudentMapper;
 import org.svnee.easyfile.example.model.Student;
@@ -23,7 +24,7 @@ public class StudentStreamDownloadDemoExecutor extends
     private SqlSessionFactory sqlSessionFactory;
 
     @Override
-    public boolean enableAsync(DownloaderRequestContext context) {
+    public boolean enableAsync(BaseDownloaderRequestContext context) {
         return false;
     }
 
@@ -33,7 +34,7 @@ public class StudentStreamDownloadDemoExecutor extends
     }
 
     @Override
-    public Cursor<Student> streamQuery(SqlSession session, DownloaderRequestContext context) {
+    public Cursor<Student> streamQuery(SqlSession session, BaseDownloaderRequestContext context) {
         return session.getMapper(StudentMapper.class).scan(1000000);
     }
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Page;
 import org.svnee.easyfile.common.bean.PageTotal;
@@ -35,7 +36,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
      * @param context context
      * @return Class<?>
      */
-    public Class<?>[] exportGroup(DownloaderRequestContext context) {
+    public Class<?>[] exportGroup(BaseDownloaderRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -45,7 +46,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
      * @param context context
      * @return sheet-group
      */
-    public abstract List<G> sheetPrefix(DownloaderRequestContext context);
+    public abstract List<G> sheetPrefix(BaseDownloaderRequestContext context);
 
     /**
      * 用于传递参数
@@ -65,7 +66,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
      * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
      * @return 当前最大ID cursorId --> resultList
      */
-    public abstract Pair<Long, List<T>> shardingData(DownloaderRequestContext context, G sheetGroup, Page page,
+    public abstract Pair<Long, List<T>> shardingData(BaseDownloaderRequestContext context, G sheetGroup, Page page,
         Long cursorId);
 
     @Override
