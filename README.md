@@ -72,7 +72,7 @@ EasyFile 提供两种模式
 
 ### 快速开始
 
-[下载器](doc/QuickStart.md)
+[快速开始](doc/QuickStart.md)
 
 
 
