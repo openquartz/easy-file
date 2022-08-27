@@ -16,29 +16,37 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ExcelProperty("ID")
+    @com.alibaba.excel.annotation.ExcelProperty("ID")
     private Long id;
 
     @ExcelProperty(value = "姓名", width = 8 * 512)
+    @com.alibaba.excel.annotation.ExcelProperty("姓名")
     private String name;
 
     @ExcelProperty("年龄")
+    @com.alibaba.excel.annotation.ExcelProperty("年龄")
     private Integer age;
 
     @ExcelProperty(value = "学校", width = 8 * 1024)
+    @com.alibaba.excel.annotation.ExcelProperty("学校")
     private String school;
 
     private Long schoolId;
 
     @ExcelProperty(value = "地址", width = 8 * 1024)
+    @com.alibaba.excel.annotation.ExcelProperty("地址")
     private String address;
 
     @ExcelProperty("特征")
+    //    @com.alibaba.excel.annotation.ExcelProperty("特征")
     private List<Feature> featureList;
 
     @ExcelProperty("新地址信息")
+    //    @com.alibaba.excel.annotation.ExcelProperty("")
     private Address addr;
 
     @ExcelProperty("學校等級")
+    @com.alibaba.excel.annotation.ExcelProperty("学校等级")
     private String schoolGrade;
 
     public Long getId() {

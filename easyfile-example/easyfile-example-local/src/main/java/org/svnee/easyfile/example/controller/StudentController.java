@@ -10,6 +10,7 @@ import org.svnee.easyfile.common.bean.DownloaderRequestContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
+import org.svnee.easyfile.example.downloader.StudentDownloadDemoExecutor;
 import org.svnee.easyfile.example.downloader.StudentMultiSheetPageDownloadDemoExecutor;
 import org.svnee.easyfile.example.downloader.StudentMultiSheetStreamDownloadDemoExecutor;
 import org.svnee.easyfile.example.downloader.StudentPageDownloadDemoExecutor;
@@ -25,11 +26,26 @@ import org.svnee.easyfile.example.entity.response.ExportResultVO;
 @RequestMapping("/student")
 public class StudentController {
 
+    private final StudentDownloadDemoExecutor studentDownloadDemoExecutor;
     private final StudentStreamDownloadDemoExecutor studentStreamDownloadDemoExecutor;
     private final StudentStreamDownloadDemoMergeExecutor studentStreamDownloadDemoMergeExecutor;
     private final StudentPageDownloadDemoExecutor studentPageDownloadDemoExecutor;
     private final StudentMultiSheetPageDownloadDemoExecutor studentMultiSheetPageDownloadDemoExecutor;
     private final StudentMultiSheetStreamDownloadDemoExecutor studentMultiSheetStreamDownloadDemoExecutor;
+
+
+    @GetMapping("/export/get")
+    public ResponseResult<ExportResultVO> getExport(HttpServletResponse response) throws IOException {
+        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        requestContext.setOut(response.getOutputStream());
+        requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
+        requestContext.setExportRemark("StudentExport备注");
+        Pair<Boolean, Long> result = studentDownloadDemoExecutor.exportResult(requestContext);
+        if (Boolean.TRUE.equals(result.getKey())) {
+            return ResponseResult.ok(new ExportResultVO(result.getValue(), "导出成功"));
+        }
+        return null;
+    }
 
     @GetMapping("/export/stream")
     public ResponseResult<ExportResultVO> export(HttpServletResponse response) throws IOException {

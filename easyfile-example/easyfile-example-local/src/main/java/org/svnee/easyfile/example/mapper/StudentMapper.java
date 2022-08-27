@@ -1,19 +1,21 @@
 package org.svnee.easyfile.example.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.ResultSetType;
+import org.svnee.easyfile.example.model.School;
 import org.svnee.easyfile.example.model.Student;
 
 /**
  * @author svnee
  */
-public interface StudentMapper extends BaseMapper<Student> {
+@Mapper
+public interface StudentMapper {
 
     /**
      * 查询
@@ -41,4 +43,10 @@ public interface StudentMapper extends BaseMapper<Student> {
     int count();
 
     int countBySchool(Long schoolId);
+
+    /**
+     * all
+     */
+    List<Student> selectAll();
+
 }

@@ -53,4 +53,9 @@
         order by school_id, id
         limit #{offset}
     </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from test_student
+    </select>
 </mapper>

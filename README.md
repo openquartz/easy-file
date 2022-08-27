@@ -46,6 +46,16 @@ EasyFile 是一个大文件导出的解决方案。用于解决大文件导出�
 
 而且,EasyFile和Alibaba EasyExcel 并不冲突，依然可以结合EasyExcel 使用,文件生成逻辑使用Alibaba EasyExcel 做自行拓展使用。
 
+1、使用全量查出100w万数据+EasyExcel导出(`org.svnee.easyfile.example.downloader.StudentDownloadDemoExecutor`)
+内存图：
+![全量导出+EasyExcel](./doc/image/FullDownloadMemory.png)
+2、使用分页导出(`org.svnee.easyfile.example.downloader.StudentPageDownloadDemoExecutor`)
+内存图
+![分页导出](./doc/image/PageDownloadMemory.png)
+
+生成的文件大小比对:
+![文件大小对比图](./doc/image/PageDownloadSize2FullDownloadSize.png)
+
 ### 软件架构
 
 EasyFile 提供两种模式
