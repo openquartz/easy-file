@@ -7,7 +7,7 @@
 # EasyFile
 Make BigData Export Easier!!!
 
-## 欢迎Star!!!
+## 开源不易,欢迎Star!!!
 
 ### 介绍
 
