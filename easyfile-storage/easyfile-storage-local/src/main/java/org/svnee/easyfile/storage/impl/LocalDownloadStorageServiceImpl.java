@@ -23,6 +23,7 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
+import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -40,6 +41,7 @@ import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTask;
 import org.svnee.easyfile.storage.exception.AsyncDownloadExceptionCode;
 import org.svnee.easyfile.storage.exception.DownloadStorageErrorCode;
+import org.svnee.easyfile.storage.expand.FileUrlTransformerSupport;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
@@ -284,7 +286,12 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
         // 下载
-        asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
+        int download = asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
+        Asserts.isTrue(download > 0, DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_DOWNLOAD_SUCCESS);
+        FileUrlTransformer transformer = FileUrlTransformerSupport.get(downloadRecord.getFileSystem());
+        if (Objects.nonNull(transformer)) {
+            return transformer.transform(downloadRecord.getFileUrl());
+        }
         return downloadRecord.getFileUrl();
     }
 

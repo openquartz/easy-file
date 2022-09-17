@@ -31,6 +31,7 @@ import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.ExpandExecutorErrorCode;
+import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
@@ -58,7 +59,6 @@ import org.svnee.easyfile.server.notify.NotifyMessageTemplate;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 import org.svnee.easyfile.server.service.NotifyService;
 import org.svnee.easyfile.server.service.executor.ExportLimitingExecutor;
-import org.svnee.easyfile.server.service.executor.FileUrlTransformer;
 import org.svnee.easyfile.server.utils.DbUtils;
 import org.svnee.easyfile.server.utils.PaginationUtils;
 
@@ -327,7 +327,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
         FileUrlTransformer transformer = fileUrlTransformerMap.get(downloadRecord.getFileSystem());
         if (Objects.nonNull(transformer)) {
-            return transformer.transform(downloadRecord);
+            return transformer.transform(downloadRecord.getFileUrl());
         }
         return downloadRecord.getFileUrl();
     }

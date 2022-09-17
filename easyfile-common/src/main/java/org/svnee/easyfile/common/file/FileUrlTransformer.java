@@ -1,6 +1,4 @@
-package org.svnee.easyfile.server.service.executor;
-
-import org.svnee.easyfile.server.entity.AsyncDownloadRecord;
+package org.svnee.easyfile.common.file;
 
 /**
  * 文件转存
@@ -19,9 +17,9 @@ public interface FileUrlTransformer {
     /**
      * 转换到文件存储器
      *
-     * @param downloadRecord 下载记录
+     * @param fileKey 文件key
      * @return 文件路径
      */
-    String transform(AsyncDownloadRecord downloadRecord);
+    String transform(String fileKey);
 
 }
