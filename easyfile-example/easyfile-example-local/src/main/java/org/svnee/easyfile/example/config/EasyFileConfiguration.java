@@ -6,7 +6,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.example.upload.ActualUploadServiceImpl;
 import org.svnee.easyfile.example.upload.MinioFileServiceUrlTransformer;
 import org.svnee.easyfile.example.upload.MinioUploadServiceImpl;
