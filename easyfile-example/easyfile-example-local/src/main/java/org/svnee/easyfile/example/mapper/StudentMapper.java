@@ -8,7 +8,6 @@ import org.apache.ibatis.annotations.ResultType;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.mapping.ResultSetType;
-import org.svnee.easyfile.example.model.School;
 import org.svnee.easyfile.example.model.Student;
 
 /**
@@ -20,7 +19,7 @@ public interface StudentMapper {
     /**
      * 查询
      */
-    @Select("select * from test_student limit #{limit} ")
+    @Select("select id,`name`,age,school_id,school,address from test_student limit #{limit} ")
     @Options(resultSetType = ResultSetType.FORWARD_ONLY, fetchSize = Integer.MIN_VALUE)
     @ResultType(Student.class)
     Cursor<Student> scan(@Param("limit") int limit);
@@ -28,7 +27,7 @@ public interface StudentMapper {
     /**
      * 查询
      */
-    @Select("select * from test_student where school_id =#{schoolId} limit #{limit} ")
+    @Select("select id,`name`,age,school_id,school,address from test_student where school_id =#{schoolId} limit #{limit} ")
     @Options(resultSetType = ResultSetType.FORWARD_ONLY, fetchSize = Integer.MIN_VALUE)
     @ResultType(Student.class)
     Cursor<Student> scanBySchool(@Param("limit") int limit, @Param("schoolId") Long schoolId);
