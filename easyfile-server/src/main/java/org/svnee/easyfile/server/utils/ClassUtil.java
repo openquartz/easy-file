@@ -25,8 +25,8 @@ public final class ClassUtil {
      */
     public static <T> Set<Class<? extends T>> getAllSubEnumClass(Class<T> superClass, String... packageDir) {
         Set<Class<? extends T>> subClazzSet = Sets.newHashSet();
-        for (int i = 0; i < packageDir.length; i++) {
-            Reflections reflections = new Reflections(packageDir[i], Thread.currentThread().getContextClassLoader());
+        for (String s : packageDir) {
+            Reflections reflections = new Reflections(s, Thread.currentThread().getContextClassLoader());
             Set<Class<? extends T>> classSet = reflections.getSubTypesOf(superClass);
             Optional.ofNullable(classSet)
                 .ifPresent(classes -> classes.stream().filter(Class::isEnum)
