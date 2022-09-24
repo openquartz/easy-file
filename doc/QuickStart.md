@@ -145,11 +145,11 @@ easyfile.remote.namespace=remote-example
 
 #### 四、异步文件处理器
 
-[异步文件处理器配置](doc/AsyncFileHandler.md)
+[异步文件处理器配置](./AsyncFileHandler.md)
 
 #### 五、实现下载器
 
-[下载器](doc/BaseDownloadExecutror.md)
+[下载器](./BaseDownloadExecutror.md)
 
 #### 六、easyfile-server 部署
 
