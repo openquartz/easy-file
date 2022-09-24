@@ -12,9 +12,9 @@
     <version>1.0.0</version>
 </dependency>
 <dependency>
-<groupId>org.svnee</groupId>
-<artifactId>easyfile-storage-local</artifactId>
-<version>1.0.0</version>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-storage-local</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
@@ -28,9 +28,9 @@
     <version>1.0.0</version>
 </dependency>
 <dependency>
-<groupId>org.svnee</groupId>
-<artifactId>easyfile-storage-remote</artifactId>
-<version>1.0.0</version>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-storage-remote</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
