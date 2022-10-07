@@ -34,19 +34,21 @@ public final class JacksonHandler implements JsonFacade {
      * 随后可以定制化这个新{@link ObjectMapper}.
      */
     public ObjectMapper newMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-        mapper.setDateFormat(dateFormat);
-        mapper.setTimeZone(TimeZone.getTimeZone("UTC"));
-        mapper.registerModule(new JavaTimeModule());
-        mapper.registerModule(new Jdk8Module());
-        mapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-        mapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT);
-        mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        mapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
 
-        return mapper;
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setDateFormat(dateFormat);
+        objectMapper.setTimeZone(TimeZone.getTimeZone("UTC"));
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.registerModule(new Jdk8Module());
+        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
+        objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
+        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT);
+        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
+
+        return objectMapper;
     }
 
     /**

@@ -1,11 +1,9 @@
 package org.svnee.easyfile.common.util;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import org.svnee.easyfile.common.bean.Pair;
 
 /**
  * JSON util.

@@ -13,6 +13,7 @@ import java.util.StringTokenizer;
  * <p>Provides utilities for manipulating and examining
  * <code>Throwable</code> objects.</p>
  *
+ * @author svnee
  * @since 1.0
  */
 public class ExceptionUtils {
@@ -23,7 +24,7 @@ public class ExceptionUtils {
      * normally necessary.
      * </p>
      */
-    public ExceptionUtils() {
+    private ExceptionUtils() {
         super();
     }
 
@@ -117,7 +118,7 @@ public class ExceptionUtils {
      */
     public static Throwable[] getThrowables(final Throwable throwable) {
         final List<Throwable> list = getThrowableList(throwable);
-        return list.toArray(new Throwable[list.size()]);
+        return list.toArray(new Throwable[0]);
     }
 
     /**

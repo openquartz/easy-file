@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.util.ExceptionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**
@@ -23,8 +23,7 @@ public class ServerListManager {
 
     private final String serverAddrsStr;
 
-    @Getter
-    volatile List<String> serverUrls = new ArrayList<>();
+    private List<String> serverUrls = new ArrayList<>();
 
     private volatile String currentServerAddr;
 
@@ -60,6 +59,10 @@ public class ServerListManager {
 
     Iterator<String> iterator() {
         return new ServerAddressIterator(serverUrls);
+    }
+
+    public List<String> getServerUrls() {
+        return serverUrls;
     }
 
     private static class ServerAddressIterator implements Iterator<String> {
@@ -105,7 +108,7 @@ public class ServerListManager {
                      */
                     this.seed = random.nextInt(Integer.MAX_VALUE);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    ExceptionUtils.rethrow(e);
                 }
             }
 
