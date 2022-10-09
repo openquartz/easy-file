@@ -8,6 +8,11 @@
 Make BigData Export Easier!!!
 
 ## 开源不易,欢迎Star!!!
+**地址**
+
+Github: https://github.com/svnlab/easy-file
+
+Gitee: https://gitee.com/svnee/easy-file
 
 ### 介绍
 
