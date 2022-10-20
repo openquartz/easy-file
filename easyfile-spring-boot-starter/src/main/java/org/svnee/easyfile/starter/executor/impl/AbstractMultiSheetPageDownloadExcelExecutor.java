@@ -111,7 +111,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
             }
             excelBean.logExportInfo(log);
             // 增强Excel
-            executeEnhance(excelBean.getWorkbook(),context);
+            executeEnhance(excelBean.getWorkbook(), context);
             ExcelExports.writeWorkbook(excelBean, context.getOut());
         }
     }

@@ -108,7 +108,7 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
                 }
                 excelBean.logExportInfo(log);
                 // 增强
-                this.executeEnhance(excelBean.getWorkbook(),context);
+                this.executeEnhance(excelBean.getWorkbook(), context);
                 ExcelExports.writeWorkbook(excelBean, context.getOut());
             } finally {
                 if (Objects.nonNull(session)) {
