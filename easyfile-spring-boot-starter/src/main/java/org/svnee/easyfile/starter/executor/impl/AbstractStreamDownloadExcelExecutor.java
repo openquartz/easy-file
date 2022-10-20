@@ -14,6 +14,7 @@ import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
 
 /**
  * 流式下载导出-支持Mybatis 流式查询。查询出结果数据，进行不停的将数据导出到磁盘上
@@ -27,7 +28,7 @@ import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 @Slf4j
 public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T>
     extends AbstractDownloadExcel07Executor
-    implements StreamDownloadExecutor<S> {
+    implements StreamDownloadExecutor<S>, ExcelIntensifierExecutor {
 
     /**
      * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
@@ -100,6 +101,8 @@ public abstract class AbstractStreamDownloadExcelExecutor<S extends Closeable, R
                     tempList.clear();
                 }
                 excelBean.logExportInfo(log);
+                // 增强Excel
+                this.executeEnhance(excelBean.getWorkbook(), context);
                 ExcelExports.writeWorkbook(excelBean, context.getOut());
             } finally {
                 if (Objects.nonNull(session)) {

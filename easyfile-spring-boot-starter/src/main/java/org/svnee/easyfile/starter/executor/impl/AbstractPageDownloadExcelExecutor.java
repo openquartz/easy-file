@@ -17,6 +17,7 @@ import org.svnee.easyfile.common.bean.excel.ExcelFiled;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.common.util.PageUtil;
 import org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
 
 /**
  * 分页下载Excel执行器
@@ -29,7 +30,7 @@ import org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor;
 @Slf4j
 public abstract class AbstractPageDownloadExcelExecutor<T>
     extends AbstractDownloadExcel07Executor
-    implements PageShardingDownloadExecutor<T> {
+    implements PageShardingDownloadExecutor<T> , ExcelIntensifierExecutor {
 
     /**
      * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
@@ -84,6 +85,7 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
                 }
             }
             excelBean.logExportInfo(log);
+            this.executeEnhance(excelBean.getWorkbook(),context);
             ExcelExports.writeWorkbook(excelBean, context.getOut());
         }
     }

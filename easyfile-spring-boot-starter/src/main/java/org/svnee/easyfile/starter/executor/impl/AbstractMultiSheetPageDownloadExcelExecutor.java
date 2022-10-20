@@ -19,6 +19,7 @@ import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.common.util.PageUtil;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
 
 /**
  * 多sheet分割导出
@@ -28,7 +29,7 @@ import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 @Slf4j
 public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
     extends AbstractDownloadExcel07Executor
-    implements BaseDownloadExecutor {
+    implements BaseDownloadExecutor, ExcelIntensifierExecutor {
 
     /**
      * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
@@ -109,7 +110,10 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
                 }
             }
             excelBean.logExportInfo(log);
+            // 增强Excel
+            executeEnhance(excelBean.getWorkbook(),context);
             ExcelExports.writeWorkbook(excelBean, context.getOut());
         }
     }
+
 }

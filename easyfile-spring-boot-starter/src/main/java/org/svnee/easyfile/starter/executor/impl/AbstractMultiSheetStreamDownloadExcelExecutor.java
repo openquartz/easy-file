@@ -15,6 +15,7 @@ import org.svnee.easyfile.common.bean.excel.ExcelFiled;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
 
 /**
  * 多Sheet流式导出
@@ -24,7 +25,7 @@ import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 @Slf4j
 public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Closeable, R extends Iterable<T>, T, G>
     extends AbstractDownloadExcel07Executor
-    implements StreamDownloadExecutor<S> {
+    implements StreamDownloadExecutor<S>, ExcelIntensifierExecutor {
 
     /**
      * 导出模板类分组 {@link org.svnee.easyfile.common.annotations.ExcelProperty#group()}
@@ -106,6 +107,8 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
                     }
                 }
                 excelBean.logExportInfo(log);
+                // 增强
+                this.executeEnhance(excelBean.getWorkbook(),context);
                 ExcelExports.writeWorkbook(excelBean, context.getOut());
             } finally {
                 if (Objects.nonNull(session)) {
