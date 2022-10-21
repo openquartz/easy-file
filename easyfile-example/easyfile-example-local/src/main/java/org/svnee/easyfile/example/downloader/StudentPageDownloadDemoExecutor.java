@@ -1,5 +1,6 @@
 package org.svnee.easyfile.example.downloader;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
@@ -11,8 +12,10 @@ import org.svnee.easyfile.common.bean.PageTotal;
 import org.svnee.easyfile.common.bean.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.example.excel.WaterMarkExcelIntensifier;
 import org.svnee.easyfile.example.mapper.StudentMapper;
 import org.svnee.easyfile.example.model.Student;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifier;
 import org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor;
 
 /**
@@ -53,5 +56,13 @@ public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelEx
         }
         cursorId = studentList.get(studentList.size() - 1).getId();
         return Pair.of(cursorId, studentList);
+    }
+
+    /**
+     * 水印打印
+     */
+    @Override
+    public List<ExcelIntensifier> enhanceExcel() {
+        return Collections.singletonList(new WaterMarkExcelIntensifier());
     }
 }

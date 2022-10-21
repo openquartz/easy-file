@@ -38,6 +38,8 @@
         <disruptor.version>3.4.2</disruptor.version>
         <easyexcel.version>2.2.10</easyexcel.version>
         <minio.version>8.3.7</minio.version>
+        <poi-ooxml-schemas.version>1.4</poi-ooxml-schemas.version>
+        <hutool.version>5.4.7</hutool.version>
 
         <rocketmq.version>4.9.3</rocketmq.version>
 
@@ -217,6 +219,18 @@
                 <groupId>io.minio</groupId>
                 <artifactId>minio</artifactId>
                 <version>${minio.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>ooxml-schemas</artifactId>
+                <version>${poi-ooxml-schemas.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
         </dependencies>
