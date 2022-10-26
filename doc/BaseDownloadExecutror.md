@@ -63,6 +63,99 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor, BaseWrapperSy
 
 需要配合使用(`org.svnee.easyfile.common.annotations.ExcelProperty`)
 
+#### Excel增强器支持
+Excel针对使用系统框架的导出生成的Excel提供了扩展增强支持。用于用户自主增强一些自定义的功能,例如：加密、只读锁定、水印等。
+用户可以实现 `org.svnee.easyfile.starter.executor.excel.ExcelIntensifier` 以实现自己的增强功能
+例如：
+```java
+package org.svnee.easyfile.example.excel;
+
+import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
+import org.svnee.easyfile.example.utils.WaterMarkExcelUtil;
+import org.svnee.easyfile.starter.executor.excel.ExcelIntensifier;
+
+/**
+ * 增强水印
+ * @author svnee
+ **/
+@Slf4j
+public class WaterMarkExcelIntensifier implements ExcelIntensifier {
+
+    @Override
+    public void enhance(Workbook workbook, BaseDownloaderRequestContext context) {
+
+        if (workbook instanceof XSSFWorkbook) {
+            try {
+                WaterMarkExcelUtil.printWaterMark((XSSFWorkbook) workbook, "敏感内容");
+            } catch (IOException e) {
+                log.error("[WaterMarkExcelIntensifier#enhance]", e);
+            }
+        } else if (workbook instanceof SXSSFWorkbook) {
+            try {
+                WaterMarkExcelUtil.printWaterMark((SXSSFWorkbook) workbook, "敏感内容");
+            } catch (IOException e) {
+                log.error("[WaterMarkExcelIntensifier#enhance]", e);
+            }
+        } else {
+            throw new RuntimeException("this workbook not support watermark!");
+        }
+    }
+}
+```
+使用时,覆盖提供Excel增强器
+```java
+@Component
+@FileExportExecutor(value = "StudentPageDownloadDemoExecutor")
+public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor<Student> {
+
+  @Resource
+  private StudentMapper studentMapper;
+
+  @Override
+  public boolean enableAsync(BaseDownloaderRequestContext context) {
+    return true;
+  }
+
+  @Override
+  public String sheetPrefix() {
+    return "学生信息";
+  }
+
+  @Override
+  public PageTotal count(Map<String, Object> othersMap) {
+    if (PageTotalContext.currentPageToTal(sheetPrefix()) != null) {
+      return PageTotalContext.currentPageToTal(sheetPrefix());
+    }
+    int count = studentMapper.count();
+    PageTotalContext.cache(sheetPrefix(), PageTotal.of(count, 100));
+    return PageTotalContext.currentPageToTal(sheetPrefix());
+  }
+
+  @Override
+  public Pair<Long, List<Student>> shardingData(BaseDownloaderRequestContext context, Page page, Long cursorId) {
+    List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageSize());
+    if (CollectionUtils.isEmpty(studentList)) {
+      return Pair.of(cursorId, studentList);
+    }
+    cursorId = studentList.get(studentList.size() - 1).getId();
+    return Pair.of(cursorId, studentList);
+  }
+
+  /**
+   * 水印打印
+   */
+  @Override
+  public List<ExcelIntensifier> enhanceExcel() {
+    return Collections.singletonList(new WaterMarkExcelIntensifier());
+  }
+}
+```
+
 #### 限流执行器
 
 如需限流需要实现ExportLimitingExecutor
@@ -117,7 +210,7 @@ public interface ExportLimitingExecutor {
  */
 default boolean enableExportCache(BaseDownloaderRequestContext context){
         return false;
-        }
+}
 ```
 
 2、提供需要判定缓存的key的结果-用于比较是否一致.如果cache-key 为空时,则缓存为匹配所有
