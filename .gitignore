@@ -31,4 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
-!**/.flattened-pom.xml
+**/**/.flattened-pom.xml
+./.flattened-pom.xml
