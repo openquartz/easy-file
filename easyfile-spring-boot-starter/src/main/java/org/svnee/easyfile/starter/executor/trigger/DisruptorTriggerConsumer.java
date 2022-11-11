@@ -26,7 +26,7 @@ public class DisruptorTriggerConsumer implements EventHandler<DownloadTriggerMes
         log.info("[DisruptorTriggerConsumer#onEvent] message:{}", triggerMessage);
         try {
             mqTriggerHandler.handle(triggerMessage);
-        } catch (Throwable ex) {
+        } catch (Exception ex) {
             log.error("[DisruptorTriggerConsumer#onEvent]Consumption failure,message:{},properties:{}", triggerMessage,
                 downloadProperties, ex);
             throw ex;
