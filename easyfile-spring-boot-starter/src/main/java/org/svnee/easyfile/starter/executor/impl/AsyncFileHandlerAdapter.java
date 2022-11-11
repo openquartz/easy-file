@@ -31,6 +31,7 @@ import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.CompressUtils;
 import org.svnee.easyfile.common.util.DateFormatUtils;
+import org.svnee.easyfile.common.util.ExceptionUtils;
 import org.svnee.easyfile.common.util.FileUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
@@ -162,7 +163,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             result = handleResult(executor, baseRequest, registerId);
         } catch (Exception ex) {
             logger.error("[AsyncFileHandlerAdapter#execute]end,execute error!registerId:{}", registerId, ex);
-            throw ex;
+            ExceptionUtils.rethrow(ex);
         } finally {
             // 执行拦截后置处理
             afterHandle(executor, baseRequest, result, interceptorContext);
@@ -334,7 +335,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                             .upload(genFileResult.getUploadFile(), cnFileName, downloadProperties.getAppId());
                     } catch (GenerateFileException ex) {
                         throw ex;
-                    } catch (Throwable t) {
+                    } catch (Exception t) {
                         genFileResult.setHandleBreakFlag(true);
                         genFileResult.getErrorMsg().add("[文件上传]" + t.getMessage());
                         error = t;

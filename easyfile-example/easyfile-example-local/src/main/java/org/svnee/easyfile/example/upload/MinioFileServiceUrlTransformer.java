@@ -7,7 +7,6 @@ import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.http.Method;
 import java.util.concurrent.TimeUnit;
-import javax.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
@@ -32,7 +31,7 @@ public class MinioFileServiceUrlTransformer implements FileUrlTransformer {
         .concurrencyLevel(4)
         .build(new CacheLoader<MinioFileIdentifyKey, String>() {
             @Override
-            public String load(@NotNull MinioFileIdentifyKey identifyKey) {
+            public String load(MinioFileIdentifyKey identifyKey) {
                 Asserts.notNull(identifyKey, UploadFileErrorCode.FILE_IDENTIFY_KEY_IS_NOT_EXIST);
                 try {
                     GetPresignedObjectUrlArgs args = GetPresignedObjectUrlArgs.builder()
