@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author svnee
  */
-public class DownloaderRequestContext extends BaseDownloaderRequestContext {
+public final class DownloaderRequestContext extends BaseDownloaderRequestContext {
 
     /**
      * 输出流对象
