@@ -1,5 +1,6 @@
 package org.svnee.easyfile.common.bean;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import lombok.Data;
@@ -36,5 +37,18 @@ public class BaseDownloaderRequestContext {
      * 用于参数传递
      */
     private Map<String, Object> otherMap;
+
+    /**
+     * 放置参数
+     *
+     * @param key key
+     * @param value value
+     */
+    public void putParam(String key, Object value) {
+        if (otherMap == null) {
+            otherMap = new HashMap<>();
+        }
+        otherMap.put(key, value);
+    }
 
 }

@@ -82,6 +82,7 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        requestContext.putParam("request",new TestRequest(1L));
         Pair<Boolean, Long> exportResult = studentPageDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));

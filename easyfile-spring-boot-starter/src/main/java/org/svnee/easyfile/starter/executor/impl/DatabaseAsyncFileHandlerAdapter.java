@@ -72,14 +72,16 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
     public void doTrigger(DownloadTriggerEntry k) {
         boolean execute = triggerService.startExecute(k.getRegisterId(), k.getTriggerCount());
         if (execute) {
-            DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
             try {
+                DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
                 BaseDownloadExecutor executor = FileExportExecutorSupport
                     .get(requestInfo.getDownloadCode());
                 doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
                     requestInfo.getRequestContext(), k.getRegisterId());
                 triggerService.exeSuccess(k.getRegisterId());
             } catch (Exception ex) {
+                log.error("[DatabaseAsyncFileHandlerAdapter#doTrigger] execute-failed!registerId:{}", k.getRegisterId(),
+                    ex);
                 triggerService.exeFail(k.getRegisterId());
             }
         }

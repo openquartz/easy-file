@@ -21,6 +21,7 @@ import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
+import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
@@ -322,11 +323,22 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         if (Objects.isNull(downloadRecord)) {
             return null;
         }
-        BaseDownloaderRequestContext requestContext = JSONUtil
-            .parseObject(downloadRecord.getExecuteParam(), BaseDownloaderRequestContext.class);
+        RegisterDownloadRequest registerRequest = JSONUtil
+            .parseObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+        Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
+
         DownloadRequestInfo requestInfo = new DownloadRequestInfo();
-        requestInfo.setRequestContext(requestContext);
+        requestInfo.setRequestContext(convertBaseDownloadRequestContext(registerRequest));
         requestInfo.setDownloadCode(downloadRecord.getDownloadCode());
         return requestInfo;
+    }
+
+    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
+        baseDownloaderRequestContext.setNotifier(registerRequest.getNotifier());
+        baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseDownloaderRequestContext;
     }
 }
