@@ -24,7 +24,7 @@ import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
-import org.svnee.easyfile.common.exception.EasyFileException;
+import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.ExportResult;
@@ -35,8 +35,6 @@ import org.svnee.easyfile.common.util.ExceptionUtils;
 import org.svnee.easyfile.common.util.FileUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.common.exception.Asserts;
-import org.svnee.easyfile.starter.exception.DownloadErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileException;
 import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
@@ -320,11 +318,11 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             .withWaitStrategy(WaitStrategies.incrementingWait(5, TimeUnit.SECONDS, 5, TimeUnit.SECONDS))
             .withStopStrategy(StopStrategies.stopAfterAttempt(3))
             .build();
+        // 生成文件
+        GenerateFileResult genFileResult = generateFile(executor, exportExecutor, baseRequest, registerId,
+            downloadProperties.getLocalFileTempPath());
         try {
             return retryer.call(() -> {
-                // 生成文件
-                GenerateFileResult genFileResult = generateFile(executor, exportExecutor, baseRequest, registerId,
-                    downloadProperties.getLocalFileTempPath());
                 Pair<String, String> fileUrl = null;
                 Throwable error = null;
                 if (!genFileResult.isHandleBreakFlag()) {
@@ -347,7 +345,9 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             logger.error(
                 "[AsyncFileHandlerAdapter#handleFileWithRetry] retry execute handle file,error!registerId:{},executor:{}",
                 registerId, exportExecutor.value(), e);
-            throw new EasyFileException(DownloadErrorCode.HANDLE_DOWNLOAD_FILE_ERROR);
+            genFileResult.setHandleBreakFlag(true);
+            genFileResult.getErrorMsg().add("[文件处理]" + e.getMessage());
+            return new HandleFileResult(genFileResult, null, e);
         }
     }
 
