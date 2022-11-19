@@ -39,6 +39,17 @@ public final class FileUtils {
     }
 
     /**
+     * sizeOfMB
+     *
+     * @param file file
+     * @return MB byte
+     */
+    public static int sizeOfKb(File file) {
+        long byteSize = sizeOf(file);
+        return BigInteger.valueOf(byteSize).divide(Constants.ONE_KB).intValue();
+    }
+
+    /**
      * sizeOfDirectory0
      *
      * @param directory dictionary

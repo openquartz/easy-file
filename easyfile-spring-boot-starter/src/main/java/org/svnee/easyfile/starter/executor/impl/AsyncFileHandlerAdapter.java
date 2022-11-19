@@ -214,7 +214,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                 Asserts.isTrue(mkdirs, GenerateFileErrorCode.CREATE_LOCAL_TEMP_FILE_ERROR);
             } catch (Exception ex) {
                 logger.error(
-                    "[AbstractAsyncFileHandlerAdapter#handle] create dictionary error,registerId:{},downloadCode:{}",
+                    "[AbstractAsyncFileHandlerAdapter#generateFile] create dictionary error,registerId:{},downloadCode:{}",
                     registerId, exportExecutor.value(), ex);
                 handleBreakFlag = true;
                 errorMsgJoiner.add(ex.getMessage());
@@ -227,7 +227,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                     GenerateFileException.class);
             } catch (Exception ex) {
                 logger.error(
-                    "[AbstractAsyncFileHandlerAdapter#handle] handle,create new file error,registerId:{},downloadCode:{},path:{}",
+                    "[AbstractAsyncFileHandlerAdapter#generateFile] handle,create new file error,registerId:{},downloadCode:{},path:{}",
                     registerId, exportExecutor.value(), downloadProperties.getLocalFileTempPath(), ex);
                 errorMsgJoiner.add("创建新文件异常,文件路径:" + downloadProperties.getLocalFileTempPath());
                 handleBreakFlag = true;
@@ -248,6 +248,9 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         // 执行文件压缩
         Pair<Boolean, File> compressResult = compress(file, handleBreakFlag);
         compress = compressResult.getKey();
+        logger.info(
+            "[AbstractAsyncFileHandlerAdapter#generateFile] registerId:{},downloadCode:{},generate-file bytes:{} kb",
+            registerId, exportExecutor.value(), FileUtils.sizeOfKb(file));
         return GenerateFileResult
             .build(errorMsgJoiner, file, compressResult.getValue(), handleBreakFlag, compress);
     }
