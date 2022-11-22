@@ -197,6 +197,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         String tempLocalFilePath) {
 
         // 生成英文版文件名
+        long startTime = System.currentTimeMillis();
         String fileName = generateEnFileName(baseRequest.getFileSuffix(), exportExecutor, tempLocalFilePath);
         File file = new File(fileName);
         File parentFile = file.getParentFile();
@@ -249,8 +250,8 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         Pair<Boolean, File> compressResult = compress(file, handleBreakFlag);
         compress = compressResult.getKey();
         logger.info(
-            "[AbstractAsyncFileHandlerAdapter#generateFile] registerId:{},downloadCode:{},generate-file bytes:{} kb",
-            registerId, exportExecutor.value(), FileUtils.sizeOfKb(file));
+            "[AbstractAsyncFileHandlerAdapter#generateFile] registerId:{},downloadCode:{},generate-file bytes:{} kb,cost-time:{}",
+            registerId, exportExecutor.value(), FileUtils.sizeOfKb(file), System.currentTimeMillis() - startTime);
         return GenerateFileResult
             .build(errorMsgJoiner, file, compressResult.getValue(), handleBreakFlag, compress);
     }
