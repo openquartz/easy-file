@@ -210,7 +210,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             }
         }
         // 如果还未上传,则执行初始化上传信息
-        if (downloadRecord.getUploadStatus() == UploadStatusEnum.NONE) {
+        if (!downloadRecord.isUploadComplete()) {
             UploadInfoChangeCondition condition = new UploadInfoChangeCondition();
             condition.setId(downloadRecord.getId());
             condition.setUploadStatus(request.getUploadStatus());

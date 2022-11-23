@@ -162,4 +162,13 @@ public class AsyncDownloadRecord {
     @Column(name = "update_by")
     private String updateBy;
 
+    /**
+     * 是否已经上传完成
+     *
+     * @return 是否已经完成
+     */
+    public boolean isUploadComplete() {
+        return !(UploadStatusEnum.NONE == uploadStatus || UploadStatusEnum.EXECUTING == uploadStatus);
+    }
+
 }
