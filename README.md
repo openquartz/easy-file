@@ -85,6 +85,10 @@ EasyFile 提供两种模式
 - easyfile-example-local: 本地储存样样例工程
 - easyfile-example-remote: 远程存储样例工程
 
+### 时序图
+
+![下载时序图](./doc/image/sequence.jpg)
+
 ### 快速开始
 
 [快速开始](doc/QuickStart.md)
