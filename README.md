@@ -87,7 +87,7 @@ EasyFile 提供两种模式
 
 ### 时序图
 
-![下载时序图](./doc/image/sequence.jpg)
+![下载时序图](./doc/image/sequence.png)
 
 ### 快速开始
 
