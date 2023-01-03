@@ -91,7 +91,7 @@ public class EasyFileDownloadProperties {
      * EasyFile 触发类型
      * 支持：default,schedule,rocketmq,disruptor
      */
-    private String asyncTriggerType = "default";
+    private DownloadAsyncTriggerType asyncTriggerType = DownloadAsyncTriggerType.DEFAULT;
 
     public String getUnifiedAppId() {
         return StringUtils.isBlank(unifiedAppId) ? appId : unifiedAppId;

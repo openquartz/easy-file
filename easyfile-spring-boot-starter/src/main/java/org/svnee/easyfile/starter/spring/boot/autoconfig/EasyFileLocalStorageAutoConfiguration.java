@@ -3,9 +3,11 @@ package org.svnee.easyfile.starter.spring.boot.autoconfig;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -35,6 +37,7 @@ import org.svnee.easyfile.storage.mapper.AsyncDownloadTriggerMapper;
 import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadRecordMapperImpl;
 import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTaskMapperImpl;
 import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
+import org.svnee.easyfile.storage.prop.EasyFileTableGeneratorSupplier;
 
 /**
  * EasyFileLocalStorageAutoConfiguration
@@ -46,9 +49,12 @@ import org.svnee.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
 @EnableConfigurationProperties({EasyFileLocalProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
-public class EasyFileLocalStorageAutoConfiguration {
+public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
     private static final String DEFAULT_DATASOURCE_TYPE = "org.apache.tomcat.jdbc.pool.DataSource";
+
+    @Resource
+    private EasyFileLocalProperties easyFileLocalProperties;
 
     @Bean
     @ConditionalOnMissingBean(DownloadStorageService.class)
@@ -95,14 +101,14 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
     private DataSource buildDataSource(EasyFileLocalProperties easyFileLocalProperties) {
-        String dataSourceType = easyFileLocalProperties.getType();
+        String dataSourceType = easyFileLocalProperties.getDatasource().getType();
         try {
             String className = StringUtils.isNotBlank(dataSourceType) ? dataSourceType : DEFAULT_DATASOURCE_TYPE;
             Class<? extends DataSource> type = (Class<? extends DataSource>) Class.forName(className);
-            String driverClassName = easyFileLocalProperties.getDriverClassName();
-            String url = easyFileLocalProperties.getUrl();
-            String username = easyFileLocalProperties.getUsername();
-            String password = easyFileLocalProperties.getPassword();
+            String driverClassName = easyFileLocalProperties.getDatasource().getDriverClassName();
+            String url = easyFileLocalProperties.getDatasource().getUrl();
+            String username = easyFileLocalProperties.getDatasource().getUsername();
+            String password = easyFileLocalProperties.getDatasource().getPassword();
 
             return DataSourceBuilder.create()
                 .driverClassName(driverClassName)
@@ -155,4 +161,8 @@ public class EasyFileLocalStorageAutoConfiguration {
     }
 
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        EasyFileTableGeneratorSupplier.setPrefix(easyFileLocalProperties.getTable().getPrefix());
+    }
 }

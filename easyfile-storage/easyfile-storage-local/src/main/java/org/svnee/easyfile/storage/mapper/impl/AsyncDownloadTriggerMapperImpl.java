@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ import org.svnee.easyfile.storage.dictionary.DownloadTriggerStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTrigger;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTriggerMapper;
 import org.svnee.easyfile.storage.mapper.condition.QueryDownloadTriggerCondition;
+import org.svnee.easyfile.storage.prop.EasyFileTableGeneratorSupplier;
 
 /**
  * AsyncDownloadTriggerMapperImpl
@@ -38,24 +40,25 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private final JdbcTemplate jdbcTemplate;
 
     private static final String INSERT_SQL =
-        "insert into ef_async_download_trigger(register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner) values (?,?,?,?,?,?,?)";
+        "insert into {0}(register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner) values (?,?,?,?,?,?,?)";
     private static final String REFRESH_STATUS_SQL =
-        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime where register_id = :registerId and trigger_status in (:taskStatusList) ";
+        "update {0} set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime where register_id = :registerId and trigger_status in (:taskStatusList) ";
     private static final String TRIGGER_EXECUTE_SQL =
-        "update ef_async_download_trigger set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1,processing_owner= :processingOwner where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
+        "update {0} set trigger_status= :triggerStatus,last_execute_time= :lastExecuteTime,trigger_count=trigger_count+1,processing_owner= :processingOwner where register_id = :registerId and trigger_status in (:taskStatusList) and trigger_count= :triggerCount";
     private static final String SELECT_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from {0}";
     private static final String SELECT_BY_ID_SQL =
         "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger where register_id = ?";
-    private static final String DELETE_BY_ID_SQL = "delete from ef_async_download_trigger where id = ?";
+    private static final String DELETE_BY_ID_SQL = "delete from {0} where id = ?";
 
     @Override
     public int insert(AsyncDownloadTrigger trigger) {
 
+        String sql = MessageFormat.format(INSERT_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
 
-            PreparedStatement ps = connection.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setLong(1, trigger.getRegisterId());
             ps.setString(2, trigger.getTriggerStatus().getCode());
             ps.setTimestamp(3, new Timestamp(trigger.getStartTime().getTime()));
@@ -87,7 +90,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("triggerStatus", triggerStatus.getCode());
         paramMap.put("lastExecuteTime", now);
         paramMap.put("registerId", registerId);
-        return new NamedParameterJdbcTemplate(jdbcTemplate).update(REFRESH_STATUS_SQL, paramMap);
+
+        String sql = MessageFormat
+            .format(REFRESH_STATUS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
+
+        return new NamedParameterJdbcTemplate(jdbcTemplate).update(sql, paramMap);
     }
 
     @Override
@@ -104,7 +111,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("registerId", registerId);
         paramMap.put("triggerCount", triggerCount);
         paramMap.put("processingOwner", Objects.nonNull(IpUtil.getIp()) ? IpUtil.getIp() : "hostname-unknow");
-        return new NamedParameterJdbcTemplate(jdbcTemplate).update(TRIGGER_EXECUTE_SQL, paramMap);
+
+        String sql = MessageFormat
+            .format(TRIGGER_EXECUTE_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
+
+        return new NamedParameterJdbcTemplate(jdbcTemplate).update(sql, paramMap);
     }
 
     @Override
@@ -122,7 +133,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
         paramMap.put("minTriggerCount", condition.getMinTriggerCount());
         paramMap.put("offset", condition.getOffset());
 
-        StringBuilder sqlBuilder = new StringBuilder(SELECT_SQL);
+        StringBuilder sqlBuilder = new StringBuilder(MessageFormat.format(SELECT_SQL,
+            EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable()));
         sqlBuilder.append(" where trigger_status in (:taskStatusList)");
         if (Objects.nonNull(condition.getLastExecuteStartTime())) {
             sqlBuilder.append(" and last_execute_time>= :lastExecuteStartTime");
@@ -146,8 +158,10 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
 
     @Override
     public AsyncDownloadTrigger selectByRegisterId(Long registerId) {
+        String sql = MessageFormat
+            .format(SELECT_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
         List<AsyncDownloadTrigger> triggerList = jdbcTemplate
-            .query(SELECT_BY_ID_SQL, new AsyncDownloadTriggerRowMapper(), registerId);
+            .query(sql, new AsyncDownloadTriggerRowMapper(), registerId);
         return CollectionUtils.isNotEmpty(triggerList) ? triggerList.get(0) : null;
     }
 
@@ -170,6 +184,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
 
     @Override
     public int deleteById(Long id) {
-        return jdbcTemplate.update(DELETE_BY_ID_SQL, id);
+        return jdbcTemplate.update(
+            MessageFormat.format(DELETE_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable()), id);
     }
 }

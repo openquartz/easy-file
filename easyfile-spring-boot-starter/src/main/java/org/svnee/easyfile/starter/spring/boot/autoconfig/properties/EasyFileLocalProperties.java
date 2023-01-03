@@ -14,32 +14,16 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = EasyFileLocalProperties.PREFIX)
 public class EasyFileLocalProperties {
 
-    public static final String PREFIX = "easyfile.local.datasource";
+    public static final String PREFIX = "easyfile.local";
 
     /**
-     * type
+     * 数据源连接配置
      */
-    private String type;
+    private EasyFileDataSourceProperties datasource;
 
     /**
-     * jdbcUrl
+     * 表配置
      */
-    private String url;
-
-    /**
-     * driver-class-name
-     */
-    private String driverClassName;
-
-    /**
-     * username
-     */
-    private String username;
-
-    /**
-     * password
-     */
-    private String password;
-
+    private EasyFileTableProperties table;
 
 }
