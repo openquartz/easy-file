@@ -35,7 +35,6 @@ public interface ExcelIntensifierExecutor {
         }
         enhanceExcel().stream()
             .filter(e -> e.enable(context))
-            .sorted(Comparator.comparingInt(o -> o.order(context)))
             .forEach(k -> k.enhance(workbook, context));
     }
 

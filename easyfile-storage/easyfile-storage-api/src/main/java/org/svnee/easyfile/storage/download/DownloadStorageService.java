@@ -1,6 +1,5 @@
 package org.svnee.easyfile.storage.download;
 
-import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
@@ -9,7 +8,6 @@ import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
-import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**

@@ -10,15 +10,6 @@ import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 public interface ExcelIntensifier {
 
     /**
-     * 顺序
-     * @param context context
-     * @return int
-     */
-    default int order(BaseDownloaderRequestContext context){
-        return Integer.MAX_VALUE;
-    }
-
-    /**
      * 是否启动
      * @param context context
      * @return 是否启用
