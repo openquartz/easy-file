@@ -16,7 +16,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.svnee.easyfile.common.util.IpUtil;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.RocketMqAsyncHandlerProperties;
 
 /**
