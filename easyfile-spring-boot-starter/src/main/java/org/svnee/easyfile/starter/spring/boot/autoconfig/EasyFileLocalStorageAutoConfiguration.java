@@ -162,7 +162,7 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         EasyFileTableGeneratorSupplier.setPrefix(easyFileLocalProperties.getTable().getPrefix());
     }
 }
