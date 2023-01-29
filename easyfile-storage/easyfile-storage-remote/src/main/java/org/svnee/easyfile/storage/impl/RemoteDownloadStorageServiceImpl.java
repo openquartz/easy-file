@@ -145,6 +145,9 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
 
     @Override
     public void refreshExecuteProgress(Long registerId, Integer executeProcess) {
+        if (executeProcess <= 0) {
+            return;
+        }
         easyFileClient.refreshExecuteProcess(registerId, executeProcess);
     }
 

@@ -111,8 +111,8 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
                         ExcelExports.writeData(excelBean, fieldList, pair.getValue(), sheetGroup.toString());
                     }
                     // 执行进度
-                    int executeProcess =
-                        (i + 1) / totalPage * ((j + 1) / sheetGroupList.size()) * Constants.FULL_PROCESS;
+                    int executeProcess = (int) (((i + 1) / (totalPage * Constants.DOUBLE_ONE))
+                        * ((j + 1) / (sheetGroupList.size() * Constants.DOUBLE_ONE)) * Constants.FULL_PROCESS);
                     ExecuteProcessProbe.report(executeProcess);
                 }
             }

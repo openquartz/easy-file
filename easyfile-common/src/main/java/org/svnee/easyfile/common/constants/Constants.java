@@ -138,5 +138,9 @@ public final class Constants {
      */
     public static final Integer FULL_PROCESS = 100;
 
+    /**
+     * ONE
+     */
+    public static final double DOUBLE_ONE = 1.0;
 
 }

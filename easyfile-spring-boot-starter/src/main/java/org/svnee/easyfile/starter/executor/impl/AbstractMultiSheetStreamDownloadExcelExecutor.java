@@ -109,7 +109,9 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
                         tempList.clear();
                     }
                     // 上报进度
-                    ExecuteProcessProbe.report((j + 1) / sheetGroupList.size() * Constants.FULL_PROCESS);
+                    ExecuteProcessProbe
+                        .report(
+                            (int) ((j + 1) / (sheetGroupList.size() * Constants.DOUBLE_ONE) * Constants.FULL_PROCESS));
                 }
                 excelBean.logExportInfo(log);
                 // 增强

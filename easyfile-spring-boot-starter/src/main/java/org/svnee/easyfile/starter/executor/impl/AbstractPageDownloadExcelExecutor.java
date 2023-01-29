@@ -14,6 +14,7 @@ import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
+import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.common.util.PageUtil;
 import org.svnee.easyfile.starter.executor.PageShardingDownloadExecutor;
@@ -85,7 +86,8 @@ public abstract class AbstractPageDownloadExcelExecutor<T>
                     ExcelExports.writeData(excelBean, fieldList, pair.getValue(), sheetPrefix());
                 }
                 // 上报进度
-                int executeProcess = (i + 1) / totalPage * 100;
+                double process = (i + 1) / (totalPage * Constants.DOUBLE_ONE);
+                int executeProcess = (int) (process * Constants.FULL_PROCESS);
                 ExecuteProcessProbe.report(executeProcess);
             }
             excelBean.logExportInfo(log);
