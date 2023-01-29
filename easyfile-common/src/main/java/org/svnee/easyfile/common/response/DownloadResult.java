@@ -57,6 +57,11 @@ public class DownloadResult extends ExportResult {
     private Integer downloadNum;
 
     /**
+     * 执行进度
+     */
+    private Integer executeProcess;
+
+    /**
      * 更新人
      */
     private String updateBy;

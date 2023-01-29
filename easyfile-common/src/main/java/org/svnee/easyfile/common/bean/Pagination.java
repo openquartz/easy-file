@@ -20,6 +20,10 @@ public class Pagination<T> implements Serializable {
     public Pagination() {
     }
 
+    public static <T> Pagination<T> empty() {
+        return new Pagination<>();
+    }
+
     public Long getPage() {
         if (this.page == null || this.page.compareTo(1L) < 0) {
             this.page = 1L;

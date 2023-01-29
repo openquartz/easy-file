@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
+import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
@@ -128,5 +129,30 @@ public class DownloadController {
         ExportResult exportResult = asyncDownloadService.loadingExportCacheResult(request);
         return ResponseResult.ok(exportResult);
     }
+
+    /**
+     * 重置执行进度
+     *
+     * @param registerId 注册ID
+     * @return 重置结果
+     */
+    @PostMapping("/restExecuteProcess")
+    public ResponseResult<?> restExecuteProcess(@RequestBody @Valid Long registerId) {
+        asyncDownloadService.resetExecuteProcess(registerId);
+        return ResponseResult.ok();
+    }
+
+    /**
+     * 刷新执行进度
+     *
+     * @param request 请求
+     * @return 刷新结果
+     */
+    @PostMapping("/refreshExecuteProcess")
+    public ResponseResult<?> refreshExecuteProcess(@RequestBody @Valid RefreshExecuteProcessRequest request) {
+        asyncDownloadService.refreshExecuteProcess(request.getRegisterId(), request.getExecuteProcess());
+        return ResponseResult.ok();
+    }
+
 
 }

@@ -127,6 +127,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             EnableStatusEnum.ENABLE.getCode() : EnableStatusEnum.DISABLE.getCode());
         downloadRecord.setNotifyEmail(request.getNotifier().getEmail());
         downloadRecord.setVersion(Constants.DATA_INIT_VERSION);
+        downloadRecord.setExecuteProcess(0);
         downloadRecord.setMaxServerRetry(request.getMaxServerRetry());
         downloadRecord.setCurrentRetry(0);
         downloadRecord.setDownloadNum(0);
@@ -471,4 +472,13 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         return uploadInfoChangeCondition;
     }
 
+    @Override
+    public void resetExecuteProcess(Long registerId) {
+        asyncDownloadRecordMapper.resetExecuteProcess(registerId);
+    }
+
+    @Override
+    public void refreshExecuteProcess(Long registerId, Integer executeProcess) {
+        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess);
+    }
 }

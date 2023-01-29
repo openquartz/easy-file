@@ -30,6 +30,7 @@ public final class AsyncDownloadRecordConverter {
         } else {
             downloadResult.setFileUrl(downloadRecord.getFileUrl());
         }
+        downloadResult.setExecuteProcess(downloadRecord.getExecuteProcess());
         downloadResult.setExportTime(downloadRecord.getCreateTime());
         downloadResult.setLastExecuteTime(downloadRecord.getLastExecuteTime());
         downloadResult.setInvalidTime(downloadRecord.getInvalidTime());

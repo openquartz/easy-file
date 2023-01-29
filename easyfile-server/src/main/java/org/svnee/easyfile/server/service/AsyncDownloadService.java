@@ -94,4 +94,19 @@ public interface AsyncDownloadService {
      * @return 导出结果
      */
     ExportResult loadingExportCacheResult(LoadingExportCacheRequest request);
+
+    /**
+     * 重置执行进度
+     *
+     * @param registerId 注册ID
+     */
+    void resetExecuteProcess(Long registerId);
+
+    /**
+     * 刷新执行进度
+     *
+     * @param registerId 注册ID
+     * @param executeProcess 执行进度
+     */
+    void refreshExecuteProcess(Long registerId, Integer executeProcess);
 }

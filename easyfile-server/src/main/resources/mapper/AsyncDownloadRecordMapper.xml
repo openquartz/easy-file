@@ -22,6 +22,7 @@
         <result column="error_msg" property="errorMsg"/>
         <result column="last_execute_time" property="lastExecuteTime"/>
         <result column="invalid_time" property="invalidTime"/>
+        <result column="execute_process" property="executeProcess"/>
         <result column="version" property="version"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -32,7 +33,7 @@
     <sql id="Base_Column_List">
     id, download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,
     download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,
-    invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by
+    invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by
   </sql>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -220,6 +221,7 @@
             <if test="lastExecuteTime!=null">last_execute_time,</if>
             <if test="invalidTime!=null">invalid_time,</if>
             <if test="downloadNum!=null">download_num,</if>
+            <if test="executeProcess != null">execute_process,</if>
             <if test="version!=null">version,</if>
             <if test="createTime!=null">create_time,</if>
             <if test="updateTime!=null">update_time,</if>
@@ -246,6 +248,7 @@
             <if test="lastExecuteTime!=null">#{lastExecuteTime},</if>
             <if test="invalidTime!=null">#{invalidTime},</if>
             <if test="downloadNum!=null">#{downloadNum},</if>
+            <if test="executeProcess != null">#{executeProcess},</if>
             <if test="version!=null">#{version},</if>
             <if test="createTime!=null">#{createTime},</if>
             <if test="updateTime!=null">#{updateTime},</if>
@@ -277,4 +280,17 @@
         order by update_time desc
         limit #{offset}
     </select>
+
+    <update id="resetExecuteProcess">
+        update ef_async_download_record
+        set execute_process = 0
+        where id =  #{id}
+    </update>
+
+    <update id="refreshExecuteProcess">
+        update ef_async_download_record
+        set execute_process = #{executeProcess}
+        where id =  #{id}
+        and <![CDATA[execute_process < #{executeProcess}]]>
+    </update>
 </mapper>

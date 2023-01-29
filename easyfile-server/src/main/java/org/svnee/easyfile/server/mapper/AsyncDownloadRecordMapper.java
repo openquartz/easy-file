@@ -124,4 +124,20 @@ public interface AsyncDownloadRecordMapper {
     List<AsyncDownloadRecord> listByTaskIdAndStatus(@Param("downloadTaskId") Long downloadTaskId,
         @Param("uploadStatus") UploadStatusEnum uploadStatus, @Param("offset") int offset);
 
+    /**
+     * 重置执行进度
+     *
+     * @param id ID
+     * @return affect
+     */
+    int resetExecuteProcess(@Param("id") Long id);
+
+    /**
+     * 刷新执行进度
+     *
+     * @param id id
+     * @param executeProcess 执行进度
+     * @return affect row
+     */
+    int refreshExecuteProcess(@Param("id") Long id, @Param("executeProcess") Integer executeProcess);
 }
