@@ -15,11 +15,13 @@ import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
+import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.common.util.PageUtil;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
+import org.svnee.easyfile.starter.executor.process.ExecuteProcessProbe;
 
 /**
  * 多sheet分割导出
@@ -84,8 +86,9 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
             List<ExcelFiled> fieldList = ExcelBeanUtils
                 .getExcelFiledByGroup(GenericUtils.getClassT(this, 0), exportGroup(context));
 
-            for (G sheetGroup : sheetGroupList) {
+            for (int j = 0; j < sheetGroupList.size(); j++) {
                 PageTotal total;
+                G sheetGroup = sheetGroupList.get(j);
                 if (PageTotalContext.currentPageToTal(sheetGroup) != null) {
                     total = PageTotalContext.currentPageToTal(sheetGroup);
                 } else {
@@ -107,8 +110,13 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
                         cursorId = pair.getKey();
                         ExcelExports.writeData(excelBean, fieldList, pair.getValue(), sheetGroup.toString());
                     }
+                    // 执行进度
+                    int executeProcess =
+                        (i + 1) / totalPage * ((j + 1) / sheetGroupList.size()) * Constants.FULL_PROCESS;
+                    ExecuteProcessProbe.report(executeProcess);
                 }
             }
+
             excelBean.logExportInfo(log);
             // 增强Excel
             executeEnhance(excelBean.getWorkbook(), context);

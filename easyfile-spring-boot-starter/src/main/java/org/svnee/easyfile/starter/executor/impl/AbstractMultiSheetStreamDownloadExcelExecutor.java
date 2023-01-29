@@ -12,10 +12,12 @@ import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.bean.excel.ExcelBeanUtils;
 import org.svnee.easyfile.common.bean.excel.ExcelExports;
 import org.svnee.easyfile.common.bean.excel.ExcelFiled;
+import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.GenericUtils;
 import org.svnee.easyfile.starter.executor.StreamDownloadExecutor;
 import org.svnee.easyfile.starter.executor.excel.ExcelIntensifierExecutor;
+import org.svnee.easyfile.starter.executor.process.ExecuteProcessProbe;
 
 /**
  * 多Sheet流式导出
@@ -81,7 +83,8 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
             S session = openSession();
             R iterable = null;
             try {
-                for (G sheetGroup : sheetGroupList) {
+                for (int j = 0; j < sheetGroupList.size(); j++) {
+                    G sheetGroup = sheetGroupList.get(j);
                     // 设置表头header
                     ExcelExports.writeHeader(excelBean, fieldList, sheetGroup.toString());
 
@@ -105,6 +108,8 @@ public abstract class AbstractMultiSheetStreamDownloadExcelExecutor<S extends Cl
                         // 清除临时数据
                         tempList.clear();
                     }
+                    // 上报进度
+                    ExecuteProcessProbe.report((j + 1) / sheetGroupList.size() * Constants.FULL_PROCESS);
                 }
                 excelBean.logExportInfo(log);
                 // 增强
