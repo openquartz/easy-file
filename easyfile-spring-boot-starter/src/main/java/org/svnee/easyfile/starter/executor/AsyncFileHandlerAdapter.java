@@ -1,4 +1,4 @@
-package org.svnee.easyfile.starter.executor.impl;
+package org.svnee.easyfile.starter.executor;
 
 import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
@@ -37,11 +37,8 @@ import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.starter.exception.GenerateFileErrorCode;
 import org.svnee.easyfile.starter.exception.GenerateFileException;
-import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
-import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.executor.bean.GenerateFileResult;
 import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
-import org.svnee.easyfile.starter.executor.process.ExecuteProcessProbe;
 import org.svnee.easyfile.starter.executor.process.ExecuteProcessReporterImpl;
 import org.svnee.easyfile.starter.intercept.DownloadExecutorInterceptor;
 import org.svnee.easyfile.starter.intercept.ExecutorInterceptorSupport;

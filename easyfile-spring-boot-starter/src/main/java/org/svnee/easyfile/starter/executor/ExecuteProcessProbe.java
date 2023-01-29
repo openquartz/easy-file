@@ -1,7 +1,8 @@
-package org.svnee.easyfile.starter.executor.process;
+package org.svnee.easyfile.starter.executor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
+import org.svnee.easyfile.starter.executor.process.ExecuteProcessReporter;
 
 /**
  * 执行进度探针
@@ -22,14 +23,14 @@ public final class ExecuteProcessProbe {
      *
      * @param reporter reporter
      */
-    public static void setCurrentReporter(ExecuteProcessReporter reporter) {
+    protected static void setCurrentReporter(ExecuteProcessReporter reporter) {
         CURRENT_REPORTER.set(reporter);
     }
 
     /**
      * clear
      */
-    public static void clear() {
+    protected static void clear() {
         try {
             if (CURRENT_REPORTER.get() != null) {
                 CURRENT_REPORTER.remove();

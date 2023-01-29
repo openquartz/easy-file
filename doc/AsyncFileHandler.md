@@ -5,7 +5,7 @@
 
 异步文件处理器提供了适配器，需要实现`org.svnee.easyfile.starter.executor.BaseAsyncFileHandler`
 
-系统针对 提供了默认的适配器实现，只需要继承(`org.svnee.easyfile.starter.executor.impl.AsyncFileHandlerAdapter`)，并提供对应的自定义的实现即可。
+系统针对 提供了默认的适配器实现，只需要继承(`org.svnee.easyfile.starter.executor.AsyncFileHandlerAdapter`)，并提供对应的自定义的实现即可。
 
 系统提供了三种触发方式(线程池、DB-Schedule、DB-MQ)
 

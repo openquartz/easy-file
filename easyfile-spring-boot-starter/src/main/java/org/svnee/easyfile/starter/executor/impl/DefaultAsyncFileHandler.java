@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.starter.executor.AsyncFileHandlerAdapter;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncHandlerThreadPoolProperties;

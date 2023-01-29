@@ -10,6 +10,7 @@ import org.svnee.easyfile.common.request.DownloadTriggerRequest;
 import org.svnee.easyfile.common.response.DownloadTriggerEntry;
 import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
 import org.svnee.easyfile.common.util.SpringContextUtil;
+import org.svnee.easyfile.starter.executor.AsyncFileHandlerAdapter;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.processor.FileExportExecutorSupport;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.DatabaseAsyncHandlerProperties;
