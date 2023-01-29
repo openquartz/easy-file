@@ -32,6 +32,10 @@ public class ExecuteProcessReporterImpl implements ExecuteProcessReporter {
 
     @Override
     public void report(Integer executeProcess) {
+        if (log.isDebugEnabled()) {
+            log.debug("[ExecuteProcessReporterImpl#report] registerId:{},executeProcess:{}", registerId,
+                executeProcess);
+        }
         try {
             downloadStorageService.refreshExecuteProgress(registerId, executeProcess);
         } catch (Exception ex) {
