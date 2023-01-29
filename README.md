@@ -54,6 +54,7 @@ EasyFile 是一个大文件导出的解决方案。用于解决大文件导出�
 1、使用全量查出100w数据+EasyExcel导出(`org.svnee.easyfile.example.downloader.StudentDownloadDemoExecutor`)
 内存图：
 ![全量导出+EasyExcel](./doc/image/FullDownloadMemory.png)
+
 2、使用分页导出(`org.svnee.easyfile.example.downloader.StudentPageDownloadDemoExecutor`)
 内存图
 ![分页导出](./doc/image/PageDownloadMemory.png)
