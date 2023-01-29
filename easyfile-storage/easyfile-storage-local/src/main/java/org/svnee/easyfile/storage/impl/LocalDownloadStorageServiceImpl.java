@@ -228,6 +228,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         downloadRecord.setLastExecuteTime(new Date());
         downloadRecord.setInvalidTime(new Date());
         downloadRecord.setDownloadNum(0);
+        downloadRecord.setExecuteProcess(0);
         downloadRecord.setVersion(Constants.DATA_INIT_VERSION);
         downloadRecord.setCreateTime(new Date());
         downloadRecord.setUpdateTime(new Date());
@@ -340,5 +341,15 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
         baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
         return baseDownloaderRequestContext;
+    }
+
+    @Override
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess) {
+        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess);
+    }
+
+    @Override
+    public void resetExecuteProcess(Long registerId) {
+        asyncDownloadRecordMapper.resetExecuteProcess(registerId);
     }
 }

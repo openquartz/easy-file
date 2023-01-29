@@ -78,4 +78,19 @@ public interface DownloadStorageService {
      * @return 下载请求信息
      */
     DownloadRequestInfo getRequestInfoByRegisterId(Long registerId);
+
+    /**
+     * 更新执行进度
+     *
+     * @param registerId 注册ID
+     * @param executeProcess 执行进度
+     */
+    void refreshExecuteProgress(Long registerId, Integer executeProcess);
+
+    /**
+     * 重置执行进度
+     *
+     * @param registerId registerId
+     */
+    void resetExecuteProcess(Long registerId);
 }

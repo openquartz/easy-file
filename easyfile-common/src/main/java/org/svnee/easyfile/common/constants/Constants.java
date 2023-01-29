@@ -133,5 +133,10 @@ public final class Constants {
      */
     public static final String EASY_FILE_SENDER = "EasyFileSender";
 
+    /**
+     * 全进度
+     */
+    public static final Integer FULL_PROCESS = 100;
+
 
 }

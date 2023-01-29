@@ -69,7 +69,7 @@ public interface EasyFileClient {
      * @return 导出结果
      */
     ResponseResult<Pagination<DownloadResult>> listExportResult(ListDownloadResultRequest request);
-    
+
     /**
      * 下载
      *
@@ -101,4 +101,21 @@ public interface EasyFileClient {
      * @return 下载请求信息
      */
     ResponseResult<DownloadRequestInfo> getRequestInfoByRegisterId(Long registerId);
+
+    /**
+     * 重置执行进度
+     *
+     * @param registerId 注册ID
+     * @return response
+     */
+    ResponseResult<?> resetExecuteProcess(Long registerId);
+
+    /**
+     * 刷新执行进度
+     *
+     * @param registerId 注册ID
+     * @param executeProcess 执行进度
+     * @return response
+     */
+    ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess);
 }

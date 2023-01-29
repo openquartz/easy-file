@@ -133,6 +133,12 @@ public class AsyncDownloadRecord {
     private Integer downloadNum;
 
     /**
+     * 执行进度
+     */
+    @Column(name = "execute_process")
+    private Integer executeProcess;
+
+    /**
      * 版本号
      */
     @Column(name = "version")

@@ -35,21 +35,23 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     private static final String INSERT_SQL =
         "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String FIND_BY_ID_SQL =
         "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from {0} where id = ?";
+            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} where id = ?";
 
     private static final String REFRESH_UPLOAD_STATUS_SQL = "update {0} set upload_status = ?,update_by = ? where id = ? AND upload_status = ?";
 
     private static final String UPDATE_DOWNLOAD_SQL = "update {0} set download_num = download_num + 1 where id = ? and upload_status = ?";
 
+    private static final String UPDATE_EXECUTE_PROCESS_SQL = "update {0} set execute_process = ? where id = ? and execute_process < ? ";
+
     private static final String LIST_SQL =
         "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg, version, create_time, update_time, create_by, update_by from {0} "
+            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} "
             + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
 
     @Override
@@ -78,11 +80,12 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             ps.setTimestamp(16, new Timestamp(downloadRecord.getInvalidTime().getTime()));
             ps.setString(17, downloadRecord.getExecuteParam());
             ps.setString(18, downloadRecord.getErrorMsg());
-            ps.setInt(19, downloadRecord.getVersion());
-            ps.setDate(20, new Date(downloadRecord.getCreateTime().getTime()));
-            ps.setDate(21, new Date(downloadRecord.getUpdateTime().getTime()));
-            ps.setString(22, downloadRecord.getCreateBy());
-            ps.setString(23, downloadRecord.getUpdateBy());
+            ps.setInt(19, downloadRecord.getExecuteProcess());
+            ps.setInt(20, downloadRecord.getVersion());
+            ps.setDate(21, new Date(downloadRecord.getCreateTime().getTime()));
+            ps.setDate(22, new Date(downloadRecord.getUpdateTime().getTime()));
+            ps.setString(23, downloadRecord.getCreateBy());
+            ps.setString(24, downloadRecord.getUpdateBy());
             return ps;
         }, keyHolder);
 
@@ -187,6 +190,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             downloadRecord.setLastExecuteTime(rs.getDate("last_execute_time"));
             downloadRecord.setInvalidTime(rs.getDate("invalid_time"));
             downloadRecord.setDownloadNum(rs.getInt("download_num"));
+            downloadRecord.setExecuteProcess(rs.getInt("execute_process"));
             downloadRecord.setVersion(rs.getInt("version"));
             downloadRecord.setCreateTime(rs.getDate("create_time"));
             downloadRecord.setUpdateTime(rs.getDate("update_time"));
@@ -194,5 +198,19 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             downloadRecord.setUpdateBy(rs.getString("update_by"));
             return downloadRecord;
         }
+    }
+
+    @Override
+    public int refreshExecuteProcess(Long registerId, Integer executeProcess) {
+        String sql = MessageFormat
+            .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+        return jdbcTemplate.update(sql, executeProcess, registerId, executeProcess);
+    }
+
+    @Override
+    public int resetExecuteProcess(Long registerId) {
+        String sql = MessageFormat
+            .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+        return jdbcTemplate.update(sql, 0, registerId, 100);
     }
 }

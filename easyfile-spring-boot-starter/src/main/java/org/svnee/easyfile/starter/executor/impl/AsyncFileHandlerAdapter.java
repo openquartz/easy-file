@@ -41,6 +41,8 @@ import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
 import org.svnee.easyfile.starter.executor.bean.GenerateFileResult;
 import org.svnee.easyfile.starter.executor.bean.HandleFileResult;
+import org.svnee.easyfile.starter.executor.process.ExecuteProcessProbe;
+import org.svnee.easyfile.starter.executor.process.ExecuteProcessReporterImpl;
 import org.svnee.easyfile.starter.intercept.DownloadExecutorInterceptor;
 import org.svnee.easyfile.starter.intercept.ExecutorInterceptorSupport;
 import org.svnee.easyfile.starter.intercept.InterceptorContext;
@@ -236,14 +238,26 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         }
         if (!handleBreakFlag) {
             try (OutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
+
+                //report execute-process
+                ExecuteProcessReporterImpl reporter = new ExecuteProcessReporterImpl(registerId,
+                    downloadStorageService);
+                ExecuteProcessProbe.setCurrentReporter(reporter);
+                reporter.start();
+
                 DownloaderRequestContext requestContext = buildRequestDownloaderRequest(out, baseRequest);
                 executor.export(requestContext);
+
+                // report complete
+                reporter.complete();
             } catch (Exception exception) {
                 logger.error("[AbstractAsyncFileHandlerAdapter#handle] execute file error,downloadCode:{}",
                     exportExecutor.value(),
                     exception);
                 errorMsgJoiner.add("导出文件逻辑异常:" + exception.getMessage());
                 handleBreakFlag = true;
+            } finally {
+                ExecuteProcessProbe.clear();
             }
         }
         // 执行文件压缩

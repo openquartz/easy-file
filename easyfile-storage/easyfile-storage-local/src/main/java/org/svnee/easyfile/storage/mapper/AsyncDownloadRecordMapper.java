@@ -66,4 +66,21 @@ public interface AsyncDownloadRecordMapper {
      * @return 异步导出下载记录
      */
     List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus, Integer offset);
+
+    /**
+     * 刷新执行进度
+     *
+     * @param registerId 注册ID
+     * @param executeProcess 执行进度
+     * @return affect row
+     */
+    int refreshExecuteProcess(Long registerId, Integer executeProcess);
+
+    /**
+     * 重置执行进度
+     *
+     * @param registerId 注册ID
+     * @return affect row
+     */
+    int resetExecuteProcess(Long registerId);
 }

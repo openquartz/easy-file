@@ -142,4 +142,14 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
         Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
         return responseResult.getData();
     }
+
+    @Override
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess) {
+        easyFileClient.refreshExecuteProcess(registerId, executeProcess);
+    }
+
+    @Override
+    public void resetExecuteProcess(Long registerId) {
+        easyFileClient.resetExecuteProcess(registerId);
+    }
 }

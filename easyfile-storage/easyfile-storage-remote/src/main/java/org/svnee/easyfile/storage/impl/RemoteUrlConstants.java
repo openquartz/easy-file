@@ -29,4 +29,8 @@ public final class RemoteUrlConstants {
     public static final String LOADING_EXPORT_CACHE_RESULT_URL = "/easyfile/download/loadingCache";
 
     public static final String GET_REQUEST_INFO_RESULT_URL = "/easyfile/download/getRequestInfo";
+
+    public static final String RESET_EXECUTE_PROCESS_URL = "/easyfile/download/restExecuteProcess";
+
+    public static final String REFRESH_EXECUTE_PROCESS_URL = "/easyfile/download/refreshExecuteProcess";
 }

@@ -11,6 +11,7 @@ import org.svnee.easyfile.common.request.EnableRunningRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
+import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
@@ -85,5 +86,18 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     public ResponseResult<DownloadRequestInfo> getRequestInfoByRegisterId(Long registerId) {
         return httpAgent
             .httpPost(RemoteUrlConstants.GET_REQUEST_INFO_RESULT_URL, registerId, DownloadRequestInfo.class);
+    }
+
+    @Override
+    public ResponseResult<?> resetExecuteProcess(Long registerId) {
+        return httpAgent.httpPost(RemoteUrlConstants.RESET_EXECUTE_PROCESS_URL, registerId);
+    }
+
+    @Override
+    public ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess) {
+        RefreshExecuteProcessRequest processRequest = new RefreshExecuteProcessRequest();
+        processRequest.setRegisterId(registerId);
+        processRequest.setExecuteProcess(executeProcess);
+        return httpAgent.httpPost(RemoteUrlConstants.REFRESH_EXECUTE_PROCESS_URL, processRequest);
     }
 }
