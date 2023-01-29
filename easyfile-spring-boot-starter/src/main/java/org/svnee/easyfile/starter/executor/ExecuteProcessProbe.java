@@ -46,11 +46,8 @@ public final class ExecuteProcessProbe {
      * @param executeProcess 执行进度
      */
     public static void report(Integer executeProcess) {
-        if (executeProcess <= 0) {
+        if (executeProcess <= 0 || CURRENT_REPORTER.get() == null) {
             return;
-        }
-        if (CURRENT_REPORTER.get() == null) {
-            throw new IllegalArgumentException("current reporter not exist!");
         }
         CURRENT_REPORTER.get().report(executeProcess);
     }

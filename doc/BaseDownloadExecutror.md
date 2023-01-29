@@ -313,3 +313,8 @@ easyfile.download.excel-row-access-window-size=100
 ![分页导出内存消耗情况](image/PageExport.png) \
 使用流式导出CPU/内存情况 \
 ![流式导出内存消耗情况](image/StreamExport.png)
+
+#### 异步导出执行进度支持
+
+针对异步导出大文件时,可以进行实时的上报执行进度。入口`org.svnee.easyfile.starter.executor.ExecuteProcessProbe.report`
+针对使用默认的流式导出和分页导出已经支持自动上报进度。 如果自定义实现基础类(`org.svnee.easyfile.starter.executor.BaseDownloadExecutor`)时,需要用户调用执行进度接口上报执行进度。
