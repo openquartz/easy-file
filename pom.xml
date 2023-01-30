@@ -15,6 +15,7 @@
         <module>easyfile-spring-boot-starter</module>
         <module>easyfile-storage</module>
         <module>easyfile-example</module>
+        <module>easyfile-metrics</module>
     </modules>
 
     <name>${project.artifactId}</name>
