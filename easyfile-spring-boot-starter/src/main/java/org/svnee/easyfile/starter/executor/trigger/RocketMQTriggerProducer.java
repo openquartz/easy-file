@@ -31,6 +31,7 @@ public class RocketMQTriggerProducer implements MQTriggerProducer {
         Message message = new Message();
         message.setBody(JSONUtil.toJsonAsBytes(triggerMessage));
         message.setTopic(topic);
+        message.setKeys(String.valueOf(triggerMessage.getRegisterId()));
         SendResult result;
         try {
             result = producer.send(message, properties.getProduceTimeout());
