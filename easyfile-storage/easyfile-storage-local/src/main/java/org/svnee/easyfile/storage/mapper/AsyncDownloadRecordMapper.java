@@ -72,9 +72,10 @@ public interface AsyncDownloadRecordMapper {
      *
      * @param registerId 注册ID
      * @param executeProcess 执行进度
+     * @param nextStatus 下一个状态
      * @return affect row
      */
-    int refreshExecuteProcess(Long registerId, Integer executeProcess);
+    int refreshExecuteProcess(Long registerId, Integer executeProcess, UploadStatusEnum nextStatus);
 
     /**
      * 重置执行进度

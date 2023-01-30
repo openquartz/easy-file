@@ -137,7 +137,10 @@ public interface AsyncDownloadRecordMapper {
      *
      * @param id id
      * @param executeProcess 执行进度
+     * @param nextUploadStatus 下一个状态
      * @return affect row
      */
-    int refreshExecuteProcess(@Param("id") Long id, @Param("executeProcess") Integer executeProcess);
+    int refreshExecuteProcess(@Param("id") Long id,
+        @Param("executeProcess") Integer executeProcess,
+        @Param("nextUploadStatus") UploadStatusEnum nextUploadStatus);
 }

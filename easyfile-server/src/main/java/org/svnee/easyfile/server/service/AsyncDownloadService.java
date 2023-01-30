@@ -2,6 +2,7 @@ package org.svnee.easyfile.server.service;
 
 import java.util.List;
 import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
@@ -108,5 +109,6 @@ public interface AsyncDownloadService {
      * @param registerId 注册ID
      * @param executeProcess 执行进度
      */
-    void refreshExecuteProcess(Long registerId, Integer executeProcess);
+    void refreshExecuteProcess(Long registerId, Integer executeProcess,
+        UploadStatusEnum nextUploadStatus);
 }

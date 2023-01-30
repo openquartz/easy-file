@@ -289,8 +289,9 @@
 
     <update id="refreshExecuteProcess">
         update ef_async_download_record
-        set execute_process = #{executeProcess}
+        set execute_process = #{executeProcess},
+        upload_status = #{nextUploadStatus.code}
         where id =  #{id}
-        and <![CDATA[execute_process < #{executeProcess}]]>
+        and <![CDATA[execute_process <= #{executeProcess}]]>
     </update>
 </mapper>

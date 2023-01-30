@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.download;
 
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -84,8 +85,9 @@ public interface DownloadStorageService {
      *
      * @param registerId 注册ID
      * @param executeProcess 执行进度
+     * @param nextUploadStatus 下一个状态
      */
-    void refreshExecuteProgress(Long registerId, Integer executeProcess);
+    void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum nextUploadStatus);
 
     /**
      * 重置执行进度

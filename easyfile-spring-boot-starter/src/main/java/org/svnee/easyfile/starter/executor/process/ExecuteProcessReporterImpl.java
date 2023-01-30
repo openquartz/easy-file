@@ -2,6 +2,7 @@ package org.svnee.easyfile.starter.executor.process;
 
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.constants.Constants;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**
@@ -37,7 +38,11 @@ public class ExecuteProcessReporterImpl implements ExecuteProcessReporter {
                 executeProcess);
         }
         try {
-            downloadStorageService.refreshExecuteProgress(registerId, executeProcess);
+            UploadStatusEnum nextStatus = UploadStatusEnum.EXECUTING;
+            if (executeProcess.compareTo(Constants.FULL_PROCESS) == 0) {
+                nextStatus = UploadStatusEnum.UPLOADING;
+            }
+            downloadStorageService.refreshExecuteProgress(registerId, executeProcess, nextStatus);
         } catch (Exception ex) {
             log.error("[ExecuteProcessReporterImpl#report] report-error!,registerId:{},executeProcess:{}", registerId,
                 executeProcess, ex);
@@ -47,7 +52,8 @@ public class ExecuteProcessReporterImpl implements ExecuteProcessReporter {
     @Override
     public void complete() {
         try {
-            downloadStorageService.refreshExecuteProgress(registerId, Constants.FULL_PROCESS);
+            downloadStorageService
+                .refreshExecuteProgress(registerId, Constants.FULL_PROCESS, UploadStatusEnum.UPLOADING);
         } catch (Exception ex) {
             log.error("[ExecuteProcessReporterImpl#complete] complete-error!,registerId:{}", registerId, ex);
         }

@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -94,10 +95,12 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     }
 
     @Override
-    public ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess) {
+    public ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
+        UploadStatusEnum nextUploadStatus) {
         RefreshExecuteProcessRequest processRequest = new RefreshExecuteProcessRequest();
         processRequest.setRegisterId(registerId);
         processRequest.setExecuteProcess(executeProcess);
+        processRequest.setNextUploadStatus(nextUploadStatus);
         return httpAgent.httpPost(RemoteUrlConstants.REFRESH_EXECUTE_PROCESS_URL, processRequest);
     }
 }

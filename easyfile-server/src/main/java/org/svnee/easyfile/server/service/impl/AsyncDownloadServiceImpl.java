@@ -478,7 +478,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     }
 
     @Override
-    public void refreshExecuteProcess(Long registerId, Integer executeProcess) {
-        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess);
+    public void refreshExecuteProcess(Long registerId, Integer executeProcess,
+        UploadStatusEnum nextUploadStatus) {
+        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess, nextUploadStatus);
     }
 }

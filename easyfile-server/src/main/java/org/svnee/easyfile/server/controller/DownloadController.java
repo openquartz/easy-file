@@ -150,7 +150,8 @@ public class DownloadController {
      */
     @PostMapping("/refreshExecuteProcess")
     public ResponseResult<?> refreshExecuteProcess(@RequestBody @Valid RefreshExecuteProcessRequest request) {
-        asyncDownloadService.refreshExecuteProcess(request.getRegisterId(), request.getExecuteProcess());
+        asyncDownloadService
+            .refreshExecuteProcess(request.getRegisterId(), request.getExecuteProcess(), request.getNextUploadStatus());
         return ResponseResult.ok();
     }
 

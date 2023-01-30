@@ -46,7 +46,9 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     private static final String UPDATE_DOWNLOAD_SQL = "update {0} set download_num = download_num + 1 where id = ? and upload_status = ?";
 
-    private static final String UPDATE_EXECUTE_PROCESS_SQL = "update {0} set execute_process = ? where id = ? and execute_process < ? ";
+    private static final String UPDATE_EXECUTE_PROCESS_SQL = "update {0} set execute_process = ? where id = ? and execute_process <= ? ";
+
+    private static final String UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL = "update {0} set execute_process = ?,upload_status=? where id = ? and execute_process <= ? ";
 
     private static final String LIST_SQL =
         "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
@@ -201,10 +203,11 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     }
 
     @Override
-    public int refreshExecuteProcess(Long registerId, Integer executeProcess) {
+    public int refreshExecuteProcess(Long registerId, Integer executeProcess, UploadStatusEnum nextStatus) {
         String sql = MessageFormat
-            .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
-        return jdbcTemplate.update(sql, executeProcess, registerId, executeProcess);
+            .format(UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL,
+                EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+        return jdbcTemplate.update(sql, executeProcess, nextStatus.getCode(), registerId, executeProcess);
     }
 
     @Override
@@ -213,4 +216,6 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.update(sql, 0, registerId, 100);
     }
+
+
 }

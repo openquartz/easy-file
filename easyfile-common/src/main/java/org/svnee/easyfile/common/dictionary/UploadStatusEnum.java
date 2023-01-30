@@ -20,6 +20,11 @@ public enum UploadStatusEnum implements BaseEnum<String> {
     EXECUTING("executing", "执行中"),
 
     /**
+     * 上传中
+     */
+    UPLOADING("uploading", "上传中"),
+
+    /**
      * 上传成功成功
      */
     SUCCESS("success", "成功"),

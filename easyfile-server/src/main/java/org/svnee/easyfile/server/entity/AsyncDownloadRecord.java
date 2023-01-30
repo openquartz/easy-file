@@ -174,7 +174,9 @@ public class AsyncDownloadRecord {
      * @return 是否已经完成
      */
     public boolean isUploadComplete() {
-        return !(UploadStatusEnum.NONE == uploadStatus || UploadStatusEnum.EXECUTING == uploadStatus);
+        return !(UploadStatusEnum.NONE == uploadStatus
+            || UploadStatusEnum.EXECUTING == uploadStatus
+            || UploadStatusEnum.UPLOADING == uploadStatus);
     }
 
 }

@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.ResponseResult;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
@@ -144,11 +145,11 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     }
 
     @Override
-    public void refreshExecuteProgress(Long registerId, Integer executeProcess) {
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum nextUploadStatus) {
         if (executeProcess <= 0) {
             return;
         }
-        easyFileClient.refreshExecuteProcess(registerId, executeProcess);
+        easyFileClient.refreshExecuteProcess(registerId, executeProcess, nextUploadStatus);
     }
 
     @Override

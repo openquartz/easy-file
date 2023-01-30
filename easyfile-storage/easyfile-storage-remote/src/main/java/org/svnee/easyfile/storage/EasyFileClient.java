@@ -3,6 +3,7 @@ package org.svnee.easyfile.storage;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
+import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -117,5 +118,6 @@ public interface EasyFileClient {
      * @param executeProcess 执行进度
      * @return response
      */
-    ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess);
+    ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
+        UploadStatusEnum nextUploadStatus);
 }

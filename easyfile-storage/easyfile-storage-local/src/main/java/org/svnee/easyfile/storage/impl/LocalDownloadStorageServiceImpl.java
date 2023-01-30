@@ -344,11 +344,11 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     @Override
-    public void refreshExecuteProgress(Long registerId, Integer executeProcess) {
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum uploadStatus) {
         if (executeProcess <= 0) {
             return;
         }
-        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess);
+        asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess, uploadStatus);
     }
 
     @Override
