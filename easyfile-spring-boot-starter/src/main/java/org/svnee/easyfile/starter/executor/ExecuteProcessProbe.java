@@ -6,7 +6,8 @@ import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.starter.executor.process.ExecuteProcessReporter;
 
 /**
- * 执行进度探针
+ * 执行进度探针。导出执行器上报入口
+ *
  * 用于上报 异步下载时的进度。
  * 上报需要注意：由于使用{@link ThreadLocal} 做上下文上报器的传递。所以上报要求必须在执行器当前的主线程中调用{@link #report(Integer)}上报执行。
  *
@@ -22,16 +23,17 @@ public final class ExecuteProcessProbe {
     }
 
     /**
-     * set reporter
+     * set current reporter
+     * 设置当前进度上报器
      *
-     * @param reporter reporter
+     * @param reporter reporter 执行进度上报器
      */
     protected static void setCurrentReporter(ExecuteProcessReporter reporter) {
         CURRENT_REPORTER.set(reporter);
     }
 
     /**
-     * clear
+     * 清空当前上报器
      */
     protected static void clear() {
         try {
