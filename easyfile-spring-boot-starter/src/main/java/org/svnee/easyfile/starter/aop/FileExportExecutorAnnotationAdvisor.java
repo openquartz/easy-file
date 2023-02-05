@@ -2,6 +2,7 @@ package org.svnee.easyfile.starter.aop;
 
 import java.lang.reflect.Method;
 import org.aopalliance.aop.Advice;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -93,7 +94,7 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
     }
 
     @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NotNull BeanFactory beanFactory) throws BeansException {
         if (this.advice instanceof BeanFactoryAware) {
             ((BeanFactoryAware) this.advice).setBeanFactory(beanFactory);
         }
