@@ -94,5 +94,10 @@ EasyFile 提供两种模式
 
 [快速开始](doc/QuickStart.md)
 
+### 推广
 
+If you also think this project has helped you, welcome to sign up for the promotion!
 
+[Click to register as EasyFile user!](https://github.com/svnlab/easy-file/issues/1)
+
+ღ( ´・ᴗ・` )ღ Many thanks to the following registered users. ღ( ´・ᴗ・` )ღ
