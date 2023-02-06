@@ -38,6 +38,7 @@ CREATE TABLE ef_async_download_record
     last_execute_time    DATETIME NULL COMMENT '最新执行时间',
     invalid_time         DATETIME NULL COMMENT '链接失效时间',
     download_num         INT (3) NOT NULL DEFAULT 0 COMMENT '下载次数',
+    execute_process      INT (3) NOT NULL DEFAULT 0 COMMENT '执行进度',
     version              INT (10) NOT NULL DEFAULT 0 COMMENT '版本号',
     create_time          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time          TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

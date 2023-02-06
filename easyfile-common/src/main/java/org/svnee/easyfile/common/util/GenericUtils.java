@@ -8,7 +8,10 @@ import java.lang.reflect.Type;
  *
  * @author svnee
  */
-public class GenericUtils {
+public final class GenericUtils {
+
+    private GenericUtils() {
+    }
 
     /**
      * 获取接口上的泛型T
