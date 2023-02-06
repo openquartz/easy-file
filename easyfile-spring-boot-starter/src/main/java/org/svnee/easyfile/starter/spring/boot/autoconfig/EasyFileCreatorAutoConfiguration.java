@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.starter.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.executor.impl.DefaultDownloadRejectExecutionHandler;
+import org.svnee.easyfile.starter.init.EasyFileInitializingEntrance;
 import org.svnee.easyfile.starter.processor.ApplicationContentPostProcessor;
 import org.svnee.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
@@ -25,6 +26,12 @@ import org.svnee.easyfile.storage.file.local.LocalUploadServiceImpl;
 @EnableConfigurationProperties(EasyFileDownloadProperties.class)
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileCreatorAutoConfiguration {
+
+    @Bean(initMethod = "init", destroyMethod = "destroy")
+    public EasyFileInitializingEntrance easyEventInitializingEntrance(
+        EasyFileDownloadProperties easyFileDownloadProperties) {
+        return new EasyFileInitializingEntrance(easyFileDownloadProperties);
+    }
 
     @Bean
     public EasyFileBeanEnhancePostProcessor fileExportExecutorPostProcessor() {

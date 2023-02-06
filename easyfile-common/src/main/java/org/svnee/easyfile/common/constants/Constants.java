@@ -143,4 +143,14 @@ public final class Constants {
      */
     public static final double DOUBLE_ONE = 1.0;
 
+    /**
+     * The constant LINE_SEPARATOR.
+     */
+    public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    /**
+     * 分割符号
+     */
+    public static final String SLASH_SEPARATOR = "/";
+
 }
