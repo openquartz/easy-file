@@ -65,7 +65,28 @@ public interface UploadService {
 
 将文件上传到自己的文件存储服务
 
-#### 三、额外处理
+#### 三、SpringBoot 启动入口处理
+
+增加注解扫描 `@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})`包在服务的启动入口上
+
+例如：
+
+```java
+/**
+ * @author svnee
+ **/
+@SpringBootApplication
+@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
+@MapperScan("org.svnee.easyfile.example.mapper")
+public class LocalExampleApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(LocalExampleApplication.class);
+    }
+}
+```
+
+#### 四、额外处理
 
 如果是使用Local模式，需要提供Client配置
 
@@ -143,15 +164,15 @@ easyfile.remote.server-addr=127.0.0.1:8080
 easyfile.remote.namespace=remote-example
 ```
 
-#### 四、异步文件处理器
+#### 五、异步文件处理器
 
 [异步文件处理器配置](./AsyncFileHandler.md)
 
-#### 五、实现下载器
+#### 六、实现下载器
 
 [下载器](./BaseDownloadExecutror.md)
 
-#### 六、easyfile-server 部署
+#### 七、easyfile-server 部署
 
 如果使用**Remote模式**时,需要部署easyfile-server服务;
 
