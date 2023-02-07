@@ -8,19 +8,25 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.StringJoiner;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
+import org.svnee.easyfile.storage.mapper.condition.BaseRecordQueryCondition;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
 import org.svnee.easyfile.storage.prop.EasyFileTableGeneratorSupplier;
 
@@ -55,6 +61,13 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
             + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} "
             + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
+
+    private static final String SELECT_ALL_SQL =
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} ";
+
+    private static final String SELECT_COUNT_SQL = "select count(*) from {0}";
 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
@@ -217,5 +230,63 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         return jdbcTemplate.update(sql, 0, registerId, 100);
     }
 
+    @Override
+    public List<AsyncDownloadRecord> selectByCondition(BaseRecordQueryCondition condition) {
+        Pair<String, Map<String, Object>> pair = queryByCondition(condition, SELECT_ALL_SQL);
+        return new NamedParameterJdbcTemplate(jdbcTemplate)
+            .query(pair.getKey(), pair.getValue(), new AsyncDownloadRecordRowMapper());
+    }
 
+    private Pair<String, Map<String, Object>> queryByCondition(BaseRecordQueryCondition condition, String sqlTemplate) {
+        String sql = MessageFormat
+            .format(sqlTemplate, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+
+        StringJoiner conditionWhere = new StringJoiner(" and ");
+        Map<String, Object> paramMap = new HashMap<>(10);
+        if (CollectionUtils.isNotEmpty(condition.getLimitedAppIdList())) {
+            conditionWhere.add("app_id= (:appId)");
+            paramMap.put("appId", condition.getLimitedAppIdList());
+        }
+        if (StringUtils.isNotBlank(condition.getDownloadCode())) {
+            conditionWhere.add("download_code= :downloadCode");
+            paramMap.put("downloadCode", condition.getDownloadCode());
+        }
+        if (StringUtils.isNotBlank(condition.getDownloadOperateBy())) {
+            conditionWhere.add("download_operate_by= :downloadOperateBy");
+            paramMap.put("downloadOperateBy", condition.getDownloadOperateBy());
+        }
+        if (Objects.nonNull(condition.getStartCreateTime())) {
+            conditionWhere.add("create_time>= :startCreateTime");
+            paramMap.put("startCreateTime", condition.getStartCreateTime());
+        }
+        if (Objects.nonNull(condition.getEndCreateTime())) {
+            conditionWhere.add("create_time< :endCreateTime");
+            paramMap.put("endCreateTime", condition.getEndCreateTime());
+        }
+        if (Objects.nonNull(condition.getUploadStatus())) {
+            conditionWhere.add("upload_status= :uploadStatus");
+            paramMap.put("uploadStatus", condition.getUploadStatus().getCode());
+        }
+        if (Objects.nonNull(condition.getMaxInvalidTime())) {
+            conditionWhere.add("invalid_time <= :maxInvalidTime");
+            paramMap.put("maxInvalidTime", condition.getMaxInvalidTime());
+        }
+        if (conditionWhere.length() > 0) {
+            sql = sql + " where " + conditionWhere;
+        }
+        if (Objects.nonNull(condition.getStartOffset())) {
+            sql = sql + " limit :startIndex,:offset";
+            paramMap.put("startIndex", condition.getStartOffset().getKey());
+            paramMap.put("offset", condition.getStartOffset().getValue());
+        }
+        return Pair.of(sql, paramMap);
+    }
+
+    @Override
+    public int countByCondition(BaseRecordQueryCondition condition) {
+        Pair<String, Map<String, Object>> pair = queryByCondition(condition, SELECT_COUNT_SQL);
+        Integer total = new NamedParameterJdbcTemplate(jdbcTemplate)
+            .queryForObject(pair.getKey(), pair.getValue(), Integer.class);
+        return Objects.nonNull(total) ? total : 0;
+    }
 }

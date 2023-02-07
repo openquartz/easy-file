@@ -45,4 +45,12 @@ public interface AsyncDownloadTaskMapper {
      */
     int refreshTaskDesc(Long id, String taskDesc);
 
+    /**
+     * get same unifiedAppId appId
+     *
+     * @param unifiedAppId unifiedAppId
+     * @return appId
+     */
+    List<String> getByUnifiedAppId(String unifiedAppId);
+
 }

@@ -3,6 +3,7 @@ package org.svnee.easyfile.storage.mapper;
 import java.util.List;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
+import org.svnee.easyfile.storage.mapper.condition.BaseRecordQueryCondition;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
 
 /**
@@ -84,4 +85,20 @@ public interface AsyncDownloadRecordMapper {
      * @return affect row
      */
     int resetExecuteProcess(Long registerId);
+
+    /**
+     * get By Condition
+     *
+     * @param condition condition
+     * @return download record
+     */
+    List<AsyncDownloadRecord> selectByCondition(BaseRecordQueryCondition condition);
+
+    /**
+     * count By Condition
+     *
+     * @param condition condition
+     * @return total rows
+     */
+    int countByCondition(BaseRecordQueryCondition condition);
 }

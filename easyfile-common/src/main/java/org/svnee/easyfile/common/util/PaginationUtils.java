@@ -1,4 +1,4 @@
-package org.svnee.easyfile.server.utils;
+package org.svnee.easyfile.common.util;
 
 import java.util.Collections;
 import org.svnee.easyfile.common.bean.Pagination;

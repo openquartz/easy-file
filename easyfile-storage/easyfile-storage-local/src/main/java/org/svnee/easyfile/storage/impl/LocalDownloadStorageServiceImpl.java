@@ -17,6 +17,8 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -28,15 +30,20 @@ import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
+import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.common.util.MapUtils;
+import org.svnee.easyfile.common.util.PageUtil;
+import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.storage.convertor.AsyncDownloadRecordConverter;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTask;
@@ -45,6 +52,7 @@ import org.svnee.easyfile.storage.exception.DownloadStorageErrorCode;
 import org.svnee.easyfile.storage.expand.FileUrlTransformerSupport;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadRecordMapper;
 import org.svnee.easyfile.storage.mapper.AsyncDownloadTaskMapper;
+import org.svnee.easyfile.storage.mapper.condition.BaseRecordQueryCondition;
 import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
 
 /**
@@ -354,5 +362,62 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     @Override
     public void resetExecuteProcess(Long registerId) {
         asyncDownloadRecordMapper.resetExecuteProcess(registerId);
+    }
+
+    @Override
+    public Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request) {
+
+        List<String> appIdList = asyncDownloadTaskMapper.getByUnifiedAppId(request.getUnifiedAppId());
+        if (CollectionUtils.isEmpty(appIdList)) {
+            return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
+        }
+        BaseRecordQueryCondition condition = new BaseRecordQueryCondition();
+        if (CollectionUtils.isEmpty(request.getLimitedAppIdList())) {
+            condition.setLimitedAppIdList(appIdList);
+        } else {
+            List<String> intersectionList = (List<String>) CollectionUtils
+                .intersection(appIdList, request.getLimitedAppIdList());
+            if (CollectionUtils.isEmpty(intersectionList)) {
+                return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
+            }
+            condition.setLimitedAppIdList(intersectionList);
+        }
+        condition.setDownloadCode(request.getDownloadCode());
+        condition.setDownloadOperateBy(request.getDownloadOperateBy());
+        condition.setStartCreateTime(request.getStartDownloadTime());
+        condition.setEndCreateTime(request.getEndDownloadTime());
+        condition.setStartOffset(
+            Pair.of(PageUtil.startIndex(request.getPageNum(), request.getPageSize()), request.getPageSize()));
+
+        int total = asyncDownloadRecordMapper.countByCondition(condition);
+        if (total <= 0) {
+            return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
+        }
+        List<AsyncDownloadRecord> recordList = asyncDownloadRecordMapper.selectByCondition(condition);
+
+        List<String> downloadCodeList = recordList.stream()
+            .map(AsyncDownloadRecord::getDownloadCode)
+            .filter(StringUtils::isNotBlank).distinct()
+            .collect(Collectors.toList());
+
+        if (CollectionUtils.isEmpty(downloadCodeList)) {
+            return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
+        }
+        List<AsyncDownloadTask> downloadTaskList = asyncDownloadTaskMapper
+            .listByDownloadCode(downloadCodeList, condition.getLimitedAppIdList());
+        Map<Long, AsyncDownloadTask> taskMap = downloadTaskList.parallelStream()
+            .collect(Collectors.toMap(AsyncDownloadTask::getId, Function.identity()));
+
+        List<DownloadResult> resultList = recordList.stream()
+            .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
+            .collect(Collectors.toList());
+
+        // 分页结果
+        Pagination<DownloadResult> pagination = new Pagination<>();
+        pagination.setModelList(resultList);
+        pagination.setTotalRecords((long) total);
+        pagination.setPage((long) request.getPageNum());
+        pagination.setPageSize(Long.valueOf(request.getPageSize()));
+        return pagination;
     }
 }

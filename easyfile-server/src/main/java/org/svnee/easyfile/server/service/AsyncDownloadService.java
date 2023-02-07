@@ -108,6 +108,7 @@ public interface AsyncDownloadService {
      *
      * @param registerId 注册ID
      * @param executeProcess 执行进度
+     * @param nextUploadStatus 下一个上传处理状态
      */
     void refreshExecuteProcess(Long registerId, Integer executeProcess,
         UploadStatusEnum nextUploadStatus);

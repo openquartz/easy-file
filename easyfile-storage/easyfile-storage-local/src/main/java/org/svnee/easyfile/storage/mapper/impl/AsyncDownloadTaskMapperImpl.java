@@ -35,6 +35,7 @@ public class AsyncDownloadTaskMapperImpl implements AsyncDownloadTaskMapper {
         "select id, task_code, task_desc, limiting_strategy, app_id,unified_app_id, enable_status, version, create_time, update_time,\n"
             + "create_by, update_by, is_deleted from {0} where task_code in (:taskCodeList) and app_id in (:appIdList)";
     private static final String REFRESH_TASK_DESC_SQL = "update {0} set task_desc = ? where id = ?";
+    private static final String SELECT_APP_ID_SQL = "select distinct app_id from {0} where unified_app_id = ?";
 
     @Override
     public int insertSelective(AsyncDownloadTask task) {
@@ -101,5 +102,10 @@ public class AsyncDownloadTaskMapperImpl implements AsyncDownloadTaskMapper {
         }
     }
 
-
+    @Override
+    public List<String> getByUnifiedAppId(String unifiedAppId) {
+        String sql = MessageFormat
+            .format(SELECT_APP_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTaskTable());
+        return jdbcTemplate.queryForList(sql, String.class, unifiedAppId);
+    }
 }
