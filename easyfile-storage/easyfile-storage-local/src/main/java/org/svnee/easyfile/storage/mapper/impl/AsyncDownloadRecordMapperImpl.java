@@ -274,6 +274,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         if (conditionWhere.length() > 0) {
             sql = sql + " where " + conditionWhere;
         }
+        sql = sql + " order by create_time desc";
         if (Objects.nonNull(condition.getStartOffset())) {
             sql = sql + " limit :startIndex,:offset";
             paramMap.put("startIndex", condition.getStartOffset().getKey());

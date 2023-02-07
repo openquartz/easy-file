@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**
@@ -25,6 +26,7 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
 public class EasyFileAdminController {
 
     private final DownloadStorageService downloadStorageService;
+    private final EasyFileDownloadProperties easyFileDownloadProperties;
 
     /**
      * 全局-下载记录
@@ -33,6 +35,7 @@ public class EasyFileAdminController {
     public ResponseResult<Pagination<DownloadResult>> getGlobalRecord(
         @RequestBody @Valid ListDownloadResultRequest request) {
         // 分页结果
+        request.setUnifiedAppId(easyFileDownloadProperties.getUnifiedAppId());
         Pagination<DownloadResult> voPagination = downloadStorageService.listExportResult(request);
         return ResponseResult.ok(voPagination);
     }
