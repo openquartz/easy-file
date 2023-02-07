@@ -172,7 +172,12 @@ easyfile.remote.namespace=remote-example
 
 [下载器](./BaseDownloadExecutror.md)
 
-#### 七、easyfile-server 部署
+#### 七、Admin-管理界面
+暂时还未开发对应的管理前端管理界面。
+如果使用Local模式 可以直接接入自己服务的Controller.
+代码接口参考：`org.svnee.easyfile.example.admin.EasyFileAdminController`。然后提供给自己的前端服务查询
+
+#### 八、easyfile-server 部署
 
 如果使用**Remote模式**时,需要部署easyfile-server服务;
 
