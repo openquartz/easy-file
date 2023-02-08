@@ -2,7 +2,6 @@ package org.svnee.easyfile.storage.download;
 
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
-import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
