@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
+import org.svnee.easyfile.common.property.IEasyFileCommonProperties;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**
@@ -14,7 +15,7 @@ import org.svnee.easyfile.common.util.StringUtils;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = EasyFileDownloadProperties.PREFIX)
-public class EasyFileDownloadProperties {
+public class EasyFileDownloadProperties implements IEasyFileCommonProperties {
 
     public static final String PREFIX = "easyfile.download";
 
@@ -93,6 +94,7 @@ public class EasyFileDownloadProperties {
      */
     private DownloadAsyncTriggerType asyncTriggerType = DownloadAsyncTriggerType.DEFAULT;
 
+    @Override
     public String getUnifiedAppId() {
         return StringUtils.isBlank(unifiedAppId) ? appId : unifiedAppId;
     }

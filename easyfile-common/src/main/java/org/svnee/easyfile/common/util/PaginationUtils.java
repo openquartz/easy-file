@@ -1,6 +1,7 @@
 package org.svnee.easyfile.common.util;
 
 import java.util.Collections;
+import java.util.List;
 import org.svnee.easyfile.common.bean.Pagination;
 
 /**
@@ -25,6 +26,20 @@ public final class PaginationUtils {
         pagination.setPageSize(Long.valueOf(pageSize));
         pagination.setPage(Long.valueOf(pageNo));
         pagination.setModelList(Collections.emptyList());
+        return pagination;
+    }
+
+    /**
+     * copy
+     */
+    public static <T>Pagination<T> copy(Pagination<?> source, List<T> modelList){
+        Pagination<T> pagination = new Pagination<>();
+        pagination.setPage(source.getPage());
+        pagination.setTotalRecords(source.getTotalRecords());
+        pagination.setModelList(modelList);
+        pagination.setPageSize(source.getPageSize());
+        pagination.setInformation(source.getInformation());
+        pagination.setExtendsSize(source.getExtendsSize());
         return pagination;
     }
 

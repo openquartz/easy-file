@@ -14,6 +14,11 @@ public final class Constants {
     }
 
     /**
+     * 空串
+     */
+    public static final String EMPTY_STRING = "";
+
+    /**
      * 文件后缀名分隔符
      */
     public static final String FILE_SUFFIX_SEPARATOR = ".";
@@ -153,4 +158,13 @@ public final class Constants {
      */
     public static final String SLASH_SEPARATOR = "/";
 
+    /**
+     * on
+     */
+    public static final String SWITCH_ON = "on";
+
+    /**
+     * off
+     */
+    public static final String SWITCH_OFF = "off";
 }

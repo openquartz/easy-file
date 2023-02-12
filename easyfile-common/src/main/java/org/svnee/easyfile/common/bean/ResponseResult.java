@@ -3,6 +3,8 @@ package org.svnee.easyfile.common.bean;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.io.Serializable;
+import java.text.MessageFormat;
+import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**
@@ -132,6 +134,12 @@ public class ResponseResult<T> implements Serializable {
     public static <T> ResponseResult<T> fail(String errorCode, String message, T data, String errorInfo) {
         return new ResponseResult<>(false, errorCode, message, data, null, errorInfo);
     }
+
+    public static <T> ResponseResult<T> fail(EasyFileErrorCode errorCode, Object... replaceHold) {
+        return new ResponseResult<>(false, errorCode.getErrorCode(),
+            MessageFormat.format(errorCode.getErrorMsg(), replaceHold), null, null);
+    }
+
 
     @Override
     public String toString() {
