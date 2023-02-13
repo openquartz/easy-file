@@ -6,9 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import java.io.IOException;
-import java.util.Objects;
 import lombok.Data;
-import org.svnee.easyfile.common.dictionary.BaseEnum;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**

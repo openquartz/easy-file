@@ -9,9 +9,4 @@ layui.use(['element','jquery'], function(){
            $("#home").attr("src","/easyfile-ui/download-task/get");
         }
     })
-
-    //监听导航栏的事件
-    element.on('nav(flow)',function (data) {
-        console.log(data)
-    })
 });

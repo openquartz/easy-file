@@ -386,13 +386,14 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         condition.setDownloadOperateBy(request.getDownloadOperateBy());
         condition.setStartCreateTime(request.getStartDownloadTime());
         condition.setEndCreateTime(request.getEndDownloadTime());
-        condition.setStartOffset(
-            Pair.of(PageUtil.startIndex(request.getPageNum(), request.getPageSize()), request.getPageSize()));
 
         int total = asyncDownloadRecordMapper.countByCondition(condition);
         if (total <= 0) {
             return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
         }
+
+        condition.setStartOffset(
+            Pair.of(PageUtil.startIndex(request.getPageNum(), request.getPageSize()), request.getPageSize()));
         List<AsyncDownloadRecord> recordList = asyncDownloadRecordMapper.selectByCondition(condition);
 
         List<String> downloadCodeList = recordList.stream()

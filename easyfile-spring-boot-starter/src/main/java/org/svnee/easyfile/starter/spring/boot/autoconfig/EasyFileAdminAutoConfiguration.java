@@ -22,11 +22,16 @@ import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileAdmi
 public class EasyFileAdminAutoConfiguration {
 
     @Bean
-    public LoginService loginService(EasyFileAdminProperties properties){
+    public LoginService loginService(AdminProperty adminProperty){
+        return new LoginService(adminProperty);
+    }
+
+    @Bean
+    public AdminProperty adminProperty(EasyFileAdminProperties properties){
         AdminProperty adminProperty = new AdminProperty();
         adminProperty.setAdminUsername(properties.getAdmin().getUsername());
         adminProperty.setAdminPassword(properties.getAdmin().getPassword());
-        return new LoginService(adminProperty);
+        return adminProperty;
     }
 
 }

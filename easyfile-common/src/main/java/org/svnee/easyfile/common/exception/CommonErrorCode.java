@@ -1,6 +1,7 @@
 package org.svnee.easyfile.common.exception;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 /**
  * @author svnee
@@ -17,6 +18,7 @@ public enum CommonErrorCode implements EasyFileErrorCode {
     METHOD_NOT_EXIST_ERROR("07", "Method not exist"),
     FILE_NOT_EXIST_ERROR("08", "file not exist error!"),
     PROPERTY_NOT_EXIST_ERROR("09", "Property Not Exist!"),
+    REQUEST_PARAM_ERROR("10","request param error"),
     ;
     private final String errorCode;
     private final String errorMsg;

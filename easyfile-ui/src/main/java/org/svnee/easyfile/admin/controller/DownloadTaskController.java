@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.svnee.easyfile.admin.model.request.ClickDownloadRequest;
 import org.svnee.easyfile.admin.model.request.ShowDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.response.DownloadTaskResult;
+import org.svnee.easyfile.admin.property.AdminProperty;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.property.IEasyFileCommonProperties;
@@ -37,6 +39,7 @@ public class DownloadTaskController {
 
     private final DownloadStorageService downloadStorageService;
     private final IEasyFileCommonProperties easyFileDownloadProperties;
+    private final AdminProperty adminProperty;
 
     /**
      * get
@@ -95,8 +98,14 @@ public class DownloadTaskController {
      */
     @ResponseBody
     @PostMapping(value = "/download", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseResult<String> download(@RequestBody @Valid DownloadRequest request) {
-        String url = downloadStorageService.download(request);
+    public ResponseResult<String> download(@RequestBody @Valid ClickDownloadRequest request) {
+
+        DownloadRequest downloadRequest = new DownloadRequest();
+        downloadRequest.setAppId(easyFileDownloadProperties.getAppId());
+        downloadRequest.setRegisterId(request.getRegisterId());
+        downloadRequest.setDownloadOperateBy(adminProperty.getAdminUsername());
+        downloadRequest.setDownloadOperateName(adminProperty.getAdminUsername());
+        String url = downloadStorageService.download(downloadRequest);
         return ResponseResult.ok(url);
     }
 
