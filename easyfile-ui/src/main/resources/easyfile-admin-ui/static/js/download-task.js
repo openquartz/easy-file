@@ -64,7 +64,7 @@ layui.use(['element', 'table'], function () {
         //do something
 
         var requestBody = {
-          registerId: data.registerId,
+          registerId: data.registerId
         };
 
         $.ajax({

@@ -5,16 +5,20 @@ import java.util.Date;
 import java.util.Objects;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.svnee.easyfile.admin.model.request.LoginRequest;
 import org.svnee.easyfile.admin.service.LoginService;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.constants.Constants;
@@ -51,17 +55,18 @@ public class IndexController {
     }
 
     @ResponseBody
-    @PostMapping("/login")
-    public ResponseResult<String> loginDo(HttpServletRequest request, HttpServletResponse response, String username,
-        String password, String rememberMe) {
-        boolean isRememberMe = StringUtils.isNotBlank(rememberMe) && Objects.equals(Constants.SWITCH_ON, rememberMe);
-        return loginService.login(response, username, password, isRememberMe);
+    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResult<String> loginDo(@RequestBody @Valid LoginRequest request,
+        HttpServletResponse response) {
+        boolean isRememberMe = StringUtils.isNotBlank(request.getRememberMe()) && Objects
+            .equals(Constants.SWITCH_ON, request.getRememberMe());
+        return loginService.login(response, request.getUsername(), request.getPassword(), isRememberMe);
     }
 
-    @ResponseBody
-    @PostMapping("/logout")
-    public ResponseResult<String> logout(HttpServletRequest request, HttpServletResponse response) {
-        return loginService.logout(request, response);
+    @RequestMapping("/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        loginService.logout(request, response);
+        return "login";
     }
 
     @InitBinder
