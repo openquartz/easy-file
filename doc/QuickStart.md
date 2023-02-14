@@ -196,6 +196,7 @@ easyfile.ui.admin.username=admin
 easyfile.ui.admin.password=admin
 ```
 EasyFile UI 管理界面
+
 ![EasyFileUI](./doc/image/EasyfileUi.png)
 
 #### 八、easyfile-server 部署
