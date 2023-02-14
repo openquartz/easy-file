@@ -1,6 +1,5 @@
 package org.svnee.easyfile.storage.mapper.impl;
 
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -97,8 +96,8 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             ps.setString(18, downloadRecord.getErrorMsg());
             ps.setInt(19, downloadRecord.getExecuteProcess());
             ps.setInt(20, downloadRecord.getVersion());
-            ps.setDate(21, new Date(downloadRecord.getCreateTime().getTime()));
-            ps.setDate(22, new Date(downloadRecord.getUpdateTime().getTime()));
+            ps.setTimestamp(21, new Timestamp(downloadRecord.getCreateTime().getTime()));
+            ps.setTimestamp(22, new Timestamp(downloadRecord.getUpdateTime().getTime()));
             ps.setString(23, downloadRecord.getCreateBy());
             ps.setString(24, downloadRecord.getUpdateBy());
             return ps;
