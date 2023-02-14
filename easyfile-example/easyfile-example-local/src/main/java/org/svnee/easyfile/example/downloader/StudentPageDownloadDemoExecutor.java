@@ -22,7 +22,7 @@ import org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecuto
  * @author svnee
  **/
 @Component
-@FileExportExecutor(value = "StudentPageDownloadDemoExecutor")
+@FileExportExecutor(value = "StudentPageDownloadDemoExecutor", desc = "Student分页下载")
 public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor<Student> {
 
     @Resource

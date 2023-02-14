@@ -93,8 +93,8 @@ public class AsyncDownloadTaskMapperImpl implements AsyncDownloadTaskMapper {
             asyncDownloadTask.setEnableStatus(resultSet.getInt("enable_status"));
             asyncDownloadTask.setLimitingStrategy(resultSet.getString("limiting_strategy"));
             asyncDownloadTask.setVersion(resultSet.getInt("version"));
-            asyncDownloadTask.setCreateTime(resultSet.getDate("create_time"));
-            asyncDownloadTask.setUpdateTime(resultSet.getDate("update_time"));
+            asyncDownloadTask.setCreateTime(resultSet.getTimestamp("create_time"));
+            asyncDownloadTask.setUpdateTime(resultSet.getTimestamp("update_time"));
             asyncDownloadTask.setCreateBy(resultSet.getString("create_by"));
             asyncDownloadTask.setUpdateBy(resultSet.getString("update_by"));
             asyncDownloadTask.setIsDeleted(resultSet.getLong("is_deleted"));

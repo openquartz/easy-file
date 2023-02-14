@@ -173,8 +173,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
             downloadTrigger.setId(resultSet.getLong("id"));
             downloadTrigger.setRegisterId(resultSet.getLong("register_id"));
             downloadTrigger.setTriggerStatus(DownloadTriggerStatusEnum.ofCode(resultSet.getString("trigger_status")));
-            downloadTrigger.setStartTime(resultSet.getDate("start_time"));
-            downloadTrigger.setLastExecuteTime(resultSet.getDate("last_execute_time"));
+            downloadTrigger.setStartTime(resultSet.getTimestamp("start_time"));
+            downloadTrigger.setLastExecuteTime(resultSet.getTimestamp("last_execute_time"));
             downloadTrigger.setTriggerCount(resultSet.getInt("trigger_count"));
             downloadTrigger.setCreatingOwner(resultSet.getString("creating_owner"));
             downloadTrigger.setProcessingOwner(resultSet.getString("processing_owner"));

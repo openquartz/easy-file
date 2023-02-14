@@ -201,13 +201,13 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             downloadRecord.setCurrentRetry(rs.getInt("current_retry"));
             downloadRecord.setExecuteParam(rs.getString("execute_param"));
             downloadRecord.setErrorMsg(rs.getString("error_msg"));
-            downloadRecord.setLastExecuteTime(rs.getDate("last_execute_time"));
-            downloadRecord.setInvalidTime(rs.getDate("invalid_time"));
+            downloadRecord.setLastExecuteTime(rs.getTimestamp("last_execute_time"));
+            downloadRecord.setInvalidTime(rs.getTimestamp("invalid_time"));
             downloadRecord.setDownloadNum(rs.getInt("download_num"));
             downloadRecord.setExecuteProcess(rs.getInt("execute_process"));
             downloadRecord.setVersion(rs.getInt("version"));
-            downloadRecord.setCreateTime(rs.getDate("create_time"));
-            downloadRecord.setUpdateTime(rs.getDate("update_time"));
+            downloadRecord.setCreateTime(rs.getTimestamp("create_time"));
+            downloadRecord.setUpdateTime(rs.getTimestamp("update_time"));
             downloadRecord.setCreateBy(rs.getString("create_by"));
             downloadRecord.setUpdateBy(rs.getString("update_by"));
             return downloadRecord;

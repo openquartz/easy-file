@@ -71,7 +71,8 @@ public class DownloadTaskController {
 
         Pagination<DownloadResult> voPagination = downloadStorageService.listExportResult(resultRequest);
 
-        List<DownloadTaskResult> resultList = voPagination.getModelList().stream().map(this::assember)
+        List<DownloadTaskResult> resultList = voPagination.getModelList()
+            .stream().map(this::assember)
             .collect(Collectors.toList());
 
         return ResponseResult.ok(PaginationUtils.copy(voPagination, resultList));

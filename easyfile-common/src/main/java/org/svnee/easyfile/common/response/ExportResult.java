@@ -6,8 +6,6 @@ import lombok.Data;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.serdes.BaseEnumDeserializer;
 import org.svnee.easyfile.common.serdes.BaseEnumSerializer;
-import org.svnee.easyfile.common.serdes.Long2StringSerializer;
-import org.svnee.easyfile.common.serdes.String2LongDeserializer;
 
 /**
  * 导出结果
