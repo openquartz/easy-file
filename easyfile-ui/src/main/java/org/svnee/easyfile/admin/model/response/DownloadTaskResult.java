@@ -1,5 +1,6 @@
 package org.svnee.easyfile.admin.model.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import lombok.Data;
 
@@ -63,16 +64,19 @@ public class DownloadTaskResult {
     /**
      * 下载时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date exportTime;
 
     /**
      * 最新执行时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date lastExecuteTime;
 
     /**
      * 失效时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date invalidTime;
 
     /**
