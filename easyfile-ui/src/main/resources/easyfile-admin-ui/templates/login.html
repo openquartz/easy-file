@@ -42,19 +42,23 @@
       console.log(JSON.stringify(data.field));
 
       $.ajax({
+        type: 'POST',
         url: '/easyfile-ui/login',
         data: JSON.stringify(data.field),
-        dataType: 'json',
         contentType: 'application/json',
-        type: 'post',
-        success: function (data) {
-          if (data.success) {
-            location.href = "/easyfile-ui";
+        success: function (result, status, xhr) {
+          if (result.success) {
+            location.href = "/easyfile-ui/";
           } else {
-            layer.msg('登录失败:' + data.message);
+            layer.msg('登录失败!失败原因:' + result.message);
           }
-        }
+        },
+        error: function (xhr, status, error) {
+          layer.msg('登录失败!' + error);
+        },
+        dataType: 'json'
       });
+
       return false;
     });
   });

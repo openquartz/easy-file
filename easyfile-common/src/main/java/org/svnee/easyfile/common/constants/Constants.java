@@ -167,4 +167,9 @@ public final class Constants {
      * off
      */
     public static final String SWITCH_OFF = "off";
+
+    /**
+     * back package path
+     */
+    public static final String BASE_PACKAGE_PATH = "org.svnee.easyfile";
 }

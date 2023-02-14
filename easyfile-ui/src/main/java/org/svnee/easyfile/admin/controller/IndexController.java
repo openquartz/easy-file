@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
+import org.svnee.easyfile.admin.controller.annotation.Auth;
 import org.svnee.easyfile.admin.model.request.LoginRequest;
 import org.svnee.easyfile.admin.service.LoginService;
 import org.svnee.easyfile.common.bean.ResponseResult;
@@ -39,6 +40,7 @@ public class IndexController {
         this.loginService = loginService;
     }
 
+    @Auth
     @RequestMapping("/")
     public String index(Model model) {
 
@@ -63,6 +65,7 @@ public class IndexController {
         return loginService.login(response, request.getUsername(), request.getPassword(), isRememberMe);
     }
 
+    @Auth
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         loginService.logout(request, response);

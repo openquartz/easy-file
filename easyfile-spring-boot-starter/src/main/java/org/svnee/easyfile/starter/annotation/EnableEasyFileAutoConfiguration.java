@@ -7,6 +7,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
+import org.svnee.easyfile.common.constants.Constants;
 
 /**
  * 开启EasyFile auto configuration
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.ComponentScans;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
 @Documented
-@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
+@ComponentScans(value = {@ComponentScan(Constants.BASE_PACKAGE_PATH)})
 public @interface EnableEasyFileAutoConfiguration {
 
 

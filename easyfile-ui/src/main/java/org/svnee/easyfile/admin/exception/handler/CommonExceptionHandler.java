@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.svnee.easyfile.common.bean.ResponseResult;
+import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.EasyFileException;
 
@@ -20,7 +21,7 @@ import org.svnee.easyfile.common.exception.EasyFileException;
  *
  * @author svnee
  */
-@ControllerAdvice(basePackages = "org.svnee.easyfile")
+@ControllerAdvice(basePackages = Constants.BASE_PACKAGE_PATH)
 public class CommonExceptionHandler extends AbstractExceptionHandler {
 
 

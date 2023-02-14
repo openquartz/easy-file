@@ -43,7 +43,8 @@ layui.use(['element', 'table'], function () {
         width: 150,
         templet: function (res) {
           return '<div class="layui-progress layui-progress-big" lay-showpercent="true">\n'
-              + '  <div class="layui-progress-bar" lay-percent="'+res.executeProcess+'%"></div>\n'
+              + '  <div class="layui-progress-bar" lay-percent="'
+              + res.executeProcess + '%"></div>\n'
               + '</div>';
         }
       }
@@ -61,7 +62,6 @@ layui.use(['element', 'table'], function () {
     var data = obj.data;
     if (obj.event === 'click') {
       layer.confirm('真的要下载吗?', {icon: 3, title: '提示'}, function (index) {
-        //do something
 
         var requestBody = {
           registerId: data.registerId
@@ -90,7 +90,28 @@ layui.use(['element', 'table'], function () {
     } else if (obj.event === 'cancel') {
       layer.confirm('真的要取消下载任务: ' + data.registerId + ' 吗?',
           {icon: 3, title: '提示'}, function (index) {
-            //do something
+
+            var requestBody = {
+              registerId: data.registerId
+            };
+
+            $.ajax({
+              type: 'POST',
+              url: '/easyfile-ui/download-task/revoke',
+              data: JSON.stringify(requestBody),
+              contentType: 'application/json',
+              success: function (result, status, xhr) {
+                if (result.success) {
+                  layer.msg('取消成功！');
+                } else {
+                  layer.msg('取消失败!失败原因:' + result.message);
+                }
+              },
+              error: function (xhr, status, error) {
+                layer.msg('下载失败!' + error);
+              },
+              dataType: 'json'
+            });
 
             layer.close(index);
           });

@@ -7,10 +7,18 @@ import java.lang.annotation.Target;
 
 /**
  * 登录控制
+ *
  * @author svnee
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Auth {
+
+    /**
+     * need login
+     *
+     * @return login
+     */
+    boolean needLogin() default true;
 
 }

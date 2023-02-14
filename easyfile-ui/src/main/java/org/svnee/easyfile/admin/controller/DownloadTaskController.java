@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.svnee.easyfile.admin.controller.annotation.Auth;
 import org.svnee.easyfile.admin.model.request.ClickDownloadRequest;
+import org.svnee.easyfile.admin.model.request.RevokeDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.request.ShowDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.response.DownloadTaskResult;
 import org.svnee.easyfile.admin.property.AdminProperty;
@@ -44,6 +46,7 @@ public class DownloadTaskController {
     /**
      * get
      */
+    @Auth
     @RequestMapping(value = "/get")
     public String get() {
         return "download-task";
@@ -52,6 +55,7 @@ public class DownloadTaskController {
     /**
      * 全局-下载记录
      */
+    @Auth
     @ResponseBody
     @PostMapping(value = "/list", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseResult<Pagination<DownloadTaskResult>> list(
@@ -69,7 +73,7 @@ public class DownloadTaskController {
         List<DownloadTaskResult> resultList = voPagination.getModelList().stream().map(this::assember)
             .collect(Collectors.toList());
 
-        return ResponseResult.ok(PaginationUtils.copy(voPagination,resultList));
+        return ResponseResult.ok(PaginationUtils.copy(voPagination, resultList));
     }
 
     private DownloadTaskResult assember(DownloadResult downloadResult) {
@@ -96,6 +100,7 @@ public class DownloadTaskController {
     /**
      * 点击下载
      */
+    @Auth
     @ResponseBody
     @PostMapping(value = "/download", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseResult<String> download(@RequestBody @Valid ClickDownloadRequest request) {
@@ -112,10 +117,14 @@ public class DownloadTaskController {
     /**
      * 撤销下载
      */
+    @Auth
     @ResponseBody
     @PostMapping(value = "/revoke", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseResult<?> revoke(@RequestBody @Valid CancelUploadRequest request) {
-        downloadStorageService.cancelUpload(request);
+    public ResponseResult<?> revoke(@RequestBody @Valid RevokeDownloadTaskRequest request) {
+        CancelUploadRequest cancelRequest = new CancelUploadRequest();
+        cancelRequest.setCancelBy(adminProperty.getAdminUsername());
+        cancelRequest.setRegisterId(request.getRegisterId());
+        downloadStorageService.cancelUpload(cancelRequest);
         return ResponseResult.ok();
     }
 

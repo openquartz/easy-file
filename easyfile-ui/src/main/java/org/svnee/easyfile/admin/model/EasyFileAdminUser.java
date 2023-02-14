@@ -4,18 +4,19 @@ import lombok.Data;
 
 /**
  * EasyFileUser
+ *
  * @author svnee
  **/
 @Data
-public class EasyFileUser {
+public class EasyFileAdminUser {
 
     private String username;
     private String password;
 
-    public EasyFileUser() {
+    public EasyFileAdminUser() {
     }
 
-    public EasyFileUser(String username, String password) {
+    public EasyFileAdminUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
