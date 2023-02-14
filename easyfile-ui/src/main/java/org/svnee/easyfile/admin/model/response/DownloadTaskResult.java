@@ -1,8 +1,10 @@
 package org.svnee.easyfile.admin.model.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import java.util.Date;
 import lombok.Data;
+import org.svnee.easyfile.common.serdes.Long2StringSerializer;
 
 /**
  * DownloadTask Result
@@ -14,6 +16,7 @@ public class DownloadTaskResult {
     /**
      * 注册ID
      */
+    @JsonSerialize(using = Long2StringSerializer.class)
     private Long registerId;
 
     /**
@@ -64,19 +67,19 @@ public class DownloadTaskResult {
     /**
      * 下载时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date exportTime;
 
     /**
      * 最新执行时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date lastExecuteTime;
 
     /**
      * 失效时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date invalidTime;
 
     /**
