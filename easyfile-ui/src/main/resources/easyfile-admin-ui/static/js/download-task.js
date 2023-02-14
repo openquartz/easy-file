@@ -16,8 +16,6 @@ layui.use(['element', 'table'], function () {
     , page: {
       layout: ['limit', 'count', 'prev', 'page', 'next', 'skip']
       , groups: 1
-      , first: false
-      , last: false
     }
     , parseData: function (res) {
       return {
