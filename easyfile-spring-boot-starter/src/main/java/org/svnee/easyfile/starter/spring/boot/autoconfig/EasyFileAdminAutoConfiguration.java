@@ -1,7 +1,7 @@
 package org.svnee.easyfile.starter.spring.boot.autoconfig;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileAdmi
 @Configuration
 @EnableConfigurationProperties(EasyFileAdminProperties.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
-@ConditionalOnProperty(prefix = EasyFileAdminProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnClass(LoginService.class)
 public class EasyFileAdminAutoConfiguration {
 
     @Bean
