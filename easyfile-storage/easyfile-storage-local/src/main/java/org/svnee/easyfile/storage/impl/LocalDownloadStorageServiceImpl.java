@@ -410,6 +410,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             .collect(Collectors.toMap(AsyncDownloadTask::getId, Function.identity()));
 
         List<DownloadResult> resultList = recordList.stream()
+            .sorted(((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime())))
             .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
             .collect(Collectors.toList());
 
