@@ -14,7 +14,6 @@ public class LoginRequest {
     private String username;
     @NotBlank
     private String password;
-    @NotBlank
     private String rememberMe;
 
 }
