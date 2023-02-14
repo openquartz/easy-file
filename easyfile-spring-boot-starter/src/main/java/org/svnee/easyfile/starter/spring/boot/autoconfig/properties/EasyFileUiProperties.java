@@ -7,17 +7,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author svnee
  **/
-@ConfigurationProperties(prefix = EasyFileAdminProperties.PREFIX)
-public class EasyFileAdminProperties {
+@ConfigurationProperties(prefix = EasyFileUiProperties.PREFIX)
+public class EasyFileUiProperties {
 
-    public static final String PREFIX = "easyfile.admin";
+    public static final String PREFIX = "easyfile.ui";
 
     /**
      * admin account
      */
-    private Admin admin = new Admin();
+    private AdminUser admin = new AdminUser();
 
-    public static class Admin {
+    public static class AdminUser {
 
         private String username = "admin";
         private String password = "admin";
@@ -39,11 +39,11 @@ public class EasyFileAdminProperties {
         }
     }
 
-    public Admin getAdmin() {
+    public AdminUser getAdmin() {
         return admin;
     }
 
-    public void setAdmin(Admin admin) {
+    public void setAdmin(AdminUser admin) {
         this.admin = admin;
     }
 }

@@ -8,26 +8,27 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.admin.property.AdminProperty;
 import org.svnee.easyfile.admin.service.LoginService;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileAdminProperties;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileUiProperties;
 
 /**
  * Admin Configuration
+ *
  * @author svnee
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties(EasyFileAdminProperties.class)
+@EnableConfigurationProperties(EasyFileUiProperties.class)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 @ConditionalOnClass(LoginService.class)
-public class EasyFileAdminAutoConfiguration {
+public class EasyFileUiAutoConfiguration {
 
     @Bean
-    public LoginService loginService(AdminProperty adminProperty){
+    public LoginService loginService(AdminProperty adminProperty) {
         return new LoginService(adminProperty);
     }
 
     @Bean
-    public AdminProperty adminProperty(EasyFileAdminProperties properties){
+    public AdminProperty adminProperty(EasyFileUiProperties properties) {
         AdminProperty adminProperty = new AdminProperty();
         adminProperty.setAdminUsername(properties.getAdmin().getUsername());
         adminProperty.setAdminPassword(properties.getAdmin().getPassword());
