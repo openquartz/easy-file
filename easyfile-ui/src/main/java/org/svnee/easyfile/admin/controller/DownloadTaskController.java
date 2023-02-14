@@ -24,6 +24,7 @@ import org.svnee.easyfile.common.property.IEasyFileCommonProperties;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
+import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -124,8 +125,12 @@ public class DownloadTaskController {
         CancelUploadRequest cancelRequest = new CancelUploadRequest();
         cancelRequest.setCancelBy(adminProperty.getAdminUsername());
         cancelRequest.setRegisterId(request.getRegisterId());
-        downloadStorageService.cancelUpload(cancelRequest);
-        return ResponseResult.ok();
+        CancelUploadResult cancelUpload = downloadStorageService.cancelUpload(cancelRequest);
+        if (cancelUpload.isCancelResult()) {
+            return ResponseResult.ok();
+        } else {
+            return ResponseResult.fail("01", cancelUpload.getCancelMsg());
+        }
     }
 
 }
