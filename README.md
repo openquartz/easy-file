@@ -84,11 +84,11 @@ EasyFile 提供两种模式
 - easyfile-spring-boot-starter: easyfile starter 包
 - easyfile-server: easyfile 远程存储服务端
 
+- easyfile-ui: easyfile-admin ui-管理服务 (可选)
+
 - easyfile-example: 样例工程
   - easyfile-example-local: 本地储存样样例工程
   - easyfile-example-remote: 远程存储样例工程
-
-- easyfile-ui: easyfile-admin ui-管理服务 (可选)
 
 ### 时序图
 
