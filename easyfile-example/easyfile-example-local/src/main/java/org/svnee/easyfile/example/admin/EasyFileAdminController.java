@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
@@ -44,9 +45,9 @@ public class EasyFileAdminController {
      * 点击下载
      */
     @PostMapping("/clickDownload")
-    public ResponseResult<String> clickDownload(@RequestBody @Valid DownloadRequest request) {
-        String url = downloadStorageService.download(request);
-        return ResponseResult.ok(url);
+    public ResponseResult<DownloadUrlResult> clickDownload(@RequestBody @Valid DownloadRequest request) {
+        DownloadUrlResult result = downloadStorageService.download(request);
+        return ResponseResult.ok(result);
     }
 
     /**

@@ -20,6 +20,7 @@ import org.svnee.easyfile.common.exception.EasyFileException;
  * common exception handler
  *
  * @author svnee
+ * @since 1.2.0
  */
 @ControllerAdvice(basePackages = Constants.BASE_PACKAGE_PATH)
 public class CommonExceptionHandler extends AbstractExceptionHandler {

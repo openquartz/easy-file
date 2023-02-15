@@ -12,6 +12,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -77,8 +78,9 @@ public interface AsyncDownloadService {
      *
      * @param request 请求
      * @return file url
+     * @since 1.2.1
      */
-    String download(DownloadRequest request);
+    DownloadUrlResult download(DownloadRequest request);
 
     /**
      * 撤销

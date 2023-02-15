@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  * 调用远程服务配置
+ *
  * @author svnee
  **/
 @Getter

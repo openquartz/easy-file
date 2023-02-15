@@ -18,6 +18,7 @@ import org.svnee.easyfile.common.util.StringUtils;
  * LoginService
  *
  * @author svnee
+ * @since 1.2.0
  */
 public class LoginService {
 

@@ -36,6 +36,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
@@ -100,6 +101,9 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
                 ExportResult exportResult = new ExportResult();
                 exportResult.setRegisterId(request.getRegisterId());
                 exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
+                exportResult.setFileUrl(StringUtils.EMPTY);
+                exportResult.setFileName(StringUtils.EMPTY);
                 return exportResult;
             });
         if (UploadStatusEnum.SUCCESS.equals(result.getUploadStatus())) {
@@ -159,6 +163,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         exportResult.setUploadStatus(downloadRecord.getUploadStatus());
         exportResult.setFileSystem(downloadRecord.getFileSystem());
         exportResult.setFileUrl(downloadRecord.getFileUrl());
+        exportResult.setFileName(downloadRecord.getFileName());
         exportResult.setErrorMsg(downloadRecord.getErrorMsg());
         return exportResult;
     }
@@ -178,6 +183,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadInfoChangeCondition.setId(downloadRecord.getId());
         uploadInfoChangeCondition.setUploadStatus(request.getUploadStatus());
         uploadInfoChangeCondition.setFileUrl(request.getFileUrl());
+        uploadInfoChangeCondition.setFileName(request.getFileName());
         uploadInfoChangeCondition.setFileSystem(request.getSystem());
         uploadInfoChangeCondition.setErrorMsg(request.getErrorMsg());
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
@@ -191,6 +197,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadInfoChangeCondition.setId(registerId);
         uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
         uploadInfoChangeCondition.setFileUrl(exportResult.getFileUrl());
+        uploadInfoChangeCondition.setFileName(exportResult.getFileName());
         uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
         uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
@@ -219,6 +226,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         downloadRecord.setDownloadCode(request.getDownloadCode());
         downloadRecord.setUploadStatus(UploadStatusEnum.NONE);
         downloadRecord.setFileUrl(StringUtils.EMPTY);
+        downloadRecord.setFileName(StringUtils.EMPTY);
         downloadRecord.setFileSystem(Constants.NONE_FILE_SYSTEM);
         downloadRecord.setDownloadOperateBy(
             Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserBy() : StringUtils.EMPTY);
@@ -290,19 +298,30 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     @Override
-    public String download(DownloadRequest request) {
-        log.info("[AsyncDownload##download]file download,request:{}", request);
+    public DownloadUrlResult download(DownloadRequest request) {
+        log.info("[AsyncDownload#download]file download,request:{}", request);
 
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
+        Asserts.isTrue(downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS,
+            AsyncDownloadExceptionCode.DOWNLOAD_STATUS_NOT_SUPPORT);
+
         // 下载
         int download = asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
+
         Asserts.isTrue(download > 0, DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_DOWNLOAD_SUCCESS);
         FileUrlTransformer transformer = FileUrlTransformerSupport.get(downloadRecord.getFileSystem());
+
+        String url = downloadRecord.getFileUrl();
         if (Objects.nonNull(transformer)) {
-            return transformer.transform(downloadRecord.getFileUrl());
+            url = transformer.transform(downloadRecord.getFileUrl());
         }
-        return downloadRecord.getFileUrl();
+
+        DownloadUrlResult downloadUrlResult = new DownloadUrlResult();
+        downloadUrlResult.setFileSystem(downloadRecord.getFileSystem());
+        downloadUrlResult.setFileName(downloadRecord.getFileName());
+        downloadUrlResult.setUrl(url);
+        return downloadUrlResult;
     }
 
     @Override

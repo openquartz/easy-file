@@ -39,11 +39,11 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     private final JdbcTemplate jdbcTemplate;
 
     private static final String INSERT_SQL =
-        "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+        "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
             + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String FIND_BY_ID_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
             + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} where id = ?";
 
@@ -56,13 +56,13 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     private static final String UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL = "update {0} set execute_process = ?,upload_status=? where id = ? and execute_process <= ? ";
 
     private static final String LIST_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
             + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} "
             + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
 
     private static final String SELECT_ALL_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_system, download_operate_by,"
+        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
             + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
             + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} ";
 
@@ -81,25 +81,26 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             ps.setString(3, downloadRecord.getDownloadCode());
             ps.setString(4, downloadRecord.getUploadStatus().getCode());
             ps.setString(5, downloadRecord.getFileUrl());
-            ps.setString(6, downloadRecord.getFileSystem());
-            ps.setString(7, downloadRecord.getDownloadOperateBy());
-            ps.setString(8, downloadRecord.getDownloadOperateName());
-            ps.setString(9, downloadRecord.getRemark());
-            ps.setInt(10, downloadRecord.getNotifyEnableStatus());
-            ps.setString(11, downloadRecord.getNotifyEmail());
-            ps.setInt(12, downloadRecord.getMaxServerRetry());
-            ps.setInt(13, downloadRecord.getCurrentRetry());
-            ps.setInt(14, downloadRecord.getDownloadNum());
-            ps.setTimestamp(15, new Timestamp(downloadRecord.getLastExecuteTime().getTime()));
-            ps.setTimestamp(16, new Timestamp(downloadRecord.getInvalidTime().getTime()));
-            ps.setString(17, downloadRecord.getExecuteParam());
-            ps.setString(18, downloadRecord.getErrorMsg());
-            ps.setInt(19, downloadRecord.getExecuteProcess());
-            ps.setInt(20, downloadRecord.getVersion());
-            ps.setTimestamp(21, new Timestamp(downloadRecord.getCreateTime().getTime()));
-            ps.setTimestamp(22, new Timestamp(downloadRecord.getUpdateTime().getTime()));
-            ps.setString(23, downloadRecord.getCreateBy());
-            ps.setString(24, downloadRecord.getUpdateBy());
+            ps.setString(6, downloadRecord.getFileName());
+            ps.setString(7, downloadRecord.getFileSystem());
+            ps.setString(8, downloadRecord.getDownloadOperateBy());
+            ps.setString(9, downloadRecord.getDownloadOperateName());
+            ps.setString(10, downloadRecord.getRemark());
+            ps.setInt(11, downloadRecord.getNotifyEnableStatus());
+            ps.setString(12, downloadRecord.getNotifyEmail());
+            ps.setInt(13, downloadRecord.getMaxServerRetry());
+            ps.setInt(14, downloadRecord.getCurrentRetry());
+            ps.setInt(15, downloadRecord.getDownloadNum());
+            ps.setTimestamp(16, new Timestamp(downloadRecord.getLastExecuteTime().getTime()));
+            ps.setTimestamp(17, new Timestamp(downloadRecord.getInvalidTime().getTime()));
+            ps.setString(18, downloadRecord.getExecuteParam());
+            ps.setString(19, downloadRecord.getErrorMsg());
+            ps.setInt(20, downloadRecord.getExecuteProcess());
+            ps.setInt(21, downloadRecord.getVersion());
+            ps.setTimestamp(22, new Timestamp(downloadRecord.getCreateTime().getTime()));
+            ps.setTimestamp(23, new Timestamp(downloadRecord.getUpdateTime().getTime()));
+            ps.setString(24, downloadRecord.getCreateBy());
+            ps.setString(25, downloadRecord.getUpdateBy());
             return ps;
         }, keyHolder);
 
@@ -133,6 +134,10 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         if (StringUtils.isNotBlank(condition.getFileUrl())) {
             sql.append(",file_url = ?");
             params.add(condition.getFileUrl());
+        }
+        if (StringUtils.isNotBlank(condition.getFileName())) {
+            sql.append(",file_name = ?");
+            params.add(condition.getFileName());
         }
         if (StringUtils.isNotBlank(condition.getFileSystem())) {
             sql.append(",file_system = ?");
@@ -191,6 +196,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             downloadRecord.setDownloadCode(rs.getString("download_code"));
             downloadRecord.setUploadStatus(UploadStatusEnum.fromCode(rs.getString("upload_status")));
             downloadRecord.setFileUrl(rs.getString("file_url"));
+            downloadRecord.setFileName(rs.getString("file_name"));
             downloadRecord.setFileSystem(rs.getString("file_system"));
             downloadRecord.setDownloadOperateBy(rs.getString("download_operate_by"));
             downloadRecord.setDownloadOperateName(rs.getString("download_operate_name"));

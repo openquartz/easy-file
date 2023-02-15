@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * EasyFileAdminProperty
  *
  * @author svnee
+ * @since 1.2.0
  **/
 @ConfigurationProperties(prefix = EasyFileUiProperties.PREFIX)
 public class EasyFileUiProperties {

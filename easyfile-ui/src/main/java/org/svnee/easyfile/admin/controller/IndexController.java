@@ -29,6 +29,7 @@ import org.svnee.easyfile.common.util.StringUtils;
  * index controller
  *
  * @author svnee
+ * @since 1.2.0
  */
 @Controller
 @RequestMapping("/easyfile-ui")

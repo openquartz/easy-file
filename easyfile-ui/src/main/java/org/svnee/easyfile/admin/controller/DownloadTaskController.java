@@ -26,6 +26,7 @@ import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
@@ -33,6 +34,7 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
  * download-task manage
  *
  * @author svnee
+ * @since 1.2.0
  */
 @Controller
 @RequestMapping("/easyfile-ui/download-task")
@@ -83,8 +85,6 @@ public class DownloadTaskController {
         downloadTaskResult.setRegisterId(downloadResult.getRegisterId());
         downloadTaskResult.setUploadStatus(downloadResult.getUploadStatus().getCode());
         downloadTaskResult.setUploadStatusDesc(downloadResult.getUploadStatus().getDesc());
-        downloadTaskResult.setFileSystem(downloadResult.getFileSystem());
-        downloadTaskResult.setFileUrl(downloadResult.getFileUrl());
         downloadTaskResult.setErrorMsg(downloadResult.getErrorMsg());
         downloadTaskResult.setDownloadCode(downloadResult.getDownloadCode());
         downloadTaskResult.setDownloadCodeDesc(downloadResult.getDownloadCodeDesc());
@@ -105,14 +105,14 @@ public class DownloadTaskController {
     @Auth
     @ResponseBody
     @PostMapping(value = "/download", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseResult<String> download(@RequestBody @Valid ClickDownloadRequest request) {
+    public ResponseResult<DownloadUrlResult> download(@RequestBody @Valid ClickDownloadRequest request) {
 
         DownloadRequest downloadRequest = new DownloadRequest();
         downloadRequest.setAppId(easyFileDownloadProperties.getAppId());
         downloadRequest.setRegisterId(request.getRegisterId());
         downloadRequest.setDownloadOperateBy(adminProperty.getAdminUsername());
         downloadRequest.setDownloadOperateName(adminProperty.getAdminUsername());
-        String url = downloadStorageService.download(downloadRequest);
+        DownloadUrlResult url = downloadStorageService.download(downloadRequest);
         return ResponseResult.ok(url);
     }
 

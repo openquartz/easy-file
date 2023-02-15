@@ -53,6 +53,12 @@ public class AsyncDownloadRecord {
     private String fileUrl;
 
     /**
+     * 文件名
+     */
+    @Column(name = "file_name")
+    private String fileName;
+
+    /**
      * 文件所在系统
      */
     @Column(name = "file_system")

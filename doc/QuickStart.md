@@ -187,7 +187,7 @@ EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需�
 </dependency>
 ```
 
-服务监控路径地址为: ip+port/easyfile-ui/ 例如：localhost:8080/easyfile-ui/ 服务默认Admin用户账户密码为: adminUser / adminUser
+服务监控路径地址为: ip+port/easyfile-ui/ 例如：localhost:8080/easyfile-ui/ 服务默认Admin用户账户密码为: admin / admin
 
 如果需要更改可以配置：
 

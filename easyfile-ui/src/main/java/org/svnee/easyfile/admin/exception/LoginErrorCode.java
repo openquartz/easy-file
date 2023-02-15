@@ -5,7 +5,9 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 
 /**
  * login error code
+ *
  * @author svnee
+ * @since 1.2.0
  */
 @Getter
 public enum LoginErrorCode implements EasyFileErrorCode {

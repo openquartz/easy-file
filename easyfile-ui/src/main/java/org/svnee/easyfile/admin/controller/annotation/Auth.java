@@ -9,6 +9,7 @@ import java.lang.annotation.Target;
  * 登录控制
  *
  * @author svnee
+ * @since 1.2.0
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)

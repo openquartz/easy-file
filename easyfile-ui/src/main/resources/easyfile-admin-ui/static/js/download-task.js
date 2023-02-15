@@ -37,7 +37,7 @@ layui.use(['element', 'table'], function () {
       , {
         field: 'executeProcess',
         title: '执行进度',
-        width: 150,
+        width: 200,
         templet: function (res) {
           return '<div class="layui-progress layui-progress-big" lay-showpercent="true">\n'
               + '  <div class="layui-progress-bar" lay-percent="'
@@ -71,7 +71,8 @@ layui.use(['element', 'table'], function () {
           contentType: 'application/json',
           success: function (result, status, xhr) {
             if (result.success) {
-              layer.msg('下载成功！');
+              downloadURL(result.data.url, result.data.fileName);
+              layer.msg('下载成功!');
             } else {
               layer.msg('下载失败!失败原因:' + result.message);
             }
@@ -114,6 +115,27 @@ layui.use(['element', 'table'], function () {
           });
     }
   });
-
 });
 
+function downloadURL(url, filename) {
+  url = url.replace(/\\/g, '/');
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url, true);
+  xhr.responseType = 'blob';
+  xhr.onload = () => {
+    if (xhr.status === 200) {
+      saveAs(xhr.response, filename);
+    }
+  };
+
+  xhr.send();
+}
+
+function saveAs(data, name) {
+  var urlObject = window.URL || window.webkitURL || window;
+  var export_blob = new Blob([data]);
+  var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+  save_link.href = urlObject.createObjectURL(export_blob);
+  save_link.download = name;
+  save_link.click();
+}

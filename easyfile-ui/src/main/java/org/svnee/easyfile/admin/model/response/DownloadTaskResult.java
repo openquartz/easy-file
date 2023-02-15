@@ -30,16 +30,6 @@ public class DownloadTaskResult {
     private String uploadStatusDesc;
 
     /**
-     * 上传文件系统
-     */
-    private String fileSystem;
-
-    /**
-     * 文件地址
-     */
-    private String fileUrl;
-
-    /**
      * 异常Msg
      */
     private String errorMsg;

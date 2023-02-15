@@ -12,7 +12,9 @@ import org.svnee.easyfile.common.exception.EasyFileErrorCode;
 
 /**
  * Exception-Handler
+ *
  * @author svnee
+ * @since 1.2.0
  */
 @Slf4j
 public class AbstractExceptionHandler {

@@ -11,6 +11,7 @@ import org.svnee.easyfile.admin.filter.AuthInterceptor;
  * web mvc 配置
  *
  * @author svnee
+ * @since 1.2.0
  */
 @Configuration
 public class EasyFileAdminWebMvcConfig implements WebMvcConfigurer {

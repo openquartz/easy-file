@@ -15,6 +15,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -77,7 +78,7 @@ public interface EasyFileClient {
      * @param request 下载请求
      * @return ResponseResult-fileUrl
      */
-    ResponseResult<String> download(DownloadRequest request);
+    ResponseResult<DownloadUrlResult> download(DownloadRequest request);
 
     /**
      * 用户撤销任务上传

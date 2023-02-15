@@ -4,4 +4,5 @@ org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileEnhanceCreatorAutoConf
 org.svnee.easyfile.starter.spring.boot.autoconfig.DefaultAsyncFileHandlerAutoConfiguration,\
 org.svnee.easyfile.starter.spring.boot.autoconfig.DisruptorAsyncFileHandlerAutoConfiguration,\
 org.svnee.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncFileHandlerAutoConfiguration,\
-org.svnee.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration
+org.svnee.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration,\
+org.svnee.easyfile.starter.spring.boot.autoconfig.EasyFileUiAutoConfiguration

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**
@@ -24,14 +25,14 @@ public class FileManageController {
     private String appId;
 
     @GetMapping("/get-url")
-    public ResponseResult<String> getUrl(@RequestParam("registerId")Long registerId){
+    public ResponseResult<String> getUrl(@RequestParam("registerId")Long registerId) {
         DownloadRequest downloadRequest = new DownloadRequest();
         downloadRequest.setDownloadOperateBy("sys");
         downloadRequest.setDownloadOperateName("sys");
         downloadRequest.setAppId(appId);
         downloadRequest.setRegisterId(registerId);
-        String url = downloadStorageService.download(downloadRequest);
-        return ResponseResult.ok(url);
+        DownloadUrlResult result = downloadStorageService.download(downloadRequest);
+        return ResponseResult.ok(result.getUrl());
     }
 
 }

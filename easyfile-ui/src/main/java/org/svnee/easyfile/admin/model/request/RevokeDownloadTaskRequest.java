@@ -7,6 +7,7 @@ import lombok.Data;
  * revoke download-task
  *
  * @author svnee
+ * @since 1.2.0
  **/
 @Data
 public class RevokeDownloadTaskRequest {

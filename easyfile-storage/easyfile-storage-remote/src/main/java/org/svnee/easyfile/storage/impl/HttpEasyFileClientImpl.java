@@ -17,6 +17,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.TypeReference;
 import org.svnee.easyfile.storage.EasyFileClient;
@@ -69,8 +70,8 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     }
 
     @Override
-    public ResponseResult<String> download(DownloadRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL, request, String.class);
+    public ResponseResult<DownloadUrlResult> download(DownloadRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL, request, DownloadUrlResult.class);
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 
@@ -113,9 +114,9 @@ public class DownloadController {
      * @return 结果
      */
     @PostMapping("/file")
-    public ResponseResult<String> download(@RequestBody @Valid DownloadRequest request) {
-        String fileUrl = asyncDownloadService.download(request);
-        return ResponseResult.ok(fileUrl);
+    public ResponseResult<DownloadUrlResult> download(@RequestBody @Valid DownloadRequest request) {
+        DownloadUrlResult result = asyncDownloadService.download(request);
+        return ResponseResult.ok(result);
     }
 
     /**

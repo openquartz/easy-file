@@ -6,6 +6,7 @@ import lombok.Data;
  * EasyFileAdminProperty
  *
  * @author svnee
+ * @since 1.2.0
  **/
 @Data
 public class AdminProperty {

@@ -22,6 +22,11 @@ public class HandleFileResult {
     private Pair<String, String> fileUrlPair;
 
     /**
+     * local generate file name
+     */
+    private String localFileName;
+
+    /**
      * 异常信息
      */
     private Throwable ex;
@@ -31,5 +36,10 @@ public class HandleFileResult {
         this.genFileResult = genFileResult;
         this.fileUrlPair = fileUrlPair;
         this.ex = ex;
+    }
+
+    public HandleFileResult localFileName(String localFileName) {
+        this.localFileName = localFileName;
+        return this;
     }
 }

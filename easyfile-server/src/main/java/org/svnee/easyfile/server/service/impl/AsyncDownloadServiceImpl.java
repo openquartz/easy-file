@@ -41,6 +41,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
@@ -119,6 +120,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setDownloadCode(request.getDownloadCode());
         downloadRecord.setUploadStatus(UploadStatusEnum.NONE);
         downloadRecord.setFileUrl(StringUtils.EMPTY);
+        downloadRecord.setFileName(StringUtils.EMPTY);
         downloadRecord.setFileSystem(Constants.NONE_FILE_SYSTEM);
         downloadRecord.setDownloadOperateBy(request.getNotifier().getUserBy());
         downloadRecord.setDownloadOperateName(request.getNotifier().getUserName());
@@ -182,6 +184,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             condition.setFileSystem(request.getSystem());
             condition.setUploadStatus(UploadStatusEnum.SUCCESS);
             condition.setFileUrl(request.getFileUrl());
+            condition.setFileName(request.getFileName());
             condition.setLastExecuteTime(new Date());
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constants.GMT8));
             calendar.add(Calendar.HOUR, bizConfig.getFileInvalidTimeMap().getOrDefault(request.getSystem(), 100));
@@ -318,19 +321,30 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     }
 
     @Override
-    public String download(DownloadRequest request) {
+    public DownloadUrlResult download(DownloadRequest request) {
+
         log.info("[AsyncDownload]#file download,request:{}", request);
 
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
+        Asserts.isTrue(downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS,
+            AsyncDownloadExceptionCode.DOWNLOAD_STATUS_NOT_SUPPORT);
+
         // 下载
         asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
 
         FileUrlTransformer transformer = fileUrlTransformerMap.get(downloadRecord.getFileSystem());
+
+        String url = downloadRecord.getFileUrl();
         if (Objects.nonNull(transformer)) {
-            return transformer.transform(downloadRecord.getFileUrl());
+            url = transformer.transform(downloadRecord.getFileUrl());
         }
-        return downloadRecord.getFileUrl();
+
+        DownloadUrlResult downloadUrlResult = new DownloadUrlResult();
+        downloadUrlResult.setFileSystem(downloadRecord.getFileSystem());
+        downloadUrlResult.setFileName(downloadRecord.getFileName());
+        downloadUrlResult.setUrl(url);
+        return downloadUrlResult;
     }
 
     @Override
@@ -394,6 +408,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
                 ExportResult exportResult = new ExportResult();
                 exportResult.setRegisterId(request.getRegisterId());
                 exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                exportResult.setFileName(StringUtils.EMPTY);
+                exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
                 return exportResult;
             });
 
@@ -454,6 +470,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         exportResult.setRegisterId(registerId);
         exportResult.setUploadStatus(downloadRecord.getUploadStatus());
         exportResult.setFileSystem(downloadRecord.getFileSystem());
+        exportResult.setFileName(downloadRecord.getFileName());
         exportResult.setFileUrl(downloadRecord.getFileUrl());
         exportResult.setErrorMsg(downloadRecord.getErrorMsg());
         return exportResult;
@@ -465,6 +482,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         uploadInfoChangeCondition.setId(registerId);
         uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
         uploadInfoChangeCondition.setFileUrl(exportResult.getFileUrl());
+        uploadInfoChangeCondition.setFileName(exportResult.getFileName());
         uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
         uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());

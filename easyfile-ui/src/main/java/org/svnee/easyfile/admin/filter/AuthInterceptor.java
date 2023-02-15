@@ -17,6 +17,7 @@ import org.svnee.easyfile.admin.service.LoginService;
  * 权限拦截
  *
  * @author svnee
+ * @since 1.2.0
  */
 @Component
 public class AuthInterceptor implements AsyncHandlerInterceptor {

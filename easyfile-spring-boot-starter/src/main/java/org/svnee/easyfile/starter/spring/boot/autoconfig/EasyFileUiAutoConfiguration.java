@@ -14,6 +14,7 @@ import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileUiPr
  * Admin Configuration
  *
  * @author svnee
+ * @since 1.2.0
  **/
 @Slf4j
 @Configuration

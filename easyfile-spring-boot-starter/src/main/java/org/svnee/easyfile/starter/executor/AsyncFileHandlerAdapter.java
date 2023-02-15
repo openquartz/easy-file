@@ -99,11 +99,13 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         Pair<String, String> fileUrl;
         boolean handleBreakFlag;
         GenerateFileResult genFileResult = null;
+        String localFileName;
         try {
             HandleFileResult handleFileResult = handleFileWithRetry(executor, exportExecutor, baseRequest, registerId);
             genFileResult = handleFileResult.getGenFileResult();
             handleBreakFlag = handleFileResult.getGenFileResult().isHandleBreakFlag();
             fileUrl = handleFileResult.getFileUrlPair();
+            localFileName = handleFileResult.getLocalFileName();
         } finally {
             // 上传完成时执行文件删除操作
             if (Objects.nonNull(genFileResult)) {
@@ -114,6 +116,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         UploadCallbackRequest request = new UploadCallbackRequest();
         request.setRegisterId(registerId);
         request.setSystem(Objects.nonNull(fileUrl) ? fileUrl.getKey() : Constants.NONE_FILE_SYSTEM);
+        request.setFileName(localFileName);
         if (!handleBreakFlag) {
             request.setUploadStatus(UploadStatusEnum.SUCCESS);
             request.setFileUrl(Objects.nonNull(fileUrl) ? fileUrl.getValue() : StringUtils.EMPTY);
@@ -340,9 +343,10 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             return retryer.call(() -> {
                 Pair<String, String> fileUrl = null;
                 Throwable error = null;
+                String cnFileName = StringUtils.EMPTY;
                 if (!genFileResult.isHandleBreakFlag()) {
                     try {
-                        String cnFileName = genCnFileName(baseRequest.getFileSuffix(), exportExecutor,
+                        cnFileName = genCnFileName(baseRequest.getFileSuffix(), exportExecutor,
                             genFileResult.isCompress());
                         fileUrl = uploadService
                             .upload(genFileResult.getUploadFile(), cnFileName, downloadProperties.getAppId());
@@ -354,7 +358,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                         error = t;
                     }
                 }
-                return new HandleFileResult(genFileResult, fileUrl, error);
+                return new HandleFileResult(genFileResult, fileUrl, error).localFileName(cnFileName);
             });
         } catch (Exception e) {
             logger.error(
@@ -389,6 +393,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         exportResult.setRegisterId(request.getRegisterId());
         exportResult.setUploadStatus(request.getUploadStatus());
         exportResult.setFileSystem(request.getSystem());
+        exportResult.setFileName(request.getFileName());
         exportResult.setFileUrl(request.getFileUrl());
         exportResult.setErrorMsg(request.getErrorMsg());
         return exportResult;
@@ -400,6 +405,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         exportResult.setUploadStatus(UploadStatusEnum.FAIL);
         exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
         exportResult.setFileUrl(StringUtils.EMPTY);
+        exportResult.setFileName(StringUtils.EMPTY);
         return exportResult;
     }
 

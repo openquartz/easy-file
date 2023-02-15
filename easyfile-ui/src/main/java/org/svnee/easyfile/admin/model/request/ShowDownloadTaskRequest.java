@@ -8,7 +8,9 @@ import lombok.Data;
 
 /**
  * show download task request
+ *
  * @author svnee
+ * @since 1.2.0
  **/
 @Data
 public class ShowDownloadTaskRequest {

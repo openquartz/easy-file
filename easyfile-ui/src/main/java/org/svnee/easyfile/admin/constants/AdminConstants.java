@@ -4,6 +4,7 @@ package org.svnee.easyfile.admin.constants;
  * Admin Constants
  *
  * @author svnee
+ * @since 1.2.0
  **/
 public final class AdminConstants {
 

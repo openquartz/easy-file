@@ -29,6 +29,7 @@ import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.storage.EasyFileClient;
@@ -124,8 +125,8 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     }
 
     @Override
-    public String download(DownloadRequest request) {
-        ResponseResult<String> responseResult = easyFileClient.download(request);
+    public DownloadUrlResult download(DownloadRequest request) {
+        ResponseResult<DownloadUrlResult> responseResult = easyFileClient.download(request);
         Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_ERROR);
         return responseResult.getData();

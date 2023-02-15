@@ -9,6 +9,7 @@ import org.svnee.easyfile.common.constants.Constants;
  * Cookie Utils
  *
  * @author svnee
+ * @since 1.2.0
  */
 public final class CookieUtil {
 
