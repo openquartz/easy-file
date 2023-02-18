@@ -23,7 +23,9 @@ public final class ThreadFactoryBuilder {
     private ThreadFactory backingThreadFactory = null;
 
     public ThreadFactoryBuilder setNameFormat(String nameFormat) {
+
         format(nameFormat, 0);
+
         this.nameFormat = nameFormat;
         return this;
     }
