@@ -318,3 +318,26 @@ easyfile.download.excel-row-access-window-size=100
 
 针对异步导出大文件时,可以进行实时的上报执行进度。入口`org.svnee.easyfile.starter.executor.ExecuteProcessProbe.report`
 针对使用默认的流式导出和分页导出已经支持自动上报进度。 如果自定义实现基础类(`org.svnee.easyfile.starter.executor.BaseDownloadExecutor`)时,需要用户调用执行进度接口上报执行进度。
+
+### 扩展点
+
+#### 下载器发布监听支持
+
+`easy-file` 在用户提交导出请求后.会在导出的前后发布导出开始事件(`org.svnee.easyfile.starter.intercept.listener.DownloadStartEvent`) \
+用户可以自定义实现接口(`org.svnee.easyfile.starter.intercept.listener.DownloadStartListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
+
+`easy-file` 在用户提交导出请求后.会在导出的提交完成后发布导出完成事件(`org.svnee.easyfile.starter.intercept.listener.DownloadEndEvent`) \
+用户可以自定义实现接口(`org.svnee.easyfile.starter.intercept.listener.DownloadEndListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
+
+注意：针对异步下载,导出结束事件(`org.svnee.easyfile.starter.intercept.listener.DownloadEndEvent`) 是指提交异步导出请求之后,并非实际执行完成之后。
+但是针对同步导出情况时,是指在导出文件方法执行之后。
+
+**使用场景**: 自定义业务打点监控,打点耗时; 自定义用户提交流量拦截限流; 特殊导出参数拦截(例如：安全参数校验) 等等;
+
+#### 异步下载器执行拦截支持
+
+在异步下载器实际导出逻辑处理时。`easy-file` 提供了 拦截支持。用户可以自定义实现接口(`org.svnee.easyfile.starter.intercept.DownloadExecutorInterceptor`),
+并注入到Spring 工厂中。\
+如果存在多个执行拦截器的顺序是： 前置拦截从小到大顺序执行; 后置拦截从大到小顺序执行;
+
+**使用场景**: 执行前切换数据源。切换读写分离。自定义业务监控打点。自定义统一日志打印等等
