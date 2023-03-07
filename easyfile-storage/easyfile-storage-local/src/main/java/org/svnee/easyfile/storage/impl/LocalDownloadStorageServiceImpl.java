@@ -62,11 +62,17 @@ import org.svnee.easyfile.storage.mapper.condition.UploadInfoChangeCondition;
  * @author svnee
  **/
 @Slf4j
-@AllArgsConstructor
 public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
 
     private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
     private final AsyncDownloadRecordMapper asyncDownloadRecordMapper;
+
+    public LocalDownloadStorageServiceImpl(
+        AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+        AsyncDownloadRecordMapper asyncDownloadRecordMapper) {
+        this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
+        this.asyncDownloadRecordMapper = asyncDownloadRecordMapper;
+    }
 
     @Override
     public boolean enableRunning(Long registerId) {
