@@ -9,7 +9,7 @@ import org.svnee.easyfile.starter.annotation.EnableEasyFileAutoConfiguration;
  * @author svnee
  **/
 @SpringBootApplication
-//@EnableEasyFileAutoConfiguration
+@EnableEasyFileAutoConfiguration
 @MapperScan("org.svnee.easyfile.example.mapper")
 public class LocalExampleApplication {
 
