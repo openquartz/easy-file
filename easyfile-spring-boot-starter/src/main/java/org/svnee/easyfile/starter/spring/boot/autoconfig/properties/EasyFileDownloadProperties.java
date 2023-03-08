@@ -4,8 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.svnee.easyfile.common.bean.excel.ExcelGenProperty;
-import org.svnee.easyfile.common.property.IEasyFileCommonProperties;
 import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.core.property.IEasyFileDownloadProperty;
 
 /**
  * 下载配置参数
@@ -15,7 +15,7 @@ import org.svnee.easyfile.common.util.StringUtils;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = EasyFileDownloadProperties.PREFIX)
-public class EasyFileDownloadProperties implements IEasyFileCommonProperties {
+public class EasyFileDownloadProperties implements IEasyFileDownloadProperty {
 
     public static final String PREFIX = "easyfile.download";
 
@@ -39,9 +39,9 @@ public class EasyFileDownloadProperties implements IEasyFileCommonProperties {
     /**
      * 本地文件临时存放地址
      * 默认：/tmp
-     * local-file-temp-path=/tmp
+     * local-file-temp-path=/temp
      */
-    private String localFileTempPath = "/tmp";
+    private String localFileTempPath = "/temp";
 
     /**
      * 是否开启自动注册
@@ -61,7 +61,7 @@ public class EasyFileDownloadProperties implements IEasyFileCommonProperties {
      * 在启用文件压缩后生效
      * min-enable-compress-mb-size=1
      */
-    private Integer minEnableCompressMbSize = 1;
+    private int minEnableCompressMbSize = 1;
 
     /**
      * 切面顺序,默认 Integer.MAX_VALUE

@@ -40,7 +40,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     private static final String INSERT_SQL =
         "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String FIND_BY_ID_SQL =
         "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"

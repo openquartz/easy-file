@@ -8,11 +8,12 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.lang.NonNull;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
-import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.core.executor.support.FileExportExecutorSupport;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 

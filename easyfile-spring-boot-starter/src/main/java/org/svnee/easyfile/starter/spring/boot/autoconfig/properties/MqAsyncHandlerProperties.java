@@ -1,11 +1,13 @@
 package org.svnee.easyfile.starter.spring.boot.autoconfig.properties;
 
+import org.svnee.easyfile.core.property.IDatabaseAsyncHandlerProperty;
+
 /**
  * MQ AsyncHandlerProperties
  *
  * @author svnee
  **/
-public interface MqAsyncHandlerProperties extends DatabaseAsyncHandlerProperties {
+public interface MqAsyncHandlerProperties extends IDatabaseAsyncHandlerProperty {
 
     /**
      * 最大等待超时时间

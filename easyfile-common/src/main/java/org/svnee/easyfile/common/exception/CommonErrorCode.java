@@ -1,7 +1,6 @@
 package org.svnee.easyfile.common.exception;
 
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
 
 /**
  * @author svnee

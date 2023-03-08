@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.svnee.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import org.svnee.easyfile.starter.aop.FileExportInterceptor;
-import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
+import org.svnee.easyfile.core.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;

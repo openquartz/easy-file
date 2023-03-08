@@ -3,12 +3,13 @@ package org.svnee.easyfile.starter.processor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.lang.NonNull;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.common.util.SpringContextUtil;
-import org.svnee.easyfile.starter.exception.DownloadErrorCode;
-import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.core.exception.DownloadErrorCode;
+import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.core.executor.support.FileExportExecutorSupport;
 import org.svnee.easyfile.storage.expand.FileUrlTransformerSupport;
 
 /**

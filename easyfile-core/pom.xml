@@ -25,12 +25,27 @@
 
         <dependency>
             <groupId>org.svnee</groupId>
-            <artifactId>easyevent-common</artifactId>
+            <artifactId>easyfile-common</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.svnee</groupId>
             <artifactId>easyfile-storage-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.rholder</groupId>
+            <artifactId>guava-retrying</artifactId>
         </dependency>
 
     </dependencies>
