@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.svnee.easyfile.admin.controller.annotation.Auth;
 import org.svnee.easyfile.admin.model.request.ClickDownloadRequest;
+import org.svnee.easyfile.admin.model.request.RetryDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.request.RevokeDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.request.ShowDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.response.DownloadTaskResult;
@@ -132,6 +133,14 @@ public class DownloadTaskController {
         } else {
             return ResponseResult.fail("01", cancelUpload.getCancelMsg());
         }
+    }
+
+    @Auth
+    @ResponseBody
+    @PostMapping(value = "/retry", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResult<?> retry(@RequestBody @Valid RetryDownloadTaskRequest request) {
+        // TODO: 2023/3/8 TODO
+        return ResponseResult.ok();
     }
 
 }
