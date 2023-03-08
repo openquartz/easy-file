@@ -85,6 +85,16 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-ui</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-storage-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
