@@ -10,7 +10,28 @@ import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * 文件导出执行器
+ * 标记导出执行器
+ * {@code
+ * <pre>
+ * @Component
+ * @FileExportExecutor("StudentDownloadDemoExecutor")
+ * public class StudentDownloadDemoExecutor extends AbstractDownloadExcel07Executor {
  *
+ *     @Resource
+ *     private StudentMapper studentMapper;
+ *
+ *     @Override
+ *     public boolean enableAsync(BaseDownloaderRequestContext context) {
+ *         return true;
+ *     }
+ *
+ *     @Override
+ *     public void export(DownloaderRequestContext context) {
+ *          // do export to i/o stream
+ *     }
+ * }
+ * </pre>
+ *     }
  * @author svnee
  */
 @Target({ElementType.TYPE})
@@ -19,7 +40,7 @@ import org.svnee.easyfile.common.util.StringUtils;
 public @interface FileExportExecutor {
 
     /**
-     * 执行器code
+     * 执行器code 需要唯一
      */
     String value();
 

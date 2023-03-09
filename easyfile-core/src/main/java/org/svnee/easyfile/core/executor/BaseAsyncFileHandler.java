@@ -7,6 +7,7 @@ import org.svnee.easyfile.common.response.ExportResult;
 /**
  * 异步文件处理器
  * 用于文件异步处理
+ * 你可以直接继承 {@link AsyncFileHandlerAdapter},
  *
  * @author svnee
  */
