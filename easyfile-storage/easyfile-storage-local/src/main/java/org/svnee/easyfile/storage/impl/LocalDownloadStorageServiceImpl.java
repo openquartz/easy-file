@@ -9,7 +9,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -34,6 +33,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -46,6 +46,7 @@ import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.convertor.AsyncDownloadRecordConverter;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
+import org.svnee.easyfile.storage.entity.AsyncDownloadAppEntity;
 import org.svnee.easyfile.storage.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTask;
 import org.svnee.easyfile.storage.exception.AsyncDownloadExceptionCode;
@@ -446,5 +447,18 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         pagination.setPage((long) request.getPageNum());
         pagination.setPageSize(Long.valueOf(request.getPageSize()));
         return pagination;
+    }
+
+    @Override
+    public List<AppTree> getAppTree() {
+        List<AsyncDownloadAppEntity> entityList = asyncDownloadTaskMapper.getAsyncDownloadAppEntity();
+        return entityList.stream()
+            .collect(Collectors.groupingBy(AsyncDownloadAppEntity::getUnifiedAppId,
+                Collectors.mapping(AsyncDownloadAppEntity::getAppId, Collectors.toList())))
+            .entrySet()
+            .stream()
+            .map(e -> new AppTree(e.getKey(), e.getValue()))
+            .collect(Collectors.toList());
+
     }
 }

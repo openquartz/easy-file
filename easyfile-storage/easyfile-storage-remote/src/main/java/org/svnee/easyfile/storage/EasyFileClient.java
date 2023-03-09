@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage;
 
+import java.util.List;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
@@ -13,6 +14,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -121,4 +123,11 @@ public interface EasyFileClient {
      */
     ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
         UploadStatusEnum nextUploadStatus);
+
+    /**
+     * get app tree
+     *
+     * @return app
+     */
+    ResponseResult<List<AppTree>> getAppTree();
 }

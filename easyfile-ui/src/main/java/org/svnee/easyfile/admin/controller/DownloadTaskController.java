@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.svnee.easyfile.admin.controller.annotation.Auth;
 import org.svnee.easyfile.admin.model.request.ClickDownloadRequest;
 import org.svnee.easyfile.admin.model.request.RetryDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.request.RevokeDownloadTaskRequest;
 import org.svnee.easyfile.admin.model.request.ShowDownloadTaskRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.admin.model.response.DownloadTaskResult;
 import org.svnee.easyfile.admin.property.AdminProperty;
+import org.svnee.easyfile.admin.service.ServerAppIdProvider;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
-import org.svnee.easyfile.common.property.IEasyFileCommonProperties;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.ListDownloadResultRequest;
@@ -44,7 +46,7 @@ import org.svnee.easyfile.storage.download.DownloadStorageService;
 public class DownloadTaskController {
 
     private final DownloadStorageService downloadStorageService;
-    private final IEasyFileCommonProperties easyFileDownloadProperties;
+    private final ServerAppIdProvider serverAppIdProvider;
     private final AdminProperty adminProperty;
 
     /**
@@ -52,8 +54,11 @@ public class DownloadTaskController {
      */
     @Auth
     @RequestMapping(value = "/get")
-    public String get() {
-        return "download-task";
+    public ModelAndView get() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("download-task");
+        modelAndView.addObject("showAppId", serverAppIdProvider.isShow());
+        return modelAndView;
     }
 
     /**
@@ -63,10 +68,10 @@ public class DownloadTaskController {
     @ResponseBody
     @PostMapping(value = "/list", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseResult<Pagination<DownloadTaskResult>> list(
-        @RequestBody @Valid ShowDownloadTaskRequest request) {
+        @RequestBody ShowDownloadTaskRequest request) {
 
         ListDownloadResultRequest resultRequest = new ListDownloadResultRequest();
-        resultRequest.setUnifiedAppId(easyFileDownloadProperties.getUnifiedAppId());
+        resultRequest.setUnifiedAppId(serverAppIdProvider.getCurrentUnifiedAppId());
         resultRequest.setStartDownloadTime(request.getStartDownloadTime());
         resultRequest.setEndDownloadTime(request.getEndDownloadTime());
         resultRequest.setPageNum(Objects.nonNull(request.getPageNum()) ? request.getPageNum() : 1);
@@ -109,7 +114,6 @@ public class DownloadTaskController {
     public ResponseResult<DownloadUrlResult> download(@RequestBody @Valid ClickDownloadRequest request) {
 
         DownloadRequest downloadRequest = new DownloadRequest();
-        downloadRequest.setAppId(easyFileDownloadProperties.getAppId());
         downloadRequest.setRegisterId(request.getRegisterId());
         downloadRequest.setDownloadOperateBy(adminProperty.getAdminUsername());
         downloadRequest.setDownloadOperateName(adminProperty.getAdminUsername());
@@ -141,6 +145,14 @@ public class DownloadTaskController {
     public ResponseResult<?> retry(@RequestBody @Valid RetryDownloadTaskRequest request) {
         // TODO: 2023/3/8 TODO
         return ResponseResult.ok();
+    }
+
+    @Auth
+    @ResponseBody
+    @PostMapping(value = "/listAppId", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResult<List<AppTree>> listAppId() {
+        List<AppTree> appTreeList = downloadStorageService.getAppTree();
+        return ResponseResult.ok(appTreeList);
     }
 
 }

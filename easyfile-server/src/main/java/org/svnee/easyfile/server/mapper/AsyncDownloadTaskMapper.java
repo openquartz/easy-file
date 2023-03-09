@@ -2,6 +2,7 @@ package org.svnee.easyfile.server.mapper;
 
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.svnee.easyfile.server.entity.AsyncDownloadAppEntity;
 import org.svnee.easyfile.server.entity.AsyncDownloadTask;
 
 /**
@@ -78,5 +79,10 @@ public interface AsyncDownloadTaskMapper {
      */
     int refreshTaskDesc(@Param("id") Long id, @Param("taskDesc") String taskDesc);
 
-
+    /**
+     * get app tree
+     *
+     * @return app tree
+     */
+    List<AsyncDownloadAppEntity> getAppTree();
 }

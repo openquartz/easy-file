@@ -11,6 +11,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -123,5 +124,13 @@ public interface AsyncDownloadService {
      * @return 请求信息
      */
     DownloadRequestInfo getRequestInfoByRegisterId(Long registerId);
+
+    /**
+     * app tree
+     *
+     * @return app tree
+     */
+    List<AppTree> getAppTree();
+
 
 }

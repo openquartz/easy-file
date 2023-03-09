@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.impl;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
@@ -15,6 +16,7 @@ import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -103,5 +105,13 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
         processRequest.setExecuteProcess(executeProcess);
         processRequest.setNextUploadStatus(nextUploadStatus);
         return httpAgent.httpPost(RemoteUrlConstants.REFRESH_EXECUTE_PROCESS_URL, processRequest);
+    }
+
+    @Override
+    public ResponseResult<List<AppTree>> getAppTree() {
+        return httpAgent
+            .httpPost(RemoteUrlConstants.GET_APP_TREE_URL, null,
+                new TypeReference<ResponseResult<List<AppTree>>>() {
+                });
     }
 }

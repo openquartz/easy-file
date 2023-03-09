@@ -1,5 +1,6 @@
 package org.svnee.easyfile.storage.download;
 
+import java.util.List;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -10,6 +11,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -107,4 +109,12 @@ public interface DownloadStorageService {
      * @return 导出结果
      */
     Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request);
+
+    /**
+     * app tree
+     *
+     * @return app
+     */
+    List<AppTree> getAppTree();
+
 }

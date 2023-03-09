@@ -8,7 +8,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.admin.property.AdminProperty;
+import org.svnee.easyfile.admin.service.DefaultServiceAppIdProvider;
 import org.svnee.easyfile.admin.service.LoginService;
+import org.svnee.easyfile.admin.service.ServerAppIdProvider;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileUiProperties;
 
@@ -37,6 +39,11 @@ public class EasyFileUiAutoConfiguration {
         adminProperty.setAdminUsername(properties.getAdmin().getUsername());
         adminProperty.setAdminPassword(properties.getAdmin().getPassword());
         return adminProperty;
+    }
+
+    @Bean
+    public ServerAppIdProvider defaultServerAppIdProvider(EasyFileDownloadProperties easyFileDownloadProperties) {
+        return new DefaultServiceAppIdProvider(easyFileDownloadProperties);
     }
 
 }

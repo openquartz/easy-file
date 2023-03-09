@@ -1,5 +1,6 @@
 package org.svnee.easyfile.server.controller;
 
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -168,6 +170,17 @@ public class DownloadController {
     public ResponseResult<DownloadRequestInfo> getRequestInfo(@RequestBody @Valid @NotNull Long registerId) {
         DownloadRequestInfo requestInfo = asyncDownloadService.getRequestInfoByRegisterId(registerId);
         return ResponseResult.ok(requestInfo);
+    }
+
+    /**
+     * get app tree
+     *
+     * @return result
+     */
+    @PostMapping("/getAppTree")
+    public ResponseResult<List<AppTree>> getAppTree() {
+        List<AppTree> appTreeList = asyncDownloadService.getAppTree();
+        return ResponseResult.ok(appTreeList);
     }
 
 }

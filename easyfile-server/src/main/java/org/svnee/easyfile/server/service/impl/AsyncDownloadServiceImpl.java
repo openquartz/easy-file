@@ -42,6 +42,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -53,6 +54,7 @@ import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.server.config.BizConfig;
 import org.svnee.easyfile.server.convertor.AsyncDownloadRecordConverter;
+import org.svnee.easyfile.server.entity.AsyncDownloadAppEntity;
 import org.svnee.easyfile.server.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.server.entity.AsyncDownloadTask;
 import org.svnee.easyfile.server.exception.AsyncDownloadExceptionCode;
@@ -527,5 +529,17 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
         baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
         return baseDownloaderRequestContext;
+    }
+
+    @Override
+    public List<AppTree> getAppTree() {
+        List<AsyncDownloadAppEntity> appEntityList = asyncDownloadTaskMapper.getAppTree();
+        return appEntityList.stream()
+            .collect(Collectors.groupingBy(AsyncDownloadAppEntity::getUnifiedAppId,
+                Collectors.mapping(AsyncDownloadAppEntity::getAppId, Collectors.toList())))
+            .entrySet()
+            .stream()
+            .map(e -> new AppTree(e.getKey(), e.getValue()))
+            .collect(Collectors.toList());
     }
 }

@@ -1,6 +1,5 @@
 package org.svnee.easyfile.common.request;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -11,9 +10,6 @@ import lombok.Data;
  */
 @Data
 public class DownloadRequest {
-
-    @NotBlank(message = "AppId不能为空")
-    private String appId;
 
     @NotNull(message = "注册Id不能为空")
     private Long registerId;

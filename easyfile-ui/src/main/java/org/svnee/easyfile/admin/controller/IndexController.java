@@ -44,7 +44,6 @@ public class IndexController {
     @Auth
     @RequestMapping("/")
     public String index(Model model) {
-
         return "index";
     }
 
