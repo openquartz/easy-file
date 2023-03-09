@@ -8,13 +8,6 @@ package org.svnee.easyfile.admin.service;
 public interface ServerAppIdProvider {
 
     /**
-     * getAppId
-     *
-     * @return appId
-     */
-    String getCurrentAppId();
-
-    /**
      * 服务统一标识
      * unified-app-id
      *
@@ -28,7 +21,7 @@ public interface ServerAppIdProvider {
      * @return show flag
      */
     default boolean isShow() {
-        return false;
+        return true;
     }
 
 }

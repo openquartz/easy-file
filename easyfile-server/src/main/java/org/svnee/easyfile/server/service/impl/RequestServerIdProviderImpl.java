@@ -17,16 +17,6 @@ import org.svnee.easyfile.common.exception.CommonErrorCode;
 public class RequestServerIdProviderImpl implements ServerAppIdProvider {
 
     @Override
-    public String getCurrentAppId() {
-
-        HttpServletRequest request =
-            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String appId = request.getParameter("appId");
-        Asserts.notEmpty(appId, CommonErrorCode.PARAM_ILLEGAL_ERROR);
-        return appId;
-    }
-
-    @Override
     public String getCurrentUnifiedAppId() {
         HttpServletRequest request =
             ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();

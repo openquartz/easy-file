@@ -16,11 +16,6 @@ public class DefaultServiceAppIdProvider implements ServerAppIdProvider {
     }
 
     @Override
-    public String getCurrentAppId() {
-        return commonProperties.getAppId();
-    }
-
-    @Override
     public String getCurrentUnifiedAppId() {
         return commonProperties.getUnifiedAppId();
     }
