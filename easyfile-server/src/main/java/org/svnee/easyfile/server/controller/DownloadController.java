@@ -1,9 +1,11 @@
 package org.svnee.easyfile.server.controller;
 
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
@@ -156,5 +158,16 @@ public class DownloadController {
         return ResponseResult.ok();
     }
 
+    /**
+     * get request info
+     *
+     * @param registerId registerId
+     * @return result
+     */
+    @PostMapping("/getRequestInfo")
+    public ResponseResult<DownloadRequestInfo> getRequestInfo(@RequestBody @Valid @NotNull Long registerId) {
+        DownloadRequestInfo requestInfo = asyncDownloadService.getRequestInfoByRegisterId(registerId);
+        return ResponseResult.ok(requestInfo);
+    }
 
 }

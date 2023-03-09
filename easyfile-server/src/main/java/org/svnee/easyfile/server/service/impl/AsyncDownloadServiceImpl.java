@@ -22,13 +22,16 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Notifier;
 import org.svnee.easyfile.common.bean.Pagination;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
+import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.ExpandExecutorErrorCode;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
@@ -499,5 +502,30 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     public void refreshExecuteProcess(Long registerId, Integer executeProcess,
         UploadStatusEnum nextUploadStatus) {
         asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess, nextUploadStatus);
+    }
+
+    @Override
+    public DownloadRequestInfo getRequestInfoByRegisterId(Long registerId) {
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(registerId);
+        if (Objects.isNull(downloadRecord)) {
+            return null;
+        }
+        RegisterDownloadRequest registerRequest = JSONUtil
+            .parseObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+        Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
+
+        DownloadRequestInfo requestInfo = new DownloadRequestInfo();
+        requestInfo.setRequestContext(convertBaseDownloadRequestContext(registerRequest));
+        requestInfo.setDownloadCode(downloadRecord.getDownloadCode());
+        return requestInfo;
+    }
+
+    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
+        baseDownloaderRequestContext.setNotifier(registerRequest.getNotifier());
+        baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseDownloaderRequestContext;
     }
 }

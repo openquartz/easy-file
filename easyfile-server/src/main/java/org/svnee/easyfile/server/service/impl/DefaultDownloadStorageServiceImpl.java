@@ -69,8 +69,7 @@ public class DefaultDownloadStorageServiceImpl implements DownloadStorageService
 
     @Override
     public DownloadRequestInfo getRequestInfoByRegisterId(Long registerId) {
-        // TODO: 2023/3/9
-        return null;
+        return asyncDownloadService.getRequestInfoByRegisterId(registerId);
     }
 
     @Override
