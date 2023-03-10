@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScans;
  **/
 @SpringBootApplication
 @MapperScan("org.svnee.easyfile.server.mapper")
-@ComponentScans(value = {@ComponentScan("org.svnee")})
+@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
 public class EasyFileServerApplication {
 
     public static void main(String[] args) {
