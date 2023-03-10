@@ -196,6 +196,7 @@
 
     <select id="getAppTree" resultType="org.svnee.easyfile.server.entity.AsyncDownloadAppEntity">
         select distinct app_id, unified_app_id
-        from ef_async_download_task and is_deleted = 0
+        from ef_async_download_task
+        where is_deleted = 0
     </select>
 </mapper>

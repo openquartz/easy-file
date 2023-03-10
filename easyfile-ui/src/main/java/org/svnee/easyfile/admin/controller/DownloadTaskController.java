@@ -30,6 +30,7 @@ import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.util.PaginationUtils;
+import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 
 /**
@@ -68,6 +69,10 @@ public class DownloadTaskController {
     @PostMapping(value = "/list", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseResult<Pagination<DownloadTaskResult>> list(
         @RequestBody ShowDownloadTaskRequest request) {
+
+        if (StringUtils.isBlank(serverAppIdProvider.getCurrentUnifiedAppId())) {
+            return ResponseResult.ok(Pagination.empty());
+        }
 
         ListDownloadResultRequest resultRequest = new ListDownloadResultRequest();
         resultRequest.setUnifiedAppId(serverAppIdProvider.getCurrentUnifiedAppId());

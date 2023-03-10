@@ -70,10 +70,13 @@ layui.use(['element', 'table', 'dropdown'], function () {
             function (obj) {
               // 数据重载 - 参数重置
               table.reloadData('table', {
-                where: {
-                  unifiedAppId: obj.id
-                  //,test: '新的 test2'
-                  //,token: '新的 token2'
+                url: '/easyfile-ui/download-task/list' + "?unifiedAppId="
+                    + obj.id
+                , method: 'post'
+                , contentType: 'application/json'
+                , request: {
+                  pageName: 'pageNum'
+                  , limitName: 'pageSize'
                 }
                 , scrollPos: 'fixed'  // 保持滚动条位置不变 - v2.7.3 新增
                 , height: 2000 // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
