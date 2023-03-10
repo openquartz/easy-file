@@ -21,7 +21,7 @@ public interface ServerAppIdProvider {
      * @return show flag
      */
     default boolean isShow() {
-        return true;
+        return false;
     }
 
 }

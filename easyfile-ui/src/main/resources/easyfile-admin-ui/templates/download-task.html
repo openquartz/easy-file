@@ -9,17 +9,18 @@
     <link rel="stylesheet" href="/easyfile-ui/static/layui/css/layui.css" media="all">
 </head>
 <body>
-<fieldset class="layui-elem-field layui-field-title">
-    <legend>下载任务</legend>
-</fieldset>
-<div th:if="${showAppId}">
-    <i class="layui-edge"></i>
-    <!--    <input type="text" placeholder="请选择" value="管理员" readonly class="layui-input layui-unselect">-->
-</div>
 
 <table id="table" lay-filter="table"></table>
 
 <script src="/easyfile-ui/static/layui/layui.js"></script>
+<script type="text/html" id="tableToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTable" th:if="${showAppId}">
+            统一APPID
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+    </div>
+</script>
 <script type="text/html" id="clickDownload">
     <a class="layui-btn layui-btn-xs" lay-event="click">下载</a>
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>

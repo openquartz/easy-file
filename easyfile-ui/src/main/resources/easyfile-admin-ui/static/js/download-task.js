@@ -1,11 +1,18 @@
-layui.use(['element', 'table'], function () {
+layui.use(['element', 'table', 'dropdown'], function () {
 
   var element = layui.element;
   var table = layui.table;
+  var dropdown = layui.dropdown;
 
   table.render({
     elem: '#table'
-    , height: 'full'
+    , height: 'full-300'
+    , toolbar: '#tableToolbar'
+    , defaultToolbar: ['filter', 'exports', 'print', {
+      title: '帮助'
+      , layEvent: 'LAYTABLE_TIPS'
+      , icon: 'layui-icon-tips'
+    }]
     , url: '/easyfile-ui/download-task/list'
     , method: 'post'
     , contentType: 'application/json'
@@ -50,6 +57,31 @@ layui.use(['element', 'table'], function () {
     ]],
     done: function (res, curr, count) {
       element.render();
+
+      var id = this.id;
+
+      // 重载测试
+      dropdown.render({
+        elem: '#reloadTable' //可绑定在任意元素中，此处以上述按钮为例
+        , align: 'center'
+        , data: loadAppTree()
+        // 菜单被点击的事件
+        , click:
+            function (obj) {
+              // 数据重载 - 参数重置
+              table.reloadData('table', {
+                where: {
+                  unifiedAppId: obj.id
+                  //,test: '新的 test2'
+                  //,token: '新的 token2'
+                }
+                , scrollPos: 'fixed'  // 保持滚动条位置不变 - v2.7.3 新增
+                , height: 2000 // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
+                //,url: '404'
+                //,page: {curr: 1, limit: 30} // 重新指向分页
+              });
+            }
+      });
     }
   });
 
@@ -138,4 +170,28 @@ function saveAs(data, name) {
   save_link.href = urlObject.createObjectURL(export_blob);
   save_link.download = name;
   save_link.click();
+}
+
+function loadAppTree() {
+
+  var array = [];
+
+  var $ = layui.jquery;
+
+  $.ajax({
+    type: 'POST',
+    url: '/easyfile-ui/download-task/listAppId',
+    contentType: 'application/json',
+    success: function (result, status, xhr) {
+      if (result.success) {
+        for (let i = 0; i < result.data.length; i++) {
+          array.push({id: result.data[i].appId, title: result.data[i].appId});
+        }
+      }
+    },
+    error: function (xhr, status, error) {
+    },
+    dataType: 'json'
+  });
+  return array;
 }

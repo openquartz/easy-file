@@ -249,7 +249,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         StringJoiner conditionWhere = new StringJoiner(" and ");
         Map<String, Object> paramMap = new HashMap<>(10);
         if (CollectionUtils.isNotEmpty(condition.getLimitedAppIdList())) {
-            conditionWhere.add("app_id= (:appId)");
+            conditionWhere.add("app_id in (:appId)");
             paramMap.put("appId", condition.getLimitedAppIdList());
         }
         if (StringUtils.isNotBlank(condition.getDownloadCode())) {

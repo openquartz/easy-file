@@ -1,5 +1,6 @@
 package org.svnee.easyfile.server.service.impl;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
@@ -12,6 +13,7 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
@@ -85,5 +87,10 @@ public class DefaultDownloadStorageServiceImpl implements DownloadStorageService
     @Override
     public Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request) {
         return asyncDownloadService.listExportResult(request);
+    }
+
+    @Override
+    public List<AppTree> getAppTree() {
+        return asyncDownloadService.getAppTree();
     }
 }
