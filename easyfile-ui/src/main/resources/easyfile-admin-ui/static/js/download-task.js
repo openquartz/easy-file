@@ -62,7 +62,7 @@ layui.use(['element', 'table', 'dropdown'], function () {
 
       // 重载测试
       dropdown.render({
-        elem: '#reloadTable' //可绑定在任意元素中，此处以上述按钮为例
+        elem: '#switchApp' //可绑定在任意元素中，此处以上述按钮为例
         , align: 'center'
         , data: loadAppTree()
         // 菜单被点击的事件
@@ -85,6 +85,20 @@ layui.use(['element', 'table', 'dropdown'], function () {
               });
             }
       });
+    }
+  });
+
+  // 工具栏事件
+  table.on('toolbar(table)', function (obj) {
+
+    var id = obj.config.id;
+    var checkStatus = table.checkStatus(id);
+    var othis = lay(this);
+    switch (obj.event) {
+
+      case 'reloadTable':
+        table.reload('table');
+        break;
     }
   });
 

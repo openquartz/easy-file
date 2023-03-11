@@ -15,7 +15,10 @@
 <script src="/easyfile-ui/static/layui/layui.js"></script>
 <script type="text/html" id="tableToolbar">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm layui-bg-blue" id="reloadTable" th:if="${showAppId}">
+        <button class="layui-btn layui-btn-sm layui-bg-green" lay-event="reloadTable">
+            刷新
+        </button>
+        <button class="layui-btn layui-btn-sm layui-bg-blue" id="switchApp" th:if="${showAppId}">
             统一APPID
             <i class="layui-icon layui-icon-down layui-font-12"></i>
         </button>
