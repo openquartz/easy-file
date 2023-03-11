@@ -99,6 +99,9 @@ layui.use(['element', 'table', 'dropdown'], function () {
       case 'reloadTable':
         table.reload('table');
         break;
+      case 'LAYTABLE_TIPS':
+        window.location.href = 'https://github.com/svnlab/easyfile';
+        break;
     }
   });
 

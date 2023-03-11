@@ -58,7 +58,7 @@ public class LoginService {
                 adminProperty.getAdminPassword());
         }
         if (easyFileAdminUser == null) {
-            return ResponseResult.fail(LoginErrorCode.LOGIN_PARAM_EMPTY_ERROR);
+            return ResponseResult.fail(LoginErrorCode.LOGIN_USERNAME_OR_PASSWORD_ERROR);
         }
 
         String loginToken = makeToken(easyFileAdminUser);

@@ -17,9 +17,9 @@ public final class CookieUtil {
 	}
 
 	/**
-	 * cookie default cache seconds
-	 */
-    private static final int COOKIE_CACHE_MAX_SECONDS = 120;
+     * cookie default cache seconds
+     */
+    private static final int COOKIE_CACHE_MAX_SECONDS = 300;
 
     /**
 	 * cookie path
@@ -30,7 +30,7 @@ public final class CookieUtil {
      * save cookie
      */
     public static void save(HttpServletResponse response, String key, String value, boolean rememberMe) {
-        int age = rememberMe ? COOKIE_CACHE_MAX_SECONDS : -1;
+        int age = !rememberMe ? COOKIE_CACHE_MAX_SECONDS : -1;
 		save(response, key, value, age);
     }
 

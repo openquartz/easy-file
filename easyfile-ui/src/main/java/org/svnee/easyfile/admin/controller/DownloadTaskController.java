@@ -144,6 +144,9 @@ public class DownloadTaskController {
     }
 
 
+    /**
+     * appId
+     */
     @Auth
     @ResponseBody
     @PostMapping(value = "/listAppId", consumes = MediaType.APPLICATION_JSON_VALUE)

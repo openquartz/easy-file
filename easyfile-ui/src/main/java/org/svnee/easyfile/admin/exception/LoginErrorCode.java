@@ -14,8 +14,9 @@ public enum LoginErrorCode implements EasyFileErrorCode {
 
     AUTH_FAILED_ERROR("01", "Auth Failed!"),
     USER_NOT_EXISTED_ERROR("02", "User Not Existed!"),
-    LOGIN_PARAM_EMPTY_ERROR("03","login param is empty"),
-    LOGIN_PARAM_INVALID_ERROR("04","login param invalid"),
+    LOGIN_PARAM_EMPTY_ERROR("03", "login param is empty"),
+    LOGIN_PARAM_INVALID_ERROR("04", "login param invalid"),
+    LOGIN_USERNAME_OR_PASSWORD_ERROR("05", "login username or password not correct!"),
     ;
 
     private final String errorCode;
