@@ -129,7 +129,8 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             return true;
         }
 
-        BaseExecuteParam executeParam = JSONUtil.parseObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+        BaseExecuteParam executeParam = JSONUtil
+            .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
         if (Objects.isNull(executeParam)) {
             if (MapUtils.isEmpty(exportParamMap)) {
                 return true;
@@ -246,7 +247,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             Objects.nonNull(request.getNotifier()) ? request.getNotifier().getEmail() : StringUtils.EMPTY);
         downloadRecord.setMaxServerRetry(request.getMaxServerRetry());
         downloadRecord.setCurrentRetry(0);
-        downloadRecord.setExecuteParam(JSONUtil.toJson(request));
+        downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         downloadRecord.setErrorMsg(StringUtils.EMPTY);
         downloadRecord.setLastExecuteTime(new Date());
         downloadRecord.setInvalidTime(new Date());
@@ -359,7 +360,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             return null;
         }
         RegisterDownloadRequest registerRequest = JSONUtil
-            .parseObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+            .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
         Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
 
         DownloadRequestInfo requestInfo = new DownloadRequestInfo();

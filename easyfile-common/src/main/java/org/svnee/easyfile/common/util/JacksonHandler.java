@@ -3,31 +3,22 @@ package org.svnee.easyfile.common.util;
 import static org.svnee.easyfile.common.util.ExceptionUtils.rethrow;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
-import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.TimeZone;
 
 /**
  * JsonUtils
  *
  * @author svnee
  **/
-public final class JacksonHandler implements JsonFacade {
+public abstract class JacksonHandler implements JsonFacade {
 
     private final ObjectMapper mapper = newMapper();
 
@@ -35,24 +26,7 @@ public final class JacksonHandler implements JsonFacade {
      * 基于默认配置, 创建一个新{@link ObjectMapper},
      * 随后可以定制化这个新{@link ObjectMapper}.
      */
-    public ObjectMapper newMapper() {
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-        final ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.setDateFormat(dateFormat);
-        objectMapper.setTimeZone(TimeZone.getTimeZone("UTC"));
-        objectMapper.registerModule(new JavaTimeModule());
-        objectMapper.registerModule(new Jdk8Module());
-        objectMapper.enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY);
-        objectMapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
-        objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT);
-        objectMapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-        objectMapper.disable(MapperFeature.DEFAULT_VIEW_INCLUSION);
-        objectMapper.activateDefaultTypingAsProperty(LaissezFaireSubTypeValidator.instance,
-            DefaultTyping.NON_FINAL, "@class");
-        return objectMapper;
-    }
+    public abstract ObjectMapper newMapper();
 
     /**
      * 获取默认{@link ObjectMapper}.

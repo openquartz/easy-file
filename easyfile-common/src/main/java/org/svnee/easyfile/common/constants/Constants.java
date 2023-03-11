@@ -99,11 +99,6 @@ public final class Constants {
     public static final String UP = "UP";
 
     /**
-     * Access_Token
-     */
-    public static final String ACCESS_TOKEN = "accessToken";
-
-    /**
      * SSL
      */
     public static final String SSL = "SSL";

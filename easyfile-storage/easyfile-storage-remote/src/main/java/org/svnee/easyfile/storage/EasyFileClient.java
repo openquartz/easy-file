@@ -119,6 +119,7 @@ public interface EasyFileClient {
      *
      * @param registerId 注册ID
      * @param executeProcess 执行进度
+     * @param nextUploadStatus next upload status
      * @return response
      */
     ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,

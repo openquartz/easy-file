@@ -151,7 +151,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         param.setDownloadCode(request.getDownloadCode());
         param.setFileSuffix(request.getFileSuffix());
         param.setOtherMap(request.getOtherMap());
-        downloadRecord.setExecuteParam(JSONUtil.toJson(request));
+        downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         return downloadRecord;
     }
 
@@ -435,7 +435,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             return true;
         }
 
-        BaseExecuteParam executeParam = JSONUtil.parseObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+        BaseExecuteParam executeParam = JSONUtil
+            .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
         if (Objects.isNull(executeParam)) {
             if (MapUtils.isEmpty(exportParamMap)) {
                 return true;
@@ -513,7 +514,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             return null;
         }
         RegisterDownloadRequest registerRequest = JSONUtil
-            .parseObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+            .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
         Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
 
         DownloadRequestInfo requestInfo = new DownloadRequestInfo();
