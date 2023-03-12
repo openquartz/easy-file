@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.svnee.easyfile.common.util.json.ClassJacksonHandler;
+import org.svnee.easyfile.common.util.json.GeneralJacksonHandler;
+import org.svnee.easyfile.common.util.json.JsonFacade;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * JSON util.

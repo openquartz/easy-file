@@ -1,16 +1,9 @@
 package org.svnee.easyfile.storage.remote;
 
 import java.util.Map;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import org.svnee.easyfile.common.bean.ResponseResult;
-import org.svnee.easyfile.common.constants.Constants;
-import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
-import org.svnee.easyfile.common.util.MapUtils;
 import org.svnee.easyfile.common.util.SpringContextUtil;
-import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * Server http agent.

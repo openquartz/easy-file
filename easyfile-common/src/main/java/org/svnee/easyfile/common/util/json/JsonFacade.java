@@ -1,7 +1,8 @@
-package org.svnee.easyfile.common.util;
+package org.svnee.easyfile.common.util.json;
 
 import java.util.List;
 import java.util.Set;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * Json facade.

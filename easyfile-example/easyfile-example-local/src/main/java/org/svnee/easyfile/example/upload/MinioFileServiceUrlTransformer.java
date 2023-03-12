@@ -12,7 +12,7 @@ import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
 import org.svnee.easyfile.common.util.ExceptionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 import org.svnee.easyfile.example.exception.UploadFileErrorCode;
 import org.svnee.easyfile.example.upload.model.FileStorageKeyEnum;
 import org.svnee.easyfile.example.upload.model.MinioFileIdentifyKey;

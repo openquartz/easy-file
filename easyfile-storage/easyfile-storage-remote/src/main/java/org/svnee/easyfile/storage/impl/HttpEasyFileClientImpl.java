@@ -21,7 +21,7 @@ import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
 import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.remote.HttpAgent;
 

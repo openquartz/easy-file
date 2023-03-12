@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.util;
+package org.svnee.easyfile.common.util.json;
 
 import static org.svnee.easyfile.common.util.ExceptionUtils.rethrow;
 
@@ -12,6 +12,8 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import org.svnee.easyfile.common.util.json.JsonFacade;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * JsonUtils

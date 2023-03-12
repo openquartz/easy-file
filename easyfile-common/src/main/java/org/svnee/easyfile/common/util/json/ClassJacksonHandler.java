@@ -1,8 +1,9 @@
-package org.svnee.easyfile.common.util;
+package org.svnee.easyfile.common.util.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import org.svnee.easyfile.common.util.json.GeneralJacksonHandler;
 
 /**
  * Class Jackson handler

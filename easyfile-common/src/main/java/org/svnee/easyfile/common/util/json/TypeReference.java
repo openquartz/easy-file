@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.util;
+package org.svnee.easyfile.common.util.json;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -20,7 +20,7 @@ import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.EasyFileException;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.common.util.StringUtils;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
 
 /**

@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.util;
+package org.svnee.easyfile.common.util.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.TimeZone;
+import org.svnee.easyfile.common.util.json.JacksonHandler;
 
 /**
  * general jackson handler
