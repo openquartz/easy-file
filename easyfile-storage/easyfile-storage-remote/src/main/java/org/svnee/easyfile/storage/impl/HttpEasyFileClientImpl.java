@@ -3,7 +3,7 @@ package org.svnee.easyfile.storage.impl;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;

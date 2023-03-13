@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
-import org.svnee.easyfile.common.bean.PageTotalContext;
+import org.svnee.easyfile.common.util.page.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;

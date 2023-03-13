@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;

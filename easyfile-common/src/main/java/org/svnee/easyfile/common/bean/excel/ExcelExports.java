@@ -19,6 +19,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.svnee.easyfile.common.annotations.ExcelProperty;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.ReflectionUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 
 /**
@@ -205,7 +206,7 @@ public final class ExcelExports {
             for (ExcelFiled field : exportFields) {
                 // 基本类型数据
                 if (!field.isCollection()
-                    && org.svnee.easyfile.common.bean.excel.ReflectionUtils.isJavaClass(field.getField().getType())) {
+                    && ReflectionUtils.isJavaClass(field.getField().getType())) {
                     Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
 
                     Cell cell = row.createCell(field.getFrmColumnIndex());

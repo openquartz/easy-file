@@ -2,7 +2,7 @@ package org.svnee.easyfile.storage;
 
 import java.util.List;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;

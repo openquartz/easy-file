@@ -8,7 +8,7 @@ import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.request.DownloadTriggerRequest;
 import org.svnee.easyfile.common.response.DownloadTriggerEntry;
-import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.common.concurrent.ThreadFactoryBuilder;
 import org.svnee.easyfile.common.util.SpringContextUtil;
 import org.svnee.easyfile.core.executor.AsyncFileHandlerAdapter;
 import org.svnee.easyfile.core.executor.BaseDownloadExecutor;

@@ -7,7 +7,7 @@ import com.lmax.disruptor.dsl.Disruptor;
 import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
 import org.springframework.beans.factory.DisposableBean;
-import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.common.concurrent.ThreadFactoryBuilder;
 import org.svnee.easyfile.core.executor.trigger.DownloadTriggerMessage;
 import org.svnee.easyfile.core.executor.trigger.MQTriggerProducer;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.DisruptorAsyncHandlerProperties;

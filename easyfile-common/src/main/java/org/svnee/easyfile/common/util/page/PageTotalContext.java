@@ -1,10 +1,10 @@
-package org.svnee.easyfile.common.bean;
+package org.svnee.easyfile.common.util.page;
 
 import java.util.Map;
 import java.util.Objects;
-import org.springframework.core.NamedThreadLocal;
 import org.svnee.easyfile.common.bean.excel.ExcelBean;
 import org.svnee.easyfile.common.util.MapUtils;
+import org.svnee.easyfile.common.util.page.PageTotal;
 
 /**
  * PageTotalContext
@@ -13,8 +13,8 @@ import org.svnee.easyfile.common.util.MapUtils;
  */
 public final class PageTotalContext {
 
-    private static final ThreadLocal<Map<Object, PageTotal>> CURRENT_PAGE_TOTAL = new NamedThreadLocal<>(
-        "Current Page Total");
+    private static final ThreadLocal<Map<Object, PageTotal>> CURRENT_PAGE_TOTAL =
+        ThreadLocal.withInitial(() -> MapUtils.newHashMapWithExpectedSize(10));
 
     private PageTotalContext() {
     }

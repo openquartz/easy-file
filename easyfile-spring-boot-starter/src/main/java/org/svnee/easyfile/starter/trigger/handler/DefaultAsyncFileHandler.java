@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.common.concurrent.ThreadFactoryBuilder;
 import org.svnee.easyfile.core.executor.AsyncFileHandlerAdapter;
 import org.svnee.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.core.executor.BaseDownloadExecutor;

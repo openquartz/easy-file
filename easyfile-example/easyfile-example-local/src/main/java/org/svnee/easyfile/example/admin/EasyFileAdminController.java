@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;

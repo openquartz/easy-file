@@ -22,6 +22,7 @@ import org.svnee.easyfile.common.annotations.ExcelProperty;
 import org.svnee.easyfile.common.exception.Asserts;
 import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.ReflectionUtils;
 
 /**
  * @author svnee

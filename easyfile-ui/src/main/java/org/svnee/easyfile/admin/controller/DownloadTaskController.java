@@ -21,7 +21,7 @@ import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.admin.model.response.DownloadTaskResult;
 import org.svnee.easyfile.admin.property.AdminProperty;
 import org.svnee.easyfile.admin.service.ServerAppIdProvider;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;

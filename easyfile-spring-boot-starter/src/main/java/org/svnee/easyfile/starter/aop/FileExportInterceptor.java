@@ -16,7 +16,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
-import org.svnee.easyfile.common.bean.PageTotalContext;
+import org.svnee.easyfile.common.util.page.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.request.ExportLimitingRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;

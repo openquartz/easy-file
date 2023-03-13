@@ -2,7 +2,7 @@ package org.svnee.easyfile.common.util;
 
 import java.util.Collections;
 import java.util.List;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 
 /**
  * @author svnee

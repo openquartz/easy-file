@@ -16,7 +16,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;

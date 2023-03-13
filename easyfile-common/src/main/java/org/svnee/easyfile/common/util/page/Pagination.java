@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.bean;
+package org.svnee.easyfile.common.util.page;
 
 import java.io.Serializable;
 import java.util.ArrayList;

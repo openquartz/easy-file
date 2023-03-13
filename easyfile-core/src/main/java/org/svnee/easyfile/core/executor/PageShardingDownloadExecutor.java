@@ -3,8 +3,8 @@ package org.svnee.easyfile.core.executor;
 import java.util.List;
 import java.util.Map;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.bean.Page;
-import org.svnee.easyfile.common.bean.PageTotal;
+import org.svnee.easyfile.common.util.page.Page;
+import org.svnee.easyfile.common.util.page.PageTotal;
 import org.svnee.easyfile.common.bean.Pair;
 
 /**

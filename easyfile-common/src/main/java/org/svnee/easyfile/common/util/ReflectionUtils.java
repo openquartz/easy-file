@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.bean.excel;
+package org.svnee.easyfile.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;

@@ -25,7 +25,7 @@ public final class PoiMergeCellUtil {
      * @param firstRow firstRow
      * @param lastRow lastRow
      * @param firstCol firstCol
-     * @param lastCol lsstCol
+     * @param lastCol lastCol
      */
     public static void addMergedRegion(Sheet sheet, int firstRow, int lastRow, int firstCol, int lastCol) {
         try {

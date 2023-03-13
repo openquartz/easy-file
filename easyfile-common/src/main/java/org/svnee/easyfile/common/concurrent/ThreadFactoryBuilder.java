@@ -1,4 +1,4 @@
-package org.svnee.easyfile.common.thread;
+package org.svnee.easyfile.common.concurrent;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.Locale;

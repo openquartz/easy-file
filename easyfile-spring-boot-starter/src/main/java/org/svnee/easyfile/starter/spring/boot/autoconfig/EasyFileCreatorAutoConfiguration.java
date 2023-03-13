@@ -11,6 +11,7 @@ import org.svnee.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandle
 import org.svnee.easyfile.core.executor.impl.DefaultDownloadRejectExecutionHandler;
 import org.svnee.easyfile.starter.init.EasyFileInitializingEntrance;
 import org.svnee.easyfile.starter.processor.ApplicationContentPostProcessor;
+import org.svnee.easyfile.starter.processor.DownloadInterceptorPostProcessor;
 import org.svnee.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.file.UploadService;
@@ -36,6 +37,11 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean
     public EasyFileBeanEnhancePostProcessor fileExportExecutorPostProcessor() {
         return new EasyFileBeanEnhancePostProcessor();
+    }
+
+    @Bean
+    public DownloadInterceptorPostProcessor downloadInterceptorPostProcessor() {
+        return new DownloadInterceptorPostProcessor();
     }
 
     @Bean

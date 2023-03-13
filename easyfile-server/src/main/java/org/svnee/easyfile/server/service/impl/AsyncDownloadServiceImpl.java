@@ -26,7 +26,7 @@ import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Notifier;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
@@ -66,7 +66,7 @@ import org.svnee.easyfile.server.notify.NotifyMessageTemplate;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 import org.svnee.easyfile.server.service.NotifyService;
 import org.svnee.easyfile.server.service.executor.ExportLimitingExecutor;
-import org.svnee.easyfile.server.utils.DbUtils;
+import org.svnee.easyfile.common.util.DbUtils;
 
 /**
  * 注册下载 服务
