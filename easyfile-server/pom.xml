@@ -54,13 +54,13 @@
         </dependency>
 
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson-spring-data-23</artifactId>
         </dependency>
 
         <dependency>
@@ -75,14 +75,24 @@
         </dependency>
 
         <!-- freemarker-starter -->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-freemarker</artifactId>-->
+        <!--        </dependency>-->
+
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-mail</artifactId>-->
+        <!--        </dependency>-->
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-freemarker</artifactId>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-ui</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
+            <groupId>org.svnee</groupId>
+            <artifactId>easyfile-storage-api</artifactId>
         </dependency>
 
     </dependencies>
@@ -93,6 +103,9 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <imageName>${project.groupId}/${project.artifactId}:${project.version}</imageName>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

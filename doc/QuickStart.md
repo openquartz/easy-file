@@ -51,7 +51,7 @@ public interface UploadService {
 
     /**
      * 文件上传
-     * 如果需要重试则需要抛出 org.svnee.easyfile.starter.exception.GenerateFileException
+     * 如果需要重试则需要抛出 org.svnee.easyfile.core.exception.GenerateFileException
      *
      * @param file 文件
      * @param fileName 自定义生成的文件名
@@ -67,7 +67,7 @@ public interface UploadService {
 
 #### 三、SpringBoot 启动入口处理
 
-增加注解扫描 `@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})`包在服务的启动入口上
+增加注解扫描 `org.svnee.easyfile.starter.annotation.EnableEasyFileAutoConfiguration`包在服务的启动入口上
 
 例如：
 
@@ -76,7 +76,7 @@ public interface UploadService {
  * @author svnee
  **/
 @SpringBootApplication
-@ComponentScans(value = {@ComponentScan("org.svnee.easyfile")})
+@EnableEasyFileAutoConfiguration
 @MapperScan("org.svnee.easyfile.example.mapper")
 public class LocalExampleApplication {
 
@@ -135,13 +135,14 @@ CREATE TABLE ef_async_download_record
     remark                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '备注',
     notify_enable_status  TINYINT (3) NOT NULL DEFAULT 0 COMMENT '通知启用状态',
     notify_email          VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '通知有效',
-    max_server_retry      INT (3) NOT NULL DEFAULT 0 COMMENT '最大服务重试',
-    current_retry         INT (3) NOT NULL DEFAULT 0 COMMENT '当前重试次数',
+    max_server_retry      TINYINT(3) NOT NULL DEFAULT 0 COMMENT '最大服务重试',
+    current_retry         TINYINT(3) NOT NULL DEFAULT 0 COMMENT '当前重试次数',
     execute_param         TEXT NULL COMMENT '重试执行参数',
     error_msg             VARCHAR(256) NOT NULL DEFAULT '' COMMENT '异常信息',
     last_execute_time     DATETIME NULL COMMENT '最新执行时间',
     invalid_time          DATETIME NULL COMMENT '链接失效时间',
-    download_num          INT (3) NOT NULL DEFAULT 0 COMMENT '下载次数',
+    download_num          TINYINT(3) NOT NULL DEFAULT 0 COMMENT '下载次数',
+    execute_process       TINYINT(3) NOT NULL DEFAULT 0 COMMENT '执行进度',
     version               INT (10) NOT NULL DEFAULT 0 COMMENT '版本号',
     create_time           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     update_time           TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -150,7 +151,8 @@ CREATE TABLE ef_async_download_record
     PRIMARY KEY (id),
     KEY                   `idx_download_operate_by` (`download_operate_by`) USING BTREE,
     KEY                   `idx_operator_record` (`download_operate_by`,`app_id`,`create_time`),
-    KEY                   `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`)
+    KEY                   `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`),
+    KEY                   `idx_create_time` (`create_time`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 ```
 
@@ -172,7 +174,33 @@ easyfile.remote.namespace=remote-example
 
 [下载器](./BaseDownloadExecutror.md)
 
-#### 七、easyfile-server 部署
+#### 七、Admin-管理界面
+
+EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需开启需要引入maven
+
+```xml
+
+<dependency>
+    <groupId>org.svnee</groupId>
+    <artifactId>easyfile-ui</artifactId>
+    <version>1.2.0</version>
+</dependency>
+```
+
+服务监控路径地址为: ip+port/easyfile-ui/ 例如：`localhost:8080/easyfile-ui/` 服务默认Admin用户账户密码为: `admin / admin`
+
+如果需要更改可以配置：
+
+```properties
+easyfile.ui.admin.username=admin
+easyfile.ui.admin.password=admin
+```
+
+EasyFile UI 管理界面
+
+![EasyFileUI](./image/EasyfileUi.png)
+
+#### 八、easyfile-server 部署
 
 如果使用**Remote模式**时,需要部署easyfile-server服务;
 

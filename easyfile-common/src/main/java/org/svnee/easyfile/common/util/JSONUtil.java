@@ -4,6 +4,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import org.svnee.easyfile.common.util.json.ClassJacksonHandler;
+import org.svnee.easyfile.common.util.json.GeneralJacksonHandler;
+import org.svnee.easyfile.common.util.json.JsonFacade;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * JSON util.
@@ -12,7 +16,8 @@ import java.util.Set;
  */
 public final class JSONUtil {
 
-    private static final JsonFacade JSON_FACADE = new JacksonHandler();
+    private static final JsonFacade JSON_FACADE = new GeneralJacksonHandler();
+    private static final JsonFacade CLASS_JSON_FACADE = new ClassJacksonHandler();
 
     private JSONUtil() {
     }
@@ -32,6 +37,20 @@ public final class JSONUtil {
     }
 
     /**
+     * json with class
+     *
+     * @param object obj
+     * @return json
+     */
+    public static String toClassJson(Object object) {
+        if (object == null) {
+            return null;
+        }
+
+        return CLASS_JSON_FACADE.toJson(object);
+    }
+
+    /**
      * 反序列化成对象
      *
      * @param text json
@@ -45,6 +64,22 @@ public final class JSONUtil {
         }
 
         return JSON_FACADE.parseObject(text, clazz);
+    }
+
+    /**
+     * 反序列化成对象
+     *
+     * @param text json
+     * @param clazz clazz
+     * @param <T> T
+     * @return 对象
+     */
+    public static <T> T parseClassObject(String text, Class<T> clazz) {
+        if (StringUtils.isBlank(text)) {
+            return null;
+        }
+
+        return CLASS_JSON_FACADE.parseObject(text, clazz);
     }
 
     /**

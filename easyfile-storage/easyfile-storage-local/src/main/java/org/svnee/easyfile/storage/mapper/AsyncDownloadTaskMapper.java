@@ -1,6 +1,7 @@
 package org.svnee.easyfile.storage.mapper;
 
 import java.util.List;
+import org.svnee.easyfile.storage.entity.AsyncDownloadAppEntity;
 import org.svnee.easyfile.storage.entity.AsyncDownloadTask;
 
 /**
@@ -44,5 +45,20 @@ public interface AsyncDownloadTaskMapper {
      * @return affect row
      */
     int refreshTaskDesc(Long id, String taskDesc);
+
+    /**
+     * get same unifiedAppId appId
+     *
+     * @param unifiedAppId unifiedAppId
+     * @return appId
+     */
+    List<String> getByUnifiedAppId(String unifiedAppId);
+
+    /**
+     * get async download entity
+     *
+     * @return download entity
+     */
+    List<AsyncDownloadAppEntity> getAsyncDownloadAppEntity();
 
 }

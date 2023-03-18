@@ -27,8 +27,10 @@ public final class AsyncDownloadRecordConverter {
         // 非失效链接时加入
         if (UploadStatusEnum.INVALID == downloadRecord.getUploadStatus()) {
             downloadResult.setFileUrl(StringUtils.EMPTY);
+            downloadResult.setFileName(StringUtils.EMPTY);
         } else {
             downloadResult.setFileUrl(downloadRecord.getFileUrl());
+            downloadResult.setFileName(downloadRecord.getFileName());
         }
         downloadResult.setExecuteProcess(downloadRecord.getExecuteProcess());
         downloadResult.setExportTime(downloadRecord.getCreateTime());

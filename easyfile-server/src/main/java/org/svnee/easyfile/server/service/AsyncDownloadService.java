@@ -1,7 +1,8 @@
 package org.svnee.easyfile.server.service;
 
 import java.util.List;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -10,8 +11,10 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -77,8 +80,9 @@ public interface AsyncDownloadService {
      *
      * @param request 请求
      * @return file url
+     * @since 1.2.1
      */
-    String download(DownloadRequest request);
+    DownloadUrlResult download(DownloadRequest request);
 
     /**
      * 撤销
@@ -108,7 +112,25 @@ public interface AsyncDownloadService {
      *
      * @param registerId 注册ID
      * @param executeProcess 执行进度
+     * @param nextUploadStatus 下一个上传处理状态
      */
     void refreshExecuteProcess(Long registerId, Integer executeProcess,
         UploadStatusEnum nextUploadStatus);
+
+    /**
+     * 获取注册下载的请求信息
+     *
+     * @param registerId 注册任务ID
+     * @return 请求信息
+     */
+    DownloadRequestInfo getRequestInfoByRegisterId(Long registerId);
+
+    /**
+     * app tree
+     *
+     * @return app tree
+     */
+    List<AppTree> getAppTree();
+
+
 }

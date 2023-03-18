@@ -7,7 +7,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.example.utils.WaterMarkExcelUtil;
-import org.svnee.easyfile.starter.executor.excel.ExcelIntensifier;
+import org.svnee.easyfile.core.executor.excel.ExcelIntensifier;
 
 /**
  * 增强水印

@@ -11,10 +11,12 @@
 
     <modules>
         <module>easyfile-common</module>
+        <module>easyfile-core</module>
         <module>easyfile-server</module>
         <module>easyfile-spring-boot-starter</module>
         <module>easyfile-storage</module>
         <module>easyfile-example</module>
+        <module>easyfile-ui</module>
         <module>easyfile-metrics</module>
     </modules>
 
@@ -22,7 +24,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <revision>1.1.0</revision>
+        <revision>1.2.3</revision>
 
         <guava.version>31.1-jre</guava.version>
         <guava.retry.version>2.0.0</guava.retry.version>
@@ -33,7 +35,7 @@
         <poi.version>3.17</poi.version>
         <javax.persistence.version>2.2</javax.persistence.version>
         <druid.version>1.1.6</druid.version>
-        <redisson.version>3.9.1</redisson.version>
+        <redisson.version>3.20.0</redisson.version>
         <jjwt.version>0.9.0</jjwt.version>
         <reflections.version>0.9.10</reflections.version>
         <disruptor.version>3.4.2</disruptor.version>
@@ -146,6 +148,12 @@
 
             <dependency>
                 <groupId>org.svnee</groupId>
+                <artifactId>easyfile-core</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.svnee</groupId>
                 <artifactId>easyfile-storage-api</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -169,6 +177,12 @@
             </dependency>
 
             <dependency>
+                <groupId>org.svnee</groupId>
+                <artifactId>easyfile-ui</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.rholder</groupId>
                 <artifactId>guava-retrying</artifactId>
                 <version>${guava.retry.version}</version>
@@ -183,6 +197,18 @@
             <dependency>
                 <groupId>org.redisson</groupId>
                 <artifactId>redisson-spring-boot-starter</artifactId>
+                <version>${redisson.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.redisson</groupId>
+                        <artifactId>redisson-spring-data-20</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson-spring-data-23</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
 

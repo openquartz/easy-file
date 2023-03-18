@@ -8,11 +8,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import org.svnee.easyfile.starter.executor.impl.MqTriggerAsyncFileHandler;
-import org.svnee.easyfile.starter.executor.trigger.DisruptorTriggerConsumer;
-import org.svnee.easyfile.starter.executor.trigger.DisruptorTriggerProducer;
-import org.svnee.easyfile.starter.executor.trigger.MQTriggerHandler;
-import org.svnee.easyfile.starter.executor.trigger.MQTriggerProducer;
+import org.svnee.easyfile.starter.trigger.handler.MqTriggerAsyncFileHandler;
+import org.svnee.easyfile.starter.trigger.DisruptorTriggerConsumer;
+import org.svnee.easyfile.starter.trigger.DisruptorTriggerProducer;
+import org.svnee.easyfile.core.executor.trigger.MQTriggerHandler;
+import org.svnee.easyfile.core.executor.trigger.MQTriggerProducer;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.DisruptorAsyncHandlerProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;

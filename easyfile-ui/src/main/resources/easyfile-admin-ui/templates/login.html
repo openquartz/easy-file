@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录页</title>
+    <link rel="stylesheet" href="/easyfile-ui/static/layui/css/layui.css">
+    <link rel="stylesheet" href="/easyfile-ui/static/css/style.css">
+    <link rel="stylesheet" href="/easyfile-ui/static/css/login.css">
+    <link rel="stylesheet" href="/easyfile-ui/static/css/admin.css">
+</head>
+<body>
+
+<div class="login-main">
+    <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: none;">
+        <div class="layadmin-user-login-main">
+            <div class="layadmin-user-login-box layadmin-user-login-header">
+                <h2>登录</h2>
+                <p></p>
+            </div>
+            <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-username"
+                           for="LAY-user-login-username"></label>
+                    <input type="text" name="username" id="LAY-user-login-username" lay-verify="required"
+                           placeholder="用户名" class="layui-input">
+                </div>
+                <div class="layui-form-item">
+                    <label class="layadmin-user-login-icon layui-icon layui-icon-password"
+                           for="LAY-user-login-password"></label>
+                    <input type="password" name="password" id="LAY-user-login-password" lay-verify="required"
+                           placeholder="密码" class="layui-input">
+                </div>
+                <div class="layui-form-item" style="margin-bottom: 20px;">
+                    <input type="checkbox" name="rememberMe" lay-skin="primary" title="记住密码">
+                </div>
+                <div class="layui-form-item">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="LAY-user-login-submit">登 入</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-trans layadmin-user-login-footer">
+            <p><b>@svnlab @svnee</b></p>
+        </div>
+    </div>
+
+    <script src="/easyfile-ui/static/layui/layui.js"></script>
+    <script type="text/javascript">
+      layui.use(['form', 'layer', 'jquery'], function () {
+
+        // 操作对象
+        var form = layui.form;
+        var $ = layui.jquery;
+        form.on('submit(LAY-user-login-submit)', function (data) {
+
+          console.log(JSON.stringify(data.field));
+
+          $.ajax({
+            type: 'POST',
+            url: '/easyfile-ui/login',
+            data: JSON.stringify(data.field),
+            contentType: 'application/json',
+            success: function (result, status, xhr) {
+              if (result.success) {
+                location.href = "/easyfile-ui/";
+              } else {
+                layer.msg('登录失败!失败原因:' + result.message);
+              }
+            },
+            error: function (xhr, status, error) {
+              layer.msg('登录失败!' + error);
+            },
+            dataType: 'json'
+          });
+
+          return false;
+        });
+      });
+    </script>
+</div>
+</body>
+</html>

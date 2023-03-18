@@ -10,10 +10,12 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
@@ -22,10 +24,14 @@ import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
 import org.svnee.easyfile.common.request.EnableRunningRequest;
+import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
+import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.storage.EasyFileClient;
@@ -121,8 +127,8 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     }
 
     @Override
-    public String download(DownloadRequest request) {
-        ResponseResult<String> responseResult = easyFileClient.download(request);
+    public DownloadUrlResult download(DownloadRequest request) {
+        ResponseResult<DownloadUrlResult> responseResult = easyFileClient.download(request);
         Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_ERROR);
         return responseResult.getData();
@@ -155,5 +161,21 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     @Override
     public void resetExecuteProcess(Long registerId) {
         easyFileClient.resetExecuteProcess(registerId);
+    }
+
+    @Override
+    public Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request) {
+        ResponseResult<Pagination<DownloadResult>> responseResult = easyFileClient.listExportResult(request);
+        Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
+        return responseResult.getData();
+    }
+
+    @Override
+    public List<AppTree> getAppTree() {
+        ResponseResult<List<AppTree>> responseResult = easyFileClient.getAppTree();
+        Asserts.notNull(responseResult, DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), DOWNLOAD_RESPONSE_MSG_ERROR, responseResult.getMessage());
+        return responseResult.getData();
     }
 }

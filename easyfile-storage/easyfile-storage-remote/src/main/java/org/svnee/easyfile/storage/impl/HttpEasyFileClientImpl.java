@@ -1,8 +1,9 @@
 package org.svnee.easyfile.storage.impl;
 
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
@@ -15,10 +16,12 @@ import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.remote.HttpAgent;
 
@@ -69,8 +72,8 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     }
 
     @Override
-    public ResponseResult<String> download(DownloadRequest request) {
-        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL, request, String.class);
+    public ResponseResult<DownloadUrlResult> download(DownloadRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_FILE_URL, request, DownloadUrlResult.class);
     }
 
     @Override
@@ -102,5 +105,13 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
         processRequest.setExecuteProcess(executeProcess);
         processRequest.setNextUploadStatus(nextUploadStatus);
         return httpAgent.httpPost(RemoteUrlConstants.REFRESH_EXECUTE_PROCESS_URL, processRequest);
+    }
+
+    @Override
+    public ResponseResult<List<AppTree>> getAppTree() {
+        return httpAgent
+            .httpPost(RemoteUrlConstants.GET_APP_TREE_URL, null,
+                new TypeReference<ResponseResult<List<AppTree>>>() {
+                });
     }
 }

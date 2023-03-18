@@ -11,10 +11,12 @@ import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.svnee.easyfile.common.constants.Constants;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import org.svnee.easyfile.storage.EasyFileClient;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
@@ -39,6 +41,7 @@ import org.svnee.easyfile.storage.remote.ServerHttpAgent;
 @EnableConfigurationProperties({EasyFileRemoteProperties.class})
 @ConditionalOnClass({RemoteDownloadStorageServiceImpl.class, RemoteLimitingServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
+@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileRemoteStorageAutoConfiguration {
 
     @Bean

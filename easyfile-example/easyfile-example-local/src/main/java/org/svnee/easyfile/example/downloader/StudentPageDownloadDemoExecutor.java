@@ -5,24 +5,24 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.bean.Page;
-import org.svnee.easyfile.common.bean.PageTotal;
-import org.svnee.easyfile.common.bean.PageTotalContext;
+import org.svnee.easyfile.common.util.page.Page;
+import org.svnee.easyfile.common.util.page.PageTotal;
+import org.svnee.easyfile.common.util.page.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.example.excel.WaterMarkExcelIntensifier;
 import org.svnee.easyfile.example.mapper.StudentMapper;
 import org.svnee.easyfile.example.model.Student;
-import org.svnee.easyfile.starter.executor.excel.ExcelIntensifier;
-import org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor;
+import org.svnee.easyfile.core.executor.excel.ExcelIntensifier;
+import org.svnee.easyfile.core.executor.impl.AbstractPageDownloadExcelExecutor;
 
 /**
  * @author svnee
  **/
 @Component
-@FileExportExecutor(value = "StudentPageDownloadDemoExecutor")
+@FileExportExecutor(value = "StudentPageDownloadDemoExecutor", desc = "Student分页下载")
 public class StudentPageDownloadDemoExecutor extends AbstractPageDownloadExcelExecutor<Student> {
 
     @Resource

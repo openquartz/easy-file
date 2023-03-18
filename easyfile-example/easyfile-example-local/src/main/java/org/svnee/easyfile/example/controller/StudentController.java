@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.svnee.easyfile.common.bean.DownloaderRequestContext;
+import org.svnee.easyfile.common.bean.Notifier;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.dictionary.FileSuffixEnum;
@@ -40,6 +41,11 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> result = studentDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(result.getKey())) {
             return ResponseResult.ok(new ExportResultVO(result.getValue(), "导出成功"));
@@ -54,6 +60,11 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> exportResult = studentStreamDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
@@ -68,6 +79,11 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> exportResult = studentStreamDownloadDemoMergeExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
@@ -82,7 +98,12 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
-        requestContext.putParam("request",new TestRequest(1L));
+        requestContext.putParam("request", new TestRequest(1L));
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> exportResult = studentPageDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
@@ -97,6 +118,11 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> exportResult = studentMultiSheetPageDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));
@@ -111,6 +137,11 @@ public class StudentController {
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
+        Notifier notifier = new Notifier();
+        notifier.setUserName("admin");
+        notifier.setUserBy("admin");
+        notifier.setEmail("admin@163.com");
+        requestContext.setNotifier(notifier);
         Pair<Boolean, Long> exportResult = studentMultiSheetStreamDownloadDemoExecutor.exportResult(requestContext);
         if (Boolean.TRUE.equals(exportResult.getKey())) {
             return ResponseResult.ok(new ExportResultVO(exportResult.getValue(), "导出成功"));

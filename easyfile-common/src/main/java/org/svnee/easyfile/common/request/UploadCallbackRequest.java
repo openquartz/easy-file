@@ -28,6 +28,13 @@ public class UploadCallbackRequest {
     private String fileUrl;
 
     /**
+     * fileName
+     *
+     * @since 1.2.1
+     */
+    private String fileName;
+
+    /**
      * 上传系统枚举
      */
     @NotNull(message = "上传文件系统不能为空")

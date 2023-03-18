@@ -7,18 +7,18 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.bean.Page;
-import org.svnee.easyfile.common.bean.PageTotal;
-import org.svnee.easyfile.common.bean.PageTotalContext;
+import org.svnee.easyfile.common.util.page.Page;
+import org.svnee.easyfile.common.util.page.PageTotal;
+import org.svnee.easyfile.common.util.page.PageTotalContext;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.example.mapper.SchoolMapper;
 import org.svnee.easyfile.example.mapper.StudentMapper;
 import org.svnee.easyfile.example.model.School;
 import org.svnee.easyfile.example.model.Student;
-import org.svnee.easyfile.starter.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor;
+import org.svnee.easyfile.core.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor;
 
 /**
  * @author svnee

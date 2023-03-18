@@ -33,4 +33,6 @@ public final class RemoteUrlConstants {
     public static final String RESET_EXECUTE_PROCESS_URL = "/easyfile/download/restExecuteProcess";
 
     public static final String REFRESH_EXECUTE_PROCESS_URL = "/easyfile/download/refreshExecuteProcess";
+
+    public static final String GET_APP_TREE_URL = "/easyfile/download/getAppTree";
 }

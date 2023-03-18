@@ -38,6 +38,13 @@ public class ExportResult {
     private String fileUrl;
 
     /**
+     * 文件名
+     *
+     * @since 1.2.1
+     */
+    private String fileName;
+
+    /**
      * 异常Msg
      */
     private String errorMsg;

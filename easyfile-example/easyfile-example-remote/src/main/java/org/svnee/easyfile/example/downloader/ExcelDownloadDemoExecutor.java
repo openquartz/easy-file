@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Component;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
-import org.svnee.easyfile.common.bean.Page;
-import org.svnee.easyfile.common.bean.PageTotal;
+import org.svnee.easyfile.common.util.page.Page;
+import org.svnee.easyfile.common.util.page.PageTotal;
 import org.svnee.easyfile.common.bean.Pair;
 import org.svnee.easyfile.example.model.ExcelModel;
-import org.svnee.easyfile.starter.executor.impl.AbstractPageDownloadExcelExecutor;
+import org.svnee.easyfile.core.executor.impl.AbstractPageDownloadExcelExecutor;
 
 /**
  * Excel download demo

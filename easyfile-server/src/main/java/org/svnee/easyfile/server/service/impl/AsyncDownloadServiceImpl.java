@@ -22,13 +22,16 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.bean.BaseExecuteParam;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
 import org.svnee.easyfile.common.bean.Notifier;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.constants.Constants;
 import org.svnee.easyfile.common.dictionary.EnableStatusEnum;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.exception.Asserts;
+import org.svnee.easyfile.common.exception.CommonErrorCode;
 import org.svnee.easyfile.common.exception.DataExecuteErrorCode;
 import org.svnee.easyfile.common.exception.ExpandExecutorErrorCode;
 import org.svnee.easyfile.common.file.FileUrlTransformer;
@@ -39,15 +42,19 @@ import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.common.util.JSONUtil;
 import org.svnee.easyfile.common.util.MapUtils;
+import org.svnee.easyfile.common.util.PaginationUtils;
 import org.svnee.easyfile.common.util.StringUtils;
 import org.svnee.easyfile.server.config.BizConfig;
 import org.svnee.easyfile.server.convertor.AsyncDownloadRecordConverter;
+import org.svnee.easyfile.server.entity.AsyncDownloadAppEntity;
 import org.svnee.easyfile.server.entity.AsyncDownloadRecord;
 import org.svnee.easyfile.server.entity.AsyncDownloadTask;
 import org.svnee.easyfile.server.exception.AsyncDownloadExceptionCode;
@@ -59,8 +66,7 @@ import org.svnee.easyfile.server.notify.NotifyMessageTemplate;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 import org.svnee.easyfile.server.service.NotifyService;
 import org.svnee.easyfile.server.service.executor.ExportLimitingExecutor;
-import org.svnee.easyfile.server.utils.DbUtils;
-import org.svnee.easyfile.server.utils.PaginationUtils;
+import org.svnee.easyfile.common.util.DbUtils;
 
 /**
  * 注册下载 服务
@@ -119,6 +125,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setDownloadCode(request.getDownloadCode());
         downloadRecord.setUploadStatus(UploadStatusEnum.NONE);
         downloadRecord.setFileUrl(StringUtils.EMPTY);
+        downloadRecord.setFileName(StringUtils.EMPTY);
         downloadRecord.setFileSystem(Constants.NONE_FILE_SYSTEM);
         downloadRecord.setDownloadOperateBy(request.getNotifier().getUserBy());
         downloadRecord.setDownloadOperateName(request.getNotifier().getUserName());
@@ -144,7 +151,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         param.setDownloadCode(request.getDownloadCode());
         param.setFileSuffix(request.getFileSuffix());
         param.setOtherMap(request.getOtherMap());
-        downloadRecord.setExecuteParam(JSONUtil.toJson(request));
+        downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         return downloadRecord;
     }
 
@@ -182,6 +189,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             condition.setFileSystem(request.getSystem());
             condition.setUploadStatus(UploadStatusEnum.SUCCESS);
             condition.setFileUrl(request.getFileUrl());
+            condition.setFileName(request.getFileName());
             condition.setLastExecuteTime(new Date());
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constants.GMT8));
             calendar.add(Calendar.HOUR, bizConfig.getFileInvalidTimeMap().getOrDefault(request.getSystem(), 100));
@@ -318,19 +326,30 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     }
 
     @Override
-    public String download(DownloadRequest request) {
+    public DownloadUrlResult download(DownloadRequest request) {
+
         log.info("[AsyncDownload]#file download,request:{}", request);
 
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
+        Asserts.isTrue(downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS,
+            AsyncDownloadExceptionCode.DOWNLOAD_STATUS_NOT_SUPPORT);
+
         // 下载
         asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
 
         FileUrlTransformer transformer = fileUrlTransformerMap.get(downloadRecord.getFileSystem());
+
+        String url = downloadRecord.getFileUrl();
         if (Objects.nonNull(transformer)) {
-            return transformer.transform(downloadRecord.getFileUrl());
+            url = transformer.transform(downloadRecord.getFileUrl());
         }
-        return downloadRecord.getFileUrl();
+
+        DownloadUrlResult downloadUrlResult = new DownloadUrlResult();
+        downloadUrlResult.setFileSystem(downloadRecord.getFileSystem());
+        downloadUrlResult.setFileName(downloadRecord.getFileName());
+        downloadUrlResult.setUrl(url);
+        return downloadUrlResult;
     }
 
     @Override
@@ -394,6 +413,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
                 ExportResult exportResult = new ExportResult();
                 exportResult.setRegisterId(request.getRegisterId());
                 exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                exportResult.setFileName(StringUtils.EMPTY);
+                exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
                 return exportResult;
             });
 
@@ -414,7 +435,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             return true;
         }
 
-        BaseExecuteParam executeParam = JSONUtil.parseObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+        BaseExecuteParam executeParam = JSONUtil
+            .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
         if (Objects.isNull(executeParam)) {
             if (MapUtils.isEmpty(exportParamMap)) {
                 return true;
@@ -454,6 +476,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         exportResult.setRegisterId(registerId);
         exportResult.setUploadStatus(downloadRecord.getUploadStatus());
         exportResult.setFileSystem(downloadRecord.getFileSystem());
+        exportResult.setFileName(downloadRecord.getFileName());
         exportResult.setFileUrl(downloadRecord.getFileUrl());
         exportResult.setErrorMsg(downloadRecord.getErrorMsg());
         return exportResult;
@@ -465,6 +488,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         uploadInfoChangeCondition.setId(registerId);
         uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
         uploadInfoChangeCondition.setFileUrl(exportResult.getFileUrl());
+        uploadInfoChangeCondition.setFileName(exportResult.getFileName());
         uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
         uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
@@ -481,5 +505,42 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     public void refreshExecuteProcess(Long registerId, Integer executeProcess,
         UploadStatusEnum nextUploadStatus) {
         asyncDownloadRecordMapper.refreshExecuteProcess(registerId, executeProcess, nextUploadStatus);
+    }
+
+    @Override
+    public DownloadRequestInfo getRequestInfoByRegisterId(Long registerId) {
+        AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(registerId);
+        if (Objects.isNull(downloadRecord)) {
+            return null;
+        }
+        RegisterDownloadRequest registerRequest = JSONUtil
+            .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+        Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
+
+        DownloadRequestInfo requestInfo = new DownloadRequestInfo();
+        requestInfo.setRequestContext(convertBaseDownloadRequestContext(registerRequest));
+        requestInfo.setDownloadCode(downloadRecord.getDownloadCode());
+        return requestInfo;
+    }
+
+    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
+        baseDownloaderRequestContext.setNotifier(registerRequest.getNotifier());
+        baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseDownloaderRequestContext;
+    }
+
+    @Override
+    public List<AppTree> getAppTree() {
+        List<AsyncDownloadAppEntity> appEntityList = asyncDownloadTaskMapper.getAppTree();
+        return appEntityList.stream()
+            .collect(Collectors.groupingBy(AsyncDownloadAppEntity::getUnifiedAppId,
+                Collectors.mapping(AsyncDownloadAppEntity::getAppId, Collectors.toList())))
+            .entrySet()
+            .stream()
+            .map(e -> new AppTree(e.getKey(), e.getValue()))
+            .collect(Collectors.toList());
     }
 }

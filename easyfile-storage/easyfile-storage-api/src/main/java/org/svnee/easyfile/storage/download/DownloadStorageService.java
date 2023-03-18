@@ -1,14 +1,20 @@
 package org.svnee.easyfile.storage.download;
 
+import java.util.List;
 import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.dictionary.UploadStatusEnum;
 import org.svnee.easyfile.common.request.AutoTaskRegisterRequest;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
+import org.svnee.easyfile.common.request.ListDownloadResultRequest;
 import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
+import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 
 /**
@@ -62,7 +68,7 @@ public interface DownloadStorageService {
      * @param request 下载请求
      * @return 下载文件url
      */
-    String download(DownloadRequest request);
+    DownloadUrlResult download(DownloadRequest request);
 
     /**
      * 用户撤销任务上传
@@ -95,4 +101,20 @@ public interface DownloadStorageService {
      * @param registerId registerId
      */
     void resetExecuteProcess(Long registerId);
+
+    /**
+     * 下载导出结果
+     *
+     * @param request 请求
+     * @return 导出结果
+     */
+    Pagination<DownloadResult> listExportResult(ListDownloadResultRequest request);
+
+    /**
+     * app tree
+     *
+     * @return app
+     */
+    List<AppTree> getAppTree();
+
 }

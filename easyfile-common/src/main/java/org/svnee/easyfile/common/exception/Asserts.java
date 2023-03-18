@@ -1,8 +1,13 @@
 package org.svnee.easyfile.common.exception;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
+import org.svnee.easyfile.common.util.CollectionUtils;
+import org.svnee.easyfile.common.util.MapUtils;
+import org.svnee.easyfile.common.util.StringUtils;
 
 /**
  * 断言工具类
@@ -103,4 +108,35 @@ public final class Asserts {
     public static void isNull(Object obj, EasyFileErrorCode code, Object... placeHold) {
         isTrue(Objects.isNull(obj), code, placeHold);
     }
+
+    /**
+     * assert not empty
+     *
+     * @param obj obj
+     * @param code code
+     */
+    public static void notEmpty(String obj, EasyFileErrorCode code, Object... placeHold) {
+        isTrue(StringUtils.isNotBlank(obj), code, placeHold);
+    }
+
+    /**
+     * assert not empty
+     *
+     * @param obj obj
+     * @param code code
+     */
+    public static void notEmpty(Collection<?> obj, EasyFileErrorCode code, Object... placeHold) {
+        isTrue(CollectionUtils.isNotEmpty(obj), code, placeHold);
+    }
+
+    /**
+     * assert not empty
+     *
+     * @param obj obj
+     * @param code code
+     */
+    public static void notEmpty(Map<?, ?> obj, EasyFileErrorCode code, Object... placeHold) {
+        isTrue(MapUtils.isNotEmpty(obj), code, placeHold);
+    }
+
 }

@@ -35,4 +35,8 @@ public class EasyFileException extends RuntimeException {
         throw new EasyFileException(errorCode, MessageFormat.format(errorCode.getErrorMsg(), placeHold));
     }
 
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+        return this;
+    }
 }

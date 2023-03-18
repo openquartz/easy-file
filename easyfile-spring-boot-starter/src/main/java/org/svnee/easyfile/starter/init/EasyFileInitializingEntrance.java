@@ -1,7 +1,7 @@
 package org.svnee.easyfile.starter.init;
 
 import lombok.extern.slf4j.Slf4j;
-import org.svnee.easyfile.common.banner.EasyFileBannerPrinter;
+import org.svnee.easyfile.core.banner.EasyFileBannerPrinter;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 
 /**

@@ -2,7 +2,7 @@ package org.svnee.easyfile.storage.remote;
 
 import java.util.Map;
 import org.svnee.easyfile.common.bean.ResponseResult;
-import org.svnee.easyfile.common.util.TypeReference;
+import org.svnee.easyfile.common.util.json.TypeReference;
 
 /**
  * Http agent.

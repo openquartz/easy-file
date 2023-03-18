@@ -1,8 +1,8 @@
 package org.svnee.easyfile.starter.aop;
 
 import java.lang.reflect.Method;
+import javax.validation.constraints.NotNull;
 import org.aopalliance.aop.Advice;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -13,8 +13,8 @@ import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
-import org.svnee.easyfile.starter.executor.BaseDownloadExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.executor.BaseDownloadExecutor;
 
 /**
  * AsyncFileExecutorAdvice

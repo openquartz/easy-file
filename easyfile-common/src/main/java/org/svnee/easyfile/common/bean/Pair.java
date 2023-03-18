@@ -2,6 +2,13 @@ package org.svnee.easyfile.common.bean;
 
 import java.util.Objects;
 
+/**
+ * Pair
+ *
+ * @param <L> L
+ * @param <R> R
+ * @author svnee
+ */
 public class Pair<L, R> {
 
     private final L left;

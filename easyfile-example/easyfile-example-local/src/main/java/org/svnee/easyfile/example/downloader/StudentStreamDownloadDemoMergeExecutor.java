@@ -10,7 +10,7 @@ import org.apache.ibatis.cursor.Cursor;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
-import org.svnee.easyfile.common.annotations.FileExportExecutor;
+import org.svnee.easyfile.core.annotations.FileExportExecutor;
 import org.svnee.easyfile.common.bean.BaseDownloaderRequestContext;
 import org.svnee.easyfile.common.util.CollectionUtils;
 import org.svnee.easyfile.example.mapper.SchoolMapper;
@@ -19,7 +19,7 @@ import org.svnee.easyfile.example.model.Address;
 import org.svnee.easyfile.example.model.Feature;
 import org.svnee.easyfile.example.model.School;
 import org.svnee.easyfile.example.model.Student;
-import org.svnee.easyfile.starter.executor.impl.AbstractStreamDownloadExcelExecutor;
+import org.svnee.easyfile.core.executor.impl.AbstractStreamDownloadExcelExecutor;
 
 /**
  * @author svnee

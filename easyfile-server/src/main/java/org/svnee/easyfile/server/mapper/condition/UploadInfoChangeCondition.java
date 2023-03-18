@@ -25,6 +25,13 @@ public class UploadInfoChangeCondition {
     private String fileUrl;
 
     /**
+     * file-name
+     *
+     * @since 1.2.1
+     */
+    private String fileName;
+
+    /**
      * 文件所在系统
      */
     private String fileSystem;

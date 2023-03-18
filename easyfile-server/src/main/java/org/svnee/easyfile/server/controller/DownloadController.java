@@ -1,10 +1,13 @@
 package org.svnee.easyfile.server.controller;
 
+import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import org.svnee.easyfile.common.bean.Pagination;
+import org.svnee.easyfile.common.bean.DownloadRequestInfo;
+import org.svnee.easyfile.common.util.page.Pagination;
 import org.svnee.easyfile.common.bean.ResponseResult;
 import org.svnee.easyfile.common.request.CancelUploadRequest;
 import org.svnee.easyfile.common.request.DownloadRequest;
@@ -15,8 +18,10 @@ import org.svnee.easyfile.common.request.LoadingExportCacheRequest;
 import org.svnee.easyfile.common.request.RefreshExecuteProcessRequest;
 import org.svnee.easyfile.common.request.RegisterDownloadRequest;
 import org.svnee.easyfile.common.request.UploadCallbackRequest;
+import org.svnee.easyfile.common.response.AppTree;
 import org.svnee.easyfile.common.response.CancelUploadResult;
 import org.svnee.easyfile.common.response.DownloadResult;
+import org.svnee.easyfile.common.response.DownloadUrlResult;
 import org.svnee.easyfile.common.response.ExportResult;
 import org.svnee.easyfile.server.service.AsyncDownloadService;
 
@@ -113,9 +118,9 @@ public class DownloadController {
      * @return 结果
      */
     @PostMapping("/file")
-    public ResponseResult<String> download(@RequestBody @Valid DownloadRequest request) {
-        String fileUrl = asyncDownloadService.download(request);
-        return ResponseResult.ok(fileUrl);
+    public ResponseResult<DownloadUrlResult> download(@RequestBody @Valid DownloadRequest request) {
+        DownloadUrlResult result = asyncDownloadService.download(request);
+        return ResponseResult.ok(result);
     }
 
     /**
@@ -155,5 +160,27 @@ public class DownloadController {
         return ResponseResult.ok();
     }
 
+    /**
+     * get request info
+     *
+     * @param registerId registerId
+     * @return result
+     */
+    @PostMapping("/getRequestInfo")
+    public ResponseResult<DownloadRequestInfo> getRequestInfo(@RequestBody @Valid @NotNull Long registerId) {
+        DownloadRequestInfo requestInfo = asyncDownloadService.getRequestInfoByRegisterId(registerId);
+        return ResponseResult.ok(requestInfo);
+    }
+
+    /**
+     * get app tree
+     *
+     * @return result
+     */
+    @PostMapping("/getAppTree")
+    public ResponseResult<List<AppTree>> getAppTree() {
+        List<AppTree> appTreeList = asyncDownloadService.getAppTree();
+        return ResponseResult.ok(appTreeList);
+    }
 
 }

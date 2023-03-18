@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>下载任务</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="/easyfile-ui/static/layui/css/layui.css" media="all">
+</head>
+<body>
+
+<table id="table" lay-filter="table"></table>
+
+<script src="/easyfile-ui/static/layui/layui.js"></script>
+<script type="text/html" id="tableToolbar">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm layui-bg-green" lay-event="reloadTable">
+            刷新
+        </button>
+        <button class="layui-btn layui-btn-sm layui-bg-blue" id="switchApp" th:if="${showAppId}">
+            统一APPID
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+    </div>
+</script>
+<script type="text/html" id="clickDownload">
+    <a class="layui-btn layui-btn-xs" lay-event="click">下载</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>
+</script>
+<script type="text/javascript" th:src="@{/easyfile-ui/static/js/download-task.js}"></script>
+</body>
+</html>

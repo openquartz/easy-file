@@ -13,7 +13,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationListener;
 import org.svnee.easyfile.common.event.ApplicationCompleteEvent;
 import org.svnee.easyfile.common.exception.EasyFileException;
-import org.svnee.easyfile.common.thread.ThreadFactoryBuilder;
+import org.svnee.easyfile.common.concurrent.ThreadFactoryBuilder;
 import org.svnee.easyfile.storage.exception.RemoteExceptionCode;
 
 /**

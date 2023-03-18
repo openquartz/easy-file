@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
@@ -22,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.svnee.easyfile.common.util.StringUtils;
+import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileLocalProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.DownloadTriggerService;
@@ -49,27 +51,13 @@ import org.svnee.easyfile.storage.prop.EasyFileTableGeneratorSupplier;
 @EnableConfigurationProperties({EasyFileLocalProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
+@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
     private static final String DEFAULT_DATASOURCE_TYPE = "org.apache.tomcat.jdbc.pool.DataSource";
 
     @Resource
     private EasyFileLocalProperties easyFileLocalProperties;
-
-    @Bean
-    @ConditionalOnMissingBean(DownloadStorageService.class)
-    public DownloadStorageService localDownloadStorageService(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
-        AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
-        return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean(LimitingService.class)
-    @ConditionalOnClass(LocalLimitingServiceImpl.class)
-    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
-        List<ExportLimitingExecutor> executorList) {
-        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList);
-    }
 
     @Bean
     @ConditionalOnMissingBean(type = "easyFileLocalStorageDataSource", value = DataSource.class)
@@ -160,6 +148,21 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
         return new NoneExportLimitingExecutor();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(DownloadStorageService.class)
+    @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
+    public DownloadStorageService localDownloadStorageServiceImpl(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
+        AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
+        return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(LimitingService.class)
+    @ConditionalOnClass(LocalLimitingServiceImpl.class)
+    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+        List<ExportLimitingExecutor> executorList) {
+        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList);
+    }
 
     @Override
     public void afterPropertiesSet() {

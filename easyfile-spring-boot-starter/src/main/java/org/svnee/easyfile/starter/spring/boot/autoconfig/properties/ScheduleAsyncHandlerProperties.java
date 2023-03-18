@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.svnee.easyfile.core.property.IDatabaseAsyncHandlerProperty;
 
 /**
  * 定时调度异步处理器配置
@@ -14,7 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Getter
 @Setter
 @ConfigurationProperties(prefix = ScheduleAsyncHandlerProperties.PREFIX)
-public class ScheduleAsyncHandlerProperties implements DatabaseAsyncHandlerProperties {
+public class ScheduleAsyncHandlerProperties implements IDatabaseAsyncHandlerProperty {
 
     public static final String PREFIX = "easyfile.schedule.async.download.handler";
 

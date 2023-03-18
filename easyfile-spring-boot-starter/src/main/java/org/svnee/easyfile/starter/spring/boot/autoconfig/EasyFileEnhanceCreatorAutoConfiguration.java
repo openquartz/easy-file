@@ -12,10 +12,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import org.svnee.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import org.svnee.easyfile.starter.aop.FileExportInterceptor;
-import org.svnee.easyfile.starter.executor.BaseAsyncFileHandler;
+import org.svnee.easyfile.core.executor.BaseAsyncFileHandler;
 import org.svnee.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
 import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import org.svnee.easyfile.starter.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import org.svnee.easyfile.storage.download.DownloadStorageService;
 import org.svnee.easyfile.storage.download.LimitingService;
 
@@ -26,7 +25,7 @@ import org.svnee.easyfile.storage.download.LimitingService;
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties({EasyFileDownloadProperties.class, EasyFileRemoteProperties.class})
+@EnableConfigurationProperties({EasyFileDownloadProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
 public class EasyFileEnhanceCreatorAutoConfiguration {
