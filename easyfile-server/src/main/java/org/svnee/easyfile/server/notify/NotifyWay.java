@@ -22,11 +22,6 @@ public enum NotifyWay implements BaseEnum<String> {
      * 飞书机器人通知
      */
     FEI_SHU("feishu", "飞书机器人通知"),
-
-    /**
-     * 邮箱通知
-     */
-    EMAIL("email", "邮箱通知"),
     ;
     private final String code;
     private final String desc;
