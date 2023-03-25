@@ -59,9 +59,7 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     @Resource
     private EasyFileLocalProperties easyFileLocalProperties;
 
-    @Bean
-    @ConditionalOnMissingBean(type = "easyFileLocalStorageDataSource", value = DataSource.class)
-    public DataSource easyFileLocalStorageDataSource(EasyFileLocalProperties easyFileLocalProperties,
+    private DataSource newLocalStorageDataSource(EasyFileLocalProperties easyFileLocalProperties,
         Environment environment) {
 
         Iterable<ConfigurationPropertySource> sources = ConfigurationPropertySources
@@ -114,8 +112,9 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean(type = "localStorageJdbcTemplate", value = JdbcTemplate.class)
-    public JdbcTemplate localStorageJdbcTemplate(@Qualifier("easyFileLocalStorageDataSource") DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
+    public JdbcTemplate localStorageJdbcTemplate(EasyFileLocalProperties easyFileLocalProperties,
+        Environment environment) {
+        return new JdbcTemplate(newLocalStorageDataSource(easyFileLocalProperties, environment));
     }
 
     @Bean
