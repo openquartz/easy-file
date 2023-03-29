@@ -1,9 +1,8 @@
 package org.svnee.easyfile.example.utils;
 
-
-import com.alibaba.excel.util.DateUtils;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -11,7 +10,10 @@ import java.util.Date;
  *
  * @author svnee
  */
-public class FontImage {
+public final class FontImage {
+
+    private FontImage() {
+    }
 
     public static BufferedImage createWatermarkImage(String text, String dateFormat, String color) {
 
@@ -45,7 +47,7 @@ public class FontImage {
         }
         //g.drawString(DateUtils.getNowDateFormatCustom(watermark.getDateFormat()), 0, y);// 画出字符串
         // 画出字符串
-        String format = DateUtils.format(new Date(), dateFormat);
+        String format = new SimpleDateFormat(dateFormat).format(new Date());
         g.drawString(format, 0, y);
 
         g.dispose();// 释放画笔
