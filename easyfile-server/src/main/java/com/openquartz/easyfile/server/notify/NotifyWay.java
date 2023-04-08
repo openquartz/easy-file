@@ -17,11 +17,6 @@ public enum NotifyWay implements BaseEnum<String> {
      * Wechat推送
      */
     WECHAT("wechat", "微信机器人通知"),
-
-    /**
-     * 飞书机器人通知
-     */
-    FEI_SHU("feishu", "飞书机器人通知"),
     ;
     private final String code;
     private final String desc;

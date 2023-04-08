@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.server.service.impl;
 
-import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
+import com.openquartz.easyfile.server.common.LockSupport;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.util.CollectionUtils;
-import com.openquartz.easyfile.server.common.lock.ILock;
-import com.openquartz.easyfile.server.common.lock.LockFactory;
-import com.openquartz.easyfile.server.common.lock.LockKeyFormatter;
+import com.openquartz.easyfile.server.common.lock.LockBizType;
+import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
 import com.openquartz.easyfile.server.mapper.AsyncDownloadTaskMapper;
 import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;
 
@@ -32,21 +32,23 @@ import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;
 public class AsyncDownloadTaskServiceImpl implements AsyncDownloadTaskService {
 
     private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
-    private final LockFactory lockFactory;
+    private final LockSupport lockSupport;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void autoRegister(AutoTaskRegisterRequest request) {
-        ILock lock = lockFactory.getLock(LockKeyFormatter.TASK_AUTO_REGISTER_LOCK, request.getAppId());
-        if (lock.tryLock()) {
-            try {
+        lockSupport
+            .consumeIfTryLock(Pair.of(request.getAppId(), LockBizType.TASK_AUTO_REGISTER_LOCK), () -> {
+
                 List<String> downloadCodeList = CollectionUtils
                     .newArrayList(request.getDownloadCodeMap().keySet());
                 List<AsyncDownloadTask> taskList = asyncDownloadTaskMapper
                     .listByDownloadCode(downloadCodeList, CollectionUtils.newArrayList(request.getAppId()));
+
                 Map<String, AsyncDownloadTask> downloadTaskMap = taskList.stream()
                     .collect(Collectors.toMap(AsyncDownloadTask::getTaskCode, e -> e));
                 List<AsyncDownloadTask> toInitDownloadTaskList = CollectionUtils.newArrayList();
+
                 request.getDownloadCodeMap().entrySet().forEach(e -> {
                     if (!downloadTaskMap.containsKey(e.getKey())) {
                         AsyncDownloadTask task = convert(request, e);
@@ -60,10 +62,7 @@ public class AsyncDownloadTaskServiceImpl implements AsyncDownloadTaskService {
                 if (CollectionUtils.isNotEmpty(toInitDownloadTaskList)) {
                     asyncDownloadTaskMapper.insertList(toInitDownloadTaskList);
                 }
-            } finally {
-                lock.unlock();
-            }
-        }
+            });
     }
 
     private AsyncDownloadTask convert(AutoTaskRegisterRequest request, Entry<String, String> entry) {
