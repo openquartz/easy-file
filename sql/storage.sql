@@ -1,4 +1,7 @@
-CREATE TABLE ef_async_download_task
+CREATE DATABASE IF NOT EXISTS `easyfile`;
+USE`easyfile`;
+
+CREATE TABLE IF NOT EXISTS ef_async_download_task
 (
     id                BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
     task_code         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '任务编码',
@@ -17,7 +20,7 @@ CREATE TABLE ef_async_download_task
     UNIQUE KEY `uniq_app_id_task_code` (`task_code`,`app_id`) USING BTREE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载任务';
 
-CREATE TABLE ef_async_download_record
+CREATE TABLE IF NOT EXISTS ef_async_download_record
 (
     id                    BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
     download_task_id      BIGINT (20) NOT NULL DEFAULT 0 COMMENT '下载任务ID',
@@ -51,7 +54,7 @@ CREATE TABLE ef_async_download_record
     KEY                  `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 
-CREATE TABLE ef_async_download_trigger
+CREATE TABLE IF NOT EXISTS ef_async_download_trigger
 (
     id                BIGINT (20) NOT NULL AUTO_INCREMENT COMMENT 'Id',
     register_id       BIGINT (20) NOT NULL DEFAULT -1 COMMENT '注册ID',

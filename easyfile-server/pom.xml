@@ -102,6 +102,32 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>dockerfile-maven-plugin</artifactId>
+                <version>1.4.13</version>
+                <executions>
+                    <execution>
+                        <id>default</id>
+                        <!--自定义镜像命令,打包-->
+                        <goals>
+                            <goal>build</goal>
+                            <!--                            <goal>push</goal>-->
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dockerfile>src/main/docker</dockerfile>
+                    <finalName>${project.groupId}/${project.artifactId}</finalName>
+                    <!--                    <repository>xxx/${project.groupId}/${project.artifactId}</repository>-->
+                    <!--                    <useMavenSettingsForAuth>true</useMavenSettingsForAuth>-->
+                    <!-- 镜像版本号-->
+                    <tag>${project.version}</tag>
+                    <buildArgs>
+                        <JAR_FILE>target/${project.artifactId}-${project.version}.jar</JAR_FILE>
+                    </buildArgs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

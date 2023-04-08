@@ -1,0 +1,50 @@
+version: "3"
+services:
+
+    easyfile-server:
+        image: ${CC_IMAGE:-svnee/easyfile-server:1.2.3}
+        restart: always
+        ports:
+            - "${WEB_PORT:-9900}:9900"
+        volumes:
+            - ./data:/data
+            - ./logs:/logs
+        environment:
+            - "JAVA_OPTS=-Xmx${CC_JAVA_XMX:-12288m} -Xms${CC_JAVA_XMS:-2048m} -XX:PermSize=256m -XX:MaxPermSize=1024m -Djava.net.preferIPv4Stack=true"
+            - SERVER_PORT=8035
+            - SERVER_LOG_PATH=/logs
+            - SERVER_LOG_LEVEL=${LOG_LEVEL:-WARN}
+            # set a separated port for SSL
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/test?useUnicode=true&characterEncoding=UTF-8
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=${DB_PASSWD:-123456}
+            - SPRING_REDIS_HOST=redis
+            - SPRING_REDIS_PORT=6379
+            - SPRING_REDIS_PASSWORD=${DB_PASSWD:-123456}
+        depends_on:
+            - mysql
+            - redis
+
+    mysql:
+        image: mysql:5.7
+        restart: always
+        environment:
+            - MYSQL_ROOT_PASSWORD=${DB_PASSWD:-123456}
+            - MYSQL_USER=admin
+            - MYSQL_PASSWORD=${DB_PASSWD:-123456}
+        ports:
+            - "${MYSQL_PORT:-3306}:3306"
+        volumes:
+            - ./database/mysql/data:/var/lib/mysql
+            - ./sql/storage.sql:/docker-entrypoint-initdb.d/init.sql
+        command: --max_allowed_packet=32505856 --init-file /docker-entrypoint-initdb.d/init.sql
+
+    redis:
+        image: redis:7.0
+        environment:
+            - REDIS_PASSWORD=${DB_PASSWD:-123456}
+        restart: always
+        volumes:
+            - ./database/redis/data:/data
+        ports:
+            - "${REDIS_PORT:-6379}:6379"
