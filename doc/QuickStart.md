@@ -7,12 +7,12 @@
 ```xml
 
 <dependency>
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easyfile-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
 <dependency>
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easyfile-storage-local</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -23,12 +23,12 @@
 ```xml
 
 <dependency>
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easyfile-spring-boot-starter</artifactId>
     <version>1.0.0</version>
 </dependency>
 <dependency>
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easyfile-storage-remote</artifactId>
     <version>1.0.0</version>
 </dependency>
@@ -37,10 +37,10 @@
 #### 二、Client端需要提供文件上传服务进行实现接口
 
 ```java
-package org.svnee.easyfile.storage.file;
+package com.openquartz.easyfile.storage.file;
 
 import java.io.File;
-import org.svnee.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.bean.Pair;
 
 /**
  * 文件上传服务
@@ -51,7 +51,7 @@ public interface UploadService {
 
     /**
      * 文件上传
-     * 如果需要重试则需要抛出 org.svnee.easyfile.core.exception.GenerateFileException
+     * 如果需要重试则需要抛出 com.openquartz.easyfile.core.exception.GenerateFileException
      *
      * @param file 文件
      * @param fileName 自定义生成的文件名
@@ -67,7 +67,7 @@ public interface UploadService {
 
 #### 三、SpringBoot 启动入口处理
 
-增加注解扫描 `org.svnee.easyfile.starter.annotation.EnableEasyFileAutoConfiguration`包在服务的启动入口上
+增加注解扫描 `com.openquartz.easyfile.starter.annotation.EnableEasyFileAutoConfiguration`包在服务的启动入口上
 
 例如：
 
@@ -77,7 +77,7 @@ public interface UploadService {
  **/
 @SpringBootApplication
 @EnableEasyFileAutoConfiguration
-@MapperScan("org.svnee.easyfile.example.mapper")
+@MapperScan("com.openquartz.easyfile.example.mapper")
 public class LocalExampleApplication {
 
     public static void main(String[] args) {
@@ -181,7 +181,7 @@ EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需�
 ```xml
 
 <dependency>
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easyfile-ui</artifactId>
     <version>1.2.0</version>
 </dependency>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.svnee.easyfile.server.mapper.AsyncDownloadTaskMapper">
-    <resultMap id="BaseResultMap" type="org.svnee.easyfile.server.entity.AsyncDownloadTask">
+<mapper namespace="com.openquartz.easyfile.server.mapper.AsyncDownloadTaskMapper">
+    <resultMap id="BaseResultMap" type="com.openquartz.easyfile.server.entity.AsyncDownloadTask">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="task_code" jdbcType="VARCHAR" property="taskCode"/>
         <result column="task_desc" jdbcType="VARCHAR" property="taskDesc"/>
@@ -194,7 +194,7 @@
         where id = #{id}
     </update>
 
-    <select id="getAppTree" resultType="org.svnee.easyfile.server.entity.AsyncDownloadAppEntity">
+    <select id="getAppTree" resultType="com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity">
         select distinct app_id, unified_app_id
         from ef_async_download_task
         where is_deleted = 0

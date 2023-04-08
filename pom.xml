@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.svnee</groupId>
+    <groupId>com.openquartz</groupId>
     <artifactId>easy-file</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
@@ -140,43 +140,43 @@
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-common</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-core</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-storage-api</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-storage-remote</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-spring-boot-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-storage-local</artifactId>
                 <version>${revision}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.svnee</groupId>
+                <groupId>com.openquartz</groupId>
                 <artifactId>easyfile-ui</artifactId>
                 <version>${revision}</version>
             </dependency>

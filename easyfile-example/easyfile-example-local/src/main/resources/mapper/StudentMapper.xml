@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.svnee.easyfile.example.mapper.StudentMapper">
+<mapper namespace="com.openquartz.easyfile.example.mapper.StudentMapper">
     <sql id="Base_Column_List">
         id,
         `name`,
@@ -10,7 +10,7 @@
         address
     </sql>
 
-    <resultMap id="BaseResultMap" type="org.svnee.easyfile.example.model.Student">
+    <resultMap id="BaseResultMap" type="com.openquartz.easyfile.example.model.Student">
         <result column="id" property="id"/>
         <result column="name" property="name"/>
         <result column="age" property="age"/>
