@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.svnee.easyfile.server.mapper.AsyncDownloadRecordMapper">
-    <resultMap id="BaseResultMap" type="org.svnee.easyfile.server.entity.AsyncDownloadRecord">
+<mapper namespace="com.openquartz.easyfile.server.mapper.AsyncDownloadRecordMapper">
+    <resultMap id="BaseResultMap" type="com.openquartz.easyfile.server.entity.AsyncDownloadRecord">
         <id column="id" property="id"/>
         <result column="download_task_id" property="downloadTaskId"/>
         <result column="app_id" property="appId"/>
@@ -67,7 +67,7 @@
     </select>
 
     <!--  变更上传信息-->
-    <update id="changeUploadInfo" parameterType="org.svnee.easyfile.server.mapper.condition.UploadInfoChangeCondition">
+    <update id="changeUploadInfo" parameterType="com.openquartz.easyfile.server.mapper.condition.UploadInfoChangeCondition">
         update ef_async_download_record
             set upload_status = #{condition.uploadStatus.code},
         <if test="condition.fileUrl != null and condition.fileUrl != ''">

@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.svnee</groupId>
+        <groupId>com.openquartz</groupId>
         <artifactId>easyfile-example</artifactId>
         <version>${revision}</version>
     </parent>
@@ -38,12 +38,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-spring-boot-starter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-storage-remote</artifactId>
         </dependency>
 
