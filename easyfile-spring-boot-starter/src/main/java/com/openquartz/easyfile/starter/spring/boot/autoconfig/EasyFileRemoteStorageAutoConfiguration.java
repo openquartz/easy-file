@@ -18,18 +18,18 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.common.constants.Constants;
-import com.openquartz.easyfile.storage.EasyFileClient;
+import com.openquartz.easyfile.storage.remote.EasyFileClient;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
-import com.openquartz.easyfile.storage.impl.HttpEasyFileClientImpl;
-import com.openquartz.easyfile.storage.impl.RemoteDownloadStorageServiceImpl;
-import com.openquartz.easyfile.storage.impl.RemoteLimitingServiceImpl;
-import com.openquartz.easyfile.storage.remote.HttpAgent;
-import com.openquartz.easyfile.storage.remote.HttpScheduledHealthCheck;
-import com.openquartz.easyfile.storage.remote.RemoteBootstrapProperties;
-import com.openquartz.easyfile.storage.remote.RemoteClient;
-import com.openquartz.easyfile.storage.remote.ServerHealthCheck;
-import com.openquartz.easyfile.storage.remote.ServerHttpAgent;
+import com.openquartz.easyfile.storage.remote.impl.HttpEasyFileClientImpl;
+import com.openquartz.easyfile.storage.remote.impl.RemoteDownloadStorageServiceImpl;
+import com.openquartz.easyfile.storage.remote.impl.RemoteLimitingServiceImpl;
+import com.openquartz.easyfile.storage.remote.common.HttpAgent;
+import com.openquartz.easyfile.storage.remote.common.HttpScheduledHealthCheck;
+import com.openquartz.easyfile.storage.remote.common.RemoteBootstrapProperties;
+import com.openquartz.easyfile.storage.remote.common.RemoteClient;
+import com.openquartz.easyfile.storage.remote.common.ServerHealthCheck;
+import com.openquartz.easyfile.storage.remote.common.ServerHttpAgent;
 
 /**
  * EasyFileLocalStorageAutoConfiguration

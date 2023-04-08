@@ -2,6 +2,7 @@ package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileLocalProperties;
+import com.openquartz.easyfile.storage.local.expand.NoneExportLimitingExecutor;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -29,17 +30,16 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.DownloadTriggerService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
-import com.openquartz.easyfile.storage.expand.NoneExportLimitingExecutor;
-import com.openquartz.easyfile.storage.impl.LocalDownloadStorageServiceImpl;
-import com.openquartz.easyfile.storage.impl.LocalDownloadTriggerServiceImpl;
-import com.openquartz.easyfile.storage.impl.LocalLimitingServiceImpl;
-import com.openquartz.easyfile.storage.mapper.AsyncDownloadRecordMapper;
-import com.openquartz.easyfile.storage.mapper.AsyncDownloadTaskMapper;
-import com.openquartz.easyfile.storage.mapper.AsyncDownloadTriggerMapper;
-import com.openquartz.easyfile.storage.mapper.impl.AsyncDownloadRecordMapperImpl;
-import com.openquartz.easyfile.storage.mapper.impl.AsyncDownloadTaskMapperImpl;
-import com.openquartz.easyfile.storage.mapper.impl.AsyncDownloadTriggerMapperImpl;
-import com.openquartz.easyfile.storage.prop.EasyFileTableGeneratorSupplier;
+import com.openquartz.easyfile.storage.local.impl.LocalDownloadStorageServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalDownloadTriggerServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalLimitingServiceImpl;
+import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadRecordMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTaskMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTriggerMapper;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadRecordMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTaskMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTriggerMapperImpl;
+import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier;
 
 /**
  * EasyFileLocalStorageAutoConfiguration
