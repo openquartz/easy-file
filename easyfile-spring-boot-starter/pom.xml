@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.svnee</groupId>
+        <groupId>com.openquartz</groupId>
         <artifactId>easy-file</artifactId>
         <version>${revision}</version>
     </parent>
@@ -43,18 +43,18 @@
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-storage-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-storage-remote</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-storage-local</artifactId>
             <optional>true</optional>
         </dependency>
@@ -71,13 +71,13 @@
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-ui</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>org.svnee</groupId>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-core</artifactId>
         </dependency>
 
