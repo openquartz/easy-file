@@ -19,6 +19,7 @@
   </properties>
 
   <dependencies>
+
     <dependency>
       <groupId>com.openquartz</groupId>
       <artifactId>easyfile-common</artifactId>
