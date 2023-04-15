@@ -16,6 +16,7 @@ import com.openquartz.easyfile.common.exception.CommonErrorCode;
 import com.openquartz.easyfile.server.common.lock.Consumer;
 import com.openquartz.easyfile.server.common.lock.DistributedLockFactory;
 import com.openquartz.easyfile.server.common.lock.LockBizType;
+import org.springframework.stereotype.Component;
 
 /**
  * LockSupportImpl
@@ -23,6 +24,7 @@ import com.openquartz.easyfile.server.common.lock.LockBizType;
  * @author svnee
  **/
 @Slf4j
+@Component
 public class LockSupportImpl implements LockSupport {
 
     private final DistributedLockFactory distributedLockFactory;
