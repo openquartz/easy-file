@@ -3,7 +3,7 @@ package com.openquartz.easyfile.server.common.lock.impl;
 
 import static com.openquartz.easyfile.common.util.ParamUtils.checkNotNull;
 
-import com.openquartz.easyfile.server.common.LockSupport;
+import com.openquartz.easyfile.server.common.lock.LockSupport;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;

@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.server.service.impl;
 
-import com.openquartz.easyfile.server.common.LockSupport;
+import com.openquartz.easyfile.server.common.lock.LockSupport;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.openquartz.easyfile.server.common;
+package com.openquartz.easyfile.server.common.lock;
 
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.server.common.lock.Consumer;
