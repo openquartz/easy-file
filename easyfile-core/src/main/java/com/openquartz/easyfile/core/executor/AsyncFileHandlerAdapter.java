@@ -60,7 +60,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     private final UploadService uploadService;
     private final DownloadStorageService downloadStorageService;
 
-    public AsyncFileHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
+    protected AsyncFileHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
         DownloadStorageService storageService) {
         this.downloadProperties = downloadProperties;
         this.downloadStorageService = storageService;

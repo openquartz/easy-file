@@ -30,6 +30,11 @@
 
         <dependency>
             <groupId>com.openquartz</groupId>
+            <artifactId>easyfile-metrics-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.openquartz</groupId>
             <artifactId>easyfile-storage-api</artifactId>
         </dependency>
 

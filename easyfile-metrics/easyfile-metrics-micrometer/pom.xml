@@ -35,6 +35,13 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <!-- micrometer -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
     </dependencies>
 
     <build>

@@ -198,6 +198,12 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
     @Override
     public void archiveHistoryTrigger(Integer archiveHours, Integer maxTriggerCount) {
+
+        // 当归档配置小于等于0 时默认不归档
+        if (archiveHours <= 0) {
+            return;
+        }
+
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
         LocalDateTime beforeTime = now.plusHours(-archiveHours);
 
