@@ -18,6 +18,7 @@
     <module>easyfile-metrics-api</module>
     <module>easyfile-metrics-log</module>
     <module>easyfile-metrics-micrometer</module>
+      <module>easyfile-metrics-promethes</module>
   </modules>
 
   <build>

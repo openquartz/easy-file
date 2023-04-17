@@ -1,5 +1,6 @@
 package com.openquartz.metrics.log;
 
+import com.openquartz.easyfile.common.spi.SPI;
 import com.openquartz.easyfile.metrics.api.spi.MetricsRegister;
 import lombok.extern.slf4j.Slf4j;
 
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author svnee
  */
 @Slf4j
+@SPI("log")
 public class LogMetricsRegister implements MetricsRegister {
 
     @Override
