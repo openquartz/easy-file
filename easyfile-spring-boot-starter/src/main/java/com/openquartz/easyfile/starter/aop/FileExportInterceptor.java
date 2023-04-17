@@ -3,9 +3,11 @@ package com.openquartz.easyfile.starter.aop;
 import static com.openquartz.easyfile.core.exception.DownloadErrorCode.FILE_GENERATOR_MUST_SUPPORT_ANNOTATION;
 import static com.openquartz.easyfile.core.exception.DownloadErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
+import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -84,27 +86,28 @@ public class FileExportInterceptor implements MethodInterceptor {
             }
 
             // 发布下载开始-事件
-            publishDownloadStartEvent(executor, requestContext, async);
+            String downloadTraceId = UUID.randomUUID().toString().replace("-", StringUtils.EMPTY);
+            publishDownloadStartEvent(executor, requestContext, async, downloadTraceId);
 
             // 是否开启异步
             if (!async) {
                 try {
                     Object syncResult = executeSync(invocation);
-                    publishDownloadEndEvent(executor, requestContext, false, null, syncResult);
+                    publishDownloadEndEvent(executor, requestContext, false, null, syncResult, downloadTraceId);
                     return syncResult;
                 } catch (Throwable throwable) {
                     log.error("FileExportInterceptor,executeSync fail!requestContext:{}", requestContext, throwable);
-                    publishDownloadEndEvent(executor, requestContext, false, throwable, null);
+                    publishDownloadEndEvent(executor, requestContext, false, throwable, null, downloadTraceId);
                     throw new EasyFileException(SYNC_DOWNLOAD_EXECUTE_ERROR);
                 }
             } else {
                 try {
                     Pair<Boolean, Long> resultPair = executeAsync(invocation, executor, requestContext, exportExecutor);
-                    publishDownloadEndEvent(executor, requestContext, true, null, resultPair);
+                    publishDownloadEndEvent(executor, requestContext, true, null, resultPair, downloadTraceId);
                     return resultPair;
                 } catch (Throwable ex) {
                     log.error("FileExportInterceptor,executeAsync fail!requestContext:{}", requestContext, ex);
-                    publishDownloadEndEvent(executor, requestContext, true, ex, null);
+                    publishDownloadEndEvent(executor, requestContext, true, ex, null, downloadTraceId);
                     throw ex;
                 }
             }
@@ -173,9 +176,11 @@ public class FileExportInterceptor implements MethodInterceptor {
      * @param async 是否异步
      */
     private void publishDownloadEndEvent(BaseDownloadExecutor executor, DownloaderRequestContext requestContext,
-        boolean async, Throwable exception, Object result) {
+        boolean async, Throwable exception, Object result, String downloadTraceId) {
 
-        DownloadEndEvent endEvent = new DownloadEndEvent(requestContext, executor, async, exception, result);
+        DownloadEndEvent endEvent = new DownloadEndEvent(requestContext, executor, async, exception, result,
+            downloadTraceId);
+
         // 执行发布事件到监听器
         Map<String, DownloadEndListener> startListenerMap = context.getBeansOfType(DownloadEndListener.class);
         for (DownloadEndListener listener : startListenerMap.values()) {
@@ -192,8 +197,12 @@ public class FileExportInterceptor implements MethodInterceptor {
      * @param async 是否异步
      */
     private void publishDownloadStartEvent(BaseDownloadExecutor executor, DownloaderRequestContext requestContext,
-        boolean async) {
-        DownloadStartEvent startEvent = new DownloadStartEvent(requestContext, executor, async);
+        boolean async,
+        String downloadTraceId) {
+
+        // 构建开始事件
+        DownloadStartEvent startEvent = new DownloadStartEvent(requestContext, executor, async, downloadTraceId);
+
         // 执行发布事件到监听器
         Map<String, DownloadStartListener> startListenerMap = context.getBeansOfType(DownloadStartListener.class);
         for (DownloadStartListener listener : startListenerMap.values()) {
@@ -214,6 +223,7 @@ public class FileExportInterceptor implements MethodInterceptor {
 
     private RegisterDownloadRequest buildDownloadRequest(FileExportExecutor executor,
         DownloaderRequestContext requestContext) {
+
         RegisterDownloadRequest registerRequest = new RegisterDownloadRequest();
         registerRequest.setAppId(downloadProperties.getAppId());
         registerRequest.setDownloadCode(executor.value());

@@ -25,11 +25,20 @@ public class DownloadStartEvent {
      */
     private final boolean enableAsync;
 
+    /**
+     * 本次traceId
+     */
+    private final String downloadTraceId;
+
     public DownloadStartEvent(DownloaderRequestContext requestContext,
-        BaseDownloadExecutor executor, boolean enableAsync) {
+        BaseDownloadExecutor executor,
+        boolean enableAsync,
+        String downloadTraceId) {
+
         this.requestContext = requestContext;
         this.executor = executor;
         this.enableAsync = enableAsync;
+        this.downloadTraceId = downloadTraceId;
     }
 
     public DownloaderRequestContext getRequestContext() {
@@ -44,12 +53,17 @@ public class DownloadStartEvent {
         return enableAsync;
     }
 
+    public String getDownloadTraceId() {
+        return downloadTraceId;
+    }
+
     @Override
     public String toString() {
         return "DownloadStartEvent{" +
             "requestContext=" + requestContext +
             ", executor=" + executor +
             ", enableAsync=" + enableAsync +
+            ", downloadTraceId='" + downloadTraceId + '\'' +
             '}';
     }
 }
