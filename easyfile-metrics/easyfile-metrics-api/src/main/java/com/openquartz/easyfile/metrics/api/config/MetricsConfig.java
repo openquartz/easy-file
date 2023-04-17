@@ -12,7 +12,7 @@ import java.util.Properties;
  */
 @Data
 @SPI("MetricsConfig")
-public final class MetricsConfig extends AbstractConfig {
+public final class MetricsConfig {
 
     /**
      * metrics-name

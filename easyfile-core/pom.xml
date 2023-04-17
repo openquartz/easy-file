@@ -53,6 +53,11 @@
             <artifactId>guava-retrying</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.openquartz</groupId>
+            <artifactId>easyfile-metrics-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

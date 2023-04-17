@@ -1,10 +1,15 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.common.util.StringUtils;
+import com.openquartz.easyfile.metrics.api.config.MetricsConfig;
+import com.openquartz.easyfile.metrics.api.metric.MetricsTrackerFacade;
 import com.openquartz.easyfile.starter.init.EasyFileInitializingEntrance;
 import com.openquartz.easyfile.starter.processor.ApplicationContentPostProcessor;
 import com.openquartz.easyfile.starter.processor.DownloadInterceptorPostProcessor;
 import com.openquartz.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileMetricsProperties;
+import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -24,7 +29,7 @@ import com.openquartz.easyfile.storage.file.local.LocalUploadServiceImpl;
  **/
 @Slf4j
 @Configuration
-@EnableConfigurationProperties(EasyFileDownloadProperties.class)
+@EnableConfigurationProperties({EasyFileDownloadProperties.class, EasyFileMetricsProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileCreatorAutoConfiguration {
 
@@ -59,6 +64,23 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean
     public ApplicationContentPostProcessor applicationContentPostProcessor(ApplicationContext applicationContext) {
         return new ApplicationContentPostProcessor(applicationContext);
+    }
+
+    @Bean(destroyMethod = "close")
+    public MetricsTrackerFacade metricsTrackerFacade(EasyFileMetricsProperties easyFileMetricsProperties) {
+        MetricsConfig metricsConfig = new MetricsConfig();
+        metricsConfig.setMetricsName(easyFileMetricsProperties.getName());
+        metricsConfig.setHost(easyFileMetricsProperties.getHost());
+        metricsConfig.setPort(easyFileMetricsProperties.getPort());
+        metricsConfig.setJmxConfig(easyFileMetricsProperties.getJmxConfig());
+        metricsConfig.setProps(easyFileMetricsProperties.getProps());
+
+        if (StringUtils.isNotBlank(metricsConfig.getMetricsName())) {
+            MetricsTrackerFacade facade = new MetricsTrackerFacade();
+            facade.start(metricsConfig);
+            return facade;
+        }
+        return null;
     }
 
 }
