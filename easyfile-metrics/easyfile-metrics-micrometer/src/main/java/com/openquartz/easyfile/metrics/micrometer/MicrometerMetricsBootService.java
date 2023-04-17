@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.metrics.micrometer;
 
+import com.openquartz.easyfile.common.spi.SPI;
 import com.openquartz.easyfile.metrics.api.config.MetricsConfig;
 import com.openquartz.easyfile.metrics.api.spi.MetricsBootService;
 import com.openquartz.easyfile.metrics.api.spi.MetricsRegister;
@@ -9,6 +10,7 @@ import com.openquartz.easyfile.metrics.api.spi.MetricsRegister;
  *
  * @author svnee
  */
+@SPI("micrometer")
 public class MicrometerMetricsBootService implements MetricsBootService {
 
     @Override
