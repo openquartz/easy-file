@@ -24,7 +24,7 @@ public class DownloadMetricsListener implements DownloadExecutorInterceptor {
             "easyfile download total count");
 
         MetricsReporter.registerHistogram(MetricsKeyConstants.ASYNC_INVOKE_DOWNLOAD_TIMER, new String[]{"type"},
-            "download Latency Histogram Millis (ms)");
+            "easyfile download Latency Histogram Millis (ms)");
     }
 
     private static final String START_TIME_KEY = "startTimestamp";

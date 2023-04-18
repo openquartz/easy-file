@@ -1,5 +1,7 @@
 package com.openquartz.easyfile.metrics.api.reporter;
 
+import com.openquartz.easyfile.common.exception.EasyFileException;
+import com.openquartz.easyfile.metrics.api.error.MetricsErrorCode;
 import com.openquartz.easyfile.metrics.api.metric.Metric;
 import com.openquartz.easyfile.metrics.api.spi.MetricsRegister;
 import java.util.Collection;
@@ -12,6 +14,9 @@ import java.util.Optional;
  * @author svnee
  */
 public final class MetricsReporter {
+
+    private MetricsReporter() {
+    }
 
     private static MetricsRegister metricsRegister;
 
@@ -42,7 +47,8 @@ public final class MetricsReporter {
                     registerHistogram(metric.getName(), getLabelNames(metric.getLabels()), metric.getDocument());
                     break;
                 default:
-                    throw new RuntimeException("we not support metric registration for type: " + metric.getType());
+                    throw EasyFileException.replacePlaceHold(MetricsErrorCode.METRICS_TYPE_NOT_FOUND_ERROR,
+                        metric.getType());
             }
         }
     }

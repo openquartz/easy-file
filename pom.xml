@@ -190,18 +190,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.openquartz</groupId>
-                <artifactId>easyfile-metrics-log</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.openquartz</groupId>
-                <artifactId>easyfile-metrics-micrometer</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.github.rholder</groupId>
                 <artifactId>guava-retrying</artifactId>
                 <version>${guava.retry.version}</version>
