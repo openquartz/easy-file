@@ -32,7 +32,7 @@ public final class PaginationUtils {
     /**
      * copy
      */
-    public static <T>Pagination<T> copy(Pagination<?> source, List<T> modelList){
+    public static <T> Pagination<T> copy(Pagination<?> source, List<T> modelList) {
         Pagination<T> pagination = new Pagination<>();
         pagination.setPage(source.getPage());
         pagination.setTotalRecords(source.getTotalRecords());

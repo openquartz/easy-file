@@ -81,14 +81,10 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         if (Objects.isNull(downloadRecord) || downloadRecord.getUploadStatus() != UploadStatusEnum.NONE) {
             return false;
         }
-        boolean running = downloadRecord.getUploadStatus() == UploadStatusEnum.NONE;
-        if (Boolean.TRUE.equals(running)) {
-            int affect = asyncDownloadRecordMapper
-                .refreshUploadStatus(registerId, UploadStatusEnum.NONE, UploadStatusEnum.EXECUTING,
-                    downloadRecord.getUpdateBy());
-            return affect > 0;
-        }
-        return false;
+        int affect = asyncDownloadRecordMapper
+            .refreshUploadStatus(registerId, UploadStatusEnum.NONE, UploadStatusEnum.EXECUTING,
+                downloadRecord.getUpdateBy());
+        return affect > 0;
     }
 
     @Override

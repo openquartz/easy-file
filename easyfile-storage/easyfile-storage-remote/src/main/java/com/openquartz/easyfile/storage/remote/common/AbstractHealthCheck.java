@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationListener;
 import com.openquartz.easyfile.common.event.ApplicationCompleteEvent;
 import com.openquartz.easyfile.common.exception.EasyFileException;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
+import org.springframework.lang.NonNull;
 
 /**
  * Abstract health check.
@@ -138,7 +139,7 @@ public abstract class AbstractHealthCheck implements ServerHealthCheck, Initiali
     }
 
     @Override
-    public void onApplicationEvent(ApplicationCompleteEvent event) {
+    public void onApplicationEvent(@NonNull ApplicationCompleteEvent event) {
         contextInitComplete = true;
     }
 

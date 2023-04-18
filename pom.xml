@@ -17,19 +17,20 @@
         <module>easyfile-storage</module>
         <module>easyfile-example</module>
         <module>easyfile-ui</module>
+        <module>easyfile-metrics</module>
     </modules>
 
     <name>${project.artifactId}</name>
 
     <properties>
         <java.version>1.8</java.version>
-        <revision>1.2.3</revision>
+        <revision>1.3.0</revision>
 
         <guava.version>31.1-jre</guava.version>
         <guava.retry.version>2.0.0</guava.retry.version>
         <okhttp3.version>4.9.0</okhttp3.version>
         <hibernate-validator.version>6.1.5.Final</hibernate-validator.version>
-        <compress.version>1.18</compress.version>
+        <compress.version>1.21</compress.version>
         <poi.version>3.17</poi.version>
         <javax.persistence.version>2.2</javax.persistence.version>
         <druid.version>1.1.6</druid.version>
@@ -40,6 +41,9 @@
         <minio.version>8.3.7</minio.version>
         <poi-ooxml-schemas.version>1.4</poi-ooxml-schemas.version>
         <hutool.version>5.4.7</hutool.version>
+        <micrometer.version>1.3.5</micrometer.version>
+        <prometheus-java-client.version>0.10.0</prometheus-java-client.version>
+        <prometheus-jmx.version>0.15.0</prometheus-jmx.version>
 
         <rocketmq.version>4.9.3</rocketmq.version>
 
@@ -180,6 +184,12 @@
             </dependency>
 
             <dependency>
+                <groupId>com.openquartz</groupId>
+                <artifactId>easyfile-metrics-api</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>com.github.rholder</groupId>
                 <artifactId>guava-retrying</artifactId>
                 <version>${guava.retry.version}</version>
@@ -249,6 +259,38 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- micrometer -->
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-core</artifactId>
+                <version>${micrometer.version}</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient</artifactId>
+                <version>${prometheus-java-client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_httpserver</artifactId>
+                <version>${prometheus-java-client.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_hotspot</artifactId>
+                <version>${prometheus-java-client.version}</version>
+            </dependency>
+
+            <!-- https://mvnrepository.com/artifact/io.prometheus.jmx/collector -->
+            <dependency>
+                <groupId>io.prometheus.jmx</groupId>
+                <artifactId>collector</artifactId>
+                <version>${prometheus-jmx.version}</version>
             </dependency>
 
         </dependencies>

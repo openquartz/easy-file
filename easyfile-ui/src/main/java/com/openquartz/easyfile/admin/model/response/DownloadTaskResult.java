@@ -8,6 +8,7 @@ import com.openquartz.easyfile.common.serdes.Long2StringSerializer;
 
 /**
  * DownloadTask Result
+ *
  * @author svnee
  **/
 @Data

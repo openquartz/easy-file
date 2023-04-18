@@ -13,25 +13,25 @@ import com.openquartz.easyfile.common.constants.Constants;
  */
 public final class CookieUtil {
 
-	private CookieUtil() {
-	}
+    private CookieUtil() {
+    }
 
-	/**
+    /**
      * cookie default cache seconds
      */
     private static final int COOKIE_CACHE_MAX_SECONDS = 300;
 
     /**
-	 * cookie path
-	 */
-	private static final String COOKIE_PATH = "/";
+     * cookie path
+     */
+    private static final String COOKIE_PATH = "/";
 
     /**
      * save cookie
      */
     public static void save(HttpServletResponse response, String key, String value, boolean rememberMe) {
         int age = !rememberMe ? COOKIE_CACHE_MAX_SECONDS : -1;
-		save(response, key, value, age);
+        save(response, key, value, age);
     }
 
     /**
@@ -48,8 +48,9 @@ public final class CookieUtil {
 
     /**
      * get cookie value
-	 * @param request request
-	 * @param key cookie key
+     *
+     * @param request request
+     * @param key cookie key
      */
     public static String getValue(HttpServletRequest request, String key) {
         Cookie cookie = get(request, key);
@@ -61,8 +62,9 @@ public final class CookieUtil {
 
     /**
      * get cookie from request
-	 * @param request request
-	 * @param key cookie key
+     *
+     * @param request request
+     * @param key cookie key
      */
     private static Cookie get(HttpServletRequest request, String key) {
         Cookie[] cookieArr = request.getCookies();

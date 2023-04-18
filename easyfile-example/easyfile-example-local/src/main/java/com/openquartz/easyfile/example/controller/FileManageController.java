@@ -21,7 +21,7 @@ public class FileManageController {
     private DownloadStorageService downloadStorageService;
 
     @GetMapping("/get-url")
-    public ResponseResult<String> getUrl(@RequestParam("registerId")Long registerId) {
+    public ResponseResult<String> getUrl(@RequestParam("registerId") Long registerId) {
         DownloadRequest downloadRequest = new DownloadRequest();
         downloadRequest.setDownloadOperateBy("sys");
         downloadRequest.setDownloadOperateName("sys");

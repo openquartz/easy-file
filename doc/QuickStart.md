@@ -195,6 +195,7 @@ EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需�
 easyfile.ui.admin.username=admin
 easyfile.ui.admin.password=admin
 ```
+
 EasyFile UI 管理界面
 
 ![EasyFileUI](./image/EasyfileUi.png)

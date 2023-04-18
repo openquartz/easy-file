@@ -4,23 +4,8 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.StringJoiner;
-import java.util.concurrent.TimeUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.DownloaderRequestContext;
-import com.openquartz.easyfile.common.util.page.PageTotalContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.FileSuffixEnum;
@@ -36,6 +21,8 @@ import com.openquartz.easyfile.common.util.ExceptionUtils;
 import com.openquartz.easyfile.common.util.FileUtils;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
+import com.openquartz.easyfile.common.util.page.PageTotalContext;
+import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.core.exception.GenerateFileErrorCode;
 import com.openquartz.easyfile.core.exception.GenerateFileException;
 import com.openquartz.easyfile.core.executor.bean.GenerateFileResult;
@@ -44,8 +31,21 @@ import com.openquartz.easyfile.core.executor.process.ExecuteProcessReporterImpl;
 import com.openquartz.easyfile.core.intercept.DownloadExecutorInterceptor;
 import com.openquartz.easyfile.core.intercept.ExecutorInterceptorSupport;
 import com.openquartz.easyfile.core.intercept.InterceptorContext;
+import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 异步处理器适配器
@@ -60,7 +60,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     private final UploadService uploadService;
     private final DownloadStorageService downloadStorageService;
 
-    public AsyncFileHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
+    protected AsyncFileHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
         DownloadStorageService storageService) {
         this.downloadProperties = downloadProperties;
         this.downloadStorageService = storageService;
@@ -122,7 +122,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             request.setFileUrl(Objects.nonNull(fileUrl) ? fileUrl.getValue() : StringUtils.EMPTY);
         } else {
             request.setUploadStatus(UploadStatusEnum.FAIL);
-            Optional.ofNullable(genFileResult).ifPresent(k -> request.setErrorMsg(lessErrorMsg(k.getErrorMsg())));
+            Optional.of(genFileResult).ifPresent(k -> request.setErrorMsg(lessErrorMsg(k.getErrorMsg())));
         }
         downloadStorageService.uploadCallback(request);
         // 上传完成结果进行回调触发。
@@ -237,7 +237,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             }
         }
         if (!handleBreakFlag) {
-            try (OutputStream out = new BufferedOutputStream(new FileOutputStream(file))) {
+            try (OutputStream out = new BufferedOutputStream(Files.newOutputStream(file.toPath()))) {
 
                 //report execute-process
                 ExecuteProcessReporterImpl reporter = new ExecuteProcessReporterImpl(registerId,

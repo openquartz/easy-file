@@ -1,6 +1,5 @@
 package com.openquartz.easyfile.common.exception;
 
-import com.openquartz.easyfile.common.exception.EasyFileErrorCode;
 import lombok.Getter;
 
 /**
@@ -20,7 +19,6 @@ public enum CommonErrorCode implements EasyFileErrorCode {
     PROPERTY_NOT_EXIST_ERROR("09", "Property Not Exist!"),
     REQUEST_PARAM_ERROR("10", "request param error"),
     CAN_NOT_GET_LOCK_ERROR("11", "Can not acquire lock!"),
-
     ;
     private final String errorCode;
     private final String errorMsg;

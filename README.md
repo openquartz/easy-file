@@ -7,7 +7,7 @@
 # EasyFile
 Make BigData Export Easier!!!
 
-## 开源不易,欢迎Star!!!
+## 欢迎Star!!!
 **[主页](https://svnlab.github.io/)** \
 **[Github](https://github.com/openquartz/easy-file)**
 
@@ -74,9 +74,9 @@ EasyFile 提供两种模式
 - `easyfile-common`: 公共模块服务
 
 - `easyfile-storage`: 存储服务
-  - `easyfile-storage-api`: 存储服务API
-  - `easyfile-storage-remote`: 远程调用存储
-  - `easyfile-storage-local`: 本地数据源存储
+    - `easyfile-storage-api`: 存储服务API
+    - `easyfile-storage-remote`: 远程调用存储
+    - `easyfile-storage-local`: 本地数据源存储
 
 - `easyfile-spring-boot-starter`: easyfile starter 包
 - `easyfile-server`: easyfile 远程存储服务端
@@ -84,8 +84,8 @@ EasyFile 提供两种模式
 - `easyfile-ui`: easyfile-admin ui-管理服务 (可选)
 
 - `easyfile-example`: 样例工程
-  - `easyfile-example-local`: 本地储存样样例工程
-  - `easyfile-example-remote`: 远程存储样例工程
+    - `easyfile-example-local`: 本地储存样样例工程
+    - `easyfile-example-remote`: 远程存储样例工程
 
 ### 时序图
 

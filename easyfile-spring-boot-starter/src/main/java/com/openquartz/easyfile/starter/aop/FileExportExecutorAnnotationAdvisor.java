@@ -1,7 +1,8 @@
 package com.openquartz.easyfile.starter.aop;
 
+import com.openquartz.easyfile.core.annotations.FileExportExecutor;
+import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 import java.lang.reflect.Method;
-import javax.validation.constraints.NotNull;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -13,8 +14,7 @@ import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import org.springframework.lang.NonNull;
 
 /**
  * AsyncFileExecutorAdvice
@@ -55,11 +55,13 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
         }
 
         @Override
+        @NonNull
         public ClassFilter getClassFilter() {
             return parentClazz::isAssignableFrom;
         }
 
         @Override
+        @NonNull
         public MethodMatcher getMethodMatcher() {
             return new FullQualifiedNameMethodMatcher(methodName);
         }
@@ -73,7 +75,7 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
             }
 
             @Override
-            public boolean matches(Method method, Class<?> targetClass) {
+            public boolean matches(@NonNull Method method,@NonNull Class<?> targetClass) {
                 return matchesMethod(method);
             }
 
@@ -84,17 +86,19 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
     }
 
     @Override
+    @NonNull
     public Pointcut getPointcut() {
         return pointcut;
     }
 
     @Override
+    @NonNull
     public Advice getAdvice() {
         return advice;
     }
 
     @Override
-    public void setBeanFactory(@NotNull BeanFactory beanFactory) throws BeansException {
+    public void setBeanFactory(@NonNull BeanFactory beanFactory) throws BeansException {
         if (this.advice instanceof BeanFactoryAware) {
             ((BeanFactoryAware) this.advice).setBeanFactory(beanFactory);
         }

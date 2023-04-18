@@ -11,6 +11,7 @@ import com.openquartz.easyfile.common.constants.Constants;
 
 /**
  * 开启EasyFile auto configuration
+ *
  * @author svnee
  */
 @Retention(RetentionPolicy.RUNTIME)

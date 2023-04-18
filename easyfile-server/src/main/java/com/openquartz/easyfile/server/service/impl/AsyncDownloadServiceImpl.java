@@ -91,9 +91,12 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
      */
     private final Map<String, FileUrlTransformer> fileUrlTransformerMap = new ConcurrentHashMap<>();
 
-    public AsyncDownloadServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
-        AsyncDownloadRecordMapper asyncDownloadRecordMapper, NotifyService notifyService,
+    public AsyncDownloadServiceImpl(AsyncDownloadTaskMapper
+        asyncDownloadTaskMapper,
+        AsyncDownloadRecordMapper asyncDownloadRecordMapper,
+        NotifyService notifyService,
         BizConfig bizConfig) {
+
         this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
         this.asyncDownloadRecordMapper = asyncDownloadRecordMapper;
         this.notifyService = notifyService;
