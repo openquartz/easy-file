@@ -72,7 +72,10 @@ EasyFile 提供两种模式
 ### 代码结构
 
 - `easyfile-common`: 公共模块服务
-
+- `easyfile-core` : 核心服务
+- `easyfile-metrics` : metrics支持
+  - `easyfile-metrics-api` :  metrics-api 协议
+  - `easyfile-metrics-promethes` : metrics-promethes 实现 
 - `easyfile-storage`: 存储服务
     - `easyfile-storage-api`: 存储服务API
     - `easyfile-storage-remote`: 远程调用存储
