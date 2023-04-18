@@ -11,8 +11,8 @@ import com.openquartz.easyfile.core.executor.process.ExecuteProcessReporter;
  * 用于上报 异步下载时的进度。
  * 上报需要注意：由于使用{@link ThreadLocal} 做上下文上报器的传递。所以上报要求必须在执行器当前的主线程中调用{@link #report(Integer)}上报执行。
  *
- * {@code
  * <pre>
+ * {@code
  * @Component
  * @FileExportExecutor("StudentDownloadDemoExecutor")
  * public class StudentDownloadDemoExecutor extends AbstractDownloadExcel07Executor {
@@ -32,9 +32,8 @@ import com.openquartz.easyfile.core.executor.process.ExecuteProcessReporter;
  *          // report execute process
  *          ExecuteProcessProbe.report(executeProcess);
  *     }
- * }
- * <pre>
- * }
+ * }}
+ * </pre>
  * @author svnee
  **/
 @Slf4j

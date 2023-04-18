@@ -17,7 +17,7 @@ public interface UploadService {
      * @param file 文件
      * @param fileName 自定义生成的文件名
      * @param appId 服务ID
-     * @return key: 文件系统 --> value:返回文件URL/KEY标识符
+     * @return key: 文件系统, value:返回文件URL/KEY标识符
      */
     Pair<String, String> upload(File file, String fileName, String appId);
 

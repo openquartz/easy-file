@@ -71,7 +71,7 @@ public final class FileExportExecutorSupport {
     /**
      * 查询下载码
      *
-     * @return 下载code key：下载code --> value: 下载描述
+     * @return 下载code key：下载code, value: 下载描述
      */
     public static Map<String, String> getDownloadCodeMap() {
         return BASE_DOWNLOAD_EXECUTOR_MAP.entrySet()
