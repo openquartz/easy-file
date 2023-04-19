@@ -23,7 +23,10 @@ import java.util.List;
  *
  * @author svnee
  */
-public class ExtensionLoaderFactory {
+public final class ExtensionLoaderFactory {
+
+    private ExtensionLoaderFactory() {
+    }
 
     /**
      * Load t.
