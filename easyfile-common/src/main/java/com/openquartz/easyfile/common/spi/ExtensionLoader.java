@@ -48,7 +48,7 @@ public final class ExtensionLoader<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExtensionLoader.class);
 
-    private static final String EXTENSION_DIRECTORY = "META-INF/openquartz/";
+    private static final String EXTENSION_DIRECTORY = "META-INF/easyfile/";
 
     private static final Map<Class<?>, ExtensionLoader<?>> LOADERS = new ConcurrentHashMap<>();
 
