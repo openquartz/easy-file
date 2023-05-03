@@ -4,6 +4,7 @@ import static com.openquartz.easyfile.core.exception.DownloadErrorCode.FILE_GENE
 import static com.openquartz.easyfile.core.exception.DownloadErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
 import com.openquartz.easyfile.common.util.StringUtils;
+import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import java.util.Map;
 import java.util.Objects;
@@ -66,7 +67,12 @@ public class FileExportInterceptor implements MethodInterceptor {
     private static final String EXPORT_RESULT_METHOD_NAME = "exportResult";
 
     @Override
-    public Object invoke(MethodInvocation invocation) {
+    public Object invoke(MethodInvocation invocation) throws Throwable {
+
+        // direct trigger if async trigger
+        if (FileExportTriggerContext.isAsyncTrigger()){
+            return invocation.proceed();
+        }
 
         Object[] args = invocation.getArguments();
         BaseDownloadExecutor executor = (BaseDownloadExecutor) invocation.getThis();

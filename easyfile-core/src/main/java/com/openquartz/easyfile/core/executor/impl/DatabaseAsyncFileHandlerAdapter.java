@@ -1,23 +1,23 @@
 package com.openquartz.easyfile.core.executor.impl;
 
+import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
+import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
+import com.openquartz.easyfile.common.request.DownloadTriggerRequest;
+import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.AsyncFileHandlerAdapter;
+import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
+import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
 import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
+import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.file.UploadService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
-import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
-import com.openquartz.easyfile.common.request.DownloadTriggerRequest;
-import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
-import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
-import com.openquartz.easyfile.common.util.SpringContextUtil;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
-import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
-import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
  * 数据DB
@@ -77,13 +77,18 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
                 DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
                 BaseDownloadExecutor executor = FileExportExecutorSupport
                     .get(requestInfo.getDownloadCode());
-                doExecute((BaseDownloadExecutor) SpringContextUtil.getTarget(executor),
-                    requestInfo.getRequestContext(), k.getRegisterId());
+
+                // set async trigger if absent
+                FileExportTriggerContext.setAsyncTriggerFlagIfAbsent(true);
+                doExecute(executor, requestInfo.getRequestContext(), k.getRegisterId());
                 triggerService.exeSuccess(k.getRegisterId());
             } catch (Exception ex) {
                 log.error("[DatabaseAsyncFileHandlerAdapter#doTrigger] execute-failed!registerId:{}", k.getRegisterId(),
                     ex);
                 triggerService.exeFail(k.getRegisterId());
+            } finally {
+                // clear context
+                FileExportTriggerContext.clear();
             }
         }
     }
