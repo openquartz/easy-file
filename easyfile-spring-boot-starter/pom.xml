@@ -10,12 +10,19 @@
     </parent>
 
     <artifactId>easyfile-spring-boot-starter</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
 
+    <modules>
+        <module>easyfile-spring-boot-starter-parent</module>
+        <module>easyfile-spring-boot-starter-local</module>
+        <module>easyfile-spring-boot-starter-remote</module>
+    </modules>
+
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
@@ -23,105 +30,15 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
 
+        <!--自动配置-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.rholder</groupId>
-            <artifactId>guava-retrying</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-storage-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-storage-remote</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-storage-local</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.lmax</groupId>
-            <artifactId>disruptor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-ui</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-core</artifactId>
-        </dependency>
-
     </dependencies>
-
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                        <archive>
-                            <manifestEntries>
-                                <Implementation-Title>${project.artifactId}</Implementation-Title>
-                                <Implementation-Version>${project.version}</Implementation-Version>
-                                <Build-Time>${maven.build.timestamp}</Build-Time>
-                                <Built-By>svnee</Built-By>
-                            </manifestEntries>
-                        </archive>
-                    </configuration>
-                </plugin>
-
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>2.10.3</version>
-                    <executions>
-                        <execution>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-gpg-plugin</artifactId>
-                    <version>1.6</version>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

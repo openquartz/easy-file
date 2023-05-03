@@ -1,7 +1,8 @@
-package com.openquartz.easyfile.starter.spring.boot.autoconfig;
+package com.openquartz.easyfile.starter.remote.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
+import com.openquartz.easyfile.starter.remote.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;

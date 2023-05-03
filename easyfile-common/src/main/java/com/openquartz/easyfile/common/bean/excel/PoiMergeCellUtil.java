@@ -18,8 +18,8 @@ public final class PoiMergeCellUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(PoiMergeCellUtil.class);
 
     /**
-     * 从 fistRow--->lastRow
-     * 从 firstCol--->lastCol
+     * 从 fistRow 到 lastRow
+     * 从 firstCol 到 lastCol
      *
      * @param sheet sheet
      * @param firstRow firstRow

@@ -36,10 +36,4 @@ public class MetricsKeyConstants {
      */
     public static final String ASYNC_INVOKE_DOWNLOAD_TIMER = "easyfile.download.invoke.async.timer";
 
-    /**
-     * async invoke timer
-     */
-    public static final String ASYNC_DOWNLOAD_TIMER = "easyfile.download.invoke.async.timer";
-
-
 }

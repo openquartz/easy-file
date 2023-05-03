@@ -1,7 +1,5 @@
-package com.openquartz.easyfile.starter.spring.boot.autoconfig.properties;
+package com.openquartz.easyfile.starter.local.spring.boot.autoconfig.properties;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,8 +7,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @author svnee
  **/
-@Getter
-@Setter
 @ConfigurationProperties(prefix = EasyFileLocalProperties.PREFIX)
 public class EasyFileLocalProperties {
 
@@ -19,12 +15,38 @@ public class EasyFileLocalProperties {
     /**
      * 数据源连接配置
      */
-    private final EasyFileDataSourceProperties datasource = new EasyFileDataSourceProperties();
+    private EasyFileDataSourceProperties datasource = new EasyFileDataSourceProperties();
 
     /**
      * 表配置
      */
-    private final EasyFileTableProperties table = new EasyFileTableProperties();
+    private EasyFileTableProperties table = new EasyFileTableProperties();
+
+    public EasyFileDataSourceProperties getDatasource() {
+        return datasource;
+    }
+
+    public void setDatasource(
+        EasyFileDataSourceProperties datasource) {
+        this.datasource = datasource;
+    }
+
+    public EasyFileTableProperties getTable() {
+        return table;
+    }
+
+    public void setTable(
+        EasyFileTableProperties table) {
+        this.table = table;
+    }
+
+    @Override
+    public String toString() {
+        return "EasyFileLocalProperties{" +
+            "datasource=" + datasource +
+            ", table=" + table +
+            '}';
+    }
 
     public static class EasyFileTableProperties {
 
@@ -36,6 +58,13 @@ public class EasyFileLocalProperties {
 
         public void setPrefix(String prefix) {
             this.prefix = prefix;
+        }
+
+        @Override
+        public String toString() {
+            return "EasyFileTableProperties{" +
+                "prefix='" + prefix + '\'' +
+                '}';
         }
     }
 
@@ -104,6 +133,17 @@ public class EasyFileLocalProperties {
 
         public void setPassword(String password) {
             this.password = password;
+        }
+
+        @Override
+        public String toString() {
+            return "EasyFileDataSourceProperties{" +
+                "type='" + type + '\'' +
+                ", url='" + url + '\'' +
+                ", driverClassName='" + driverClassName + '\'' +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                '}';
         }
     }
 

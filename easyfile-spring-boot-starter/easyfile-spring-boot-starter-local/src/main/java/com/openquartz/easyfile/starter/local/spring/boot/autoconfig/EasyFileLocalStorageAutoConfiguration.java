@@ -1,7 +1,8 @@
-package com.openquartz.easyfile.starter.spring.boot.autoconfig;
+package com.openquartz.easyfile.starter.local.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileLocalProperties;
+import com.openquartz.easyfile.starter.local.spring.boot.autoconfig.properties.EasyFileLocalProperties;
 import com.openquartz.easyfile.storage.local.expand.NoneExportLimitingExecutor;
 import java.util.List;
 import java.util.Map;
