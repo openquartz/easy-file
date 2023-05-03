@@ -10,6 +10,6 @@ public enum DownloadAsyncTriggerType {
     DEFAULT,
     SCHEDULE,
     ROCKETMQ,
-    DISRUPTOR;
+    DISRUPTOR,
 
 }

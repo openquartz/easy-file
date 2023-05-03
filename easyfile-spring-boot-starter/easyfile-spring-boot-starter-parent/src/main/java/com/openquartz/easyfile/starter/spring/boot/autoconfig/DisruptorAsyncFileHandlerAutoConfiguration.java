@@ -7,6 +7,7 @@ import com.openquartz.easyfile.starter.trigger.DisruptorTriggerProducer;
 import com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -26,6 +27,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
+@ConditionalOnBean(DownloadTriggerService.class)
 @EnableConfigurationProperties({DisruptorAsyncHandlerProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "disruptor")
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)

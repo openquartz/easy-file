@@ -5,6 +5,7 @@ import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.Schedul
 import com.openquartz.easyfile.starter.trigger.handler.ScheduleTriggerAsyncFileHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -23,6 +24,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
+@ConditionalOnBean(DownloadTriggerService.class)
 @EnableConfigurationProperties({ScheduleAsyncHandlerProperties.class, EasyFileDownloadProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "schedule")
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)

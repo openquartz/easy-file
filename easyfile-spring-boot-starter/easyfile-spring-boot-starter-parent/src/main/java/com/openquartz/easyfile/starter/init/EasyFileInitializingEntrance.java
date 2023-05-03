@@ -1,8 +1,7 @@
 package com.openquartz.easyfile.starter.init;
 
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.core.banner.EasyFileBannerPrinter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * EasyFileInit Entrance
@@ -12,11 +11,7 @@ import com.openquartz.easyfile.core.banner.EasyFileBannerPrinter;
 @Slf4j
 public class EasyFileInitializingEntrance {
 
-    private final EasyFileDownloadProperties properties;
-
-    public EasyFileInitializingEntrance(
-        EasyFileDownloadProperties properties) {
-        this.properties = properties;
+    public EasyFileInitializingEntrance() {
     }
 
     /**

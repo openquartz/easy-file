@@ -35,9 +35,8 @@ import org.springframework.context.annotation.Configuration;
 public class EasyFileCreatorAutoConfiguration {
 
     @Bean(initMethod = "init", destroyMethod = "destroy")
-    public EasyFileInitializingEntrance easyEventInitializingEntrance(
-        EasyFileDownloadProperties easyFileDownloadProperties) {
-        return new EasyFileInitializingEntrance(easyFileDownloadProperties);
+    public EasyFileInitializingEntrance easyEventInitializingEntrance() {
+        return new EasyFileInitializingEntrance();
     }
 
     @Bean
