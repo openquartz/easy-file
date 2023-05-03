@@ -28,13 +28,8 @@
 
 <dependency>
     <groupId>com.openquartz</groupId>
-    <artifactId>easyfile-spring-boot-starter</artifactId>
+    <artifactId>easyfile-spring-boot-starter-local</artifactId>
     <version>1.0.0</version>
-</dependency>
-<dependency>
-<groupId>com.openquartz</groupId>
-<artifactId>easyfile-storage-local</artifactId>
-   <version>1.0.0</version>
 </dependency>
 ```
 

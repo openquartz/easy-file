@@ -5,9 +5,11 @@
 -------
 
 # EasyFile
+
 Make BigData Export Easier!!!
 
 ## 欢迎Star!!!
+
 **[主页](https://svnlab.github.io/)** \
 **[Github](https://github.com/openquartz/easy-file)**
 
@@ -45,7 +47,8 @@ EasyFile-是为了提供更加便捷的文件服务,一整套Web大文件导出�
 
 Alibaba EasyExcel 是一个Excel文件生成导出、导入 解析工具。
 
-EasyFile 是一个大文件导出的解决方案。用于解决大文件导出时遇到的，文件复用，文件导出超时，内存溢出，瞬时CPU 内存飙高等等问题的一整套解决方案。 同时EasyFile 不仅可以用于Excel
+EasyFile 是一个大文件导出的解决方案。用于解决大文件导出时遇到的，文件复用，文件导出超时，内存溢出，瞬时CPU 内存飙高等等问题的一整套解决方案。
+同时EasyFile 不仅可以用于Excel
 文件的导出,也可以用于csv,pdf,word 等文件导出的管理（暂时需要用户自己集成基础导出下载类BaseDownloadExecutor 实现文件生成逻辑）。
 
 而且,EasyFile和Alibaba EasyExcel 并不冲突，依然可以结合EasyExcel 使用,文件生成逻辑使用Alibaba EasyExcel 做自行拓展使用。
@@ -74,14 +77,18 @@ EasyFile 提供两种模式
 - `easyfile-common`: 公共模块服务
 - `easyfile-core` : 核心服务
 - `easyfile-metrics` : metrics支持
-  - `easyfile-metrics-api` :  metrics-api 协议
-  - `easyfile-metrics-promethes` : metrics-promethes 实现 
+    - `easyfile-metrics-api` :  metrics-api 协议
+    - `easyfile-metrics-promethes` : metrics-promethes 实现
 - `easyfile-storage`: 存储服务
     - `easyfile-storage-api`: 存储服务API
     - `easyfile-storage-remote`: 远程调用存储
     - `easyfile-storage-local`: 本地数据源存储
 
-- `easyfile-spring-boot-starter`: easyfile starter 包
+- `easyfile-spring-boot-starter`: easyfile starter 包 工程module集合
+    - `easyfile-spring-boot-starter-parent`: easyfile starter parent 工程
+    - `easyfile-spring-boot-starter-local`: easyfile local 模式 starter工程包
+    - `easyfile-spring-boot-starter-remote`: easyfile remote 模式 starter工程包
+
 - `easyfile-server`: easyfile 远程存储服务端
 
 - `easyfile-ui`: easyfile-admin ui-管理服务 (可选)

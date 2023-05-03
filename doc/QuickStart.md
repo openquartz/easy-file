@@ -5,32 +5,20 @@
 如果使用本地模式 引入maven
 
 ```xml
-
 <dependency>
     <groupId>com.openquartz</groupId>
-    <artifactId>easyfile-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<dependency>
-    <groupId>com.openquartz</groupId>
-    <artifactId>easyfile-storage-local</artifactId>
-    <version>1.0.0</version>
+    <artifactId>easyfile-spring-boot-starter-local</artifactId>
+    <version>1.4.0</version>
 </dependency>
 ```
 
 如果使用remote模式引入maven 依赖
 
 ```xml
-
 <dependency>
     <groupId>com.openquartz</groupId>
-    <artifactId>easyfile-spring-boot-starter</artifactId>
-    <version>1.0.0</version>
-</dependency>
-<dependency>
-    <groupId>com.openquartz</groupId>
-    <artifactId>easyfile-storage-remote</artifactId>
-    <version>1.0.0</version>
+    <artifactId>easyfile-spring-boot-starter-remote</artifactId>
+    <version>1.4.0</version>
 </dependency>
 ```
 
