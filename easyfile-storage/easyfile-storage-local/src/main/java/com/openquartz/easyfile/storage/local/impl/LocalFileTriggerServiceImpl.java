@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.storage.local.impl;
 
 import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.local.entity.AsyncFileTrigger;
 import com.openquartz.easyfile.storage.local.mapper.AsyncFileTriggerMapper;
 import com.openquartz.easyfile.storage.local.mapper.condition.QueryDownloadTriggerCondition;
@@ -26,7 +26,7 @@ import com.openquartz.easyfile.common.util.StringUtils;
  **/
 @Slf4j
 @RequiredArgsConstructor
-public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
+public class LocalFileTriggerServiceImpl implements FileTriggerService {
 
     private final AsyncFileTriggerMapper asyncFileTriggerMapper;
 

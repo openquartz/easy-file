@@ -14,7 +14,7 @@ import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileHandlerAdapte
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
@@ -25,7 +25,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
 @Slf4j
 public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements InitializingBean {
 
-    private final DownloadTriggerService triggerService;
+    private final FileTriggerService triggerService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
     private final ScheduleAsyncHandlerProperties handlerProperties;
     private final ScheduledThreadPoolExecutor reaperScheduleExecutorService;
@@ -43,7 +43,7 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,
-        DownloadTriggerService triggerService,
+        FileTriggerService triggerService,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
         BaseDefaultDownloadRejectExecutionHandler rejectExecutionHandler) {
         super(downloadProperties, uploadService, storageService, triggerService, scheduleAsyncHandlerProperties);

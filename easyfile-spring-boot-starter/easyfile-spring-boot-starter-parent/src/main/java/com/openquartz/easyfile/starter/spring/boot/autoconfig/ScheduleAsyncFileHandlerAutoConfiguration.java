@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
@@ -24,7 +24,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
-@ConditionalOnBean(DownloadTriggerService.class)
+@ConditionalOnBean(FileTriggerService.class)
 @EnableConfigurationProperties({ScheduleAsyncHandlerProperties.class, EasyFileDownloadProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "schedule")
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
@@ -35,11 +35,11 @@ public class ScheduleAsyncFileHandlerAutoConfiguration {
     public BaseAsyncFileHandler scheduleTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
-        DownloadTriggerService downloadTriggerService,
+        FileTriggerService fileTriggerService,
         BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
         return new ScheduleTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-            downloadTriggerService,
+            fileTriggerService,
             scheduleAsyncHandlerProperties,
             baseDefaultDownloadRejectExecutionHandler);
     }

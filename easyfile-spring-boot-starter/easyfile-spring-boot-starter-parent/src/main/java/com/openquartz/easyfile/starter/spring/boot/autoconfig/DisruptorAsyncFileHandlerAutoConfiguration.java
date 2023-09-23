@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Primary;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
@@ -27,7 +27,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
-@ConditionalOnBean(DownloadTriggerService.class)
+@ConditionalOnBean(FileTriggerService.class)
 @EnableConfigurationProperties({DisruptorAsyncHandlerProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "disruptor")
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
@@ -38,12 +38,12 @@ public class DisruptorAsyncFileHandlerAutoConfiguration {
     public MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
-        DownloadTriggerService downloadTriggerService,
+        FileTriggerService fileTriggerService,
         MQTriggerProducer mqTriggerProducer,
         DisruptorAsyncHandlerProperties mqAsyncHandlerProperties) {
         return new MqTriggerAsyncFileHandler(easyFileDownloadProperties,
             uploadService, downloadStorageService,
-            downloadTriggerService,
+            fileTriggerService,
             mqAsyncHandlerProperties,
             mqTriggerProducer);
     }

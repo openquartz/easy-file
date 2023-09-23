@@ -25,7 +25,7 @@ import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.starter.trigger.RocketMQTriggerConsumer;
 import com.openquartz.easyfile.starter.trigger.RocketMQTriggerProducer;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
@@ -33,7 +33,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  **/
 @Slf4j
 @Configuration
-@ConditionalOnBean(DownloadTriggerService.class)
+@ConditionalOnBean(FileTriggerService.class)
 @ConditionalOnClass(MQProducer.class)
 @EnableConfigurationProperties({RocketMqAsyncHandlerProperties.class})
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "async-trigger-type", havingValue = "rocketmq")
@@ -45,11 +45,11 @@ public class RocketMqAsyncFileHandlerAutoConfiguration {
     public MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
-        DownloadTriggerService downloadTriggerService,
+        FileTriggerService fileTriggerService,
         MQTriggerProducer mqTriggerProducer,
         RocketMqAsyncHandlerProperties mqAsyncHandlerProperties) {
         return new MqTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-            downloadTriggerService,
+            fileTriggerService,
             mqAsyncHandlerProperties,
             mqTriggerProducer);
     }

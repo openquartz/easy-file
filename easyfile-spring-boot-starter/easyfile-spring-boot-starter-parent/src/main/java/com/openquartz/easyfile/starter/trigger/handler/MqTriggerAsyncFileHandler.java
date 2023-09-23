@@ -16,7 +16,7 @@ import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
@@ -27,7 +27,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
 @Slf4j
 public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements MQTriggerHandler {
 
-    private final DownloadTriggerService triggerService;
+    private final FileTriggerService triggerService;
     private final MQTriggerProducer mqTriggerProducer;
     private final MqAsyncHandlerProperties handlerProperties;
 
@@ -35,7 +35,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,
-        DownloadTriggerService triggerService,
+        FileTriggerService triggerService,
         MqAsyncHandlerProperties handlerProperties,
         MQTriggerProducer mqProducer) {
 

@@ -9,7 +9,7 @@ import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
  *
  * @author svnee
  */
-public interface DownloadTriggerService {
+public interface FileTriggerService {
 
     /**
      * 执行下载请求

@@ -28,11 +28,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.DownloadTriggerService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
 import com.openquartz.easyfile.storage.local.impl.LocalDownloadStorageServiceImpl;
-import com.openquartz.easyfile.storage.local.impl.LocalDownloadTriggerServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalFileTriggerServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalLimitingServiceImpl;
 import com.openquartz.easyfile.storage.local.mapper.AsyncFileRecordMapper;
 import com.openquartz.easyfile.storage.local.mapper.AsyncFileTaskMapper;
@@ -82,9 +82,9 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(DownloadTriggerService.class)
-    public DownloadTriggerService localDownloadTriggerService(AsyncFileTriggerMapper asyncFileTriggerMapper) {
-        return new LocalDownloadTriggerServiceImpl(asyncFileTriggerMapper);
+    @ConditionalOnMissingBean(FileTriggerService.class)
+    public FileTriggerService localDownloadTriggerService(AsyncFileTriggerMapper asyncFileTriggerMapper) {
+        return new LocalFileTriggerServiceImpl(asyncFileTriggerMapper);
     }
 
     private DataSource buildDataSource(EasyFileLocalProperties easyFileLocalProperties) {
