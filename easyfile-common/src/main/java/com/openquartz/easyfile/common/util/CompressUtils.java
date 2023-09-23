@@ -3,8 +3,6 @@ package com.openquartz.easyfile.common.util;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +13,7 @@ import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Objects;
-
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.ArchiveInputStream;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
@@ -29,7 +27,8 @@ import org.apache.commons.compress.utils.IOUtils;
  *
  * @author svnee
  */
-public class CompressUtils {
+@Slf4j
+public final class CompressUtils {
 
     private CompressUtils() {
     }
@@ -43,7 +42,7 @@ public class CompressUtils {
      */
     public static void zip(String srcDir, String targetFile) throws IOException {
         try (
-            OutputStream outputStream = new FileOutputStream(targetFile);
+            OutputStream outputStream = Files.newOutputStream(Paths.get(targetFile));
         ) {
             zip(srcDir, outputStream);
         }
@@ -75,7 +74,7 @@ public class CompressUtils {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     try (
-                        InputStream input = new FileInputStream(file.toFile())
+                        InputStream input = Files.newInputStream(file.toFile().toPath())
                     ) {
                         ArchiveEntry entry = new ZipArchiveEntry(file.toFile(), start.relativize(file).toString());
                         out.putArchiveEntry(entry);
@@ -99,7 +98,7 @@ public class CompressUtils {
      */
     public static void unzip(String zipFileName, String destDir) throws IOException {
         try (
-            InputStream inputStream = new FileInputStream(zipFileName);
+            InputStream inputStream = Files.newInputStream(Paths.get(zipFileName));
         ) {
             unzip(inputStream, destDir);
         }
@@ -124,11 +123,12 @@ public class CompressUtils {
                     File file = Paths.get(destDir, entry.getName()).toFile();
                     if (entry.isDirectory()) {
                         if (!file.exists()) {
-                            file.mkdirs();
+                            boolean mkdirs = file.mkdirs();
+                            log.info("[CompressUtils#unzip] mkdir dictionary result:{}", mkdirs);
                         }
                     } else {
                         try (
-                            OutputStream out = new FileOutputStream(file);
+                            OutputStream out = Files.newOutputStream(file.toPath());
                         ) {
                             IOUtils.copy(in, out);
                         }

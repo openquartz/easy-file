@@ -38,7 +38,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
      * 导出模板类分组 {@link ExcelProperty#group()}
      *
      * @param context context
-     * @return Class<?>
+     * @return export class group
      */
     public Class<?>[] exportGroup(BaseDownloaderRequestContext context) {
         return new Class<?>[]{Default.class};
@@ -68,7 +68,7 @@ public abstract class AbstractMultiSheetPageDownloadExcelExecutor<T, G>
      * @param sheetGroup sheetGroup
      * @param page 页
      * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
-     * @return 当前最大ID cursorId --> resultList
+     * @return 当前最大ID key: cursorId, value: resultList
      */
     public abstract Pair<Long, List<T>> shardingData(BaseDownloaderRequestContext context, G sheetGroup, Page page,
         Long cursorId);

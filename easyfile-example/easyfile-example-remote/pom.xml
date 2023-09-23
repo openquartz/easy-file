@@ -39,12 +39,7 @@
 
         <dependency>
             <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-spring-boot-starter</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.openquartz</groupId>
-            <artifactId>easyfile-storage-remote</artifactId>
+            <artifactId>easyfile-spring-boot-starter-remote</artifactId>
         </dependency>
 
         <dependency>

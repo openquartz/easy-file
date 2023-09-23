@@ -2,6 +2,7 @@ package com.openquartz.easyfile.server.mapper;
 
 import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity;
 
@@ -10,6 +11,7 @@ import com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity;
  *
  * @author svnee
  */
+@Mapper
 public interface AsyncDownloadTaskMapper {
 
     /**
@@ -66,18 +68,16 @@ public interface AsyncDownloadTaskMapper {
      * 批量插入
      *
      * @param list list
-     * @return affect row
      */
-    int insertList(@Param("list") List<AsyncDownloadTask> list);
+    void insertList(@Param("list") List<AsyncDownloadTask> list);
 
     /**
      * 刷新任务描述
      *
      * @param id ID
      * @param taskDesc 任务描述
-     * @return affect row
      */
-    int refreshTaskDesc(@Param("id") Long id, @Param("taskDesc") String taskDesc);
+    void refreshTaskDesc(@Param("id") Long id, @Param("taskDesc") String taskDesc);
 
     /**
      * get app tree

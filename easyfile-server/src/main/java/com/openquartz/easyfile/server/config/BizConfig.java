@@ -1,8 +1,12 @@
 package com.openquartz.easyfile.server.config;
 
+import com.openquartz.easyfile.server.common.lock.DistributedLockFactory;
+import com.openquartz.easyfile.server.common.lock.RedisLockFactory;
 import java.util.Map;
 import lombok.Data;
+import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.common.util.JSONUtil;
 import com.openquartz.easyfile.common.util.json.TypeReference;
@@ -36,5 +40,10 @@ public class BizConfig {
     public Map<String, Integer> getFileInvalidTimeMap() {
         return JSONUtil.parseObject(fileInvalidTimeMap, new TypeReference<Map<String, Integer>>() {
         });
+    }
+
+    @Bean
+    public DistributedLockFactory distributedLockFactory(RedissonClient redissonClient){
+        return new RedisLockFactory(redissonClient,appId);
     }
 }

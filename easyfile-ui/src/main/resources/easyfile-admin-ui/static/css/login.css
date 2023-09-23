@@ -1,4 +1,4 @@
-#LAY_app,body,html {
+#LAY_app, body, html {
     height: 100%
 }
 
@@ -6,8 +6,8 @@
     overflow: auto
 }
 
-#LAY-user-login,.layadmin-user-display-show {
-    display: block!important
+#LAY-user-login, .layadmin-user-display-show {
+    display: block !important
 }
 
 .layadmin-user-login {
@@ -77,7 +77,7 @@
     padding-top: 20px
 }
 
-.layadmin-user-login-other>* {
+.layadmin-user-login-other > * {
     display: inline-block;
     vertical-align: middle;
     margin-right: 10px;
@@ -107,7 +107,7 @@
     padding: 20px;
     text-align: center;
     box-sizing: border-box;
-    color: rgba(0,0,0,.5)
+    color: rgba(0, 0, 0, .5)
 }
 
 .layadmin-user-login-footer span {
@@ -116,7 +116,7 @@
 
 .layadmin-user-login-footer a {
     padding: 0 5px;
-    color: rgba(0,0,0,.5)
+    color: rgba(0, 0, 0, .5)
 }
 
 .layadmin-user-login-footer a:hover {
@@ -125,7 +125,7 @@
 
 .layadmin-user-login-main[bgimg] {
     background-color: #fff;
-    box-shadow: 0 0 5px rgba(0,0,0,.05)
+    box-shadow: 0 0 5px rgba(0, 0, 0, .05)
 }
 
 .ladmin-user-login-theme {
@@ -159,7 +159,7 @@
 
 @media screen and (max-width: 768px) {
     .layadmin-user-login {
-        padding-top:60px
+        padding-top: 60px
     }
 
     .layadmin-user-login-main {

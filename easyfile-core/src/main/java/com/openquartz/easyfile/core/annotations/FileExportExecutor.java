@@ -11,8 +11,9 @@ import com.openquartz.easyfile.common.util.StringUtils;
 /**
  * 文件导出执行器
  * 标记导出执行器
- * {@code
- * <pre>
+ * <p>
+ * 例如：
+ * <pre> {@code
  * @Component
  * @FileExportExecutor("StudentDownloadDemoExecutor")
  * public class StudentDownloadDemoExecutor extends AbstractDownloadExcel07Executor {
@@ -29,9 +30,9 @@ import com.openquartz.easyfile.common.util.StringUtils;
  *     public void export(DownloaderRequestContext context) {
  *          // do export to i/o stream
  *     }
- * }
- * </pre>
- *     }
+ * }}</pre>
+ * </p>
+ *
  * @author svnee
  */
 @Target({ElementType.TYPE})

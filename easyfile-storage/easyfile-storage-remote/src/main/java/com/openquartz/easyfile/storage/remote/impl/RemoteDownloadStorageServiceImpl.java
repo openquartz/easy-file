@@ -73,7 +73,7 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
                 return result.getData();
             }
         } catch (Exception ex) {
-            log.warn("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{},ex:{}", request, ex);
+            log.error("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{}", request, ex);
         }
         return null;
     }

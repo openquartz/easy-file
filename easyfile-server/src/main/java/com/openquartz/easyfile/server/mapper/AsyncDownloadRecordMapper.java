@@ -5,6 +5,7 @@ import com.openquartz.easyfile.server.mapper.condition.LimiterRecordQueryConditi
 import com.openquartz.easyfile.server.mapper.condition.RetryQueryCondition;
 import com.openquartz.easyfile.server.mapper.condition.UploadInfoChangeCondition;
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
 import com.openquartz.easyfile.server.entity.AsyncDownloadRecord;
@@ -14,6 +15,7 @@ import com.openquartz.easyfile.server.entity.AsyncDownloadRecord;
  *
  * @author svnee
  */
+@Mapper
 public interface AsyncDownloadRecordMapper {
 
     /**

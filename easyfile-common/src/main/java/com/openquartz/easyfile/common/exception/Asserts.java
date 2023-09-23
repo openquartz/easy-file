@@ -2,12 +2,12 @@ package com.openquartz.easyfile.common.exception;
 
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.common.util.MapUtils;
+import com.openquartz.easyfile.common.util.StringUtils;
 import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
-import com.openquartz.easyfile.common.util.StringUtils;
 
 /**
  * 断言工具类
@@ -62,6 +62,22 @@ public final class Asserts {
             } catch (Exception ex) {
                 throw new EasyFileException(CommonErrorCode.METHOD_NOT_EXIST_ERROR);
             }
+        }
+    }
+
+    /**
+     * 断言是否为true
+     *
+     * @param expression 表达式
+     * @param code 异常码
+     */
+    public static void isTrueIfLog(boolean expression, LogCallback logCallback, EasyFileErrorCode code,
+        Object... placeHold) {
+        if (!expression) {
+            if (Objects.nonNull(logCallback)) {
+                logCallback.log();
+            }
+            throw EasyFileException.replacePlaceHold(code, placeHold);
         }
     }
 

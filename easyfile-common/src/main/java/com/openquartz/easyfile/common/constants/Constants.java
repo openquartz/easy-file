@@ -159,11 +159,6 @@ public final class Constants {
     public static final String SWITCH_ON = "on";
 
     /**
-     * off
-     */
-    public static final String SWITCH_OFF = "off";
-
-    /**
      * back package path
      */
     public static final String BASE_PACKAGE_PATH = "com.openquartz.easyfile";

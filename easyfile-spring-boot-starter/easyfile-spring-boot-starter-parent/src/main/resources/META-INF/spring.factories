@@ -1,0 +1,9 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.openquartz.easyfile.starter.local.spring.boot.autoconfig.EasyFileLocalStorageAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileEnhanceCreatorAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.DefaultAsyncFileHandlerAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.DisruptorAsyncFileHandlerAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncFileHandlerAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileUiAutoConfiguration

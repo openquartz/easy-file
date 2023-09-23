@@ -35,16 +35,23 @@ public class DownloadEndEvent {
      */
     private final Object executeResult;
 
+    /**
+     * download traceId
+     */
+    private final String downloadTraceId;
+
     public DownloadEndEvent(DownloaderRequestContext requestContext,
         BaseDownloadExecutor executor,
         boolean enableAsync,
         Throwable exception,
-        Object executeResult) {
+        Object executeResult,
+        String downloadTraceId) {
         this.requestContext = requestContext;
         this.executor = executor;
         this.enableAsync = enableAsync;
         this.executeResult = executeResult;
         this.exception = exception;
+        this.downloadTraceId = downloadTraceId;
     }
 
     public Throwable getException() {
@@ -67,13 +74,19 @@ public class DownloadEndEvent {
         return executeResult;
     }
 
+    public String getDownloadTraceId() {
+        return downloadTraceId;
+    }
+
     @Override
     public String toString() {
         return "DownloadEndEvent{" +
             "requestContext=" + requestContext +
             ", executor=" + executor +
             ", enableAsync=" + enableAsync +
+            ", exception=" + exception +
             ", executeResult=" + executeResult +
+            ", downloadTraceId='" + downloadTraceId + '\'' +
             '}';
     }
 }
