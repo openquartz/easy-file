@@ -1,9 +1,9 @@
 package com.openquartz.easyfile.storage.local.impl;
 
 import com.openquartz.easyfile.storage.download.LimitingService;
-import com.openquartz.easyfile.storage.local.entity.AsyncDownloadTask;
+import com.openquartz.easyfile.storage.local.entity.AsyncFileTask;
 import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTaskMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileTaskMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -26,19 +26,19 @@ import com.openquartz.easyfile.common.util.MapUtils;
 public class LocalLimitingServiceImpl implements LimitingService, BeanPostProcessor {
 
     private final Map<String, ExportLimitingExecutor> limitingExecutorMap = MapUtils.newHashMapWithExpectedSize(10);
-    private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
+    private final AsyncFileTaskMapper asyncFileTaskMapper;
 
-    public LocalLimitingServiceImpl(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+    public LocalLimitingServiceImpl(AsyncFileTaskMapper asyncFileTaskMapper,
         List<ExportLimitingExecutor> executorList) {
-        this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
+        this.asyncFileTaskMapper = asyncFileTaskMapper;
         executorList.forEach(executor -> this.limitingExecutorMap.putIfAbsent(executor.strategy(), executor));
     }
 
     @Override
     public void limiting(ExportLimitingRequest request) {
 
-        AsyncDownloadTask downloadTask = asyncDownloadTaskMapper
-            .selectByDownloadCode(request.getDownloadCode(), request.getAppId());
+        AsyncFileTask downloadTask = asyncFileTaskMapper
+            .selectByTaskCode(request.getDownloadCode(), request.getAppId());
         if (Objects.isNull(downloadTask)) {
             return;
         }

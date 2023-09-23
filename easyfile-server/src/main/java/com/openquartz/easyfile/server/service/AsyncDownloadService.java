@@ -3,7 +3,7 @@ package com.openquartz.easyfile.server.service;
 import java.util.List;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
@@ -115,7 +115,7 @@ public interface AsyncDownloadService {
      * @param nextUploadStatus 下一个上传处理状态
      */
     void refreshExecuteProcess(Long registerId, Integer executeProcess,
-        UploadStatusEnum nextUploadStatus);
+        HandleStatusEnum nextUploadStatus);
 
     /**
      * 获取注册下载的请求信息

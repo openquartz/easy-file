@@ -1,16 +1,16 @@
 package com.openquartz.easyfile.storage.local.mapper;
 
-import com.openquartz.easyfile.storage.local.dictionary.DownloadTriggerStatusEnum;
+import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
 import com.openquartz.easyfile.storage.local.mapper.condition.QueryDownloadTriggerCondition;
 import java.util.List;
-import com.openquartz.easyfile.storage.local.entity.AsyncDownloadTrigger;
+import com.openquartz.easyfile.storage.local.entity.AsyncFileTrigger;
 
 /**
- * AsyncDownloadTriggerMapper
+ * AsyncFileTriggerMapper
  *
  * @author svnee
  */
-public interface AsyncDownloadTriggerMapper {
+public interface AsyncFileTriggerMapper {
 
     /**
      * 保存触发器
@@ -18,7 +18,7 @@ public interface AsyncDownloadTriggerMapper {
      * @param trigger 触发器
      * @return 影响行数
      */
-    int insert(AsyncDownloadTrigger trigger);
+    int insert(AsyncFileTrigger trigger);
 
     /**
      * 刷新触发状态
@@ -28,8 +28,8 @@ public interface AsyncDownloadTriggerMapper {
      * @param delineateStatusList 圈定状态
      * @return 影响行数
      */
-    int refreshStatus(Long registerId, DownloadTriggerStatusEnum triggerStatus,
-        List<DownloadTriggerStatusEnum> delineateStatusList);
+    int refreshStatus(Long registerId, FileTriggerStatusEnum triggerStatus,
+        List<FileTriggerStatusEnum> delineateStatusList);
 
     /**
      * 执行
@@ -40,8 +40,8 @@ public interface AsyncDownloadTriggerMapper {
      * @param triggerCount 触发执行次数
      * @return 影响行数
      */
-    int execute(Long registerId, DownloadTriggerStatusEnum triggerStatus,
-        List<DownloadTriggerStatusEnum> delineateStatusList, Integer triggerCount);
+    int execute(Long registerId, FileTriggerStatusEnum triggerStatus,
+        List<FileTriggerStatusEnum> delineateStatusList, Integer triggerCount);
 
     /**
      * 查询
@@ -49,7 +49,7 @@ public interface AsyncDownloadTriggerMapper {
      * @param condition 查询条件
      * @return 触发次数
      */
-    List<AsyncDownloadTrigger> select(QueryDownloadTriggerCondition condition);
+    List<AsyncFileTrigger> select(QueryDownloadTriggerCondition condition);
 
     /**
      * 根据registerId 查询
@@ -57,7 +57,7 @@ public interface AsyncDownloadTriggerMapper {
      * @param registerId registerId
      * @return 注册器
      */
-    AsyncDownloadTrigger selectByRegisterId(Long registerId);
+    AsyncFileTrigger selectByRegisterId(Long registerId);
 
     /**
      * 根据

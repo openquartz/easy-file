@@ -2,7 +2,7 @@ package com.openquartz.easyfile.core.executor.process;
 
 import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.constants.Constants;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 
 /**
@@ -38,9 +38,9 @@ public class ExecuteProcessReporterImpl implements ExecuteProcessReporter {
                 executeProcess);
         }
         try {
-            UploadStatusEnum nextStatus = UploadStatusEnum.EXECUTING;
+            HandleStatusEnum nextStatus = HandleStatusEnum.EXECUTING;
             if (executeProcess.compareTo(Constants.FULL_PROCESS) == 0) {
-                nextStatus = UploadStatusEnum.UPLOADING;
+                nextStatus = HandleStatusEnum.UPLOADING;
             }
             downloadStorageService.refreshExecuteProgress(registerId, executeProcess, nextStatus);
         } catch (Exception ex) {
@@ -53,7 +53,7 @@ public class ExecuteProcessReporterImpl implements ExecuteProcessReporter {
     public void complete() {
         try {
             downloadStorageService
-                .refreshExecuteProgress(registerId, Constants.FULL_PROCESS, UploadStatusEnum.UPLOADING);
+                .refreshExecuteProgress(registerId, Constants.FULL_PROCESS, HandleStatusEnum.UPLOADING);
         } catch (Exception ex) {
             log.error("[ExecuteProcessReporterImpl#complete] complete-error!,registerId:{}", registerId, ex);
         }

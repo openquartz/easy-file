@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.storage.local.mapper.impl;
 
-import com.openquartz.easyfile.storage.local.dictionary.DownloadTriggerStatusEnum;
+import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
 import com.openquartz.easyfile.storage.local.mapper.condition.QueryDownloadTriggerCondition;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -24,18 +24,18 @@ import org.springframework.jdbc.support.KeyHolder;
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.common.util.IpUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
-import com.openquartz.easyfile.storage.local.entity.AsyncDownloadTrigger;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTriggerMapper;
+import com.openquartz.easyfile.storage.local.entity.AsyncFileTrigger;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileTriggerMapper;
 import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier;
 
 /**
- * AsyncDownloadTriggerMapperImpl
+ * AsyncFileTriggerMapperImpl
  *
  * @author svnee
  **/
 @Slf4j
 @RequiredArgsConstructor
-public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMapper {
+public class AsyncFileTriggerMapperImpl implements AsyncFileTriggerMapper {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -52,7 +52,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String DELETE_BY_ID_SQL = "delete from {0} where id = ?";
 
     @Override
-    public int insert(AsyncDownloadTrigger trigger) {
+    public int insert(AsyncFileTrigger trigger) {
 
         String sql = MessageFormat.format(INSERT_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -78,11 +78,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     }
 
     @Override
-    public int refreshStatus(Long registerId, DownloadTriggerStatusEnum triggerStatus,
-        List<DownloadTriggerStatusEnum> delineateStatusList) {
+    public int refreshStatus(Long registerId, FileTriggerStatusEnum triggerStatus,
+        List<FileTriggerStatusEnum> delineateStatusList) {
         LocalDateTime now = LocalDateTime.now();
 
-        List<String> taskStatusList = delineateStatusList.stream().map(DownloadTriggerStatusEnum::getCode)
+        List<String> taskStatusList = delineateStatusList.stream().map(FileTriggerStatusEnum::getCode)
             .collect(Collectors.toList());
 
         Map<String, Object> paramMap = new HashMap<>(4);
@@ -98,11 +98,11 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     }
 
     @Override
-    public int execute(Long registerId, DownloadTriggerStatusEnum triggerStatus,
-        List<DownloadTriggerStatusEnum> delineateStatusList, Integer triggerCount) {
+    public int execute(Long registerId, FileTriggerStatusEnum triggerStatus,
+        List<FileTriggerStatusEnum> delineateStatusList, Integer triggerCount) {
         LocalDateTime now = LocalDateTime.now();
 
-        List<String> taskStatusList = delineateStatusList.stream().map(DownloadTriggerStatusEnum::getCode)
+        List<String> taskStatusList = delineateStatusList.stream().map(FileTriggerStatusEnum::getCode)
             .collect(Collectors.toList());
         Map<String, Object> paramMap = new HashMap<>(5);
         paramMap.put("taskStatusList", taskStatusList);
@@ -119,9 +119,9 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     }
 
     @Override
-    public List<AsyncDownloadTrigger> select(QueryDownloadTriggerCondition condition) {
+    public List<AsyncFileTrigger> select(QueryDownloadTriggerCondition condition) {
 
-        List<String> taskStatusList = condition.getTriggerStatusList().stream().map(DownloadTriggerStatusEnum::getCode)
+        List<String> taskStatusList = condition.getTriggerStatusList().stream().map(FileTriggerStatusEnum::getCode)
             .collect(Collectors.toList());
 
         Map<String, Object> paramMap = new HashMap<>(5);
@@ -157,22 +157,22 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     }
 
     @Override
-    public AsyncDownloadTrigger selectByRegisterId(Long registerId) {
+    public AsyncFileTrigger selectByRegisterId(Long registerId) {
         String sql = MessageFormat
             .format(SELECT_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
-        List<AsyncDownloadTrigger> triggerList = jdbcTemplate
+        List<AsyncFileTrigger> triggerList = jdbcTemplate
             .query(sql, new AsyncDownloadTriggerRowMapper(), registerId);
         return CollectionUtils.isNotEmpty(triggerList) ? triggerList.get(0) : null;
     }
 
-    private static class AsyncDownloadTriggerRowMapper implements RowMapper<AsyncDownloadTrigger> {
+    private static class AsyncDownloadTriggerRowMapper implements RowMapper<AsyncFileTrigger> {
 
         @Override
-        public AsyncDownloadTrigger mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-            AsyncDownloadTrigger downloadTrigger = new AsyncDownloadTrigger();
+        public AsyncFileTrigger mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+            AsyncFileTrigger downloadTrigger = new AsyncFileTrigger();
             downloadTrigger.setId(resultSet.getLong("id"));
             downloadTrigger.setRegisterId(resultSet.getLong("register_id"));
-            downloadTrigger.setTriggerStatus(DownloadTriggerStatusEnum.ofCode(resultSet.getString("trigger_status")));
+            downloadTrigger.setTriggerStatus(FileTriggerStatusEnum.ofCode(resultSet.getString("trigger_status")));
             downloadTrigger.setStartTime(resultSet.getTimestamp("start_time"));
             downloadTrigger.setLastExecuteTime(resultSet.getTimestamp("last_execute_time"));
             downloadTrigger.setTriggerCount(resultSet.getInt("trigger_count"));

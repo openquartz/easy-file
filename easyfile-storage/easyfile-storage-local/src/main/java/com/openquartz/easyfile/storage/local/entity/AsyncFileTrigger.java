@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.storage.local.entity;
 
-import com.openquartz.easyfile.storage.local.dictionary.DownloadTriggerStatusEnum;
+import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
 import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Id;
@@ -13,8 +13,8 @@ import lombok.Data;
  * @author svnee
  **/
 @Data
-@Table(name = "ef_async_download_trigger")
-public class AsyncDownloadTrigger {
+@Table(name = "ef_async_file_trigger")
+public class AsyncFileTrigger {
 
     /**
      * Id
@@ -26,7 +26,7 @@ public class AsyncDownloadTrigger {
     /**
      * 注册ID
      *
-     * @see AsyncDownloadRecord#getId()
+     * @see AsyncFileRecord#getId()
      */
     @Column(name = "register_id")
     private Long registerId;
@@ -35,7 +35,7 @@ public class AsyncDownloadTrigger {
      * 触发状态
      */
     @Column(name = "trigger_status")
-    private DownloadTriggerStatusEnum triggerStatus;
+    private FileTriggerStatusEnum triggerStatus;
 
     /**
      * 开始时间
@@ -68,6 +68,6 @@ public class AsyncDownloadTrigger {
     private String processingOwner;
 
     public boolean isSuccess() {
-        return triggerStatus == DownloadTriggerStatusEnum.SUCCESS;
+        return triggerStatus == FileTriggerStatusEnum.SUCCESS;
     }
 }

@@ -7,8 +7,8 @@ import com.openquartz.easyfile.server.mapper.condition.UploadInfoChangeCondition
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
-import com.openquartz.easyfile.server.entity.AsyncDownloadRecord;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
+import com.openquartz.easyfile.server.entity.AsyncFileRecord;
 
 /**
  * 异步下载记录Mapper
@@ -16,7 +16,7 @@ import com.openquartz.easyfile.server.entity.AsyncDownloadRecord;
  * @author svnee
  */
 @Mapper
-public interface AsyncDownloadRecordMapper {
+public interface AsyncFileRecordMapper {
 
     /**
      * 批量插入异步下载记录
@@ -24,15 +24,15 @@ public interface AsyncDownloadRecordMapper {
      * @param list 数据集合
      * @return 插入条数
      */
-    int insertList(@Param("list") List<AsyncDownloadRecord> list);
+    int insertList(@Param("list") List<AsyncFileRecord> list);
 
     /**
      * 插入数据
      *
-     * @param asyncDownloadRecord 插入记录
+     * @param asyncFileRecord 插入记录
      * @return 插入条数
      */
-    int insertSelective(AsyncDownloadRecord asyncDownloadRecord);
+    int insertSelective(AsyncFileRecord asyncFileRecord);
 
     /**
      * 根据ID 查询
@@ -40,7 +40,7 @@ public interface AsyncDownloadRecordMapper {
      * @param id id
      * @return record
      */
-    AsyncDownloadRecord findById(@Param("id") Long id);
+    AsyncFileRecord findById(@Param("id") Long id);
 
     /**
      * 变更上传信息
@@ -64,7 +64,7 @@ public interface AsyncDownloadRecordMapper {
      * @param condition 查询条件
      * @return 下载记录
      */
-    List<AsyncDownloadRecord> selectExportRecordOfRetryable(@Param("condition") RetryQueryCondition condition);
+    List<AsyncFileRecord> selectExportRecordOfRetryable(@Param("condition") RetryQueryCondition condition);
 
     /**
      * 更新重试信息
@@ -82,7 +82,7 @@ public interface AsyncDownloadRecordMapper {
      * @param failStatusList 失败状态条件
      */
     void updateExecuteErrorMsg(@Param("id") Long id, @Param("errorMsg") String errorMsg,
-        @Param("list") List<UploadStatusEnum> failStatusList);
+        @Param("list") List<HandleStatusEnum> failStatusList);
 
     /**
      * 根据条件查询
@@ -90,7 +90,7 @@ public interface AsyncDownloadRecordMapper {
      * @param condition 查询条件
      * @return 导出结果
      */
-    List<AsyncDownloadRecord> selectByCondition(@Param("condition") BaseRecordQueryCondition condition);
+    List<AsyncFileRecord> selectByCondition(@Param("condition") BaseRecordQueryCondition condition);
 
     /**
      * 刷新上传状态
@@ -102,8 +102,8 @@ public interface AsyncDownloadRecordMapper {
      * @return affect num
      */
     int refreshUploadStatus(@Param("id") Long id,
-        @Param("oriUploadStatus") UploadStatusEnum oriUploadStatus,
-        @Param("tagUploadStatus") UploadStatusEnum tagUploadStatus,
+        @Param("oriUploadStatus") HandleStatusEnum oriUploadStatus,
+        @Param("tagUploadStatus") HandleStatusEnum tagUploadStatus,
         @Param("updateBy") String updateBy);
 
     /**
@@ -113,7 +113,7 @@ public interface AsyncDownloadRecordMapper {
      * @param uploadStatus 上传状态
      */
     void download(@Param("id") Long id,
-        @Param("uploadStatus") UploadStatusEnum uploadStatus);
+        @Param("uploadStatus") HandleStatusEnum uploadStatus);
 
     /**
      * 根据taskId和状态查询导出记录
@@ -123,8 +123,8 @@ public interface AsyncDownloadRecordMapper {
      * @param offset 偏移量
      * @return 导出结果
      */
-    List<AsyncDownloadRecord> listByTaskIdAndStatus(@Param("downloadTaskId") Long downloadTaskId,
-        @Param("uploadStatus") UploadStatusEnum uploadStatus, @Param("offset") int offset);
+    List<AsyncFileRecord> listByTaskIdAndStatus(@Param("downloadTaskId") Long downloadTaskId,
+        @Param("uploadStatus") HandleStatusEnum uploadStatus, @Param("offset") int offset);
 
     /**
      * 重置执行进度
@@ -144,5 +144,5 @@ public interface AsyncDownloadRecordMapper {
      */
     int refreshExecuteProcess(@Param("id") Long id,
         @Param("executeProcess") Integer executeProcess,
-        @Param("nextUploadStatus") UploadStatusEnum nextUploadStatus);
+        @Param("nextUploadStatus") HandleStatusEnum nextUploadStatus);
 }

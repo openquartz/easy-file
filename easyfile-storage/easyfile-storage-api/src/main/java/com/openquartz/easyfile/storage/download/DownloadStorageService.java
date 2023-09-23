@@ -3,7 +3,7 @@ package com.openquartz.easyfile.storage.download;
 import java.util.List;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
@@ -93,7 +93,7 @@ public interface DownloadStorageService {
      * @param executeProcess 执行进度
      * @param nextUploadStatus 下一个状态
      */
-    void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum nextUploadStatus);
+    void refreshExecuteProgress(Long registerId, Integer executeProcess, HandleStatusEnum nextUploadStatus);
 
     /**
      * 重置执行进度

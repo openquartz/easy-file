@@ -9,7 +9,7 @@ import com.openquartz.easyfile.common.bean.DownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.FileSuffixEnum;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.exception.Asserts;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
@@ -70,7 +70,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     @Override
     public boolean handle(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
         ExportResult exportResult = this.handleResult(executor, baseRequest, registerId);
-        return UploadStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
+        return HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
     }
 
     @Override
@@ -84,7 +84,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             LoadingExportCacheRequest cacheRequest =
                 buildLoadingExportCacheRequest(baseRequest, exportExecutor, registerId);
             ExportResult exportResult = downloadStorageService.loadingCacheExportResult(cacheRequest);
-            if (Objects.nonNull(exportResult) && UploadStatusEnum.SUCCESS.equals(exportResult.getUploadStatus())) {
+            if (Objects.nonNull(exportResult) && HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus())) {
                 return exportResult;
             }
         }
@@ -118,10 +118,10 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         request.setSystem(Objects.nonNull(fileUrl) ? fileUrl.getKey() : Constants.NONE_FILE_SYSTEM);
         request.setFileName(localFileName);
         if (!handleBreakFlag) {
-            request.setUploadStatus(UploadStatusEnum.SUCCESS);
+            request.setUploadStatus(HandleStatusEnum.SUCCESS);
             request.setFileUrl(Objects.nonNull(fileUrl) ? fileUrl.getValue() : StringUtils.EMPTY);
         } else {
-            request.setUploadStatus(UploadStatusEnum.FAIL);
+            request.setUploadStatus(HandleStatusEnum.FAIL);
             Optional.of(genFileResult).ifPresent(k -> request.setErrorMsg(lessErrorMsg(k.getErrorMsg())));
         }
         downloadStorageService.uploadCallback(request);
@@ -402,7 +402,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     private ExportResult buildDefaultRejectExportResult(Long registerId) {
         ExportResult exportResult = new ExportResult();
         exportResult.setRegisterId(registerId);
-        exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+        exportResult.setUploadStatus(HandleStatusEnum.FAIL);
         exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
         exportResult.setFileUrl(StringUtils.EMPTY);
         exportResult.setFileName(StringUtils.EMPTY);

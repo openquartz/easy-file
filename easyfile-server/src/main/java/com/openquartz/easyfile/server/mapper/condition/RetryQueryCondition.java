@@ -4,7 +4,7 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 
 /**
  * 重试查询条件
@@ -32,10 +32,10 @@ public class RetryQueryCondition {
     /**
      * 需重试状态
      */
-    private List<UploadStatusEnum> needRetryableStatusList;
+    private List<HandleStatusEnum> needRetryableStatusList;
 
     private RetryQueryCondition(Date startTime, Date endTime,
-        List<UploadStatusEnum> needRetryableStatusList, Integer limit) {
+        List<HandleStatusEnum> needRetryableStatusList, Integer limit) {
         this.startTime = startTime;
         this.endTime = endTime;
         this.limit = limit;
@@ -43,7 +43,7 @@ public class RetryQueryCondition {
     }
 
     public static RetryQueryCondition create(Date startTime, Date endTime,
-        List<UploadStatusEnum> needRetryableStatusList, Integer limit) {
+        List<HandleStatusEnum> needRetryableStatusList, Integer limit) {
         return new RetryQueryCondition(startTime, endTime, needRetryableStatusList, limit);
     }
 

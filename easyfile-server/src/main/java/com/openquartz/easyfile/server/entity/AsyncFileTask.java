@@ -1,12 +1,12 @@
-package com.openquartz.easyfile.storage.local.entity;
+package com.openquartz.easyfile.server.entity;
 
+import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
+import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
+import java.util.Date;
 import javax.persistence.Column;
-import lombok.Data;
-
 import javax.persistence.Id;
 import javax.persistence.Table;
-import java.util.Date;
-import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
+import lombok.Data;
 
 /**
  * 异步下载任务
@@ -14,8 +14,8 @@ import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
  * @author svnee
  */
 @Data
-@Table(name = "ef_async_download_task")
-public class AsyncDownloadTask {
+@Table(name = "ef_async_file_task")
+public class AsyncFileTask {
 
     @Id
     private Long id;
@@ -25,6 +25,13 @@ public class AsyncDownloadTask {
      */
     @Column(name = "task_code")
     private String taskCode;
+
+    /**
+     * 文件处理类型
+     * @see FileHandleTypeEnum#getCode()
+     */
+    @Column(name = "task_type")
+    private Integer taskType;
 
     /**
      * 任务描述
@@ -91,7 +98,7 @@ public class AsyncDownloadTask {
     /**
      * 是否删除
      */
-    @Column(name = "is_deleted")
-    private Long isDeleted;
+    @Column(name = "deleted")
+    private Long deleted;
 
 }

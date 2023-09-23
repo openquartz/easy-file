@@ -13,7 +13,7 @@ import com.openquartz.easyfile.common.util.CollectionUtils;
  **/
 @Getter
 @AllArgsConstructor
-public enum DownloadTriggerStatusEnum implements BaseEnum<String> {
+public enum FileTriggerStatusEnum implements BaseEnum<String> {
 
     /**
      * 初始化
@@ -52,11 +52,11 @@ public enum DownloadTriggerStatusEnum implements BaseEnum<String> {
      */
     private final String desc;
 
-    public static final List<DownloadTriggerStatusEnum> EXE_TRIGGER_STATUS_LIST = CollectionUtils
+    public static final List<FileTriggerStatusEnum> EXE_TRIGGER_STATUS_LIST = CollectionUtils
         .newArrayList(INIT, FAIL);
 
-    public static DownloadTriggerStatusEnum ofCode(String triggerStatus) {
-        for (DownloadTriggerStatusEnum value : values()) {
+    public static FileTriggerStatusEnum ofCode(String triggerStatus) {
+        for (FileTriggerStatusEnum value : values()) {
             if (value.code.equals(triggerStatus)) {
                 return value;
             }

@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.exception.Asserts;
 import com.openquartz.easyfile.common.exception.EasyFileException;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
@@ -150,7 +150,7 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
     }
 
     @Override
-    public void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum nextUploadStatus) {
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess, HandleStatusEnum nextUploadStatus) {
         if (executeProcess <= 0) {
             return;
         }

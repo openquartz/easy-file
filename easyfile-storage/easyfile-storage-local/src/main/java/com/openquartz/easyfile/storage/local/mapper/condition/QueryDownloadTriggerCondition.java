@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.storage.local.mapper.condition;
 
-import com.openquartz.easyfile.storage.local.dictionary.DownloadTriggerStatusEnum;
+import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class QueryDownloadTriggerCondition {
     /**
      * 触发状态
      */
-    private List<DownloadTriggerStatusEnum> triggerStatusList;
+    private List<FileTriggerStatusEnum> triggerStatusList;
 
     /**
      * 创建者

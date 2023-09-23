@@ -3,23 +3,23 @@ package com.openquartz.easyfile.storage.local.mapper;
 import com.openquartz.easyfile.storage.local.mapper.condition.BaseRecordQueryCondition;
 import com.openquartz.easyfile.storage.local.mapper.condition.UploadInfoChangeCondition;
 import java.util.List;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
-import com.openquartz.easyfile.storage.local.entity.AsyncDownloadRecord;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
+import com.openquartz.easyfile.storage.local.entity.AsyncFileRecord;
 
 /**
  * 异步下载记录Mapper
  *
  * @author svnee
  */
-public interface AsyncDownloadRecordMapper {
+public interface AsyncFileRecordMapper {
 
     /**
      * 插入数据
      *
-     * @param asyncDownloadRecord 插入记录
+     * @param asyncFileRecord 插入记录
      * @return 插入条数
      */
-    int insertSelective(AsyncDownloadRecord asyncDownloadRecord);
+    int insertSelective(AsyncFileRecord asyncFileRecord);
 
     /**
      * 根据ID 查询
@@ -27,7 +27,7 @@ public interface AsyncDownloadRecordMapper {
      * @param id id
      * @return record
      */
-    AsyncDownloadRecord findById(Long id);
+    AsyncFileRecord findById(Long id);
 
     /**
      * 变更上传信息
@@ -46,7 +46,7 @@ public interface AsyncDownloadRecordMapper {
      * @param updateBy 更新人
      * @return affect num
      */
-    int refreshUploadStatus(Long id, UploadStatusEnum oriUploadStatus, UploadStatusEnum tagUploadStatus,
+    int refreshUploadStatus(Long id, HandleStatusEnum oriUploadStatus, HandleStatusEnum tagUploadStatus,
         String updateBy);
 
     /**
@@ -56,7 +56,7 @@ public interface AsyncDownloadRecordMapper {
      * @param uploadStatus 上传状态
      * @return affect row
      */
-    int download(Long id, UploadStatusEnum uploadStatus);
+    int download(Long id, HandleStatusEnum uploadStatus);
 
     /**
      * 根据下载任务查询异步下载记录
@@ -66,7 +66,7 @@ public interface AsyncDownloadRecordMapper {
      * @param offset 偏移量
      * @return 异步导出下载记录
      */
-    List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus, Integer offset);
+    List<AsyncFileRecord> listByTaskIdAndStatus(Long downloadTaskId, HandleStatusEnum uploadStatus, Integer offset);
 
     /**
      * 刷新执行进度
@@ -76,7 +76,7 @@ public interface AsyncDownloadRecordMapper {
      * @param nextStatus 下一个状态
      * @return affect row
      */
-    int refreshExecuteProcess(Long registerId, Integer executeProcess, UploadStatusEnum nextStatus);
+    int refreshExecuteProcess(Long registerId, Integer executeProcess, HandleStatusEnum nextStatus);
 
     /**
      * 重置执行进度
@@ -92,7 +92,7 @@ public interface AsyncDownloadRecordMapper {
      * @param condition condition
      * @return download record
      */
-    List<AsyncDownloadRecord> selectByCondition(BaseRecordQueryCondition condition);
+    List<AsyncFileRecord> selectByCondition(BaseRecordQueryCondition condition);
 
     /**
      * count By Condition

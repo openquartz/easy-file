@@ -1,14 +1,14 @@
-package com.openquartz.easyfile.storage.local.entity;
+package com.openquartz.easyfile.server.entity;
 
 import lombok.Data;
 
 /**
- * AsyncDownloadAppEntity
+ * AsyncFileAppEntity
  *
  * @author svnee
  **/
 @Data
-public class AsyncDownloadAppEntity {
+public class AsyncFileAppEntity {
 
     /**
      * 归属系统 APP ID

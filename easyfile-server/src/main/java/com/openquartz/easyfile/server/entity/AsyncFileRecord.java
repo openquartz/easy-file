@@ -1,4 +1,4 @@
-package com.openquartz.easyfile.storage.local.entity;
+package com.openquartz.easyfile.server.entity;
 
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
 import javax.persistence.Column;
@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import lombok.Data;
 
 import java.util.Date;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 
 /**
  * 异步下载记录
@@ -15,8 +15,8 @@ import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
  * @author svnee
  */
 @Data
-@Table(name = "ef_async_download_record")
-public class AsyncDownloadRecord {
+@Table(name = "ef_async_file_record")
+public class AsyncFileRecord {
 
     @Id
     private Long id;
@@ -24,10 +24,10 @@ public class AsyncDownloadRecord {
     /**
      * 下载任务ID
      *
-     * @see AsyncDownloadTask#getId()
+     * @see AsyncFileTask#getId()
      */
-    @Column(name = "download_task_id")
-    private Long downloadTaskId;
+    @Column(name = "task_id")
+    private Long taskId;
 
     /**
      * app ID
@@ -38,14 +38,14 @@ public class AsyncDownloadRecord {
     /**
      * 下载code
      */
-    @Column(name = "download_code")
-    private String downloadCode;
+    @Column(name = "executor_code")
+    private String executorCode;
 
     /**
      * 上传状态
      */
-    @Column(name = "upload_status")
-    private UploadStatusEnum uploadStatus;
+    @Column(name = "handle_status")
+    private HandleStatusEnum handleStatus;
 
     /**
      * 文件路径
@@ -54,7 +54,9 @@ public class AsyncDownloadRecord {
     private String fileUrl;
 
     /**
-     * 文件名
+     * fileName
+     *
+     * @since 1.2.1
      */
     @Column(name = "file_name")
     private String fileName;
@@ -68,14 +70,14 @@ public class AsyncDownloadRecord {
     /**
      * 下载操作人
      */
-    @Column(name = "download_operate_by")
-    private String downloadOperateBy;
+    @Column(name = "operate_by")
+    private String operateBy;
 
     /**
      * 下载操作人
      */
-    @Column(name = "download_operate_name")
-    private String downloadOperateName;
+    @Column(name = "operate_name")
+    private String operateName;
 
     /**
      * 备注
@@ -174,5 +176,16 @@ public class AsyncDownloadRecord {
      */
     @Column(name = "update_by")
     private String updateBy;
+
+    /**
+     * 是否已经上传完成
+     *
+     * @return 是否已经完成
+     */
+    public boolean isUploadComplete() {
+        return !(HandleStatusEnum.NONE == handleStatus
+            || HandleStatusEnum.EXECUTING == handleStatus
+            || HandleStatusEnum.UPLOADING == handleStatus);
+    }
 
 }

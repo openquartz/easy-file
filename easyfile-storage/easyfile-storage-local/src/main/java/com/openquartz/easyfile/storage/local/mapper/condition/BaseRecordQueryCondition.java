@@ -5,7 +5,7 @@ import lombok.Data;
 
 import java.util.Date;
 import com.openquartz.easyfile.common.bean.Pair;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 
 /**
  * 查询
@@ -46,7 +46,7 @@ public class BaseRecordQueryCondition {
      * 下载状态
      * 非必须
      */
-    private UploadStatusEnum uploadStatus;
+    private HandleStatusEnum uploadStatus;
 
     /**
      * 过期时间

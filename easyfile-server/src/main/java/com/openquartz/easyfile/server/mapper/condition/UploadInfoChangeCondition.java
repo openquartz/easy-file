@@ -2,7 +2,7 @@ package com.openquartz.easyfile.server.mapper.condition;
 
 import java.util.Date;
 import lombok.Data;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 
 /**
  * 上传成功信息条件
@@ -17,7 +17,7 @@ public class UploadInfoChangeCondition {
     /**
      * 上传状态
      */
-    private UploadStatusEnum uploadStatus;
+    private HandleStatusEnum uploadStatus;
 
     /**
      * 文件地址

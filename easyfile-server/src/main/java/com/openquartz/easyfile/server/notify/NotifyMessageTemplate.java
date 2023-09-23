@@ -2,7 +2,7 @@ package com.openquartz.easyfile.server.notify;
 
 import java.util.Date;
 import lombok.Data;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 
 /**
  * 通知消息模版
@@ -50,5 +50,5 @@ public class NotifyMessageTemplate {
     /**
      * 上传状态
      */
-    private UploadStatusEnum uploadStatus;
+    private HandleStatusEnum uploadStatus;
 }

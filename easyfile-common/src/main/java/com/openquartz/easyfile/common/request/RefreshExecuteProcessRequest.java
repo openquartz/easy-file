@@ -2,7 +2,7 @@ package com.openquartz.easyfile.common.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import lombok.Data;
 import com.openquartz.easyfile.common.serdes.BaseEnumDeserializer;
 import com.openquartz.easyfile.common.serdes.BaseEnumSerializer;
@@ -30,6 +30,6 @@ public class RefreshExecuteProcessRequest {
      */
     @JsonSerialize(using = BaseEnumSerializer.class)
     @JsonDeserialize(using = BaseEnumDeserializer.class)
-    private UploadStatusEnum nextUploadStatus;
+    private HandleStatusEnum nextUploadStatus;
 
 }

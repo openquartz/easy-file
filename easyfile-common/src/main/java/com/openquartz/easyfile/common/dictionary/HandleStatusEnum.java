@@ -7,7 +7,7 @@ import java.util.stream.Stream;
  *
  * @author svnee
  */
-public enum UploadStatusEnum implements BaseEnum<String> {
+public enum HandleStatusEnum implements BaseEnum<String> {
 
     /**
      * 未上传
@@ -50,12 +50,12 @@ public enum UploadStatusEnum implements BaseEnum<String> {
 
     private final String desc;
 
-    UploadStatusEnum(String code, String desc) {
+    HandleStatusEnum(String code, String desc) {
         this.code = code;
         this.desc = desc;
     }
 
-    public static UploadStatusEnum fromCode(String uploadStatus) {
+    public static HandleStatusEnum fromCode(String uploadStatus) {
         return Stream.of(values())
             .filter(uploadStatusEnum -> uploadStatusEnum.code.equals(uploadStatus)).findAny()
             .orElse(null);

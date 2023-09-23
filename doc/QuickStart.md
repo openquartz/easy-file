@@ -90,7 +90,7 @@ easyfile.local.datasource.password=123456
 需要执行SQL:
 
 ```sql
-CREATE TABLE ef_async_download_task
+CREATE TABLE ef_async_file_task
 (
     id                BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
     task_code         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '任务编码',
@@ -104,22 +104,22 @@ CREATE TABLE ef_async_download_task
     update_time       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     create_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '创建人',
     update_by         VARCHAR(50) NOT NULL DEFAULT '' COMMENT '更新人',
-    is_deleted        BIGINT (20) NOT NULL DEFAULT 0 COMMENT '是否删除',
+    deleted        BIGINT (20) NOT NULL DEFAULT 0 COMMENT '是否删除',
     PRIMARY KEY (id),
     UNIQUE KEY `uniq_app_id_task_code` (`task_code`,`app_id`) USING BTREE
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载任务';
 
-CREATE TABLE ef_async_download_record
+CREATE TABLE ef_async_file_record
 (
     id                    BIGINT (20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'id',
-    download_task_id      BIGINT (20) NOT NULL DEFAULT 0 COMMENT '下载任务ID',
+    task_id      BIGINT (20) NOT NULL DEFAULT 0 COMMENT '下载任务ID',
     app_id                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT 'app ID',
-    download_code         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载code',
-    upload_status         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '上传状态',
+    executor_code         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载code',
+    handle_status         VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '上传状态',
     file_url              VARCHAR(512) NOT NULL DEFAULT '' COMMENT '文件路径',
     file_system           VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '文件所在系统',
-    download_operate_by   VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
-    download_operate_name VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
+    operate_by   VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
+    operate_name VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '下载操作人',
     remark                VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '备注',
     notify_enable_status  TINYINT (3) NOT NULL DEFAULT 0 COMMENT '通知启用状态',
     notify_email          VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '通知有效',
@@ -137,9 +137,9 @@ CREATE TABLE ef_async_download_record
     create_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '创建人',
     update_by             VARCHAR(50)  NOT NULL DEFAULT '' COMMENT '更新人',
     PRIMARY KEY (id),
-    KEY                   `idx_download_operate_by` (`download_operate_by`) USING BTREE,
-    KEY                   `idx_operator_record` (`download_operate_by`,`app_id`,`create_time`),
-    KEY                   `idx_upload_invalid` (`upload_status`,`invalid_time`,`id`),
+    KEY                   `idx_operate_by` (`operate_by`) USING BTREE,
+    KEY                   `idx_operator_record` (`operate_by`,`app_id`,`create_time`),
+    KEY                   `idx_upload_invalid` (`handle_status`,`invalid_time`,`id`),
     KEY                   `idx_create_time` (`create_time`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 ```

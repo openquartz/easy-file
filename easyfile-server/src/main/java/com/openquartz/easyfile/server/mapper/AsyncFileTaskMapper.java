@@ -1,10 +1,10 @@
 package com.openquartz.easyfile.server.mapper;
 
-import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
+import com.openquartz.easyfile.server.entity.AsyncFileTask;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity;
+import com.openquartz.easyfile.server.entity.AsyncFileAppEntity;
 
 /**
  * 异步下载任务Mapper
@@ -12,15 +12,15 @@ import com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity;
  * @author svnee
  */
 @Mapper
-public interface AsyncDownloadTaskMapper {
+public interface AsyncFileTaskMapper {
 
     /**
      * 插入数据
      *
-     * @param asyncDownloadTask 异步下载任务
+     * @param asyncFileTask 异步下载任务
      * @return 插入条数
      */
-    int insertSelective(AsyncDownloadTask asyncDownloadTask);
+    int insertSelective(AsyncFileTask asyncFileTask);
 
     /**
      * 根据ID 主键插叙
@@ -28,7 +28,7 @@ public interface AsyncDownloadTaskMapper {
      * @param id ID 主键
      * @return 异步下载任务
      */
-    AsyncDownloadTask findById(@Param("id") Long id);
+    AsyncFileTask findById(@Param("id") Long id);
 
     /**
      * 根据下载code 查询异步下载任务
@@ -37,7 +37,7 @@ public interface AsyncDownloadTaskMapper {
      * @param appId 系统ID
      * @return 下载任务
      */
-    AsyncDownloadTask selectByDownloadCode(@Param("taskCode") String taskCode, @Param("appId") String appId);
+    AsyncFileTask selectByDownloadCode(@Param("taskCode") String taskCode, @Param("appId") String appId);
 
     /**
      * 加载所有的AppId
@@ -53,7 +53,7 @@ public interface AsyncDownloadTaskMapper {
      * @param appIdList appID
      * @return 下载任务
      */
-    List<AsyncDownloadTask> listByDownloadCode(@Param("list") List<String> downloadCodeList,
+    List<AsyncFileTask> listByDownloadCode(@Param("list") List<String> downloadCodeList,
         @Param("appIdList") List<String> appIdList);
 
     /**
@@ -69,7 +69,7 @@ public interface AsyncDownloadTaskMapper {
      *
      * @param list list
      */
-    void insertList(@Param("list") List<AsyncDownloadTask> list);
+    void insertList(@Param("list") List<AsyncFileTask> list);
 
     /**
      * 刷新任务描述
@@ -84,5 +84,5 @@ public interface AsyncDownloadTaskMapper {
      *
      * @return app tree
      */
-    List<AsyncDownloadAppEntity> getAppTree();
+    List<AsyncFileAppEntity> getAppTree();
 }

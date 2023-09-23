@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.openquartz.easyfile.server.mapper.AsyncDownloadTaskMapper">
-    <resultMap id="BaseResultMap" type="com.openquartz.easyfile.server.entity.AsyncDownloadTask">
+<mapper namespace="com.openquartz.easyfile.server.mapper.AsyncFileTaskMapper">
+    <resultMap id="BaseResultMap" type="com.openquartz.easyfile.server.entity.AsyncFileTask">
         <id column="id" jdbcType="BIGINT" property="id"/>
         <result column="task_code" jdbcType="VARCHAR" property="taskCode"/>
+        <result column="task_type" jdbcType="TINYINT" property="taskType"/>
         <result column="task_desc" jdbcType="VARCHAR" property="taskDesc"/>
         <result column="limiting_strategy" jdbcType="VARCHAR" property="limitingStrategy"/>
         <result column="app_id" jdbcType="VARCHAR" property="appId"/>
@@ -14,12 +15,13 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="create_by" jdbcType="VARCHAR" property="createBy"/>
         <result column="update_by" jdbcType="VARCHAR" property="updateBy"/>
-        <result column="is_deleted" jdbcType="BIGINT" property="isDeleted"/>
+        <result column="deleted" jdbcType="BIGINT" property="deleted"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         id,
         task_code,
+        task_type,
         task_desc,
         limiting_strategy,
         app_id,
@@ -30,14 +32,17 @@
         update_time,
         create_by,
         update_by,
-        is_deleted
+        deleted
     </sql>
 
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO ef_async_download_task
+        INSERT INTO ef_async_file_task
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="taskCode != null">
                 task_code,
+            </if>
+            <if test="taskType != null">
+                task_type,
             </if>
             <if test="taskDesc != null">
                 task_desc,
@@ -69,14 +74,17 @@
             <if test="updateBy != null">
                 update_by,
             </if>
-            <if test="isDeleted != null">
-                is_deleted
+            <if test="deleted != null">
+                deleted
             </if>
         </trim>
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="taskCode != null">
                 #{taskCode,jdbcType=VARCHAR},
+            </if>
+            <if test="taskType != null">
+                #{taskType,jdbcType=TINYINT},
             </if>
             <if test="taskDesc != null">
                 #{taskDesc,jdbcType=VARCHAR},
@@ -108,8 +116,8 @@
             <if test="updateBy != null">
                 #{updateBy,jdbcType=VARCHAR},
             </if>
-            <if test="isDeleted != null">
-                #{isDeleted,jdbcType=BIGINT}
+            <if test="deleted != null">
+                #{deleted,jdbcType=BIGINT}
             </if>
         </trim>
     </insert>
@@ -117,30 +125,30 @@
     <select id="findById" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ef_async_download_task
+        from ef_async_file_task
         where id = #{id}
-          AND is_deleted = 0
+          AND deleted = 0
     </select>
 
     <select id="selectByDownloadCode" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ef_async_download_task
+        from ef_async_file_task
         where task_code = #{taskCode}
           AND app_id = #{appId}
-          AND is_deleted = 0
+          AND deleted = 0
     </select>
 
     <select id="selectAllAppId" resultType="java.lang.String">
         select distinct app_id
-        from ef_async_download_task
-        where is_deleted = 0
+        from ef_async_file_task
+        where deleted = 0
     </select>
 
     <select id="listByDownloadCode" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
-        from ef_async_download_task
+        from ef_async_file_task
             where task_code in
         <foreach collection="list" item="item" close=")" open="(" separator="," index="index">
             #{item}
@@ -149,18 +157,19 @@
         <foreach collection="appIdList" open="(" close=")" item="item" separator="," index="index">
             #{item}
         </foreach>
-        AND is_deleted = 0
+        AND deleted = 0
     </select>
 
     <select id="getByUnifiedAppId" resultType="java.lang.String">
         select distinct app_id
-        from ef_async_download_task
+        from ef_async_file_task
         where unified_app_id = #{unifiedAppId}
-          and is_deleted = 0
+          and deleted = 0
     </select>
 
     <insert id="insertList">
-        INSERT INTO ef_async_download_task(task_code,
+        INSERT INTO ef_async_file_task(task_code,
+                                           task_type,
                                            task_desc,
                                            app_id,
                                            unified_app_id,
@@ -171,32 +180,33 @@
                                            update_time,
                                            create_by,
                                            update_by,
-                                           is_deleted)VALUES
+                                           deleted)VALUES
         <foreach collection="list" item="element" index="index" separator=",">
             (#{element.taskCode,jdbcType=VARCHAR},
-             #{element.taskDesc,jdbcType=VARCHAR},
-             #{element.appId,jdbcType=VARCHAR},
-             #{element.unifiedAppId,jdbcType=VARCHAR},
-             #{element.enableStatus,jdbcType=TINYINT},
-             #{element.limitingStrategy,jdbcType=VARCHAR},
-             #{element.version,jdbcType=INTEGER},
-             #{element.createTime,jdbcType=TIMESTAMP},
-             #{element.updateTime,jdbcType=TIMESTAMP},
-             #{element.createBy,jdbcType=VARCHAR},
-             #{element.updateBy,jdbcType=VARCHAR},
-             #{element.isDeleted,jdbcType=BIGINT})
+            #{element.taskType,jdbcType=TINYINT},
+            #{element.taskDesc,jdbcType=VARCHAR},
+            #{element.appId,jdbcType=VARCHAR},
+            #{element.unifiedAppId,jdbcType=VARCHAR},
+            #{element.enableStatus,jdbcType=TINYINT},
+            #{element.limitingStrategy,jdbcType=VARCHAR},
+            #{element.version,jdbcType=INTEGER},
+            #{element.createTime,jdbcType=TIMESTAMP},
+            #{element.updateTime,jdbcType=TIMESTAMP},
+            #{element.createBy,jdbcType=VARCHAR},
+            #{element.updateBy,jdbcType=VARCHAR},
+            #{element.deleted,jdbcType=BIGINT})
         </foreach>
     </insert>
 
     <update id="refreshTaskDesc">
-        update ef_async_download_task
+        update ef_async_file_task
         set task_desc = #{taskDesc}
         where id = #{id}
     </update>
 
-    <select id="getAppTree" resultType="com.openquartz.easyfile.server.entity.AsyncDownloadAppEntity">
+    <select id="getAppTree" resultType="com.openquartz.easyfile.server.entity.AsyncFileAppEntity">
         select distinct app_id, unified_app_id
-        from ef_async_download_task
-        where is_deleted = 0
+        from ef_async_file_task
+        where deleted = 0
     </select>
 </mapper>

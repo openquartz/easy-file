@@ -4,7 +4,7 @@ import java.util.List;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
@@ -123,7 +123,7 @@ public interface EasyFileClient {
      * @return response
      */
     ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
-        UploadStatusEnum nextUploadStatus);
+        HandleStatusEnum nextUploadStatus);
 
     /**
      * get app tree

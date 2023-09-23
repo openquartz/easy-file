@@ -1,9 +1,9 @@
 package com.openquartz.easyfile.storage.local.impl;
 
-import com.openquartz.easyfile.storage.local.dictionary.DownloadTriggerStatusEnum;
+import com.openquartz.easyfile.storage.local.dictionary.FileTriggerStatusEnum;
 import com.openquartz.easyfile.storage.download.DownloadTriggerService;
-import com.openquartz.easyfile.storage.local.entity.AsyncDownloadTrigger;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTriggerMapper;
+import com.openquartz.easyfile.storage.local.entity.AsyncFileTrigger;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileTriggerMapper;
 import com.openquartz.easyfile.storage.local.mapper.condition.QueryDownloadTriggerCondition;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -28,25 +28,25 @@ import com.openquartz.easyfile.common.util.StringUtils;
 @RequiredArgsConstructor
 public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
-    private final AsyncDownloadTriggerMapper asyncDownloadTriggerMapper;
+    private final AsyncFileTriggerMapper asyncFileTriggerMapper;
 
     @Override
     public void trigger(DownloadTriggerRequest request) {
         try {
-            AsyncDownloadTrigger downloadTrigger = asyncDownloadTriggerMapper
+            AsyncFileTrigger downloadTrigger = asyncFileTriggerMapper
                 .selectByRegisterId(request.getRegisterId());
             if (Objects.nonNull(downloadTrigger)) {
                 return;
             }
-            AsyncDownloadTrigger trigger = new AsyncDownloadTrigger();
+            AsyncFileTrigger trigger = new AsyncFileTrigger();
             trigger.setTriggerCount(0);
-            trigger.setTriggerStatus(DownloadTriggerStatusEnum.INIT);
+            trigger.setTriggerStatus(FileTriggerStatusEnum.INIT);
             trigger.setStartTime(new Date());
             trigger.setLastExecuteTime(new Date());
             trigger.setRegisterId(request.getRegisterId());
             trigger.setCreatingOwner(Objects.nonNull(IpUtil.getIp()) ? IpUtil.getIp() : "hostname-unknown");
             trigger.setProcessingOwner(StringUtils.EMPTY);
-            asyncDownloadTriggerMapper.insert(trigger);
+            asyncFileTriggerMapper.insert(trigger);
         } catch (Exception ex) {
             log.error("[LocalDownloadTriggerServiceImpl#trigger] save error! request:{}", request);
         }
@@ -58,7 +58,7 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(triggerOffset);
         triggerCondition.setMaxTriggerCount(maxTriggerCount);
-        triggerCondition.setTriggerStatusList(DownloadTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
+        triggerCondition.setTriggerStatusList(FileTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lookBackTime = now.plusHours(-lookBackHours);
@@ -67,7 +67,7 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         // 触发专属IP
         triggerCondition.setCreatingOwner(IpUtil.getIp());
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
         return triggerList.stream().map(e -> {
             DownloadTriggerEntry triggerResult = new DownloadTriggerEntry();
             triggerResult.setRegisterId(e.getRegisterId());
@@ -82,14 +82,14 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(triggerOffset);
         triggerCondition.setMaxTriggerCount(maxTriggerCount);
-        triggerCondition.setTriggerStatusList(DownloadTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
+        triggerCondition.setTriggerStatusList(FileTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lookBackTime = now.plusHours(-lookBackHours);
         triggerCondition.setLastExecuteStartTime(lookBackTime);
         triggerCondition.setLastExecuteEndTime(now.plusSeconds(-minReaperSeconds));
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
         return triggerList.stream().map(e -> {
             DownloadTriggerEntry triggerResult = new DownloadTriggerEntry();
             triggerResult.setRegisterId(e.getRegisterId());
@@ -104,13 +104,13 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(triggerOffset);
         triggerCondition.setMaxTriggerCount(maxTriggerCount);
-        triggerCondition.setTriggerStatusList(DownloadTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
+        triggerCondition.setTriggerStatusList(FileTriggerStatusEnum.EXE_TRIGGER_STATUS_LIST);
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime lookBackTime = now.plusHours(-lookBackHours);
         triggerCondition.setLastExecuteEndTime(lookBackTime);
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
         return triggerList.stream().map(e -> {
             DownloadTriggerEntry triggerResult = new DownloadTriggerEntry();
             triggerResult.setRegisterId(e.getRegisterId());
@@ -121,7 +121,7 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
     @Override
     public DownloadTriggerEntry getTriggerRegisterId(Long registerId, Integer maxTriggerCount) {
-        AsyncDownloadTrigger trigger = asyncDownloadTriggerMapper.selectByRegisterId(registerId);
+        AsyncFileTrigger trigger = asyncFileTriggerMapper.selectByRegisterId(registerId);
         if (Objects.isNull(trigger) || trigger.isSuccess() || trigger.getTriggerCount() > maxTriggerCount) {
             return null;
         }
@@ -130,31 +130,31 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
     @Override
     public boolean startExecute(Long registerId, Integer triggerCount) {
-        int execute = asyncDownloadTriggerMapper.execute(registerId, DownloadTriggerStatusEnum.EXECUTING,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.INIT, DownloadTriggerStatusEnum.WAITING,
-                DownloadTriggerStatusEnum.FAIL), triggerCount);
+        int execute = asyncFileTriggerMapper.execute(registerId, FileTriggerStatusEnum.EXECUTING,
+            CollectionUtils.newArrayList(FileTriggerStatusEnum.INIT, FileTriggerStatusEnum.WAITING,
+                FileTriggerStatusEnum.FAIL), triggerCount);
         return execute > 0;
     }
 
     @Override
     public void exeSuccess(Long registerId) {
-        asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.SUCCESS,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.FAIL,
-                DownloadTriggerStatusEnum.WAITING,
-                DownloadTriggerStatusEnum.INIT));
+        asyncFileTriggerMapper.refreshStatus(registerId, FileTriggerStatusEnum.SUCCESS,
+            CollectionUtils.newArrayList(FileTriggerStatusEnum.EXECUTING, FileTriggerStatusEnum.FAIL,
+                FileTriggerStatusEnum.WAITING,
+                FileTriggerStatusEnum.INIT));
     }
 
     @Override
     public void exeFail(Long registerId) {
-        asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.FAIL,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING, DownloadTriggerStatusEnum.INIT,
-                DownloadTriggerStatusEnum.WAITING));
+        asyncFileTriggerMapper.refreshStatus(registerId, FileTriggerStatusEnum.FAIL,
+            CollectionUtils.newArrayList(FileTriggerStatusEnum.EXECUTING, FileTriggerStatusEnum.INIT,
+                FileTriggerStatusEnum.WAITING));
     }
 
     @Override
     public void enterWaiting(Long registerId) {
-        asyncDownloadTriggerMapper.refreshStatus(registerId, DownloadTriggerStatusEnum.WAITING,
-            CollectionUtils.newArrayList(DownloadTriggerStatusEnum.FAIL, DownloadTriggerStatusEnum.INIT));
+        asyncFileTriggerMapper.refreshStatus(registerId, FileTriggerStatusEnum.WAITING,
+            CollectionUtils.newArrayList(FileTriggerStatusEnum.FAIL, FileTriggerStatusEnum.INIT));
     }
 
     @Override
@@ -164,16 +164,16 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(10);
-        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(FileTriggerStatusEnum.EXECUTING));
 
         triggerCondition.setLastExecuteEndTime(beforeSeconds);
         triggerCondition.setLastExecuteStartTime(now.plusHours(-48));
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
 
-        for (AsyncDownloadTrigger trigger : triggerList) {
-            asyncDownloadTriggerMapper.refreshStatus(trigger.getRegisterId(), DownloadTriggerStatusEnum.FAIL,
-                CollectionUtils.newArrayList(DownloadTriggerStatusEnum.EXECUTING));
+        for (AsyncFileTrigger trigger : triggerList) {
+            asyncFileTriggerMapper.refreshStatus(trigger.getRegisterId(), FileTriggerStatusEnum.FAIL,
+                CollectionUtils.newArrayList(FileTriggerStatusEnum.EXECUTING));
         }
     }
 
@@ -184,15 +184,15 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(10);
-        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.WAITING));
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(FileTriggerStatusEnum.WAITING));
 
         triggerCondition.setLastExecuteEndTime(beforeSeconds);
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
 
-        for (AsyncDownloadTrigger trigger : triggerList) {
-            asyncDownloadTriggerMapper.refreshStatus(trigger.getRegisterId(), DownloadTriggerStatusEnum.FAIL,
-                CollectionUtils.newArrayList(DownloadTriggerStatusEnum.WAITING));
+        for (AsyncFileTrigger trigger : triggerList) {
+            asyncFileTriggerMapper.refreshStatus(trigger.getRegisterId(), FileTriggerStatusEnum.FAIL,
+                CollectionUtils.newArrayList(FileTriggerStatusEnum.WAITING));
         }
     }
 
@@ -209,21 +209,21 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
 
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
         triggerCondition.setOffset(100);
-        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.SUCCESS));
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(FileTriggerStatusEnum.SUCCESS));
 
         triggerCondition.setLastExecuteEndTime(beforeTime);
 
-        List<AsyncDownloadTrigger> triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
+        List<AsyncFileTrigger> triggerList = asyncFileTriggerMapper.select(triggerCondition);
 
-        for (AsyncDownloadTrigger trigger : triggerList) {
-            asyncDownloadTriggerMapper.deleteById(trigger.getId());
+        for (AsyncFileTrigger trigger : triggerList) {
+            asyncFileTriggerMapper.deleteById(trigger.getId());
         }
 
         triggerCondition.setMinTriggerCount(maxTriggerCount);
-        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(DownloadTriggerStatusEnum.FAIL));
-        triggerList = asyncDownloadTriggerMapper.select(triggerCondition);
-        for (AsyncDownloadTrigger trigger : triggerList) {
-            asyncDownloadTriggerMapper.deleteById(trigger.getId());
+        triggerCondition.setTriggerStatusList(CollectionUtils.newArrayList(FileTriggerStatusEnum.FAIL));
+        triggerList = asyncFileTriggerMapper.select(triggerCondition);
+        for (AsyncFileTrigger trigger : triggerList) {
+            asyncFileTriggerMapper.deleteById(trigger.getId());
         }
     }
 }

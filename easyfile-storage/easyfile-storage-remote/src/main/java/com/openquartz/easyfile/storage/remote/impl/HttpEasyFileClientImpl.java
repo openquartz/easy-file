@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
@@ -99,7 +99,7 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
 
     @Override
     public ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
-        UploadStatusEnum nextUploadStatus) {
+        HandleStatusEnum nextUploadStatus) {
         RefreshExecuteProcessRequest processRequest = new RefreshExecuteProcessRequest();
         processRequest.setRegisterId(registerId);
         processRequest.setExecuteProcess(executeProcess);

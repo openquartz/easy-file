@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.processor;
 
+import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,7 @@ public class AutoRegisteredDownloadTaskListener implements ApplicationListener<A
             AutoTaskRegisterRequest registerRequest = new AutoTaskRegisterRequest()
                 .setAppId(downloadProperties.getAppId())
                 .setUnifiedAppId(downloadProperties.getUnifiedAppId())
+                .setHandleType(FileHandleTypeEnum.EXPORT.getCode())
                 .setDownloadCodeMap(downloadCodeMap);
             storageService.autoRegisterTask(registerRequest);
             log.info(">>>>>>>>>>[EasyFile#AutoRegister] register success! Application:{},UnifiedAppId:{}",

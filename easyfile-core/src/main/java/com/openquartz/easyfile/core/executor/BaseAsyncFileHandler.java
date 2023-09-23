@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.executor;
 
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.response.ExportResult;
 
 /**
@@ -23,7 +23,7 @@ public interface BaseAsyncFileHandler {
      */
     default boolean handle(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
         ExportResult exportResult = handleResult(executor, baseRequest, registerId);
-        return UploadStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
+        return HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
     }
 
     /**

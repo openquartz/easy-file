@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
@@ -75,7 +75,7 @@ public class DefaultDownloadStorageServiceImpl implements DownloadStorageService
     }
 
     @Override
-    public void refreshExecuteProgress(Long registerId, Integer executeProcess, UploadStatusEnum nextUploadStatus) {
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess, HandleStatusEnum nextUploadStatus) {
         asyncDownloadService.refreshExecuteProcess(registerId, executeProcess, nextUploadStatus);
     }
 

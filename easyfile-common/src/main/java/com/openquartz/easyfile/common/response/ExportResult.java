@@ -2,7 +2,7 @@ package com.openquartz.easyfile.common.response;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import lombok.Data;
 import com.openquartz.easyfile.common.serdes.BaseEnumDeserializer;
 import com.openquartz.easyfile.common.serdes.BaseEnumSerializer;
@@ -25,7 +25,7 @@ public class ExportResult {
      */
     @JsonSerialize(using = BaseEnumSerializer.class)
     @JsonDeserialize(using = BaseEnumDeserializer.class)
-    private UploadStatusEnum uploadStatus;
+    private HandleStatusEnum uploadStatus;
 
     /**
      * 上传文件系统

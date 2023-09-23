@@ -17,8 +17,8 @@ import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.server.common.lock.LockBizType;
-import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
-import com.openquartz.easyfile.server.mapper.AsyncDownloadTaskMapper;
+import com.openquartz.easyfile.server.entity.AsyncFileTask;
+import com.openquartz.easyfile.server.mapper.AsyncFileTaskMapper;
 import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;
 
 /**
@@ -31,7 +31,7 @@ import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;
 @RequiredArgsConstructor
 public class AsyncDownloadTaskServiceImpl implements AsyncDownloadTaskService {
 
-    private final AsyncDownloadTaskMapper asyncDownloadTaskMapper;
+    private final AsyncFileTaskMapper asyncFileTaskMapper;
     private final LockSupport lockSupport;
 
     @Override
@@ -42,43 +42,44 @@ public class AsyncDownloadTaskServiceImpl implements AsyncDownloadTaskService {
 
                 List<String> downloadCodeList = CollectionUtils
                     .newArrayList(request.getDownloadCodeMap().keySet());
-                List<AsyncDownloadTask> taskList = asyncDownloadTaskMapper
+                List<AsyncFileTask> taskList = asyncFileTaskMapper
                     .listByDownloadCode(downloadCodeList, CollectionUtils.newArrayList(request.getAppId()));
 
-                Map<String, AsyncDownloadTask> downloadTaskMap = taskList.stream()
-                    .collect(Collectors.toMap(AsyncDownloadTask::getTaskCode, e -> e));
-                List<AsyncDownloadTask> toInitDownloadTaskList = CollectionUtils.newArrayList();
+                Map<String, AsyncFileTask> downloadTaskMap = taskList.stream()
+                    .collect(Collectors.toMap(AsyncFileTask::getTaskCode, e -> e));
+                List<AsyncFileTask> toInitDownloadTaskList = CollectionUtils.newArrayList();
 
                 request.getDownloadCodeMap().entrySet().forEach(e -> {
                     if (!downloadTaskMap.containsKey(e.getKey())) {
-                        AsyncDownloadTask task = convert(request, e);
+                        AsyncFileTask task = convert(request, e);
                         toInitDownloadTaskList.add(task);
                     } else if (!Objects.equals(downloadTaskMap.get(e.getKey()).getTaskDesc(), e.getValue())) {
-                        AsyncDownloadTask task = downloadTaskMap.get(e.getKey());
-                        asyncDownloadTaskMapper.refreshTaskDesc(task.getId(), e.getValue());
+                        AsyncFileTask task = downloadTaskMap.get(e.getKey());
+                        asyncFileTaskMapper.refreshTaskDesc(task.getId(), e.getValue());
                     }
                 });
 
                 if (CollectionUtils.isNotEmpty(toInitDownloadTaskList)) {
-                    asyncDownloadTaskMapper.insertList(toInitDownloadTaskList);
+                    asyncFileTaskMapper.insertList(toInitDownloadTaskList);
                 }
             });
     }
 
-    private AsyncDownloadTask convert(AutoTaskRegisterRequest request, Entry<String, String> entry) {
-        AsyncDownloadTask asyncDownloadTask = new AsyncDownloadTask();
-        asyncDownloadTask.setTaskCode(entry.getKey());
-        asyncDownloadTask.setTaskDesc(entry.getValue());
-        asyncDownloadTask.setAppId(request.getAppId());
-        asyncDownloadTask.setUnifiedAppId(request.getUnifiedAppId());
-        asyncDownloadTask.setEnableStatus(EnableStatusEnum.ENABLE.getCode());
-        asyncDownloadTask.setLimitingStrategy(Constants.DEFAULT_LIMITING_STRATEGY);
-        asyncDownloadTask.setVersion(Constants.DATA_INIT_VERSION);
-        asyncDownloadTask.setCreateTime(new Date());
-        asyncDownloadTask.setUpdateTime(new Date());
-        asyncDownloadTask.setCreateBy(Constants.SYSTEM_USER);
-        asyncDownloadTask.setUpdateBy(Constants.SYSTEM_USER);
-        asyncDownloadTask.setIsDeleted(0L);
-        return asyncDownloadTask;
+    private AsyncFileTask convert(AutoTaskRegisterRequest request, Entry<String, String> entry) {
+        AsyncFileTask asyncFileTask = new AsyncFileTask();
+        asyncFileTask.setTaskCode(entry.getKey());
+        asyncFileTask.setTaskType(request.getHandleType());
+        asyncFileTask.setTaskDesc(entry.getValue());
+        asyncFileTask.setAppId(request.getAppId());
+        asyncFileTask.setUnifiedAppId(request.getUnifiedAppId());
+        asyncFileTask.setEnableStatus(EnableStatusEnum.ENABLE.getCode());
+        asyncFileTask.setLimitingStrategy(Constants.DEFAULT_LIMITING_STRATEGY);
+        asyncFileTask.setVersion(Constants.DATA_INIT_VERSION);
+        asyncFileTask.setCreateTime(new Date());
+        asyncFileTask.setUpdateTime(new Date());
+        asyncFileTask.setCreateBy(Constants.SYSTEM_USER);
+        asyncFileTask.setUpdateBy(Constants.SYSTEM_USER);
+        asyncFileTask.setDeleted(0L);
+        return asyncFileTask;
     }
 }

@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.common.request;
 
+import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
 import java.util.Map;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,4 +28,10 @@ public class AutoTaskRegisterRequest {
      * key: downloadCode, value: downloadDesc;
      */
     private Map<String, String> downloadCodeMap;
+
+    /**
+     * 文件处理类型
+     * @see FileHandleTypeEnum#getCode()
+     */
+    private Integer handleType;
 }

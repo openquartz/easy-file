@@ -8,7 +8,7 @@
         `role`,
         gmt_create,
         gmt_modified,
-        is_deleted
+        deleted
     </sql>
     <resultMap id="BaseResultMap" type="com.openquartz.easyfile.server.entity.UserInfo">
         <result column="id" property="id"/>
@@ -17,7 +17,7 @@
         <result column="role" property="role"/>
         <result column="gmt_create" property="gmtCreate"/>
         <result column="gmt_modified" property="gmtModified"/>
-        <result column="is_deleted" property="isDeleted"/>
+        <result column="deleted" property="isDeleted"/>
     </resultMap>
 
     <insert id="insertSelective">
@@ -42,7 +42,7 @@
                 gmt_modified,
             </if>
             <if test="isDeleted != null">
-                is_deleted
+                deleted
             </if>
         </trim>
         VALUES
@@ -75,6 +75,6 @@
         select <include refid="Base_Column_List"/>
         from ef_user_info
         where username = #{username}
-        and is_deleted = 0
+        and deleted = 0
     </select>
 </mapper>

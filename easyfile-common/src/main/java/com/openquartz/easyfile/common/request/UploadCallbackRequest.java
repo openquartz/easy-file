@@ -2,7 +2,7 @@ package com.openquartz.easyfile.common.request;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import javax.validation.constraints.NotNull;
 import lombok.Data;
 import com.openquartz.easyfile.common.serdes.BaseEnumDeserializer;
@@ -46,7 +46,7 @@ public class UploadCallbackRequest {
     @NotNull(message = "上传状态不能为空")
     @JsonSerialize(using = BaseEnumSerializer.class)
     @JsonDeserialize(using = BaseEnumDeserializer.class)
-    private UploadStatusEnum uploadStatus;
+    private HandleStatusEnum uploadStatus;
 
     /**
      * 异常信息备注

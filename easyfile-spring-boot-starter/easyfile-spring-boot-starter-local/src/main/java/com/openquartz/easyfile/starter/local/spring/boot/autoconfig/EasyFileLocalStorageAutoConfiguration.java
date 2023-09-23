@@ -34,12 +34,12 @@ import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
 import com.openquartz.easyfile.storage.local.impl.LocalDownloadStorageServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalDownloadTriggerServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalLimitingServiceImpl;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadRecordMapper;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTaskMapper;
-import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTriggerMapper;
-import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadRecordMapperImpl;
-import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTaskMapperImpl;
-import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTriggerMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileRecordMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileTaskMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncFileTriggerMapper;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncFileRecordMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncFileTaskMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncFileTriggerMapperImpl;
 import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier;
 
 /**
@@ -83,8 +83,8 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
     @Bean
     @ConditionalOnMissingBean(DownloadTriggerService.class)
-    public DownloadTriggerService localDownloadTriggerService(AsyncDownloadTriggerMapper asyncDownloadTriggerMapper) {
-        return new LocalDownloadTriggerServiceImpl(asyncDownloadTriggerMapper);
+    public DownloadTriggerService localDownloadTriggerService(AsyncFileTriggerMapper asyncFileTriggerMapper) {
+        return new LocalDownloadTriggerServiceImpl(asyncFileTriggerMapper);
     }
 
     private DataSource buildDataSource(EasyFileLocalProperties easyFileLocalProperties) {
@@ -119,27 +119,27 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(AsyncDownloadTaskMapper.class)
-    @ConditionalOnClass(AsyncDownloadTaskMapper.class)
-    public AsyncDownloadTaskMapper asyncDownloadTaskMapper(
+    @ConditionalOnMissingBean(AsyncFileTaskMapper.class)
+    @ConditionalOnClass(AsyncFileTaskMapper.class)
+    public AsyncFileTaskMapper asyncDownloadTaskMapper(
         @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
-        return new AsyncDownloadTaskMapperImpl(localStorageJdbcTemplate);
+        return new AsyncFileTaskMapperImpl(localStorageJdbcTemplate);
     }
 
     @Bean
-    @ConditionalOnMissingBean(AsyncDownloadRecordMapper.class)
-    @ConditionalOnClass(AsyncDownloadRecordMapper.class)
-    public AsyncDownloadRecordMapper asyncDownloadRecordMapper(
+    @ConditionalOnMissingBean(AsyncFileRecordMapper.class)
+    @ConditionalOnClass(AsyncFileRecordMapper.class)
+    public AsyncFileRecordMapper asyncDownloadRecordMapper(
         @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
-        return new AsyncDownloadRecordMapperImpl(localStorageJdbcTemplate);
+        return new AsyncFileRecordMapperImpl(localStorageJdbcTemplate);
     }
 
     @Bean
-    @ConditionalOnMissingBean(AsyncDownloadTriggerMapper.class)
-    @ConditionalOnClass(AsyncDownloadTriggerMapper.class)
-    public AsyncDownloadTriggerMapper asyncDownloadTriggerMapper(
+    @ConditionalOnMissingBean(AsyncFileTriggerMapper.class)
+    @ConditionalOnClass(AsyncFileTriggerMapper.class)
+    public AsyncFileTriggerMapper asyncDownloadTriggerMapper(
         @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
-        return new AsyncDownloadTriggerMapperImpl(localStorageJdbcTemplate);
+        return new AsyncFileTriggerMapperImpl(localStorageJdbcTemplate);
     }
 
     @Bean
@@ -151,17 +151,17 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     @Bean
     @ConditionalOnMissingBean(DownloadStorageService.class)
     @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
-    public DownloadStorageService localDownloadStorageServiceImpl(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
-        AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
-        return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);
+    public DownloadStorageService localDownloadStorageServiceImpl(AsyncFileRecordMapper asyncFileRecordMapper,
+        AsyncFileTaskMapper asyncFileTaskMapper) {
+        return new LocalDownloadStorageServiceImpl(asyncFileTaskMapper, asyncFileRecordMapper);
     }
 
     @Bean
     @ConditionalOnMissingBean(LimitingService.class)
     @ConditionalOnClass(LocalLimitingServiceImpl.class)
-    public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+    public LimitingService localLimitingService(AsyncFileTaskMapper asyncFileTaskMapper,
         List<ExportLimitingExecutor> executorList) {
-        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList);
+        return new LocalLimitingServiceImpl(asyncFileTaskMapper, executorList);
     }
 
     @Override
