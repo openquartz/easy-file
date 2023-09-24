@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.core.executor.support;
 
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import java.util.stream.Collectors;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.util.MapUtils;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 
 /**
  * 文件导出执行器 支持
@@ -23,7 +23,7 @@ public final class FileExportExecutorSupport {
     /**
      * 下载器缓存
      */
-    private static final Map<String, Pair<FileExportExecutor, BaseDownloadExecutor>> BASE_DOWNLOAD_EXECUTOR_MAP;
+    private static final Map<String, Pair<FileExportExecutor, BaseExportExecutor>> BASE_DOWNLOAD_EXECUTOR_MAP;
 
     static {
         BASE_DOWNLOAD_EXECUTOR_MAP = MapUtils.newHashMapWithExpectedSize(10);
@@ -35,7 +35,7 @@ public final class FileExportExecutorSupport {
      * @param downloadCode 缓存code
      * @param executor 下载器
      */
-    public static void register(String downloadCode, FileExportExecutor exportExecutor, BaseDownloadExecutor executor) {
+    public static void register(String downloadCode, FileExportExecutor exportExecutor, BaseExportExecutor executor) {
         BASE_DOWNLOAD_EXECUTOR_MAP.putIfAbsent(downloadCode, Pair.of(exportExecutor, executor));
     }
 
@@ -45,7 +45,7 @@ public final class FileExportExecutorSupport {
      * @param downloadCode code
      * @return 下载器
      */
-    public static BaseDownloadExecutor get(String downloadCode) {
+    public static BaseExportExecutor get(String downloadCode) {
         return BASE_DOWNLOAD_EXECUTOR_MAP.get(downloadCode).getValue();
     }
 
@@ -82,7 +82,7 @@ public final class FileExportExecutorSupport {
     /**
      * 查询执行器
      */
-    public static List<BaseDownloadExecutor> executorList() {
+    public static List<BaseExportExecutor> executorList() {
         return BASE_DOWNLOAD_EXECUTOR_MAP.values().stream().map(Pair::getValue).collect(Collectors.toList());
     }
 }

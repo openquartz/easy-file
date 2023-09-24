@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.starter.processor;
 
 import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 
@@ -42,7 +42,7 @@ public class AutoRegisteredDownloadTaskListener implements ApplicationListener<A
             downloadProperties.getAppId(),
             downloadProperties.getUnifiedAppId());
 
-        List<BaseDownloadExecutor> executorList = FileExportExecutorSupport.executorList();
+        List<BaseExportExecutor> executorList = FileExportExecutorSupport.executorList();
         if (CollectionUtils.isEmpty(executorList)) {
             log.info(
                 ">>>>>>>>>>[EasyFile#AutoRegister]Application:{},UnifiedAppId:{} Empty! auto register async download task!",
@@ -51,7 +51,7 @@ public class AutoRegisteredDownloadTaskListener implements ApplicationListener<A
             return;
         }
         Map<String, String> downloadCodeMap = MapUtils.newHashMapWithExpectedSize(executorList.size());
-        for (BaseDownloadExecutor exe : executorList) {
+        for (BaseExportExecutor exe : executorList) {
             FileExportExecutor executor = AnnotationUtils
                 .findAnnotation(SpringContextUtil.getRealClass(exe), FileExportExecutor.class);
             assert executor != null;

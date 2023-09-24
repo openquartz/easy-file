@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.FileSuffixEnum;
 import com.openquartz.easyfile.common.exception.EasyFileException;
-import com.openquartz.easyfile.core.exception.DownloadErrorCode;
+import com.openquartz.easyfile.core.exception.ExportErrorCode;
 
 /**
  * 导出请求头包装类
@@ -30,7 +30,7 @@ public final class ExportsResponseHeaderWrapper {
                 Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8)
                     + FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
-            throw new EasyFileException(DownloadErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
+            throw new EasyFileException(ExportErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
         }
         response.setContentType(Constants.RESPONSE_HEADER_CONTENT_TYPE_EXCEL);
     }
@@ -47,7 +47,7 @@ public final class ExportsResponseHeaderWrapper {
                 Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8)
                     + FileSuffixEnum.EXCEL_03.getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
-            throw new EasyFileException(DownloadErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
+            throw new EasyFileException(ExportErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
         }
         response.setContentType(Constants.RESPONSE_HEADER_CONTENT_TYPE_EXCEL);
     }
@@ -64,7 +64,7 @@ public final class ExportsResponseHeaderWrapper {
                 Constants.RESPONSE_ATTACHMENT_PREFIX + URLEncoder.encode(fileName, Constants.UTF_8)
                     + FileSuffixEnum.CSV.getFullFileSuffix());
         } catch (UnsupportedEncodingException e) {
-            throw new EasyFileException(DownloadErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
+            throw new EasyFileException(ExportErrorCode.DOWNLOAD_FILE_NAME_ENCODING_ERROR);
         }
         response.setContentType(Constants.RESPONSE_HEADER_CONTENT_TYPE_CSV);
     }

@@ -1,12 +1,12 @@
 package com.openquartz.easyfile.core.executor.impl;
 
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.request.DownloadTriggerRequest;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.AsyncFileHandlerAdapter;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
 import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
@@ -49,7 +49,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
     }
 
     @Override
-    public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
+    public void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
         DownloadTriggerRequest triggerRequest = new DownloadTriggerRequest();
         triggerRequest.setRegisterId(registerId);
         triggerService.trigger(triggerRequest);
@@ -75,7 +75,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
         if (execute) {
             try {
                 DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
-                BaseDownloadExecutor executor = FileExportExecutorSupport
+                BaseExportExecutor executor = FileExportExecutorSupport
                     .get(requestInfo.getDownloadCode());
 
                 // set async trigger if absent

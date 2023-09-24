@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.concurrent.ThreadFactory;
 import org.springframework.beans.factory.DisposableBean;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
-import com.openquartz.easyfile.core.executor.trigger.DownloadTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 
 /**
@@ -19,10 +19,10 @@ import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
  **/
 public class DisruptorTriggerProducer implements MQTriggerProducer, DisposableBean {
 
-    private final Disruptor<DownloadTriggerMessage> disruptor;
-    private final RingBuffer<DownloadTriggerMessage> ringBuffer;
+    private final Disruptor<ExportTriggerMessage> disruptor;
+    private final RingBuffer<ExportTriggerMessage> ringBuffer;
 
-    private static final EventTranslatorVararg<DownloadTriggerMessage> TRANSLATOR =
+    private static final EventTranslatorVararg<ExportTriggerMessage> TRANSLATOR =
         (message, seq, objs) -> {
             message.setRegisterId((Long) objs[0]);
             message.setTriggerTimestamp((Long) objs[1]);
@@ -39,7 +39,7 @@ public class DisruptorTriggerProducer implements MQTriggerProducer, DisposableBe
         this.ringBuffer = disruptor.getRingBuffer();
     }
 
-    public void register(EventHandler<DownloadTriggerMessage> eventHandler) {
+    public void register(EventHandler<ExportTriggerMessage> eventHandler) {
         this.disruptor.handleEventsWith(eventHandler);
     }
 
@@ -53,7 +53,7 @@ public class DisruptorTriggerProducer implements MQTriggerProducer, DisposableBe
 
 
     @Override
-    public boolean send(DownloadTriggerMessage triggerMessage) {
+    public boolean send(ExportTriggerMessage triggerMessage) {
         send(triggerMessage.getRegisterId(), triggerMessage.getTriggerTimestamp());
         return true;
     }

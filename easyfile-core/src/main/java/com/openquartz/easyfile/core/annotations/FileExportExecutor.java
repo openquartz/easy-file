@@ -1,11 +1,11 @@
 package com.openquartz.easyfile.core.annotations;
 
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
 import com.openquartz.easyfile.common.util.StringUtils;
 
 /**
@@ -65,7 +65,7 @@ public @interface FileExportExecutor {
     /**
      * cache-key
      *
-     * @see BaseDownloaderRequestContext#getOtherMap() 中的key的对应的value值
+     * @see BaseExporterRequestContext#getOtherMap() 中的key的对应的value值
      * 如果有值则可以使用点使用指向最终的数据字段。例如：#a.b.c
      * 支持SpringEL表达式
      */

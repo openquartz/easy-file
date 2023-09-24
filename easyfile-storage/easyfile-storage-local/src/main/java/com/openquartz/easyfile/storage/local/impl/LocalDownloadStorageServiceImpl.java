@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.storage.local.impl;
 
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
 import com.openquartz.easyfile.storage.local.convertor.AsyncDownloadRecordConverter;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -26,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
@@ -368,13 +368,13 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         return requestInfo;
     }
 
-    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
-        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
-        baseDownloaderRequestContext.setNotifier(registerRequest.getNotifier());
-        baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
-        baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
-        baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
-        return baseDownloaderRequestContext;
+    private BaseExporterRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseExporterRequestContext baseExporterRequestContext = new BaseExporterRequestContext();
+        baseExporterRequestContext.setNotifier(registerRequest.getNotifier());
+        baseExporterRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseExporterRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseExporterRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseExporterRequestContext;
     }
 
     @Override

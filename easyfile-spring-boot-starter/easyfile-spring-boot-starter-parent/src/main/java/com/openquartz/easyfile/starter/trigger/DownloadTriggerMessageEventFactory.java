@@ -1,17 +1,17 @@
 package com.openquartz.easyfile.starter.trigger;
 
 import com.lmax.disruptor.EventFactory;
-import com.openquartz.easyfile.core.executor.trigger.DownloadTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
 
 /**
  * event factory
  *
  * @author svnee
  **/
-public class DownloadTriggerMessageEventFactory implements EventFactory<DownloadTriggerMessage> {
+public class DownloadTriggerMessageEventFactory implements EventFactory<ExportTriggerMessage> {
 
     @Override
-    public DownloadTriggerMessage newInstance() {
-        return new DownloadTriggerMessage();
+    public ExportTriggerMessage newInstance() {
+        return new ExportTriggerMessage();
     }
 }

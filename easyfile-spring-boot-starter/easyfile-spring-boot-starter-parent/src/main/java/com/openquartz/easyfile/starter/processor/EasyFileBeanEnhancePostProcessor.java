@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.processor;
 
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.lang.NonNull;
@@ -7,8 +8,7 @@ import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.common.exception.EasyFileException;
 import com.openquartz.easyfile.common.file.FileUrlTransformer;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
-import com.openquartz.easyfile.core.exception.DownloadErrorCode;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.exception.ExportErrorCode;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.storage.expand.FileUrlTransformerSupport;
 
@@ -25,17 +25,17 @@ public class EasyFileBeanEnhancePostProcessor implements BeanPostProcessor {
         Class<?> clazz = SpringContextUtil.getRealClass(bean);
 
         if (clazz.isAnnotationPresent(FileExportExecutor.class)) {
-            if (!BaseDownloadExecutor.class.isAssignableFrom(clazz)) {
-                throw EasyFileException.replacePlaceHold(DownloadErrorCode.BASE_DOWNLOAD_EXECUTOR_IMPL_ILL_ERROR,
-                    BaseDownloadExecutor.class);
+            if (!BaseExportExecutor.class.isAssignableFrom(clazz)) {
+                throw EasyFileException.replacePlaceHold(ExportErrorCode.BASE_DOWNLOAD_EXECUTOR_IMPL_ILL_ERROR,
+                    BaseExportExecutor.class);
             }
             FileExportExecutor exportExecutor = clazz.getAnnotation(FileExportExecutor.class);
             if (FileExportExecutorSupport.contains(exportExecutor.value())
                 && !clazz.equals(FileExportExecutorSupport.get(exportExecutor.value()).getClass())) {
                 throw EasyFileException
-                    .replacePlaceHold(DownloadErrorCode.DOWNLOAD_CODE_NOT_UNIQ_ERROR, exportExecutor.value());
+                    .replacePlaceHold(ExportErrorCode.DOWNLOAD_CODE_NOT_UNIQ_ERROR, exportExecutor.value());
             }
-            FileExportExecutorSupport.register(exportExecutor.value(), exportExecutor, (BaseDownloadExecutor) bean);
+            FileExportExecutorSupport.register(exportExecutor.value(), exportExecutor, (BaseExportExecutor) bean);
         }
 
         // 注册file-url-transformer

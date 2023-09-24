@@ -11,7 +11,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
-import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
@@ -32,10 +32,10 @@ public class DefaultAsyncFileHandlerAutoConfiguration {
     public BaseAsyncFileHandler defaultAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
-        BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
+        BaseDefaultExportRejectExecutionHandler baseDefaultExportRejectExecutionHandler,
         DefaultAsyncHandlerThreadPoolProperties defaultAsyncHandlerThreadPoolProperties) {
         return new DefaultAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-            baseDefaultDownloadRejectExecutionHandler,
+            baseDefaultExportRejectExecutionHandler,
             defaultAsyncHandlerThreadPoolProperties);
     }
 

@@ -1,22 +1,22 @@
 package com.openquartz.easyfile.example.controller;
 
+import com.openquartz.easyfile.common.bean.ExporterRequestContext;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.openquartz.easyfile.common.bean.DownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.Notifier;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.bean.ResponseResult;
 import com.openquartz.easyfile.common.dictionary.FileSuffixEnum;
-import com.openquartz.easyfile.example.downloader.StudentDownloadDemoExecutor;
-import com.openquartz.easyfile.example.downloader.StudentMultiSheetPageDownloadDemoExecutor;
-import com.openquartz.easyfile.example.downloader.StudentMultiSheetStreamDownloadDemoExecutor;
-import com.openquartz.easyfile.example.downloader.StudentPageDownloadDemoExecutor;
-import com.openquartz.easyfile.example.downloader.StudentStreamDownloadDemoExecutor;
-import com.openquartz.easyfile.example.downloader.StudentStreamDownloadDemoMergeExecutor;
+import com.openquartz.easyfile.example.downloader.StudentExportDemoExecutor;
+import com.openquartz.easyfile.example.downloader.StudentMultiSheetPageExportDemoExecutor;
+import com.openquartz.easyfile.example.downloader.StudentMultiSheetStreamExportDemoExecutor;
+import com.openquartz.easyfile.example.downloader.StudentPageExportDemoExecutor;
+import com.openquartz.easyfile.example.downloader.StudentStreamExportDemoExecutor;
+import com.openquartz.easyfile.example.downloader.StudentStreamExportDemoMergeExecutor;
 import com.openquartz.easyfile.example.entity.response.ExportResultVO;
 
 /**
@@ -27,17 +27,17 @@ import com.openquartz.easyfile.example.entity.response.ExportResultVO;
 @RequestMapping("/student")
 public class StudentController {
 
-    private final StudentDownloadDemoExecutor studentDownloadDemoExecutor;
-    private final StudentStreamDownloadDemoExecutor studentStreamDownloadDemoExecutor;
-    private final StudentStreamDownloadDemoMergeExecutor studentStreamDownloadDemoMergeExecutor;
-    private final StudentPageDownloadDemoExecutor studentPageDownloadDemoExecutor;
-    private final StudentMultiSheetPageDownloadDemoExecutor studentMultiSheetPageDownloadDemoExecutor;
-    private final StudentMultiSheetStreamDownloadDemoExecutor studentMultiSheetStreamDownloadDemoExecutor;
+    private final StudentExportDemoExecutor studentDownloadDemoExecutor;
+    private final StudentStreamExportDemoExecutor studentStreamDownloadDemoExecutor;
+    private final StudentStreamExportDemoMergeExecutor studentStreamDownloadDemoMergeExecutor;
+    private final StudentPageExportDemoExecutor studentPageDownloadDemoExecutor;
+    private final StudentMultiSheetPageExportDemoExecutor studentMultiSheetPageDownloadDemoExecutor;
+    private final StudentMultiSheetStreamExportDemoExecutor studentMultiSheetStreamDownloadDemoExecutor;
 
 
     @GetMapping("/export/get")
     public ResponseResult<ExportResultVO> getExport(HttpServletResponse response) throws IOException {
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -56,7 +56,7 @@ public class StudentController {
     @GetMapping("/export/stream")
     public ResponseResult<ExportResultVO> export(HttpServletResponse response) throws IOException {
 
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -75,7 +75,7 @@ public class StudentController {
     @GetMapping("/export/stream/merge")
     public ResponseResult<ExportResultVO> exportMerge(HttpServletResponse response) throws IOException {
 
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -94,7 +94,7 @@ public class StudentController {
     @GetMapping("/export/page")
     public ResponseResult<ExportResultVO> exportPage(HttpServletResponse response) throws IOException {
 
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -114,7 +114,7 @@ public class StudentController {
     @GetMapping("/export/multiSheet/page")
     public ResponseResult<ExportResultVO> exportPageMultiSheet(HttpServletResponse response) throws IOException {
 
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -133,7 +133,7 @@ public class StudentController {
     @GetMapping("/export/multiSheet/stream")
     public ResponseResult<ExportResultVO> exportStreamMultiSheet(HttpServletResponse response) throws IOException {
 
-        DownloaderRequestContext requestContext = new DownloaderRequestContext();
+        ExporterRequestContext requestContext = new ExporterRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");

@@ -13,14 +13,14 @@ public class ExecutorInterceptorSupport {
     private ExecutorInterceptorSupport() {
     }
 
-    private static final Set<DownloadExecutorInterceptor> INTERCEPTOR_LIST = new LinkedHashSet<>();
+    private static final Set<ExportExecutorInterceptor> INTERCEPTOR_LIST = new LinkedHashSet<>();
 
     /**
      * 添加拦截器
      *
      * @param interceptor 拦截器
      */
-    public static synchronized void putIfAbsent(DownloadExecutorInterceptor interceptor) {
+    public static synchronized void putIfAbsent(ExportExecutorInterceptor interceptor) {
         INTERCEPTOR_LIST.add(interceptor);
     }
 
@@ -29,7 +29,7 @@ public class ExecutorInterceptorSupport {
      *
      * @return 拦截器
      */
-    public static Set<DownloadExecutorInterceptor> getInterceptors() {
+    public static Set<ExportExecutorInterceptor> getInterceptors() {
         return INTERCEPTOR_LIST;
     }
 }

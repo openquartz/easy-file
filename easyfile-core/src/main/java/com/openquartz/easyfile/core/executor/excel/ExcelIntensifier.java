@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.executor.excel;
 
 import org.apache.poi.ss.usermodel.Workbook;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 
 /**
  * Excel增强器
@@ -14,7 +14,7 @@ public interface ExcelIntensifier {
      * @param context context
      * @return 是否启用
      */
-    default boolean enable(BaseDownloaderRequestContext context){
+    default boolean enable(BaseExporterRequestContext context){
         return true;
     }
 
@@ -23,6 +23,6 @@ public interface ExcelIntensifier {
      * @param workbook workbook
      * @param context context
      */
-    void enhance(Workbook workbook,BaseDownloaderRequestContext context);
+    void enhance(Workbook workbook, BaseExporterRequestContext context);
 
 }

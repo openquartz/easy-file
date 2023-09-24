@@ -12,7 +12,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
-import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.file.UploadService;
@@ -36,12 +36,12 @@ public class ScheduleAsyncFileHandlerAutoConfiguration {
         UploadService uploadService,
         DownloadStorageService downloadStorageService,
         FileTriggerService fileTriggerService,
-        BaseDefaultDownloadRejectExecutionHandler baseDefaultDownloadRejectExecutionHandler,
+        BaseDefaultExportRejectExecutionHandler baseDefaultExportRejectExecutionHandler,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
         return new ScheduleTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
             fileTriggerService,
             scheduleAsyncHandlerProperties,
-            baseDefaultDownloadRejectExecutionHandler);
+            baseDefaultExportRejectExecutionHandler);
     }
 
 }

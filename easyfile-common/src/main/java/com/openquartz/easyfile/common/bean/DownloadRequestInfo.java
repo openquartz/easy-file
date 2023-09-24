@@ -11,6 +11,6 @@ import lombok.Data;
 public class DownloadRequestInfo {
 
     private String downloadCode;
-    private BaseDownloaderRequestContext requestContext;
+    private BaseExporterRequestContext requestContext;
 
 }

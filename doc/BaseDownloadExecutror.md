@@ -1,6 +1,6 @@
 ## 下载器
 
-实现接口：`com.openquartz.easyfile.core.executor.BaseDownloadExecutor`
+实现接口：`com.openquartz.easyfile.core.executor.BaseExportExecutor`
 
 并注入到Spring ApplicationContext中，并使用注解 `com.openquartz.easyfile.core.annotations.FileExportExecutor`
 
@@ -11,8 +11,8 @@
 ```java
 import org.springframework.stereotype.Component;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.common.bean.DownloaderRequestContext;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.BaseWrapperSyncResponseHeader;
 
 @Component
@@ -39,27 +39,27 @@ public class ExampleExcelExecutor implements BaseDownloadExecutor, BaseWrapperSy
 
 1、分页下载支持
 
-`com.openquartz.easyfile.core.executor.PageShardingDownloadExecutor`
+`com.openquartz.easyfile.core.executor.PageShardingExportExecutor`
 
 提供更加方便的分页支持
 
-`com.openquartz.easyfile.core.executor.impl.AbstractPageDownloadExcelExecutor`
+`com.openquartz.easyfile.core.executor.impl.AbstractPageExportExcelExecutor`
 
 需要配合使用（`com.openquartz.easyfile.common.annotations.ExcelProperty`）
 
 多Sheet组下载支持
-`com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor`
+`com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetPageExportExcelExecutor`
 
 2、流式下载支持
 
-`com.openquartz.easyfile.core.executor.StreamDownloadExecutor`
+`com.openquartz.easyfile.core.executor.StreamExportExecutor`
 
 提供更加方便的流式支持
 
-`com.openquartz.easyfile.core.executor.impl.AbstractStreamDownloadExcelExecutor`
+`com.openquartz.easyfile.core.executor.impl.AbstractStreamExportExcelExecutor`
 
 多Sheet组下载支持
-`com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetStreamDownloadExcelExecutor`
+`com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetStreamExportExcelExecutor`
 
 需要配合使用(`com.openquartz.easyfile.common.annotations.ExcelProperty`)
 
@@ -76,7 +76,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.example.utils.WaterMarkExcelUtil;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifier;
 
@@ -282,10 +282,10 @@ excel的导出支持1:* 的数据单元行列的导出。例如：\
 EasyFile 提供两个执行器
 
 - 流式-多Sheet组导出
-  `com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetStreamDownloadExcelExecutor`
+  `com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetStreamExportExcelExecutor`
 
 - 分页-多Sheet组导出
-  `com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetPageDownloadExcelExecutor`
+  `com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetPageExportExcelExecutor`
 
 #### 优化建议
 
@@ -296,7 +296,7 @@ EasyFile 提供两个执行器
 设置过大,会对内存有一定的压力。过小则会频繁的刷新数据到磁盘中,CPU容器上升。\
 3、针对分页/流式导出 使用时设置一次查询行数,需要合理设置 \
 分页导出时,需要注意分页的分页大小的设置 \
-流式导出时,需要注意增强数据缓存的长度即方法`com.openquartz.easyfile.core.executor.impl.AbstractStreamDownloadExcelExecutor.enhanceLength`
+流式导出时,需要注意增强数据缓存的长度即方法`com.openquartz.easyfile.core.executor.impl.AbstractStreamExportExcelExecutor.enhanceLength`
 
 #### 内存性能验证
 
@@ -319,7 +319,7 @@ easyfile.download.excel-row-access-window-size=100
 
 针对异步导出大文件时,可以进行实时的上报执行进度。入口`com.openquartz.easyfile.core.executor.ExecuteProcessProbe.report`
 针对使用默认的流式导出和分页导出已经支持自动上报进度。 \
-如果自定义实现基础类(`com.openquartz.easyfile.core.executor.BaseDownloadExecutor`)时,需要用户调用执行进度接口上报执行进度。
+如果自定义实现基础类(`com.openquartz.easyfile.core.executor.BaseExportExecutor`)时,需要用户调用执行进度接口上报执行进度。
 执行进度会展示在 `EasyFile UI 管理界面`
 中的`执行进度`列中
 
@@ -327,20 +327,20 @@ easyfile.download.excel-row-access-window-size=100
 
 #### 下载器发布监听支持
 
-`easy-file` 在用户提交导出请求后.会在导出的前后发布导出开始事件(`com.openquartz.easyfile.core.intercept.listener.DownloadStartEvent`) \
-用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.listener.DownloadStartListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
+`easy-file` 在用户提交导出请求后.会在导出的前后发布导出开始事件(`com.openquartz.easyfile.core.intercept.listener.ExportStartEvent`) \
+用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.listener.ExportStartListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
 
-`easy-file` 在用户提交导出请求后.会在导出的提交完成后发布导出完成事件(`com.openquartz.easyfile.core.intercept.listener.DownloadEndEvent`) \
-用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.listener.DownloadEndListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
+`easy-file` 在用户提交导出请求后.会在导出的提交完成后发布导出完成事件(`com.openquartz.easyfile.core.intercept.listener.ExportEndEvent`) \
+用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.listener.ExportEndListener`),并注入Spring工厂。实现针对开始导出事件的监听处理。
 
-注意：针对异步下载,导出结束事件(`com.openquartz.easyfile.core.intercept.listener.DownloadEndEvent`) 是指提交异步导出请求之后,并非实际执行完成之后。
+注意：针对异步下载,导出结束事件(`com.openquartz.easyfile.core.intercept.listener.ExportEndEvent`) 是指提交异步导出请求之后,并非实际执行完成之后。
 但是针对同步导出情况时,是指在导出文件方法执行之后。
 
 **使用场景**: 自定义业务打点监控,打点耗时; 自定义用户提交流量拦截限流; 特殊导出参数拦截(例如：安全参数校验) 等等;
 
 #### 异步下载器执行拦截支持
 
-在异步下载器实际导出逻辑处理时。`easy-file` 提供了 拦截支持。用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.DownloadExecutorInterceptor`),
+在异步下载器实际导出逻辑处理时。`easy-file` 提供了 拦截支持。用户可以自定义实现接口(`com.openquartz.easyfile.core.intercept.ExportExecutorInterceptor`),
 并注入到Spring 工厂中。\
 如果存在多个执行拦截器的顺序是： 前置拦截从小到大顺序执行; 后置拦截从大到小顺序执行;
 

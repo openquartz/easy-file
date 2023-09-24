@@ -1,16 +1,16 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileHandlerAdapter;
-import com.openquartz.easyfile.core.executor.trigger.DownloadTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
@@ -46,7 +46,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
     }
 
     @Override
-    public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
+    public void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
         super.execute(executor, baseRequest, registerId);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
             @Override
@@ -62,7 +62,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
 
     private void doSend(Long registerId) {
         //发送消息
-        DownloadTriggerMessage triggerMessage = new DownloadTriggerMessage();
+        ExportTriggerMessage triggerMessage = new ExportTriggerMessage();
         triggerMessage.setRegisterId(registerId);
         triggerMessage.setTriggerTimestamp(System.currentTimeMillis());
         boolean send = mqTriggerProducer.send(triggerMessage);
@@ -91,7 +91,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
     }
 
     @Override
-    public void handle(DownloadTriggerMessage message) {
+    public void handle(ExportTriggerMessage message) {
         // 查詢
         DownloadTriggerEntry triggerEntry = triggerService
             .getTriggerRegisterId(message.getRegisterId(), handlerProperties.getMaxTriggerCount());

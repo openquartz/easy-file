@@ -25,7 +25,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.bean.Notifier;
@@ -526,13 +526,13 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         return requestInfo;
     }
 
-    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
-        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
-        baseDownloaderRequestContext.setNotifier(registerRequest.getNotifier());
-        baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
-        baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
-        baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
-        return baseDownloaderRequestContext;
+    private BaseExporterRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseExporterRequestContext baseExporterRequestContext = new BaseExporterRequestContext();
+        baseExporterRequestContext.setNotifier(registerRequest.getNotifier());
+        baseExporterRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseExporterRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseExporterRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseExporterRequestContext;
     }
 
     @Override

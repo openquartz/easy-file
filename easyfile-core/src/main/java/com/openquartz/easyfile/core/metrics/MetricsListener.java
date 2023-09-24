@@ -1,10 +1,10 @@
 package com.openquartz.easyfile.core.metrics;
 
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.core.intercept.listener.DownloadEndEvent;
-import com.openquartz.easyfile.core.intercept.listener.DownloadEndListener;
-import com.openquartz.easyfile.core.intercept.listener.DownloadStartEvent;
-import com.openquartz.easyfile.core.intercept.listener.DownloadStartListener;
+import com.openquartz.easyfile.core.intercept.listener.ExportEndEvent;
+import com.openquartz.easyfile.core.intercept.listener.ExportEndListener;
+import com.openquartz.easyfile.core.intercept.listener.ExportStartEvent;
+import com.openquartz.easyfile.core.intercept.listener.ExportStartListener;
 import com.openquartz.easyfile.metrics.api.constants.MetricsKeyConstants;
 import com.openquartz.easyfile.metrics.api.reporter.MetricsReporter;
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  *
  * @author svnee
  */
-public class MetricsListener implements DownloadStartListener, DownloadEndListener {
+public class MetricsListener implements ExportStartListener, ExportEndListener {
 
     private final Map<String, LocalDateTime> downloadTimerMap = new ConcurrentHashMap<>();
 
@@ -34,7 +34,7 @@ public class MetricsListener implements DownloadStartListener, DownloadEndListen
     }
 
     @Override
-    public void listen(DownloadStartEvent startEvent) {
+    public void listen(ExportStartEvent startEvent) {
         downloadTimerMap.put(startEvent.getDownloadTraceId(), LocalDateTime.now());
 
         FileExportExecutor exportExecutor = startEvent.getExecutor().getClass()
@@ -50,7 +50,7 @@ public class MetricsListener implements DownloadStartListener, DownloadEndListen
     }
 
     @Override
-    public void listen(DownloadEndEvent endEvent) {
+    public void listen(ExportEndEvent endEvent) {
 
         FileExportExecutor exportExecutor = endEvent.getExecutor().getClass()
             .getDeclaredAnnotation(FileExportExecutor.class);

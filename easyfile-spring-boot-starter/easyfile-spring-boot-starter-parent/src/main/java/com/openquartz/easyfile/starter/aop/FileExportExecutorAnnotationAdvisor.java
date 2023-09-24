@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.starter.aop;
 
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import java.lang.reflect.Method;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
@@ -37,9 +37,9 @@ public class FileExportExecutorAnnotationAdvisor extends AbstractPointcutAdvisor
     private Pointcut buildPointcut() {
         Pointcut clazzPoint = new AnnotationMatchingPointcut(FileExportExecutor.class, false);
         FullyQualifiedNameMethodPoint exportResultPoint = new FullyQualifiedNameMethodPoint(
-            BaseDownloadExecutor.class, EXPORT_RESULT_METHOD_NAME);
+            BaseExportExecutor.class, EXPORT_RESULT_METHOD_NAME);
         FullyQualifiedNameMethodPoint exportPoint = new FullyQualifiedNameMethodPoint(
-            BaseDownloadExecutor.class, EXPORT_METHOD_NAME);
+            BaseExportExecutor.class, EXPORT_METHOD_NAME);
 
         return new ComposablePointcut(exportPoint).union(exportResultPoint).intersection(clazzPoint);
     }
