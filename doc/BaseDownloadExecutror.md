@@ -11,7 +11,7 @@
 ```java
 import org.springframework.stereotype.Component;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.BaseWrapperSyncResponseHeader;
 
@@ -76,7 +76,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.example.utils.WaterMarkExcelUtil;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifier;
 

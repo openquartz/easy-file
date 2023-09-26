@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.example.downloader;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetPageExportExcelExecutor;
 import com.openquartz.easyfile.example.model.School;
 import java.util.Comparator;
@@ -34,12 +34,12 @@ public class StudentMultiSheetPageExportDemoExecutor extends
     private final StudentMapper studentMapper;
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
     @Override
-    public List<School> sheetPrefix(BaseExporterRequestContext context) {
+    public List<School> sheetPrefix(BaseExportRequestContext context) {
         return schoolMapper.selectAll().stream()
             .sorted((Comparator.comparing(School::getId)))
             .collect(Collectors.toList());
@@ -54,7 +54,7 @@ public class StudentMultiSheetPageExportDemoExecutor extends
     }
 
     @Override
-    public Pair<Long, List<Student>> shardingData(BaseExporterRequestContext context, School sheetGroup, Page page,
+    public Pair<Long, List<Student>> shardingData(BaseExportRequestContext context, School sheetGroup, Page page,
         Long cursorId) {
         List<Student> studentList = studentMapper
             .findByMinIdAndSchoolIdLimit(cursorId, sheetGroup.getId(), page.getPageSize());

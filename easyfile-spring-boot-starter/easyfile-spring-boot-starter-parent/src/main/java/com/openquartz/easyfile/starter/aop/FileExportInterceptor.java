@@ -3,7 +3,7 @@ package com.openquartz.easyfile.starter.aop;
 import static com.openquartz.easyfile.core.exception.ExportErrorCode.FILE_GENERATOR_MUST_SUPPORT_ANNOTATION;
 import static com.openquartz.easyfile.core.exception.ExportErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
@@ -76,7 +76,7 @@ public class FileExportInterceptor implements MethodInterceptor {
 
         Object[] args = invocation.getArguments();
         BaseExportExecutor executor = (BaseExportExecutor) invocation.getThis();
-        ExporterRequestContext requestContext = (ExporterRequestContext) args[0];
+        ExportRequestContext requestContext = (ExportRequestContext) args[0];
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
         FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
         Asserts.notNull(exportExecutor, FILE_GENERATOR_MUST_SUPPORT_ANNOTATION);
@@ -157,7 +157,7 @@ public class FileExportInterceptor implements MethodInterceptor {
      * @return 执行结果
      */
     private Pair<Boolean, Long> executeAsync(MethodInvocation pjp, BaseExportExecutor executor,
-        ExporterRequestContext requestContext, FileExportExecutor exportExecutor) {
+        ExportRequestContext requestContext, FileExportExecutor exportExecutor) {
         // 先执行同步注册
         RegisterDownloadRequest downloadRequest = buildDownloadRequest(exportExecutor, requestContext);
         TransactionTemplate template = context.getBean(TransactionTemplate.class);
@@ -181,7 +181,7 @@ public class FileExportInterceptor implements MethodInterceptor {
      * @param requestContext 请求上下文
      * @param async 是否异步
      */
-    private void publishDownloadEndEvent(BaseExportExecutor executor, ExporterRequestContext requestContext,
+    private void publishDownloadEndEvent(BaseExportExecutor executor, ExportRequestContext requestContext,
         boolean async, Throwable exception, Object result, String downloadTraceId) {
 
         ExportEndEvent endEvent = new ExportEndEvent(requestContext, executor, async, exception, result,
@@ -202,7 +202,7 @@ public class FileExportInterceptor implements MethodInterceptor {
      * @param requestContext 请求上下文
      * @param async 是否异步
      */
-    private void publishDownloadStartEvent(BaseExportExecutor executor, ExporterRequestContext requestContext,
+    private void publishDownloadStartEvent(BaseExportExecutor executor, ExportRequestContext requestContext,
         boolean async,
         String downloadTraceId) {
 
@@ -217,7 +217,7 @@ public class FileExportInterceptor implements MethodInterceptor {
     }
 
     private ExportLimitingRequest buildLimitingRequest(FileExportExecutor executor,
-        ExporterRequestContext requestContext) {
+        ExportRequestContext requestContext) {
         ExportLimitingRequest limitingRequest = new ExportLimitingRequest();
         limitingRequest.setAppId(downloadProperties.getAppId());
         limitingRequest.setIpAddr(IpUtil.getIp());
@@ -228,7 +228,7 @@ public class FileExportInterceptor implements MethodInterceptor {
     }
 
     private RegisterDownloadRequest buildDownloadRequest(FileExportExecutor executor,
-        ExporterRequestContext requestContext) {
+        ExportRequestContext requestContext) {
 
         RegisterDownloadRequest registerRequest = new RegisterDownloadRequest();
         registerRequest.setAppId(downloadProperties.getAppId());

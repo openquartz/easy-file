@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.example.downloader;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.example.model.ExcelModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class ExcelExportDemoExecutor extends AbstractPageExportExcelExecutor<Exc
     }
 
     @Override
-    public Pair<Long, List<ExcelModel>> shardingData(BaseExporterRequestContext context, Page page, Long maxId) {
+    public Pair<Long, List<ExcelModel>> shardingData(BaseExportRequestContext context, Page page, Long maxId) {
 
         ArrayList<ExcelModel> list = Lists.newArrayList();
         for (int i = 0; i < page.getTotal(); i++) {
@@ -40,7 +40,7 @@ public class ExcelExportDemoExecutor extends AbstractPageExportExcelExecutor<Exc
     }
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return false;
     }
 }

@@ -3,12 +3,12 @@ package com.openquartz.easyfile.example.downloader;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.write.metadata.WriteSheet;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import java.util.List;
 import javax.annotation.Resource;
 import org.springframework.stereotype.Component;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
 import com.openquartz.easyfile.example.mapper.StudentMapper;
 import com.openquartz.easyfile.example.model.Student;
 import com.openquartz.easyfile.core.executor.impl.AbstractExportExcel07Executor;
@@ -26,12 +26,12 @@ public class StudentExportDemoExecutor extends AbstractExportExcel07Executor {
     private StudentMapper studentMapper;
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
     @Override
-    public void export(ExporterRequestContext context) {
+    public void export(ExportRequestContext context) {
         List<Student> list = studentMapper.selectAll();
         ExcelWriter excelWriter = null;
         try {

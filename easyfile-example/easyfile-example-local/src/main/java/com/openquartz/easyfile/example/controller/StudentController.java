@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.example.controller;
 
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class StudentController {
 
     @GetMapping("/export/get")
     public ResponseResult<ExportResultVO> getExport(HttpServletResponse response) throws IOException {
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -56,7 +56,7 @@ public class StudentController {
     @GetMapping("/export/stream")
     public ResponseResult<ExportResultVO> export(HttpServletResponse response) throws IOException {
 
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -75,7 +75,7 @@ public class StudentController {
     @GetMapping("/export/stream/merge")
     public ResponseResult<ExportResultVO> exportMerge(HttpServletResponse response) throws IOException {
 
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -94,7 +94,7 @@ public class StudentController {
     @GetMapping("/export/page")
     public ResponseResult<ExportResultVO> exportPage(HttpServletResponse response) throws IOException {
 
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -114,7 +114,7 @@ public class StudentController {
     @GetMapping("/export/multiSheet/page")
     public ResponseResult<ExportResultVO> exportPageMultiSheet(HttpServletResponse response) throws IOException {
 
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");
@@ -133,7 +133,7 @@ public class StudentController {
     @GetMapping("/export/multiSheet/stream")
     public ResponseResult<ExportResultVO> exportStreamMultiSheet(HttpServletResponse response) throws IOException {
 
-        ExporterRequestContext requestContext = new ExporterRequestContext();
+        ExportRequestContext requestContext = new ExportRequestContext();
         requestContext.setOut(response.getOutputStream());
         requestContext.setFileSuffix(FileSuffixEnum.EXCEL_07.getFullFileSuffix());
         requestContext.setExportRemark("StudentExport备注");

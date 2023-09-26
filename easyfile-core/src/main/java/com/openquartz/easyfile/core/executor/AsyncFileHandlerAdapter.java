@@ -4,8 +4,8 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.FileSuffixEnum;
@@ -68,13 +68,13 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
     }
 
     @Override
-    public boolean handle(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    public boolean handle(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         ExportResult exportResult = this.handleResult(executor, baseRequest, registerId);
         return HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
     }
 
     @Override
-    public ExportResult handleResult(BaseExportExecutor executor, BaseExporterRequestContext baseRequest,
+    public ExportResult handleResult(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
         Long registerId) {
         // 查询导出执行器FileExportExecutor
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
@@ -131,14 +131,14 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         return exportResult;
     }
 
-    private void afterHandle(BaseExportExecutor executor, BaseExporterRequestContext baseRequest,
+    private void afterHandle(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
         ExportResult result, InterceptorContext interceptorContext) {
         ExecutorInterceptorSupport.getInterceptors().stream()
             .sorted(((o1, o2) -> o2.order() - o1.order()))
             .forEach(interceptor -> interceptor.afterExecute(executor, baseRequest, result, interceptorContext));
     }
 
-    private void beforeHandle(BaseExportExecutor executor, BaseExporterRequestContext baseRequest,
+    private void beforeHandle(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
         Long registerId, InterceptorContext interceptorContext) {
         ExecutorInterceptorSupport.getInterceptors().stream()
             .sorted((Comparator.comparingInt(ExportExecutorInterceptor::order)))
@@ -152,7 +152,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
      * @param baseRequest 请求
      * @param registerId 注册ID
      */
-    public void doExecute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    public void doExecute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         logger.info("[AsyncFileHandlerAdapter#execute]start,execute!registerId:{}", registerId);
         ExportResult result = null;
         InterceptorContext interceptorContext = InterceptorContext.newInstance();
@@ -172,7 +172,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         logger.info("[AsyncFileHandlerAdapter#execute]end,execute!registerId:{}", registerId);
     }
 
-    private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseExporterRequestContext baseRequest,
+    private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseExportRequestContext baseRequest,
         FileExportExecutor exportExecutor,
         Long registerId) {
         LoadingExportCacheRequest loadingExportCacheRequest = new LoadingExportCacheRequest();
@@ -194,7 +194,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
      */
     private GenerateFileResult generateFile(BaseExportExecutor executor,
         FileExportExecutor exportExecutor,
-        BaseExporterRequestContext baseRequest,
+        BaseExportRequestContext baseRequest,
         Long registerId,
         String tempLocalFilePath) {
 
@@ -245,7 +245,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
                 ExecuteProcessProbe.setCurrentReporter(reporter);
                 reporter.start();
 
-                ExporterRequestContext requestContext = buildRequestDownloaderRequest(out, baseRequest);
+                ExportRequestContext requestContext = buildRequestDownloaderRequest(out, baseRequest);
                 executor.export(requestContext);
 
                 // report complete
@@ -327,7 +327,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
      */
     private HandleFileResult handleFileWithRetry(BaseExportExecutor executor,
         FileExportExecutor exportExecutor,
-        BaseExporterRequestContext baseRequest,
+        BaseExportRequestContext baseRequest,
         Long registerId) {
 
         // 针对IO 异常重试3次
@@ -409,9 +409,9 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
         return exportResult;
     }
 
-    private ExporterRequestContext buildRequestDownloaderRequest(OutputStream out,
-        BaseExporterRequestContext baseRequest) {
-        ExporterRequestContext downloaderRequest = new ExporterRequestContext();
+    private ExportRequestContext buildRequestDownloaderRequest(OutputStream out,
+        BaseExportRequestContext baseRequest) {
+        ExportRequestContext downloaderRequest = new ExportRequestContext();
         downloaderRequest.setOut(out);
         downloaderRequest.setNotifier(baseRequest.getNotifier());
         downloaderRequest.setFileSuffix(baseRequest.getFileSuffix());

@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.metrics;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.response.ExportResult;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
@@ -33,7 +33,7 @@ public class ExportMetricsListener implements ExportExecutorInterceptor {
     private static final String START_TIME_KEY = "startTimestamp";
 
     @Override
-    public void beforeExecute(BaseExportExecutor executor, BaseExporterRequestContext context, Long registerId,
+    public void beforeExecute(BaseExportExecutor executor, BaseExportRequestContext context, Long registerId,
         InterceptorContext interceptorContext) {
 
         try {
@@ -53,7 +53,7 @@ public class ExportMetricsListener implements ExportExecutorInterceptor {
     }
 
     @Override
-    public void afterExecute(BaseExportExecutor executor, BaseExporterRequestContext context, ExportResult result,
+    public void afterExecute(BaseExportExecutor executor, BaseExportRequestContext context, ExportResult result,
         InterceptorContext interceptorContext) {
 
         try {

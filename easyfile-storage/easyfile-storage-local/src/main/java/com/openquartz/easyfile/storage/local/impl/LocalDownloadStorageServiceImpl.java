@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.storage.local.impl;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
 import com.openquartz.easyfile.storage.local.convertor.AsyncDownloadRecordConverter;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -368,13 +368,13 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         return requestInfo;
     }
 
-    private BaseExporterRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
-        BaseExporterRequestContext baseExporterRequestContext = new BaseExporterRequestContext();
-        baseExporterRequestContext.setNotifier(registerRequest.getNotifier());
-        baseExporterRequestContext.setFileSuffix(registerRequest.getFileSuffix());
-        baseExporterRequestContext.setExportRemark(registerRequest.getExportRemark());
-        baseExporterRequestContext.setOtherMap(registerRequest.getOtherMap());
-        return baseExporterRequestContext;
+    private BaseExportRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseExportRequestContext baseExportRequestContext = new BaseExportRequestContext();
+        baseExportRequestContext.setNotifier(registerRequest.getNotifier());
+        baseExportRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseExportRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseExportRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseExportRequestContext;
     }
 
     @Override

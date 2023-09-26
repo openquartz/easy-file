@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.executor.excel;
 
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import java.util.Collections;
 import java.util.List;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,7 +28,7 @@ public interface ExcelIntensifierExecutor {
      * @param workbook workbook
      * @param context context
      */
-    default void executeEnhance(Workbook workbook, ExporterRequestContext context) {
+    default void executeEnhance(Workbook workbook, ExportRequestContext context) {
         if (CollectionUtils.isEmpty(enhanceExcel())) {
             return;
         }

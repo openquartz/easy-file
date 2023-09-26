@@ -2,6 +2,7 @@ package com.openquartz.easyfile.server.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.server.convertor.AsyncDownloadRecordConverter;
 import com.openquartz.easyfile.server.entity.AsyncFileTask;
 import com.openquartz.easyfile.server.service.executor.ExportLimitingExecutor;
@@ -25,7 +26,6 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.bean.Notifier;
@@ -526,13 +526,13 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         return requestInfo;
     }
 
-    private BaseExporterRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
-        BaseExporterRequestContext baseExporterRequestContext = new BaseExporterRequestContext();
-        baseExporterRequestContext.setNotifier(registerRequest.getNotifier());
-        baseExporterRequestContext.setFileSuffix(registerRequest.getFileSuffix());
-        baseExporterRequestContext.setExportRemark(registerRequest.getExportRemark());
-        baseExporterRequestContext.setOtherMap(registerRequest.getOtherMap());
-        return baseExporterRequestContext;
+    private BaseExportRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
+        BaseExportRequestContext baseExportRequestContext = new BaseExportRequestContext();
+        baseExportRequestContext.setNotifier(registerRequest.getNotifier());
+        baseExportRequestContext.setFileSuffix(registerRequest.getFileSuffix());
+        baseExportRequestContext.setExportRemark(registerRequest.getExportRemark());
+        baseExportRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseExportRequestContext;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.intercept.listener;
 
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 
 /**
@@ -13,7 +13,7 @@ public class ExportEndEvent {
     /**
      * 请求上下文
      */
-    private final ExporterRequestContext requestContext;
+    private final ExportRequestContext requestContext;
 
     /**
      * 下载执行器
@@ -40,7 +40,7 @@ public class ExportEndEvent {
      */
     private final String downloadTraceId;
 
-    public ExportEndEvent(ExporterRequestContext requestContext,
+    public ExportEndEvent(ExportRequestContext requestContext,
         BaseExportExecutor executor,
         boolean enableAsync,
         Throwable exception,
@@ -58,7 +58,7 @@ public class ExportEndEvent {
         return exception;
     }
 
-    public ExporterRequestContext getRequestContext() {
+    public ExportRequestContext getRequestContext() {
         return requestContext;
     }
 

@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.executor.impl;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.ExecuteProcessProbe;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifierExecutor;
@@ -40,7 +40,7 @@ public abstract class AbstractMultiSheetPageExportExcelExecutor<T, G>
      * @param context context
      * @return export class group
      */
-    public Class<?>[] exportGroup(BaseExporterRequestContext context) {
+    public Class<?>[] exportGroup(BaseExportRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractMultiSheetPageExportExcelExecutor<T, G>
      * @param context context
      * @return sheet-group
      */
-    public abstract List<G> sheetPrefix(BaseExporterRequestContext context);
+    public abstract List<G> sheetPrefix(BaseExportRequestContext context);
 
     /**
      * 用于传递参数
@@ -70,11 +70,11 @@ public abstract class AbstractMultiSheetPageExportExcelExecutor<T, G>
      * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
      * @return 当前最大ID key: cursorId, value: resultList
      */
-    public abstract Pair<Long, List<T>> shardingData(BaseExporterRequestContext context, G sheetGroup, Page page,
+    public abstract Pair<Long, List<T>> shardingData(BaseExportRequestContext context, G sheetGroup, Page page,
         Long cursorId);
 
     @Override
-    public void export(ExporterRequestContext context) {
+    public void export(ExportRequestContext context) {
 
         List<G> sheetGroupList = sheetPrefix(context);
 

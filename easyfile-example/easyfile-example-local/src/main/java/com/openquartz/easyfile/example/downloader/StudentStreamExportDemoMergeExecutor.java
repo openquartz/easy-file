@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.example.downloader;
 
 import com.google.common.collect.ImmutableList;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.core.executor.impl.AbstractStreamExportExcelExecutor;
 import com.openquartz.easyfile.example.model.Address;
 import com.openquartz.easyfile.example.model.Feature;
@@ -73,7 +73,7 @@ public class StudentStreamExportDemoMergeExecutor extends
     }
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
@@ -83,7 +83,7 @@ public class StudentStreamExportDemoMergeExecutor extends
     }
 
     @Override
-    public Cursor<Student> streamQuery(SqlSession session, BaseExporterRequestContext context) {
+    public Cursor<Student> streamQuery(SqlSession session, BaseExportRequestContext context) {
         return session.getMapper(StudentMapper.class).scan(1000);
     }
 }

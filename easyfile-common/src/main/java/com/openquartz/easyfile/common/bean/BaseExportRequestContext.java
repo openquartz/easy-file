@@ -11,7 +11,7 @@ import lombok.Data;
  * @author svnee
  */
 @Data
-public class BaseExporterRequestContext {
+public class BaseExportRequestContext {
 
     /**
      * 操作人

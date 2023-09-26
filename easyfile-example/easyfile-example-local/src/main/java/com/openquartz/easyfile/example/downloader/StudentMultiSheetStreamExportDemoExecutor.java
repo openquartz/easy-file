@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.example.downloader;
 
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.core.executor.impl.AbstractMultiSheetStreamExportExcelExecutor;
 import com.openquartz.easyfile.example.model.School;
 import java.util.Comparator;
@@ -12,7 +13,6 @@ import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.stereotype.Component;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.example.mapper.SchoolMapper;
 import com.openquartz.easyfile.example.mapper.StudentMapper;
 import com.openquartz.easyfile.example.model.Student;
@@ -36,7 +36,7 @@ public class StudentMultiSheetStreamExportDemoExecutor extends
     }
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
@@ -53,7 +53,7 @@ public class StudentMultiSheetStreamExportDemoExecutor extends
     }
 
     @Override
-    public Cursor<Student> streamQuery(SqlSession session, BaseExporterRequestContext context, School sheetGroup) {
+    public Cursor<Student> streamQuery(SqlSession session, BaseExportRequestContext context, School sheetGroup) {
         return session.getMapper(StudentMapper.class).scanBySchool(10000000, sheetGroup.getId());
     }
 }

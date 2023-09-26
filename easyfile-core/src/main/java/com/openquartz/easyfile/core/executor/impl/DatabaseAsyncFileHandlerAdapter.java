@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.executor.impl;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.request.DownloadTriggerRequest;
@@ -49,7 +49,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
     }
 
     @Override
-    public void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    public void execute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         DownloadTriggerRequest triggerRequest = new DownloadTriggerRequest();
         triggerRequest.setRegisterId(registerId);
         triggerService.trigger(triggerRequest);

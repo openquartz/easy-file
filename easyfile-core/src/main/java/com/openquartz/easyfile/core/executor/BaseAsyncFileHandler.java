@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.executor;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
 import com.openquartz.easyfile.common.response.ExportResult;
 
@@ -21,7 +21,7 @@ public interface BaseAsyncFileHandler {
      * @param registerId 注册下载任务ID
      * @return 处理结果 成功/失败
      */
-    default boolean handle(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    default boolean handle(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         ExportResult exportResult = handleResult(executor, baseRequest, registerId);
         return HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus());
     }
@@ -34,7 +34,7 @@ public interface BaseAsyncFileHandler {
      * @param registerId 注册下载任务ID
      * @return 处理结果 成功/失败
      */
-    ExportResult handleResult(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId);
+    ExportResult handleResult(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId);
 
     /**
      * 异步文件执行器
@@ -44,7 +44,7 @@ public interface BaseAsyncFileHandler {
      * @param baseRequest 基础请求
      * @param registerId 注册下载任务ID
      */
-    default void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    default void execute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         handle(executor, baseRequest, registerId);
     }
 }

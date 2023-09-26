@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.example.downloader;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.example.model.School;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class StudentStreamExportDemoExecutor extends
     }
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
@@ -64,7 +64,7 @@ public class StudentStreamExportDemoExecutor extends
     }
 
     @Override
-    public Cursor<Student> streamQuery(SqlSession session, BaseExporterRequestContext context) {
+    public Cursor<Student> streamQuery(SqlSession session, BaseExportRequestContext context) {
         return session.getMapper(StudentMapper.class).scan(10000000);
     }
 }

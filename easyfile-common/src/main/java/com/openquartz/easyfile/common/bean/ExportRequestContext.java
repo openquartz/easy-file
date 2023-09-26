@@ -8,7 +8,7 @@ import java.util.Objects;
  *
  * @author svnee
  */
-public final class ExporterRequestContext extends BaseExporterRequestContext {
+public final class ExportRequestContext extends BaseExportRequestContext {
 
     /**
      * 输出流对象
@@ -35,7 +35,7 @@ public final class ExporterRequestContext extends BaseExporterRequestContext {
         if (!super.equals(o)) {
             return false;
         }
-        ExporterRequestContext that = (ExporterRequestContext) o;
+        ExportRequestContext that = (ExportRequestContext) o;
         return Objects.equals(out, that.out);
     }
 

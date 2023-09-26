@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.executor;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.response.ExportResult;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
@@ -20,7 +20,7 @@ public interface BaseExportExecutor {
      * @param context 上下文请求对象
      * @return 开启异步
      */
-    boolean enableAsync(BaseExporterRequestContext context);
+    boolean enableAsync(BaseExportRequestContext context);
 
     /**
      * 开启导出缓存
@@ -28,7 +28,7 @@ public interface BaseExportExecutor {
      * @param context context
      * @return 是否开启缓存
      */
-    default boolean enableExportCache(BaseExporterRequestContext context) {
+    default boolean enableExportCache(BaseExportRequestContext context) {
         return false;
     }
 
@@ -38,20 +38,20 @@ public interface BaseExportExecutor {
      *
      * @param context context
      */
-    void export(ExporterRequestContext context);
+    void export(ExportRequestContext context);
 
     /**
      * 导出方法
      * 用于调用
      * 实现时是同步下载逻辑
      * <p>
-     * 当{@link #enableAsync(BaseExporterRequestContext)} 为true 时,
+     * 当{@link #enableAsync(BaseExportRequestContext)} 为true 时,
      * key: true, value: 为 registerId
      *
      * @param context 上下文请求对象
      * @return key:下载是否是异步, value:导出ID(异步下载文件注册ID)
      */
-    default Pair<Boolean, Long> exportResult(ExporterRequestContext context) {
+    default Pair<Boolean, Long> exportResult(ExportRequestContext context) {
         export(context);
         return Pair.of(Boolean.FALSE, null);
     }
@@ -62,7 +62,7 @@ public interface BaseExportExecutor {
      * @param result result
      * @param context 请求上下文
      */
-    default void asyncCompleteCallback(ExportResult result, BaseExporterRequestContext context) {
+    default void asyncCompleteCallback(ExportResult result, BaseExportRequestContext context) {
     }
 
 }

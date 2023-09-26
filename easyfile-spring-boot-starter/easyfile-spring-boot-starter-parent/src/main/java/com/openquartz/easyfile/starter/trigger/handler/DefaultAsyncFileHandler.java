@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.core.exception.ExportRejectExecuteException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
@@ -8,7 +9,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.core.executor.AsyncFileHandlerAdapter;
 import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
@@ -57,7 +57,7 @@ public class DefaultAsyncFileHandler extends AsyncFileHandlerAdapter {
     }
 
     @Override
-    public void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    public void execute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         executorService.execute(() -> doExecute(executor, baseRequest, registerId));
     }
 }

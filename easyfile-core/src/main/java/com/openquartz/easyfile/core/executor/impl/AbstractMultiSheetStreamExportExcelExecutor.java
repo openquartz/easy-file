@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.core.executor.impl;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.ExecuteProcessProbe;
 import com.openquartz.easyfile.core.executor.StreamExportExecutor;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifierExecutor;
@@ -10,7 +11,6 @@ import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
 import com.openquartz.easyfile.common.bean.excel.ExcelBean;
 import com.openquartz.easyfile.common.bean.excel.ExcelBeanUtils;
 import com.openquartz.easyfile.common.bean.excel.ExcelExports;
@@ -36,7 +36,7 @@ public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Clos
      * @param context context
      * @return export class group
      */
-    public Class<?>[] exportGroup(BaseExporterRequestContext context) {
+    public Class<?>[] exportGroup(BaseExportRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -64,10 +64,10 @@ public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Clos
      * @param sheetGroup sheetGroup
      * @return 流式查询结果
      */
-    public abstract R streamQuery(S session, BaseExporterRequestContext context, G sheetGroup);
+    public abstract R streamQuery(S session, BaseExportRequestContext context, G sheetGroup);
 
     @Override
-    public void export(ExporterRequestContext context) {
+    public void export(ExportRequestContext context) {
 
         List<G> sheetGroupList = sheetPrefix();
         if (CollectionUtils.isEmpty(sheetGroupList)) {

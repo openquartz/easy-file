@@ -1,13 +1,13 @@
 package com.openquartz.easyfile.core.executor.impl;
 
-import com.openquartz.easyfile.common.bean.ExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
+import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.ExecuteProcessProbe;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifierExecutor;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
 import lombok.extern.slf4j.Slf4j;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.util.page.Page;
 import com.openquartz.easyfile.common.util.page.PageTotal;
 import com.openquartz.easyfile.common.util.page.PageTotalContext;
@@ -41,7 +41,7 @@ public abstract class AbstractPageExportExcelExecutor<T>
      * @param context context
      * @return export class group
      */
-    public Class<?>[] exportGroup(BaseExporterRequestContext context) {
+    public Class<?>[] exportGroup(BaseExportRequestContext context) {
         return new Class<?>[]{Default.class};
     }
 
@@ -58,7 +58,7 @@ public abstract class AbstractPageExportExcelExecutor<T>
      * 导出实现
      */
     @Override
-    public void export(ExporterRequestContext context) {
+    public void export(ExportRequestContext context) {
         PageTotal total;
         if (PageTotalContext.currentPageToTal(sheetPrefix()) != null) {
             total = PageTotalContext.currentPageToTal(sheetPrefix());

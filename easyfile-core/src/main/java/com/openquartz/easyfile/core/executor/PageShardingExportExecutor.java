@@ -1,8 +1,8 @@
 package com.openquartz.easyfile.core.executor;
 
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import java.util.List;
 import java.util.Map;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.util.page.Page;
 import com.openquartz.easyfile.common.util.page.PageTotal;
 import com.openquartz.easyfile.common.bean.Pair;
@@ -31,6 +31,6 @@ public interface PageShardingExportExecutor<T> extends BaseExportExecutor {
      * @param cursorId 当前滚动的分页的游标ID,可以是使用ID 做最大最小值传递。主要是用于优化传递分页查询速度
      * @return 当前最大ID key: cursorId,value: resultList
      */
-    Pair<Long, List<T>> shardingData(BaseExporterRequestContext context, Page page, Long cursorId);
+    Pair<Long, List<T>> shardingData(BaseExportRequestContext context, Page page, Long cursorId);
 
 }

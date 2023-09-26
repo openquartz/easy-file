@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.example.downloader;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.example.excel.WaterMarkExcelIntensifier;
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +29,7 @@ public class StudentPageExportDemoExecutor extends AbstractPageExportExcelExecut
     private StudentMapper studentMapper;
 
     @Override
-    public boolean enableAsync(BaseExporterRequestContext context) {
+    public boolean enableAsync(BaseExportRequestContext context) {
         return true;
     }
 
@@ -49,7 +49,7 @@ public class StudentPageExportDemoExecutor extends AbstractPageExportExcelExecut
     }
 
     @Override
-    public Pair<Long, List<Student>> shardingData(BaseExporterRequestContext context, Page page, Long cursorId) {
+    public Pair<Long, List<Student>> shardingData(BaseExportRequestContext context, Page page, Long cursorId) {
         List<Student> studentList = studentMapper.findByMinIdLimit(cursorId, page.getPageSize());
         if (CollectionUtils.isEmpty(studentList)) {
             return Pair.of(cursorId, studentList);

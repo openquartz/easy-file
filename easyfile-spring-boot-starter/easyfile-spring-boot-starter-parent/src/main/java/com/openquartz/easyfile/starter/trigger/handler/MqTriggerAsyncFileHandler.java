@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import java.util.Comparator;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.Objects;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileHandlerAdapter;
 import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
@@ -46,7 +46,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
     }
 
     @Override
-    public void execute(BaseExportExecutor executor, BaseExporterRequestContext baseRequest, Long registerId) {
+    public void execute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         super.execute(executor, baseRequest, registerId);
         TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
             @Override

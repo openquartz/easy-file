@@ -1,6 +1,6 @@
 package com.openquartz.easyfile.core.intercept;
 
-import com.openquartz.easyfile.common.bean.BaseExporterRequestContext;
+import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.response.ExportResult;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 
@@ -29,7 +29,7 @@ public interface ExportExecutorInterceptor {
      * @param registerId 注册下载任务ID
      * @param interceptorContext 拦截上下文. 用于拦截时之前前后的上下文传递。
      */
-    void beforeExecute(BaseExportExecutor executor, BaseExporterRequestContext context, Long registerId,
+    void beforeExecute(BaseExportExecutor executor, BaseExportRequestContext context, Long registerId,
         InterceptorContext interceptorContext);
 
     /**
@@ -41,6 +41,6 @@ public interface ExportExecutorInterceptor {
      * @param result 导出结果
      * @param interceptorContext 拦截上下文.用于拦截时之前前后的上下文传递。
      */
-    void afterExecute(BaseExportExecutor executor, BaseExporterRequestContext context, ExportResult result,
+    void afterExecute(BaseExportExecutor executor, BaseExportRequestContext context, ExportResult result,
         InterceptorContext interceptorContext);
 }
