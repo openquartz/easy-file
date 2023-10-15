@@ -51,14 +51,14 @@ public final class ExecuteProcessProbe {
      *
      * @param reporter reporter 执行进度上报器
      */
-    protected static void setCurrentReporter(ExecuteProcessReporter reporter) {
+    static void setCurrentReporter(ExecuteProcessReporter reporter) {
         CURRENT_REPORTER.set(reporter);
     }
 
     /**
      * 清空当前上报器
      */
-    protected static void clear() {
+    static void clear() {
         try {
             if (CURRENT_REPORTER.get() != null) {
                 CURRENT_REPORTER.remove();
