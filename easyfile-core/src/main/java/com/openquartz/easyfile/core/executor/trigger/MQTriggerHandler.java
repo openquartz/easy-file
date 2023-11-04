@@ -12,6 +12,6 @@ public interface MQTriggerHandler {
      *
      * @param message 消息
      */
-    void handle(ExportTriggerMessage message);
+    void handle(TriggerMessage message);
 
 }

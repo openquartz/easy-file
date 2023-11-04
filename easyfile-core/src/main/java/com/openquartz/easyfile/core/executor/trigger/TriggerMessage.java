@@ -8,7 +8,7 @@ import lombok.Data;
  * @author svnee
  **/
 @Data
-public class ExportTriggerMessage {
+public class TriggerMessage {
 
     private Long registerId;
 

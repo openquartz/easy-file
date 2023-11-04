@@ -17,7 +17,7 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.springframework.beans.factory.InitializingBean;
 import com.openquartz.easyfile.common.util.IpUtil;
 import com.openquartz.easyfile.common.util.JSONUtil;
-import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.TriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 
 /**
@@ -75,7 +75,7 @@ public class RocketMQTriggerConsumer implements InitializingBean {
                 }
                 MessageExt message = messageExtList.get(0);
                 try {
-                    mqTriggerHandler.handle(JSONUtil.parseObject(message.getBody(), ExportTriggerMessage.class));
+                    mqTriggerHandler.handle(JSONUtil.parseObject(message.getBody(), TriggerMessage.class));
                 } catch (Throwable ex) {
                     log.error("[RocketMQTriggerConsumer#create]Consumption failure,message:{},properties:{}", message,
                         properties, ex);

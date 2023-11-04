@@ -29,7 +29,7 @@ public class BaseEnumDeserializer extends JsonDeserializer<BaseEnum<?>> implemen
         if (clz.isEnum() && BaseEnum.class.isAssignableFrom(clz)) {
             BaseEnum<?>[] constants = (BaseEnum<?>[]) clz.getEnumConstants();
             String valueAsString = jsonParser.getValueAsString();
-            if (Objects.nonNull(constants) && constants.length > 0) {
+            if (Objects.nonNull(constants)) {
                 for (BaseEnum<?> item : constants) {
                     if (String.valueOf(item.getCode()).equals(valueAsString)) {
                         return item;

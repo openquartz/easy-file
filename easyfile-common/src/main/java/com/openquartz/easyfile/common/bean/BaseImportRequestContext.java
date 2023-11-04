@@ -1,7 +1,10 @@
 package com.openquartz.easyfile.common.bean;
 
+import com.openquartz.easyfile.common.util.MapUtils;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 导入请求上下文
@@ -38,6 +41,18 @@ public class BaseImportRequestContext {
             otherMap = new HashMap<>();
         }
         otherMap.put(key, value);
+    }
+
+    public void putParam(Map<String,Object> targetMap) {
+
+        if (MapUtils.isEmpty(targetMap)){
+            return;
+        }
+
+        if(Objects.isNull(otherMap)){
+            otherMap = new HashMap<>();
+        }
+        otherMap.putAll(targetMap);
     }
 
     public Notifier getNotifier() {

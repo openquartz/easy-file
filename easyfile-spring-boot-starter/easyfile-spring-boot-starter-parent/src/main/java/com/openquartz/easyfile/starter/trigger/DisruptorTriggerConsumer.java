@@ -3,7 +3,7 @@ package com.openquartz.easyfile.starter.trigger;
 import com.lmax.disruptor.EventHandler;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import lombok.extern.slf4j.Slf4j;
-import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.TriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 
 /**
@@ -12,7 +12,7 @@ import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
  * @author svnee
  **/
 @Slf4j
-public class DisruptorTriggerConsumer implements EventHandler<ExportTriggerMessage> {
+public class DisruptorTriggerConsumer implements EventHandler<TriggerMessage> {
 
     private final EasyFileDownloadProperties downloadProperties;
     private final MQTriggerHandler mqTriggerHandler;
@@ -24,7 +24,7 @@ public class DisruptorTriggerConsumer implements EventHandler<ExportTriggerMessa
     }
 
     @Override
-    public void onEvent(ExportTriggerMessage triggerMessage, long l, boolean b) {
+    public void onEvent(TriggerMessage triggerMessage, long l, boolean b) {
         log.info("[DisruptorTriggerConsumer#onEvent] message:{}", triggerMessage);
         try {
             mqTriggerHandler.handle(triggerMessage);

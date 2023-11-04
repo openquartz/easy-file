@@ -5,13 +5,15 @@ import com.openquartz.easyfile.common.bean.ImportRequestContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.response.ImportResult;
 
+import java.io.InputStream;
+
 /**
  * 导入执行器
  * {@link com.openquartz.easyfile.core.annotations.FileImportExecutor}
  *
  * @author svnee
  */
-public interface BaseImportExecutor<T> {
+public interface BaseImportExecutor {
 
     /**
      * 是否开启异步导入
@@ -20,6 +22,13 @@ public interface BaseImportExecutor<T> {
      * @return 开启异步
      */
     boolean enableAsync(BaseImportRequestContext context);
+
+    /**
+     * import source i/o stream
+     * @param context context
+     * @return i/o stream
+     */
+    InputStream importSource(BaseImportRequestContext context);
 
     /**
      * 导入数据逻辑

@@ -6,7 +6,7 @@ import org.apache.rocketmq.client.producer.MQProducer;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import com.openquartz.easyfile.common.util.JSONUtil;
-import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.TriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 
 /**
@@ -27,7 +27,7 @@ public class RocketMQTriggerProducer implements MQTriggerProducer {
     }
 
     @Override
-    public boolean send(ExportTriggerMessage triggerMessage) {
+    public boolean send(TriggerMessage triggerMessage) {
         String topic = properties.getTopic();
         Message message = new Message();
         message.setBody(JSONUtil.toJsonAsBytes(triggerMessage));

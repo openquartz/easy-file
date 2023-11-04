@@ -235,18 +235,16 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
     @Override
     public boolean enableRunning(Long registerId) {
+
         AsyncFileRecord downloadRecord = asyncFileRecordMapper.findById(registerId);
         if (Objects.isNull(downloadRecord) || downloadRecord.getHandleStatus() != HandleStatusEnum.NONE) {
             return false;
         }
-        Boolean running = downloadRecord.getHandleStatus() == HandleStatusEnum.NONE;
-        if (Boolean.TRUE.equals(running)) {
-            int affect = asyncFileRecordMapper
-                .refreshUploadStatus(registerId, HandleStatusEnum.NONE, HandleStatusEnum.EXECUTING,
+
+        int affect = asyncFileRecordMapper
+            .refreshUploadStatus(registerId, HandleStatusEnum.NONE, HandleStatusEnum.EXECUTING,
                     downloadRecord.getUpdateBy());
-            return affect > 0;
-        }
-        return false;
+        return affect > 0;
     }
 
     private Pagination<DownloadResult> getDownloadResultPagination(Integer pageNum, Integer pageSize,

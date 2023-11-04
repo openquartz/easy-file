@@ -10,7 +10,7 @@ import org.springframework.transaction.support.TransactionSynchronizationAdapter
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileExportHandlerAdapter;
-import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
+import com.openquartz.easyfile.core.executor.trigger.TriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
@@ -62,7 +62,7 @@ public class MqTriggerAsyncFileExportHandler extends DatabaseAsyncFileExportHand
 
     private void doSend(Long registerId) {
         //发送消息
-        ExportTriggerMessage triggerMessage = new ExportTriggerMessage();
+        TriggerMessage triggerMessage = new TriggerMessage();
         triggerMessage.setRegisterId(registerId);
         triggerMessage.setTriggerTimestamp(System.currentTimeMillis());
         boolean send = mqTriggerProducer.send(triggerMessage);
@@ -91,7 +91,7 @@ public class MqTriggerAsyncFileExportHandler extends DatabaseAsyncFileExportHand
     }
 
     @Override
-    public void handle(ExportTriggerMessage message) {
+    public void handle(TriggerMessage message) {
         // 查詢
         DownloadTriggerEntry triggerEntry = triggerService
             .getTriggerRegisterId(message.getRegisterId(), handlerProperties.getMaxTriggerCount());

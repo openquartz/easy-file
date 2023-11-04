@@ -1,5 +1,10 @@
 package com.openquartz.easyfile.common.response;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.openquartz.easyfile.common.dictionary.HandleStatusEnum;
+import com.openquartz.easyfile.common.serdes.BaseEnumDeserializer;
+import com.openquartz.easyfile.common.serdes.BaseEnumSerializer;
 import lombok.Data;
 
 /**
@@ -10,13 +15,20 @@ import lombok.Data;
 public class ImportResult {
 
     /**
-     * 成功导入行数
+     * 注册ID
      */
-    private Integer successImportRows;
+    private Long registerId;
 
     /**
-     * 失败导入行数
+     * 处理状态
      */
-    private Integer failedImportRows;
+    @JsonSerialize(using = BaseEnumSerializer.class)
+    @JsonDeserialize(using = BaseEnumDeserializer.class)
+    private HandleStatusEnum handleStatus;
+
+    /**
+     * 异常Msg
+     */
+    private String errorMsg;
 
 }
