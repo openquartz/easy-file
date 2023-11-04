@@ -31,7 +31,7 @@ import com.openquartz.easyfile.common.util.IpUtil;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.exception.Asserts;
 import com.openquartz.easyfile.common.exception.EasyFileException;
-import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
+import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
 import com.openquartz.easyfile.core.executor.BaseWrapperSyncResponseHeader;
 import com.openquartz.easyfile.core.intercept.listener.ExportEndListener;
 import com.openquartz.easyfile.core.intercept.listener.ExportStartEvent;
@@ -49,13 +49,13 @@ public class FileExportInterceptor implements MethodInterceptor {
     private final EasyFileDownloadProperties downloadProperties;
     private final LimitingService limitingService;
     private final DownloadStorageService downloadStorageService;
-    private final BaseAsyncFileHandler handler;
+    private final BaseAsyncFileExportHandler handler;
     private final ApplicationContext context;
 
     public FileExportInterceptor(EasyFileDownloadProperties downloadProperties,
         LimitingService limitingService,
         DownloadStorageService downloadStorageService,
-        BaseAsyncFileHandler handler,
+        BaseAsyncFileExportHandler handler,
         ApplicationContext context) {
         this.downloadProperties = downloadProperties;
         this.limitingService = limitingService;

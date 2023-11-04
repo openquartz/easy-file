@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
-import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileHandlerAdapter;
+import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileExportHandlerAdapter;
 import com.openquartz.easyfile.core.executor.trigger.ExportTriggerMessage;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerHandler;
 import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
@@ -25,13 +25,13 @@ import com.openquartz.easyfile.storage.file.UploadService;
  * @author svnee
  **/
 @Slf4j
-public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements MQTriggerHandler {
+public class MqTriggerAsyncFileExportHandler extends DatabaseAsyncFileExportHandlerAdapter implements MQTriggerHandler {
 
     private final FileTriggerService triggerService;
     private final MQTriggerProducer mqTriggerProducer;
     private final MqAsyncHandlerProperties handlerProperties;
 
-    public MqTriggerAsyncFileHandler(
+    public MqTriggerAsyncFileExportHandler(
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,

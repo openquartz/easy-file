@@ -5,7 +5,7 @@ import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.request.DownloadTriggerRequest;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
-import com.openquartz.easyfile.core.executor.AsyncFileHandlerAdapter;
+import com.openquartz.easyfile.core.executor.AsyncFileExportHandlerAdapter;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
@@ -25,7 +25,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @author svnee
  **/
 @Slf4j
-public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAdapter implements InitializingBean {
+public abstract class DatabaseAsyncFileExportHandlerAdapter extends AsyncFileExportHandlerAdapter implements InitializingBean {
 
     private final FileTriggerService triggerService;
     private final DownloadStorageService storageService;
@@ -36,7 +36,7 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
             .setNameFormat("CompensateScheduleAsyncHandler-thread-%d")
             .build());
 
-    protected DatabaseAsyncFileHandlerAdapter(
+    protected DatabaseAsyncFileExportHandlerAdapter(
         IEasyFileDownloadProperty downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,

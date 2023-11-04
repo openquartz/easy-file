@@ -53,15 +53,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author svnee
  */
-public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
+public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExportHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncFileHandlerAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(AsyncFileExportHandlerAdapter.class);
     private final IEasyFileDownloadProperty downloadProperties;
     private final UploadService uploadService;
     private final DownloadStorageService downloadStorageService;
 
-    protected AsyncFileHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
-        DownloadStorageService storageService) {
+    protected AsyncFileExportHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
+                                            DownloadStorageService storageService) {
         this.downloadProperties = downloadProperties;
         this.downloadStorageService = storageService;
         this.uploadService = uploadService;

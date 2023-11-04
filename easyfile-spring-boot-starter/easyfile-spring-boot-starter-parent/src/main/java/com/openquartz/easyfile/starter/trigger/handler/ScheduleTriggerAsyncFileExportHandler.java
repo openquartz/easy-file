@@ -10,7 +10,7 @@ import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
-import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileHandlerAdapter;
+import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileExportHandlerAdapter;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -23,7 +23,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  * @author svnee
  **/
 @Slf4j
-public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements InitializingBean {
+public class ScheduleTriggerAsyncFileExportHandler extends DatabaseAsyncFileExportHandlerAdapter implements InitializingBean {
 
     private final FileTriggerService triggerService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
@@ -39,7 +39,7 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
             rejectHandler);
     }
 
-    public ScheduleTriggerAsyncFileHandler(
+    public ScheduleTriggerAsyncFileExportHandler(
         EasyFileDownloadProperties downloadProperties,
         UploadService uploadService,
         DownloadStorageService storageService,

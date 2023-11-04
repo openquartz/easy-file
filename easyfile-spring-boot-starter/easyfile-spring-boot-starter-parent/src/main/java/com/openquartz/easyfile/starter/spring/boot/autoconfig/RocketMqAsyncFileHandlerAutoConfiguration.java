@@ -2,7 +2,7 @@ package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.RocketMqAsyncHandlerProperties;
-import com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileHandler;
+import com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileExportHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -42,13 +42,13 @@ public class RocketMqAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @Primary
-    public MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
-        UploadService uploadService,
-        DownloadStorageService downloadStorageService,
-        FileTriggerService fileTriggerService,
-        MQTriggerProducer mqTriggerProducer,
-        RocketMqAsyncHandlerProperties mqAsyncHandlerProperties) {
-        return new MqTriggerAsyncFileHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
+    public MqTriggerAsyncFileExportHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
+                                                                     UploadService uploadService,
+                                                                     DownloadStorageService downloadStorageService,
+                                                                     FileTriggerService fileTriggerService,
+                                                                     MQTriggerProducer mqTriggerProducer,
+                                                                     RocketMqAsyncHandlerProperties mqAsyncHandlerProperties) {
+        return new MqTriggerAsyncFileExportHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
             fileTriggerService,
             mqAsyncHandlerProperties,
             mqTriggerProducer);
@@ -56,7 +56,7 @@ public class RocketMqAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(MQTriggerHandler.class)
-    public MQTriggerHandler mqTriggerHandler(MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler) {
+    public MQTriggerHandler mqTriggerHandler(MqTriggerAsyncFileExportHandler mqTriggerAsyncFileHandler) {
         return mqTriggerAsyncFileHandler;
     }
 

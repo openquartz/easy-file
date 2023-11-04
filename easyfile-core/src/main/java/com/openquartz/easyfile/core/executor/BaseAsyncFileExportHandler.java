@@ -7,11 +7,11 @@ import com.openquartz.easyfile.common.response.ExportResult;
 /**
  * 异步文件处理器
  * 用于文件异步处理
- * 你可以直接继承 {@link AsyncFileHandlerAdapter},
+ * 你可以直接继承 {@link AsyncFileExportHandlerAdapter},
  *
  * @author svnee
  */
-public interface BaseAsyncFileHandler {
+public interface BaseAsyncFileExportHandler {
 
     /**
      * 异步文件处理器

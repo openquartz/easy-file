@@ -4,7 +4,7 @@ import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.Disrupt
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.trigger.DisruptorTriggerConsumer;
 import com.openquartz.easyfile.starter.trigger.DisruptorTriggerProducer;
-import com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileHandler;
+import com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileExportHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -35,13 +35,13 @@ public class DisruptorAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @Primary
-    public MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
-        UploadService uploadService,
-        DownloadStorageService downloadStorageService,
-        FileTriggerService fileTriggerService,
-        MQTriggerProducer mqTriggerProducer,
-        DisruptorAsyncHandlerProperties mqAsyncHandlerProperties) {
-        return new MqTriggerAsyncFileHandler(easyFileDownloadProperties,
+    public MqTriggerAsyncFileExportHandler mqTriggerAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
+                                                                     UploadService uploadService,
+                                                                     DownloadStorageService downloadStorageService,
+                                                                     FileTriggerService fileTriggerService,
+                                                                     MQTriggerProducer mqTriggerProducer,
+                                                                     DisruptorAsyncHandlerProperties mqAsyncHandlerProperties) {
+        return new MqTriggerAsyncFileExportHandler(easyFileDownloadProperties,
             uploadService, downloadStorageService,
             fileTriggerService,
             mqAsyncHandlerProperties,
@@ -50,7 +50,7 @@ public class DisruptorAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(MQTriggerHandler.class)
-    public MQTriggerHandler mqTriggerHandler(MqTriggerAsyncFileHandler mqTriggerAsyncFileHandler) {
+    public MQTriggerHandler mqTriggerHandler(MqTriggerAsyncFileExportHandler mqTriggerAsyncFileHandler) {
         return mqTriggerAsyncFileHandler;
     }
 

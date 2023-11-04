@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import com.openquartz.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
-import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
+import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
 import com.openquartz.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
@@ -35,7 +35,7 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
     public Advisor fileExportExecutorAnnotationAdvisor(EasyFileDownloadProperties easyFileDownloadProperties,
         DownloadStorageService downloadStorageService,
         LimitingService limitingService,
-        BaseAsyncFileHandler baseAsyncFileHandler,
+        BaseAsyncFileExportHandler baseAsyncFileHandler,
         ApplicationContext applicationContext
     ) {
         FileExportInterceptor interceptor = new FileExportInterceptor(easyFileDownloadProperties, limitingService,
