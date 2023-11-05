@@ -1,8 +1,8 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.common.util.StringUtils;
-import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
-import com.openquartz.easyfile.core.executor.impl.DefaultExportRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.impl.DefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.metrics.ExportMetricsListener;
 import com.openquartz.easyfile.core.metrics.MetricsListener;
 import com.openquartz.easyfile.metrics.api.config.MetricsConfig;
@@ -50,9 +50,9 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnMissingBean(BaseDefaultExportRejectExecutionHandler.class)
-    public BaseDefaultExportRejectExecutionHandler defaultDownloadRejectExecutionHandler() {
-        return new DefaultExportRejectExecutionHandler();
+    @ConditionalOnMissingBean(BaseDefaultRejectExecutionHandler.class)
+    public BaseDefaultRejectExecutionHandler defaultDownloadRejectExecutionHandler() {
+        return new DefaultRejectExecutionHandler();
     }
 
     @Bean

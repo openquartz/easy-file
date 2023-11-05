@@ -8,6 +8,6 @@ import java.util.concurrent.RejectedExecutionHandler;
  *
  * @author svnee
  */
-public interface BaseDefaultExportRejectExecutionHandler extends RejectedExecutionHandler {
+public interface BaseDefaultRejectExecutionHandler extends RejectedExecutionHandler {
 
 }

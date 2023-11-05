@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.core.executor.AsyncFileExportHandlerAdapter;
-import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncHandlerThreadPoolProperties;
@@ -34,7 +34,7 @@ public class DefaultAsyncFileExportHandler extends AsyncFileExportHandlerAdapter
     private static final Logger log = LoggerFactory.getLogger(DefaultAsyncFileExportHandler.class);
 
     public ExecutorService init(DefaultAsyncHandlerThreadPoolProperties threadPoolConfig,
-        BaseDefaultExportRejectExecutionHandler rejectHandler) {
+        BaseDefaultRejectExecutionHandler rejectHandler) {
         BlockingQueue<Runnable> blockingQueue = new ArrayBlockingQueue<>(threadPoolConfig.getMaxBlockingQueueSize());
 
         return new ThreadPoolExecutor(threadPoolConfig.getCorePoolSize(),
@@ -49,7 +49,7 @@ public class DefaultAsyncFileExportHandler extends AsyncFileExportHandlerAdapter
     public DefaultAsyncFileExportHandler(IEasyFileDownloadProperty downloadProperties,
                                          UploadService uploadService,
                                          DownloadStorageService storageService,
-                                         BaseDefaultExportRejectExecutionHandler rejectExecutionHandler,
+                                         BaseDefaultRejectExecutionHandler rejectExecutionHandler,
                                          DefaultAsyncHandlerThreadPoolProperties threadPoolConfig) {
         super(downloadProperties, uploadService, storageService);
         executorService = init(threadPoolConfig, rejectExecutionHandler);

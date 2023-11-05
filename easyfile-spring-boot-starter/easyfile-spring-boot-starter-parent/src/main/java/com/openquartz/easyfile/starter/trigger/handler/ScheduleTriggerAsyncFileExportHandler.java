@@ -9,7 +9,7 @@ import org.springframework.beans.factory.InitializingBean;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.util.CollectionUtils;
-import com.openquartz.easyfile.core.executor.BaseDefaultExportRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileExportHandlerAdapter;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
@@ -31,7 +31,7 @@ public class ScheduleTriggerAsyncFileExportHandler extends DatabaseAsyncFileExpo
     private final ScheduledThreadPoolExecutor reaperScheduleExecutorService;
 
     private ScheduledThreadPoolExecutor init(ScheduleAsyncHandlerProperties handlerProperties,
-        BaseDefaultExportRejectExecutionHandler rejectHandler) {
+        BaseDefaultRejectExecutionHandler rejectHandler) {
         return new ScheduledThreadPoolExecutor(handlerProperties.getThreadPoolCoreSize(),
             new ThreadFactoryBuilder()
                 .setNameFormat(handlerProperties.getThreadPoolThreadPrefix() + "-thread-%d")
@@ -45,7 +45,7 @@ public class ScheduleTriggerAsyncFileExportHandler extends DatabaseAsyncFileExpo
         DownloadStorageService storageService,
         FileTriggerService triggerService,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
-        BaseDefaultExportRejectExecutionHandler rejectExecutionHandler) {
+        BaseDefaultRejectExecutionHandler rejectExecutionHandler) {
         super(downloadProperties, uploadService, storageService, triggerService, scheduleAsyncHandlerProperties);
         this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;

@@ -34,6 +34,7 @@ import com.openquartz.easyfile.core.intercept.InterceptorContext;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.OutputStream;
@@ -44,6 +45,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.TimeUnit;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,14 +77,14 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
 
     @Override
     public ExportResult handleResult(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
-        Long registerId) {
+                                     Long registerId) {
         // 查询导出执行器FileExportExecutor
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
         FileExportExecutor exportExecutor = clazz.getDeclaredAnnotation(FileExportExecutor.class);
         // 如果开启缓存-调用远程服务查询缓存
         if (executor.enableExportCache(baseRequest)) {
             LoadingExportCacheRequest cacheRequest =
-                buildLoadingExportCacheRequest(baseRequest, exportExecutor, registerId);
+                    buildLoadingExportCacheRequest(baseRequest, exportExecutor, registerId);
             ExportResult exportResult = downloadStorageService.loadingCacheExportResult(cacheRequest);
             if (Objects.nonNull(exportResult) && HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus())) {
                 return exportResult;
@@ -92,7 +94,7 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         // 校验是否可以执行运行
         if (!downloadStorageService.enableRunning(registerId)) {
             logger.error("[AsyncFileHandlerAdapter#handleResult] this registerId has running!skip,registerId:{}",
-                registerId);
+                    registerId);
             return buildDefaultRejectExportResult(registerId);
         }
 
@@ -132,25 +134,25 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
     }
 
     private void afterHandle(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
-        ExportResult result, InterceptorContext interceptorContext) {
+                             ExportResult result, InterceptorContext interceptorContext) {
         ExecutorInterceptorSupport.getInterceptors().stream()
-            .sorted(((o1, o2) -> o2.order() - o1.order()))
-            .forEach(interceptor -> interceptor.afterExecute(executor, baseRequest, result, interceptorContext));
+                .sorted(((o1, o2) -> o2.order() - o1.order()))
+                .forEach(interceptor -> interceptor.afterExecute(executor, baseRequest, result, interceptorContext));
     }
 
     private void beforeHandle(BaseExportExecutor executor, BaseExportRequestContext baseRequest,
-        Long registerId, InterceptorContext interceptorContext) {
+                              Long registerId, InterceptorContext interceptorContext) {
         ExecutorInterceptorSupport.getInterceptors().stream()
-            .sorted((Comparator.comparingInt(ExportExecutorInterceptor::order)))
-            .forEach(interceptor -> interceptor.beforeExecute(executor, baseRequest, registerId, interceptorContext));
+                .sorted((Comparator.comparingInt(ExportExecutorInterceptor::order)))
+                .forEach(interceptor -> interceptor.beforeExecute(executor, baseRequest, registerId, interceptorContext));
     }
 
     /**
      * 做执行执行器
      *
-     * @param executor 执行器
+     * @param executor    执行器
      * @param baseRequest 请求
-     * @param registerId 注册ID
+     * @param registerId  注册ID
      */
     public void doExecute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
         logger.info("[AsyncFileHandlerAdapter#execute]start,execute!registerId:{}", registerId);
@@ -173,8 +175,8 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
     }
 
     private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseExportRequestContext baseRequest,
-        FileExportExecutor exportExecutor,
-        Long registerId) {
+                                                                     FileExportExecutor exportExecutor,
+                                                                     Long registerId) {
         LoadingExportCacheRequest loadingExportCacheRequest = new LoadingExportCacheRequest();
         loadingExportCacheRequest.setRegisterId(registerId);
         loadingExportCacheRequest.setCacheKeyList(CollectionUtils.newArrayList(exportExecutor.cacheKey()));
@@ -185,18 +187,18 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
     /**
      * 生成文件方法
      *
-     * @param executor executor 执行器
-     * @param baseRequest baseRequest 基础下载请求
-     * @param registerId 注册ID
-     * @param exportExecutor 执行器注解
+     * @param executor          executor 执行器
+     * @param baseRequest       baseRequest 基础下载请求
+     * @param registerId        注册ID
+     * @param exportExecutor    执行器注解
      * @param tempLocalFilePath 本地文件临时存放目录
      * @return 生成文件结果
      */
     private GenerateFileResult generateFile(BaseExportExecutor executor,
-        FileExportExecutor exportExecutor,
-        BaseExportRequestContext baseRequest,
-        Long registerId,
-        String tempLocalFilePath) {
+                                            FileExportExecutor exportExecutor,
+                                            BaseExportRequestContext baseRequest,
+                                            Long registerId,
+                                            String tempLocalFilePath) {
 
         // 生成英文版文件名
         long startTime = System.currentTimeMillis();
@@ -217,8 +219,8 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
                 Asserts.isTrue(mkdirs, GenerateFileErrorCode.CREATE_LOCAL_TEMP_FILE_ERROR);
             } catch (Exception ex) {
                 logger.error(
-                    "[AbstractAsyncFileHandlerAdapter#generateFile] create dictionary error,registerId:{},downloadCode:{}",
-                    registerId, exportExecutor.value(), ex);
+                        "[AbstractAsyncFileHandlerAdapter#generateFile] create dictionary error,registerId:{},downloadCode:{}",
+                        registerId, exportExecutor.value(), ex);
                 handleBreakFlag = true;
                 errorMsgJoiner.add(ex.getMessage());
             }
@@ -227,11 +229,11 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
             try {
                 boolean fileHasName = file.createNewFile();
                 Asserts.isTrue(fileHasName, GenerateFileErrorCode.FILE_NAME_DUPLICATE_ERROR,
-                    GenerateFileException.class);
+                        GenerateFileException.class);
             } catch (Exception ex) {
                 logger.error(
-                    "[AbstractAsyncFileHandlerAdapter#generateFile] handle,create new file error,registerId:{},downloadCode:{},path:{}",
-                    registerId, exportExecutor.value(), downloadProperties.getLocalFileTempPath(), ex);
+                        "[AbstractAsyncFileHandlerAdapter#generateFile] handle,create new file error,registerId:{},downloadCode:{},path:{}",
+                        registerId, exportExecutor.value(), downloadProperties.getLocalFileTempPath(), ex);
                 errorMsgJoiner.add("创建新文件异常,文件路径:" + downloadProperties.getLocalFileTempPath());
                 handleBreakFlag = true;
             }
@@ -241,7 +243,7 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
 
                 //report execute-process
                 ExecuteProcessReporterImpl reporter = new ExecuteProcessReporterImpl(registerId,
-                    downloadStorageService);
+                        downloadStorageService);
                 ExecuteProcessProbe.setCurrentReporter(reporter);
                 reporter.start();
 
@@ -252,8 +254,8 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
                 reporter.complete();
             } catch (Exception exception) {
                 logger.error("[AbstractAsyncFileHandlerAdapter#handle] execute file error,downloadCode:{}",
-                    exportExecutor.value(),
-                    exception);
+                        exportExecutor.value(),
+                        exception);
                 errorMsgJoiner.add("导出文件逻辑异常:" + exception.getMessage());
                 handleBreakFlag = true;
             } finally {
@@ -264,16 +266,16 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         Pair<Boolean, File> compressResult = compress(file, handleBreakFlag);
         compress = compressResult.getKey();
         logger.info(
-            "[AbstractAsyncFileHandlerAdapter#generateFile] registerId:{},downloadCode:{},generate-file bytes:{} kb,cost-time:{}",
-            registerId, exportExecutor.value(), FileUtils.sizeOfKb(file), System.currentTimeMillis() - startTime);
+                "[AbstractAsyncFileHandlerAdapter#generateFile] registerId:{},downloadCode:{},generate-file bytes:{} kb,cost-time:{}",
+                registerId, exportExecutor.value(), FileUtils.sizeOfKb(file), System.currentTimeMillis() - startTime);
         return GenerateFileResult
-            .build(errorMsgJoiner, file, compressResult.getValue(), handleBreakFlag, compress);
+                .build(errorMsgJoiner, file, compressResult.getValue(), handleBreakFlag, compress);
     }
 
     /**
      * 压缩文件
      *
-     * @param file 文件
+     * @param file            文件
      * @param handleBreakFlag 处理中断标记
      * @return key:是否执行压缩成功/value:压缩文件
      */
@@ -283,10 +285,10 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         }
         // 是正常未压缩的文件.且文件当前的大小大于文件压缩的阀值
         boolean isExeCompress = file.exists()
-            && file.isFile()
-            && !isZipCompress(file)
-            && (downloadProperties.getMinEnableCompressMbSize() <= 0
-            || FileUtils.sizeOfMb(file) >= downloadProperties.getMinEnableCompressMbSize());
+                && file.isFile()
+                && !isZipCompress(file)
+                && (downloadProperties.getMinEnableCompressMbSize() <= 0
+                || FileUtils.sizeOfMb(file) >= downloadProperties.getMinEnableCompressMbSize());
         if (isExeCompress) {
             // 直接执行压缩
             // 获取文件的绝对路径
@@ -296,7 +298,7 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
                 return Pair.of(Boolean.TRUE, new File(path + FileSuffixEnum.ZIP.getFullFileSuffix()));
             } catch (Exception ex) {
                 logger
-                    .error("[AsyncFileHandleAdapter#compress] compress file fail! path:{}", file.getAbsolutePath(), ex);
+                        .error("[AsyncFileHandleAdapter#compress] compress file fail! path:{}", file.getAbsolutePath(), ex);
             }
         }
         return Pair.of(Boolean.FALSE, null);
@@ -319,26 +321,26 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
     /**
      * 处理文件&重试执行
      *
-     * @param executor 执行器
+     * @param executor       执行器
      * @param exportExecutor 执行器注解
-     * @param baseRequest 请求
-     * @param registerId 注册ID
+     * @param baseRequest    请求
+     * @param registerId     注册ID
      * @return 处理文件结果
      */
     private HandleFileResult handleFileWithRetry(BaseExportExecutor executor,
-        FileExportExecutor exportExecutor,
-        BaseExportRequestContext baseRequest,
-        Long registerId) {
+                                                 FileExportExecutor exportExecutor,
+                                                 BaseExportRequestContext baseRequest,
+                                                 Long registerId) {
 
         // 针对IO 异常重试3次
         Retryer<HandleFileResult> retryer = RetryerBuilder.<HandleFileResult>newBuilder()
-            .retryIfExceptionOfType(GenerateFileException.class)
-            .withWaitStrategy(WaitStrategies.incrementingWait(5, TimeUnit.SECONDS, 5, TimeUnit.SECONDS))
-            .withStopStrategy(StopStrategies.stopAfterAttempt(3))
-            .build();
+                .retryIfExceptionOfType(GenerateFileException.class)
+                .withWaitStrategy(WaitStrategies.incrementingWait(5, TimeUnit.SECONDS, 5, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(3))
+                .build();
         // 生成文件
         GenerateFileResult genFileResult = generateFile(executor, exportExecutor, baseRequest, registerId,
-            downloadProperties.getLocalFileTempPath());
+                downloadProperties.getLocalFileTempPath());
         try {
             return retryer.call(() -> {
                 Pair<String, String> fileUrl = null;
@@ -347,9 +349,9 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
                 if (!genFileResult.isHandleBreakFlag()) {
                     try {
                         cnFileName = genCnFileName(baseRequest.getFileSuffix(), exportExecutor,
-                            genFileResult.isCompress());
+                                genFileResult.isCompress());
                         fileUrl = uploadService
-                            .upload(genFileResult.getUploadFile(), cnFileName, downloadProperties.getAppId());
+                                .upload(genFileResult.getUploadFile(), cnFileName, downloadProperties.getAppId());
                     } catch (GenerateFileException ex) {
                         throw ex;
                     } catch (Exception t) {
@@ -362,8 +364,8 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
             });
         } catch (Exception e) {
             logger.error(
-                "[AsyncFileHandlerAdapter#handleFileWithRetry] retry execute handle file,error!registerId:{},executor:{}",
-                registerId, exportExecutor.value(), e);
+                    "[AsyncFileHandlerAdapter#handleFileWithRetry] retry execute handle file,error!registerId:{},executor:{}",
+                    registerId, exportExecutor.value(), e);
             genFileResult.setHandleBreakFlag(true);
             genFileResult.getErrorMsg().add("[文件处理]" + e.getMessage());
             return new HandleFileResult(genFileResult, null, e);
@@ -410,7 +412,7 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
     }
 
     private ExportRequestContext buildRequestDownloaderRequest(OutputStream out,
-        BaseExportRequestContext baseRequest) {
+                                                               BaseExportRequestContext baseRequest) {
         ExportRequestContext downloaderRequest = new ExportRequestContext();
         downloaderRequest.setOut(out);
         downloaderRequest.setNotifier(baseRequest.getNotifier());
@@ -424,10 +426,10 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         String fileName = StringUtils.isNotBlank(executor.desc()) ? executor.desc() : executor.value();
         String executeTime = DateFormatUtils.format(new Date(), "yyMMddHHmmssSSS");
         String suffix = fileSuffix.startsWith(Constants.FILE_SUFFIX_SEPARATOR) ? fileSuffix
-            : Constants.FILE_SUFFIX_SEPARATOR + fileSuffix;
+                : Constants.FILE_SUFFIX_SEPARATOR + fileSuffix;
         // 如果是开启了压缩的文件,使用压缩文件的后缀名.zip 否则不变更
         return fileName + "_" + executeTime + suffix + (compress ? FileSuffixEnum.ZIP.getFullFileSuffix()
-            : StringUtils.EMPTY);
+                : StringUtils.EMPTY);
     }
 
     private String generateEnFileName(String fileSuffix, FileExportExecutor executor, String path) {
@@ -435,7 +437,7 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         String fileName = executor.value();
         String executeTime = DateFormatUtils.format(new Date(), "yyMMddHHmmssSSS");
         String suffix = fileSuffix.startsWith(Constants.FILE_SUFFIX_SEPARATOR) ? fileSuffix
-            : Constants.FILE_SUFFIX_SEPARATOR + fileSuffix;
+                : Constants.FILE_SUFFIX_SEPARATOR + fileSuffix;
         return newPath + fileName + "_" + executeTime + suffix;
     }
 }
