@@ -8,14 +8,14 @@ import org.springframework.core.NamedThreadLocal;
 /**
  * @author svnee
  */
-public class FileExportTriggerContext {
+public class FileTriggerContext {
 
     private static final ThreadLocal<Map<String, Object>> currentFileExtend = new NamedThreadLocal<>(
         "Current File export");
 
     private static final String ASYNC_TRIGGER_FLAG = "ASYNC_TRIGGER";
 
-    private FileExportTriggerContext() {
+    private FileTriggerContext() {
     }
 
     public static void setAsyncTriggerFlagIfAbsent(boolean flag) {

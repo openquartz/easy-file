@@ -6,7 +6,7 @@ import static com.openquartz.easyfile.core.exception.ExportErrorCode.SYNC_DOWNLO
 import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
-import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
+import com.openquartz.easyfile.core.executor.support.FileTriggerContext;
 import com.openquartz.easyfile.core.intercept.listener.ExportEndEvent;
 import com.openquartz.easyfile.core.intercept.listener.ExportStartListener;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
@@ -70,7 +70,7 @@ public class FileExportInterceptor implements MethodInterceptor {
     public Object invoke(MethodInvocation invocation) throws Throwable {
 
         // direct trigger if async trigger
-        if (FileExportTriggerContext.isAsyncTrigger()){
+        if (FileTriggerContext.isAsyncTrigger()){
             return invocation.proceed();
         }
 

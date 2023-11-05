@@ -8,7 +8,7 @@ import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.AsyncFileExportHandlerAdapter;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
-import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
+import com.openquartz.easyfile.core.executor.support.FileTriggerContext;
 import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -79,7 +79,7 @@ public abstract class DatabaseAsyncFileExportHandlerAdapter extends AsyncFileExp
                     .get(requestInfo.getDownloadCode());
 
                 // set async trigger if absent
-                FileExportTriggerContext.setAsyncTriggerFlagIfAbsent(true);
+                FileTriggerContext.setAsyncTriggerFlagIfAbsent(true);
                 doExecute(executor, requestInfo.getRequestContext(), k.getRegisterId());
                 triggerService.exeSuccess(k.getRegisterId());
             } catch (Exception ex) {
@@ -88,7 +88,7 @@ public abstract class DatabaseAsyncFileExportHandlerAdapter extends AsyncFileExp
                 triggerService.exeFail(k.getRegisterId());
             } finally {
                 // clear context
-                FileExportTriggerContext.clear();
+                FileTriggerContext.clear();
             }
         }
     }
