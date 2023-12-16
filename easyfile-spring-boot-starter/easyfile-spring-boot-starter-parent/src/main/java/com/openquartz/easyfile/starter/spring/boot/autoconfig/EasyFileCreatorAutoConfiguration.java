@@ -1,10 +1,7 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.common.util.StringUtils;
-import com.openquartz.easyfile.core.executor.AsyncFileTriggerExecuteHandlerFactory;
-import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
-import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
-import com.openquartz.easyfile.core.executor.DefaultAsyncFileExportHandler;
+import com.openquartz.easyfile.core.executor.*;
 import com.openquartz.easyfile.core.executor.impl.DefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.metrics.ExportMetricsListener;
 import com.openquartz.easyfile.core.metrics.MetricsListener;
@@ -52,9 +49,17 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
-    public AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory(BaseAsyncFileExportHandler baseAsyncFileExportHandler) {
+    @ConditionalOnMissingBean(BaseAsyncFileImportHandler.class)
+    public BaseAsyncFileImportHandler baseAsyncFileExportHandler(DownloadStorageService storageService) {
+        return new DefaultAsyncFileImportHandler(storageService);
+    }
+
+    @Bean
+    public AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory(BaseAsyncFileExportHandler baseAsyncFileExportHandler,
+                                                                                       BaseAsyncFileImportHandler baseAsyncFileImportHandler) {
         AsyncFileTriggerExecuteHandlerFactory factory = new AsyncFileTriggerExecuteHandlerFactory();
         factory.register(baseAsyncFileExportHandler);
+        factory.register(baseAsyncFileImportHandler);
         return factory;
     }
 

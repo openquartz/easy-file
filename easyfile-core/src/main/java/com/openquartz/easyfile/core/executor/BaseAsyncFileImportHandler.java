@@ -7,7 +7,7 @@ import com.openquartz.easyfile.common.response.ImportResult;
 /**
  * 异步文件处理器
  * 用于文件异步处理
- * 你可以直接继承 {@link com.openquartz.easyfile.core.executor.AsyncFileImportHandlerAdapter},
+ * 你可以直接继承 {@link DefaultAsyncFileImportHandler},
  *
  * @author svnee
  */

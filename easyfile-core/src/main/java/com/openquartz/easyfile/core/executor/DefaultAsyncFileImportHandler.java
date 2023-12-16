@@ -18,17 +18,17 @@ import java.util.Objects;
 import java.util.Optional;
 
 /**
- * import data file handler adapter
+ * import data file handler
  *
  * @author svnee
  */
-public abstract class AsyncFileImportHandlerAdapter implements BaseAsyncFileImportHandler {
+public class DefaultAsyncFileImportHandler implements BaseAsyncFileImportHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncFileImportHandlerAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultAsyncFileImportHandler.class);
 
     private final DownloadStorageService downloadStorageService;
 
-    public AsyncFileImportHandlerAdapter(DownloadStorageService downloadStorageService) {
+    public DefaultAsyncFileImportHandler(DownloadStorageService downloadStorageService) {
         this.downloadStorageService = downloadStorageService;
     }
 
