@@ -1,21 +1,21 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
+import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
+import com.openquartz.easyfile.common.util.CollectionUtils;
+import com.openquartz.easyfile.core.executor.AsyncFileTriggerExecuteHandlerFactory;
+import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.impl.DatabaseDefaultAsyncFileExportHandler;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
+import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTriggerService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
+
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
-import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
-import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
-import com.openquartz.easyfile.common.util.CollectionUtils;
-import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
-import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncFileExportHandlerAdapter;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.download.FileTriggerService;
-import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
  * 定时调度的触发异步文件下载处理器
@@ -23,7 +23,7 @@ import com.openquartz.easyfile.storage.file.UploadService;
  * @author svnee
  **/
 @Slf4j
-public class ScheduleTriggerAsyncFileExportHandler extends DatabaseAsyncFileExportHandlerAdapter implements InitializingBean {
+public class ScheduleTriggerDefaultAsyncFileExportHandler extends DatabaseDefaultAsyncFileExportHandler implements InitializingBean {
 
     private final FileTriggerService triggerService;
     private final ScheduledThreadPoolExecutor scheduleExecutorService;
@@ -39,14 +39,15 @@ public class ScheduleTriggerAsyncFileExportHandler extends DatabaseAsyncFileExpo
             rejectHandler);
     }
 
-    public ScheduleTriggerAsyncFileExportHandler(
-        EasyFileDownloadProperties downloadProperties,
-        UploadService uploadService,
+    public ScheduleTriggerDefaultAsyncFileExportHandler(
         DownloadStorageService storageService,
         FileTriggerService triggerService,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
+        AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,
         BaseDefaultRejectExecutionHandler rejectExecutionHandler) {
-        super(downloadProperties, uploadService, storageService, triggerService, scheduleAsyncHandlerProperties);
+
+        super(storageService,triggerService,scheduleAsyncHandlerProperties,asyncFileTriggerExecuteHandlerFactory);
+
         this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;
         this.scheduleExecutorService = init(scheduleAsyncHandlerProperties, rejectExecutionHandler);

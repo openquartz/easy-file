@@ -10,7 +10,14 @@ import lombok.Data;
 @Data
 public class DownloadRequestInfo {
 
+    /**
+     * 下载码
+     */
     private String downloadCode;
-    private BaseExportRequestContext requestContext;
+
+    /**
+     * 请求上下文
+     */
+    private IRequest requestContext;
 
 }

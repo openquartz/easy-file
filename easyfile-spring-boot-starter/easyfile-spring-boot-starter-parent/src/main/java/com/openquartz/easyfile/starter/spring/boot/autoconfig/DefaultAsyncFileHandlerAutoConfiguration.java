@@ -1,9 +1,10 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.core.executor.AsyncFileTriggerExecuteHandler;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncHandlerThreadPoolProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import com.openquartz.easyfile.starter.trigger.handler.DefaultAsyncFileExportHandler;
+import com.openquartz.easyfile.starter.trigger.handler.DefaultAsyncFileTriggerExecuteHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -12,8 +13,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
-import com.openquartz.easyfile.storage.file.UploadService;
 
 /**
  * DefaultAsyncFileHandlerAutoConfiguration
@@ -29,14 +28,9 @@ public class DefaultAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileExportHandler.class)
-    public BaseAsyncFileExportHandler defaultAsyncFileHandler(EasyFileDownloadProperties easyFileDownloadProperties,
-                                                              UploadService uploadService,
-                                                              DownloadStorageService downloadStorageService,
-                                                              BaseDefaultRejectExecutionHandler baseDefaultRejectExecutionHandler,
-                                                              DefaultAsyncHandlerThreadPoolProperties defaultAsyncHandlerThreadPoolProperties) {
-        return new DefaultAsyncFileExportHandler(easyFileDownloadProperties, uploadService, downloadStorageService,
-                baseDefaultRejectExecutionHandler,
-            defaultAsyncHandlerThreadPoolProperties);
+    public AsyncFileTriggerExecuteHandler defaultAsyncFileHandler(BaseDefaultRejectExecutionHandler baseDefaultRejectExecutionHandler,
+                                                                  DefaultAsyncHandlerThreadPoolProperties defaultAsyncHandlerThreadPoolProperties) {
+        return new DefaultAsyncFileTriggerExecuteHandler(null, baseDefaultRejectExecutionHandler, defaultAsyncHandlerThreadPoolProperties);
     }
 
 }

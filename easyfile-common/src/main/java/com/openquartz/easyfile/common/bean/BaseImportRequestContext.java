@@ -1,6 +1,8 @@
 package com.openquartz.easyfile.common.bean;
 
 import com.openquartz.easyfile.common.util.MapUtils;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,17 +13,20 @@ import java.util.Objects;
  *
  * @author snvee
  */
-public class BaseImportRequestContext {
+@Getter
+public class BaseImportRequestContext implements IRequest {
 
     /**
      * 操作人
      * 必须
      */
+    @Setter
     private Notifier notifier;
 
     /**
      * 导入备注
      */
+    @Setter
     private String importRemark;
 
     /**
@@ -33,7 +38,7 @@ public class BaseImportRequestContext {
     /**
      * 放置参数
      *
-     * @param key key
+     * @param key   key
      * @param value value
      */
     public void putParam(String key, Object value) {
@@ -43,35 +48,16 @@ public class BaseImportRequestContext {
         otherMap.put(key, value);
     }
 
-    public void putParam(Map<String,Object> targetMap) {
+    public void putParam(Map<String, Object> targetMap) {
 
-        if (MapUtils.isEmpty(targetMap)){
+        if (MapUtils.isEmpty(targetMap)) {
             return;
         }
 
-        if(Objects.isNull(otherMap)){
+        if (Objects.isNull(otherMap)) {
             otherMap = new HashMap<>();
         }
         otherMap.putAll(targetMap);
     }
 
-    public Notifier getNotifier() {
-        return notifier;
-    }
-
-    public String getImportRemark() {
-        return importRemark;
-    }
-
-    public Map<String, Object> getOtherMap() {
-        return otherMap;
-    }
-
-    public void setNotifier(Notifier notifier) {
-        this.notifier = notifier;
-    }
-
-    public void setImportRemark(String importRemark) {
-        this.importRemark = importRemark;
-    }
 }

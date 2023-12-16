@@ -1,14 +1,16 @@
 package com.openquartz.easyfile.core.executor.support;
 
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
-import com.openquartz.easyfile.core.annotations.FileExportExecutor;
+
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.util.MapUtils;
+import com.openquartz.easyfile.core.executor.Executor;
 
 /**
  * 文件导出执行器 支持
@@ -23,20 +25,21 @@ public final class FileExportExecutorSupport {
     /**
      * 下载器缓存
      */
-    private static final Map<String, Pair<FileExportExecutor, BaseExportExecutor>> BASE_DOWNLOAD_EXECUTOR_MAP;
+    private static final Map<String, Executor> BASE_EXECUTOR_MAP;
 
     static {
-        BASE_DOWNLOAD_EXECUTOR_MAP = MapUtils.newHashMapWithExpectedSize(10);
+        BASE_EXECUTOR_MAP = MapUtils.newHashMapWithExpectedSize(16);
     }
 
     /**
      * 注册
      *
      * @param downloadCode 缓存code
-     * @param executor 下载器
+     * @param executor     下载器
      */
-    public static void register(String downloadCode, FileExportExecutor exportExecutor, BaseExportExecutor executor) {
-        BASE_DOWNLOAD_EXECUTOR_MAP.putIfAbsent(downloadCode, Pair.of(exportExecutor, executor));
+    @SuppressWarnings("all")
+    public static <T extends Executor> void register(String downloadCode, T executor) {
+        BASE_EXECUTOR_MAP.putIfAbsent(downloadCode, executor);
     }
 
     /**
@@ -45,8 +48,8 @@ public final class FileExportExecutorSupport {
      * @param downloadCode code
      * @return 下载器
      */
-    public static BaseExportExecutor get(String downloadCode) {
-        return BASE_DOWNLOAD_EXECUTOR_MAP.get(downloadCode).getValue();
+    public static Executor get(String downloadCode) {
+        return BASE_EXECUTOR_MAP.get(downloadCode);
     }
 
     /**
@@ -56,7 +59,7 @@ public final class FileExportExecutorSupport {
      * @return 是否包含
      */
     public static boolean contains(String downloadCode) {
-        return BASE_DOWNLOAD_EXECUTOR_MAP.containsKey(downloadCode);
+        return BASE_EXECUTOR_MAP.containsKey(downloadCode);
     }
 
     /**
@@ -65,24 +68,13 @@ public final class FileExportExecutorSupport {
      * @return codeList
      */
     public static List<String> downloadCodeList() {
-        return new ArrayList<>(BASE_DOWNLOAD_EXECUTOR_MAP.keySet());
-    }
-
-    /**
-     * 查询下载码
-     *
-     * @return 下载code key：下载code, value: 下载描述
-     */
-    public static Map<String, String> getDownloadCodeMap() {
-        return BASE_DOWNLOAD_EXECUTOR_MAP.entrySet()
-            .stream()
-            .collect(Collectors.toMap(Entry::getKey, e -> e.getValue().getKey().desc()));
+        return new ArrayList<>(BASE_EXECUTOR_MAP.keySet());
     }
 
     /**
      * 查询执行器
      */
-    public static List<BaseExportExecutor> executorList() {
-        return BASE_DOWNLOAD_EXECUTOR_MAP.values().stream().map(Pair::getValue).collect(Collectors.toList());
+    public static List<Executor> executorList() {
+        return new ArrayList<>(BASE_EXECUTOR_MAP.values());
     }
 }

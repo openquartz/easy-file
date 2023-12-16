@@ -3,13 +3,9 @@ package com.openquartz.easyfile.core.executor;
 import com.openquartz.easyfile.common.bean.IRequest;
 
 /**
- * file handler executor
- *
- * @param <T> executor type
- * @param <R> request type
+ * @author svnee
  */
-
-public interface FileHandlerExecutor<T extends Executor, R extends IRequest> {
+public interface AsyncFileTriggerExecuteHandler {
 
     /**
      * executor executes file handler
@@ -18,6 +14,6 @@ public interface FileHandlerExecutor<T extends Executor, R extends IRequest> {
      * @param baseRequest base request
      * @param registerId  register id
      */
-    void execute(T executor, R baseRequest, Long registerId);
+    <T extends Executor, R extends IRequest> void execute(T executor, R baseRequest, Long registerId);
 
 }

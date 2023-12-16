@@ -1,5 +1,7 @@
 package com.openquartz.easyfile.common.exception;
 
+import lombok.Getter;
+
 import java.text.MessageFormat;
 
 /**
@@ -7,6 +9,7 @@ import java.text.MessageFormat;
  *
  * @author svnee
  */
+@Getter
 public class EasyFileException extends RuntimeException {
 
     private final transient EasyFileErrorCode errorCode;
@@ -19,10 +22,6 @@ public class EasyFileException extends RuntimeException {
     public EasyFileException(EasyFileErrorCode errorCode, String errorMsg) {
         super(errorMsg);
         this.errorCode = errorCode;
-    }
-
-    public EasyFileErrorCode getErrorCode() {
-        return errorCode;
     }
 
     /**

@@ -1,7 +1,10 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.common.util.StringUtils;
+import com.openquartz.easyfile.core.executor.AsyncFileTriggerExecuteHandlerFactory;
+import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
 import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.DefaultAsyncFileExportHandler;
 import com.openquartz.easyfile.core.executor.impl.DefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.metrics.ExportMetricsListener;
 import com.openquartz.easyfile.core.metrics.MetricsListener;
@@ -13,6 +16,7 @@ import com.openquartz.easyfile.starter.processor.DownloadInterceptorPostProcesso
 import com.openquartz.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileMetricsProperties;
+import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
 import com.openquartz.easyfile.storage.file.local.LocalUploadServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -37,6 +41,21 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean(initMethod = "init", destroyMethod = "destroy")
     public EasyFileInitializingEntrance easyEventInitializingEntrance() {
         return new EasyFileInitializingEntrance();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(BaseAsyncFileExportHandler.class)
+    public BaseAsyncFileExportHandler baseAsyncFileExportHandler(EasyFileDownloadProperties easyFileDownloadProperties,
+                                                                 UploadService uploadService,
+                                                                 DownloadStorageService storageService) {
+        return new DefaultAsyncFileExportHandler(easyFileDownloadProperties, uploadService, storageService);
+    }
+
+    @Bean
+    public AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory(BaseAsyncFileExportHandler baseAsyncFileExportHandler) {
+        AsyncFileTriggerExecuteHandlerFactory factory = new AsyncFileTriggerExecuteHandlerFactory();
+        factory.register(baseAsyncFileExportHandler);
+        return factory;
     }
 
     @Bean
@@ -84,12 +103,12 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
-    public MetricsListener metricsListener(){
+    public MetricsListener metricsListener() {
         return new MetricsListener();
     }
 
     @Bean
-    public ExportMetricsListener downloadMetricsListener(){
+    public ExportMetricsListener downloadMetricsListener() {
         return new ExportMetricsListener();
     }
 

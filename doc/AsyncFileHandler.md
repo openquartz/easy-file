@@ -5,13 +5,13 @@
 
 异步文件处理器提供了适配器，需要实现`com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler`
 
-系统针对 提供了默认的适配器实现，只需要继承(`com.openquartz.easyfile.core.executor.AsyncFileExportHandlerAdapter`)，并提供对应的自定义的实现即可。
+系统针对 提供了默认的适配器实现，只需要继承(`com.openquartz.easyfile.core.executor.DefaultFileExportHandler`)，并提供对应的自定义的实现即可。
 
 系统提供了三种触发方式(线程池、DB-Schedule、DB-MQ)
 
 ### 线程池处理器
 
-同时EasyFile 提供了默认实现(`com.openquartz.easyfile.starter.trigger.handler.DefaultAsyncFileExportHandler`),使用线程池触发做异步文件处理器 \
+同时EasyFile 提供了默认实现(`com.openquartz.easyfile.starter.trigger.handler.DefaultAsyncFileTriggerExecuteHandler`),使用线程池触发做异步文件处理器 \
 同时提供对应的Client配置,需要配置(`easyfile.download.async-trigger-type=default`)
 
 | 配置key                                                      | 描述                                | 默认值 |
@@ -94,7 +94,7 @@ DB-调度使用Reaper线程进行调度,增加高可用以及调度效率。避�
 
 ##### disruptor+补偿模式
 
-使用disruptor+补偿模式,系统提供基于Disruptor的触发处理器(`com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileExportHandler`)。\
+使用disruptor+补偿模式,系统提供基于Disruptor的触发处理器(`com.openquartz.easyfile.starter.trigger.handler.MqTriggerDefaultAsyncFileExportHandler`)。\
 需要开启配置为`easyfile.download.async-trigger-type=disruptor`
 
 ```properties
@@ -109,7 +109,7 @@ easyfile.disruptor.async.download.handler.thread-pool-thread-prefix=DisruptorAsy
 
 ##### RocketMQ
 
-使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`com.openquartz.easyfile.starter.trigger.handler.MqTriggerAsyncFileExportHandler`)
+使用MQ 处理器,系统提供的是基于RocketMQ的触发处理(`com.openquartz.easyfile.starter.trigger.handler.MqTriggerDefaultAsyncFileExportHandler`)
 。因此需要提供依赖jar (
 rocket-client)
 

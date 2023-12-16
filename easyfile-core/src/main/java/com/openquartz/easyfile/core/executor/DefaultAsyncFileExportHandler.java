@@ -55,14 +55,15 @@ import org.slf4j.LoggerFactory;
  *
  * @author svnee
  */
-public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExportHandler {
+public class DefaultAsyncFileExportHandler implements BaseAsyncFileExportHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(AsyncFileExportHandlerAdapter.class);
+    private static final Logger logger = LoggerFactory.getLogger(DefaultAsyncFileExportHandler.class);
     private final IEasyFileDownloadProperty downloadProperties;
     private final UploadService uploadService;
     private final DownloadStorageService downloadStorageService;
 
-    protected AsyncFileExportHandlerAdapter(IEasyFileDownloadProperty downloadProperties, UploadService uploadService,
+    public DefaultAsyncFileExportHandler(IEasyFileDownloadProperty downloadProperties,
+                                            UploadService uploadService,
                                             DownloadStorageService storageService) {
         this.downloadProperties = downloadProperties;
         this.downloadStorageService = storageService;
@@ -145,6 +146,11 @@ public abstract class AsyncFileExportHandlerAdapter implements BaseAsyncFileExpo
         ExecutorInterceptorSupport.getInterceptors().stream()
                 .sorted((Comparator.comparingInt(ExportExecutorInterceptor::order)))
                 .forEach(interceptor -> interceptor.beforeExecute(executor, baseRequest, registerId, interceptorContext));
+    }
+
+    @Override
+    public void execute(BaseExportExecutor executor, BaseExportRequestContext baseRequest, Long registerId) {
+        doExecute(executor, baseRequest, registerId);
     }
 
     /**

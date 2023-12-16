@@ -27,15 +27,15 @@ public class EasyFileBeanEnhancePostProcessor implements BeanPostProcessor {
         if (clazz.isAnnotationPresent(FileExportExecutor.class)) {
             if (!BaseExportExecutor.class.isAssignableFrom(clazz)) {
                 throw EasyFileException.replacePlaceHold(ExportErrorCode.BASE_DOWNLOAD_EXECUTOR_IMPL_ILL_ERROR,
-                    BaseExportExecutor.class);
+                        BaseExportExecutor.class);
             }
             FileExportExecutor exportExecutor = clazz.getAnnotation(FileExportExecutor.class);
             if (FileExportExecutorSupport.contains(exportExecutor.value())
-                && !clazz.equals(FileExportExecutorSupport.get(exportExecutor.value()).getClass())) {
+                    && !clazz.equals(FileExportExecutorSupport.get(exportExecutor.value()).getClass())) {
                 throw EasyFileException
-                    .replacePlaceHold(ExportErrorCode.DOWNLOAD_CODE_NOT_UNIQ_ERROR, exportExecutor.value());
+                        .replacePlaceHold(ExportErrorCode.DOWNLOAD_CODE_NOT_UNIQ_ERROR, exportExecutor.value());
             }
-            FileExportExecutorSupport.register(exportExecutor.value(), exportExecutor, (BaseExportExecutor) bean);
+            FileExportExecutorSupport.register(exportExecutor.value(), (BaseExportExecutor) bean);
         }
 
         // 注册file-url-transformer

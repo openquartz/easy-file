@@ -13,7 +13,7 @@ import java.io.InputStream;
  *
  * @author svnee
  */
-public interface BaseImportExecutor {
+public interface BaseImportExecutor extends Executor {
 
     /**
      * 是否开启异步导入
@@ -25,6 +25,7 @@ public interface BaseImportExecutor {
 
     /**
      * import source i/o stream
+     *
      * @param context context
      * @return i/o stream
      */
@@ -39,6 +40,7 @@ public interface BaseImportExecutor {
 
     /**
      * 导入数据逻辑
+     *
      * @param context context
      * @return 是否开启异步。value: 导入任务ID
      */
@@ -50,7 +52,7 @@ public interface BaseImportExecutor {
     /**
      * 异步导入执行完成回调
      *
-     * @param result result
+     * @param result  result
      * @param context 请求上下文
      */
     default void asyncCompleteCallback(ImportResult result, BaseImportRequestContext context) {

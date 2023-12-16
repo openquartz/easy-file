@@ -1,9 +1,9 @@
 package com.openquartz.easyfile.common.bean;
 
+import lombok.Data;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import lombok.Data;
 
 /**
  * 请求上下文
@@ -11,7 +11,7 @@ import lombok.Data;
  * @author svnee
  */
 @Data
-public class BaseExportRequestContext {
+public class BaseExportRequestContext implements IRequest {
 
     /**
      * 操作人

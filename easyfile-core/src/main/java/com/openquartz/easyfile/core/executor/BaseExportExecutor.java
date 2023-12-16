@@ -12,7 +12,7 @@ import com.openquartz.easyfile.core.annotations.FileExportExecutor;
  *
  * @author svnee
  */
-public interface BaseExportExecutor {
+public interface BaseExportExecutor extends Executor {
 
     /**
      * 是否开启异步下载
@@ -59,7 +59,7 @@ public interface BaseExportExecutor {
     /**
      * 异步下载执行完成回调
      *
-     * @param result result
+     * @param result  result
      * @param context 请求上下文
      */
     default void asyncCompleteCallback(ExportResult result, BaseExportRequestContext context) {

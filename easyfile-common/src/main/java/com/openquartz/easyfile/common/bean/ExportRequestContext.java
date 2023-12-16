@@ -1,5 +1,8 @@
 package com.openquartz.easyfile.common.bean;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.io.OutputStream;
 import java.util.Objects;
 
@@ -8,6 +11,8 @@ import java.util.Objects;
  *
  * @author svnee
  */
+@Setter
+@Getter
 public final class ExportRequestContext extends BaseExportRequestContext {
 
     /**
@@ -15,14 +20,6 @@ public final class ExportRequestContext extends BaseExportRequestContext {
      * 必须
      */
     private OutputStream out;
-
-    public OutputStream getOut() {
-        return out;
-    }
-
-    public void setOut(OutputStream out) {
-        this.out = out;
-    }
 
     @Override
     public boolean equals(Object o) {
