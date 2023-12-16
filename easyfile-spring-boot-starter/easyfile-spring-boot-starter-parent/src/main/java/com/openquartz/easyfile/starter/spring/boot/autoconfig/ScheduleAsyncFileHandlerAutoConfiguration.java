@@ -6,7 +6,7 @@ import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
 import com.openquartz.easyfile.starter.trigger.handler.ScheduleTriggerDefaultAsyncFileExportHandler;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -32,12 +32,12 @@ public class ScheduleAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileExportHandler.class)
-    public ScheduleTriggerDefaultAsyncFileExportHandler scheduleTriggerAsyncFileHandler(DownloadStorageService downloadStorageService,
-                                                                      FileTriggerService fileTriggerService,
-                                                                      BaseDefaultRejectExecutionHandler baseDefaultRejectExecutionHandler,
-                                                                      AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,
-                                                                      ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
-       return new ScheduleTriggerDefaultAsyncFileExportHandler(downloadStorageService,
+    public ScheduleTriggerDefaultAsyncFileExportHandler scheduleTriggerAsyncFileHandler(FileTaskStorageService fileTaskStorageService,
+                                                                                        FileTriggerService fileTriggerService,
+                                                                                        BaseDefaultRejectExecutionHandler baseDefaultRejectExecutionHandler,
+                                                                                        AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,
+                                                                                        ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties) {
+       return new ScheduleTriggerDefaultAsyncFileExportHandler(fileTaskStorageService,
                 fileTriggerService,
                 scheduleAsyncHandlerProperties,
                 asyncFileTriggerExecuteHandlerFactory,

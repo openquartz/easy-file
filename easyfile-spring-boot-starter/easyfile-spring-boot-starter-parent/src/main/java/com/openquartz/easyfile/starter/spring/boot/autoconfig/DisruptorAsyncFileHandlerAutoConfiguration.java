@@ -8,7 +8,7 @@ import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFil
 import com.openquartz.easyfile.starter.trigger.DisruptorTriggerConsumer;
 import com.openquartz.easyfile.starter.trigger.DisruptorTriggerProducer;
 import com.openquartz.easyfile.starter.trigger.handler.MqTriggerDefaultAsyncFileExportHandler;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -35,13 +35,13 @@ public class DisruptorAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @Primary
-    public MqTriggerDefaultAsyncFileExportHandler mqTriggerAsyncFileHandler(DownloadStorageService downloadStorageService,
+    public MqTriggerDefaultAsyncFileExportHandler mqTriggerAsyncFileHandler(FileTaskStorageService fileTaskStorageService,
                                                                             FileTriggerService fileTriggerService,
                                                                             MQTriggerProducer mqTriggerProducer,
                                                                             DisruptorAsyncHandlerProperties mqAsyncHandlerProperties,
                                                                             AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory) {
 
-        return new MqTriggerDefaultAsyncFileExportHandler(downloadStorageService,
+        return new MqTriggerDefaultAsyncFileExportHandler(fileTaskStorageService,
                 fileTriggerService,
                 mqAsyncHandlerProperties,
                 mqTriggerProducer,

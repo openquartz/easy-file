@@ -22,7 +22,7 @@ import com.openquartz.easyfile.common.response.ExportResult;
  *
  * @author svnee
  */
-public interface DownloadStorageService {
+public interface FileTaskStorageService {
 
     /**
      * 开启执行下载服务

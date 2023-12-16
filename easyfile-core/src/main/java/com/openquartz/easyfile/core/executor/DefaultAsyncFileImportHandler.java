@@ -9,7 +9,7 @@ import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.annotations.FileImportExecutor;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +26,10 @@ public class DefaultAsyncFileImportHandler implements BaseAsyncFileImportHandler
 
     private static final Logger logger = LoggerFactory.getLogger(DefaultAsyncFileImportHandler.class);
 
-    private final DownloadStorageService downloadStorageService;
+    private final FileTaskStorageService fileTaskStorageService;
 
-    public DefaultAsyncFileImportHandler(DownloadStorageService downloadStorageService) {
-        this.downloadStorageService = downloadStorageService;
+    public DefaultAsyncFileImportHandler(FileTaskStorageService fileTaskStorageService) {
+        this.fileTaskStorageService = fileTaskStorageService;
     }
 
     @Override
@@ -38,7 +38,7 @@ public class DefaultAsyncFileImportHandler implements BaseAsyncFileImportHandler
         Class<?> clazz = SpringContextUtil.getRealClass(executor);
         FileImportExecutor importExecutor = clazz.getDeclaredAnnotation(FileImportExecutor.class);
 
-        if (!downloadStorageService.enableRunning(registerId)) {
+        if (!fileTaskStorageService.enableRunning(registerId)) {
             logger.error("[AsyncFileImportHandlerAdapter#handleResult] this registerId has running!skip,registerId:{},code:{}",
                     registerId, importExecutor.value());
             return buildDefaultRejectExportResult(registerId);
@@ -72,7 +72,7 @@ public class DefaultAsyncFileImportHandler implements BaseAsyncFileImportHandler
             String finalErrorMessage = errorMessage;
             Optional.ofNullable(errorMessage).ifPresent(k -> request.setErrorMsg(finalErrorMessage));
         }
-        downloadStorageService.uploadCallback(request);
+        fileTaskStorageService.uploadCallback(request);
         // 上传完成结果进行回调触发。
         ImportResult importResult = buildImportResult(request);
         executor.asyncCompleteCallback(importResult, baseRequest);

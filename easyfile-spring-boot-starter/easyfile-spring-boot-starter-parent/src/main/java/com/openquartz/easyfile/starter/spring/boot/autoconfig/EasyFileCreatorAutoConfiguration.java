@@ -13,7 +13,7 @@ import com.openquartz.easyfile.starter.processor.DownloadInterceptorPostProcesso
 import com.openquartz.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileMetricsProperties;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
 import com.openquartz.easyfile.storage.file.local.LocalUploadServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -44,13 +44,13 @@ public class EasyFileCreatorAutoConfiguration {
     @ConditionalOnMissingBean(BaseAsyncFileExportHandler.class)
     public BaseAsyncFileExportHandler baseAsyncFileExportHandler(EasyFileDownloadProperties easyFileDownloadProperties,
                                                                  UploadService uploadService,
-                                                                 DownloadStorageService storageService) {
+                                                                 FileTaskStorageService storageService) {
         return new DefaultAsyncFileExportHandler(easyFileDownloadProperties, uploadService, storageService);
     }
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncFileImportHandler.class)
-    public BaseAsyncFileImportHandler baseAsyncFileExportHandler(DownloadStorageService storageService) {
+    public BaseAsyncFileImportHandler baseAsyncFileExportHandler(FileTaskStorageService storageService) {
         return new DefaultAsyncFileImportHandler(storageService);
     }
 

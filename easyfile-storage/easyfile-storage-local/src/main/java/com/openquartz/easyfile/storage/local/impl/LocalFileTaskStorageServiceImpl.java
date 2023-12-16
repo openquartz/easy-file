@@ -3,7 +3,7 @@ package com.openquartz.easyfile.storage.local.impl;
 import com.openquartz.easyfile.common.bean.BaseExportRequestContext;
 import com.openquartz.easyfile.common.dictionary.FileHandleTypeEnum;
 import com.openquartz.easyfile.storage.local.convertor.AsyncDownloadRecordConverter;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.local.entity.AsyncFileAppEntity;
 import com.openquartz.easyfile.storage.local.entity.AsyncFileRecord;
 import com.openquartz.easyfile.storage.local.entity.AsyncFileTask;
@@ -64,12 +64,12 @@ import com.openquartz.easyfile.common.util.StringUtils;
  * @author svnee
  **/
 @Slf4j
-public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
+public class LocalFileTaskStorageServiceImpl implements FileTaskStorageService {
 
     private final AsyncFileTaskMapper asyncFileTaskMapper;
     private final AsyncFileRecordMapper asyncFileRecordMapper;
 
-    public LocalDownloadStorageServiceImpl(
+    public LocalFileTaskStorageServiceImpl(
         AsyncFileTaskMapper asyncFileTaskMapper,
         AsyncFileRecordMapper asyncFileRecordMapper) {
         this.asyncFileTaskMapper = asyncFileTaskMapper;

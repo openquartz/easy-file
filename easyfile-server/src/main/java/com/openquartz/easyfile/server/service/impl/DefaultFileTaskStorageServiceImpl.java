@@ -20,7 +20,7 @@ import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
 import com.openquartz.easyfile.server.service.AsyncDownloadService;
 import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 
 /**
  * DefaultDownloadStorageServiceImpl
@@ -29,7 +29,7 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
  **/
 @Service
 @RequiredArgsConstructor
-public class DefaultDownloadStorageServiceImpl implements DownloadStorageService {
+public class DefaultFileTaskStorageServiceImpl implements FileTaskStorageService {
 
     private final AsyncDownloadTaskService asyncDownloadTaskService;
     private final AsyncDownloadService asyncDownloadService;

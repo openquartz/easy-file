@@ -7,7 +7,7 @@ import com.openquartz.easyfile.core.executor.AsyncFileTriggerExecuteHandlerFacto
 import com.openquartz.easyfile.core.executor.BaseDefaultRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.impl.DatabaseDefaultAsyncFileExportHandler;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.ScheduleAsyncHandlerProperties;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -40,7 +40,7 @@ public class ScheduleTriggerDefaultAsyncFileExportHandler extends DatabaseDefaul
     }
 
     public ScheduleTriggerDefaultAsyncFileExportHandler(
-        DownloadStorageService storageService,
+        FileTaskStorageService storageService,
         FileTriggerService triggerService,
         ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
         AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openquartz.easyfile.common.bean.ResponseResult;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 
 /**
  * @author svnee
@@ -18,7 +18,7 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 public class FileManageController {
 
     @Resource
-    private DownloadStorageService downloadStorageService;
+    private FileTaskStorageService fileTaskStorageService;
 
     @GetMapping("/get-url")
     public ResponseResult<String> getUrl(@RequestParam("registerId") Long registerId) {
@@ -26,7 +26,7 @@ public class FileManageController {
         downloadRequest.setDownloadOperateBy("sys");
         downloadRequest.setDownloadOperateName("sys");
         downloadRequest.setRegisterId(registerId);
-        DownloadUrlResult result = downloadStorageService.download(downloadRequest);
+        DownloadUrlResult result = fileTaskStorageService.download(downloadRequest);
         return ResponseResult.ok(result.getUrl());
     }
 

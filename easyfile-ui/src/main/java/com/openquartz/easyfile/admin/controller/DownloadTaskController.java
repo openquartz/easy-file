@@ -31,7 +31,7 @@ import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.util.PaginationUtils;
 import com.openquartz.easyfile.common.util.StringUtils;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 
 /**
  * download-task manage
@@ -45,7 +45,7 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 @RequiredArgsConstructor
 public class DownloadTaskController {
 
-    private final DownloadStorageService downloadStorageService;
+    private final FileTaskStorageService fileTaskStorageService;
     private final ServerAppIdProvider serverAppIdProvider;
     private final AdminProperty adminProperty;
 
@@ -81,7 +81,7 @@ public class DownloadTaskController {
         resultRequest.setPageNum(Objects.nonNull(request.getPageNum()) ? request.getPageNum() : 1);
         resultRequest.setPageSize(Objects.nonNull(request.getPageSize()) ? request.getPageSize() : 10);
 
-        Pagination<DownloadResult> voPagination = downloadStorageService.listExportResult(resultRequest);
+        Pagination<DownloadResult> voPagination = fileTaskStorageService.listExportResult(resultRequest);
 
         List<DownloadTaskResult> resultList = voPagination.getModelList()
             .stream().map(this::assember)
@@ -121,7 +121,7 @@ public class DownloadTaskController {
         downloadRequest.setRegisterId(request.getRegisterId());
         downloadRequest.setDownloadOperateBy(adminProperty.getAdminUsername());
         downloadRequest.setDownloadOperateName(adminProperty.getAdminUsername());
-        DownloadUrlResult url = downloadStorageService.download(downloadRequest);
+        DownloadUrlResult url = fileTaskStorageService.download(downloadRequest);
         return ResponseResult.ok(url);
     }
 
@@ -135,7 +135,7 @@ public class DownloadTaskController {
         CancelUploadRequest cancelRequest = new CancelUploadRequest();
         cancelRequest.setCancelBy(adminProperty.getAdminUsername());
         cancelRequest.setRegisterId(request.getRegisterId());
-        CancelUploadResult cancelUpload = downloadStorageService.cancelUpload(cancelRequest);
+        CancelUploadResult cancelUpload = fileTaskStorageService.cancelUpload(cancelRequest);
         if (cancelUpload.isCancelResult()) {
             return ResponseResult.ok();
         } else {
@@ -151,7 +151,7 @@ public class DownloadTaskController {
     @ResponseBody
     @PostMapping(value = "/listAppId", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseResult<List<AppTree>> listAppId() {
-        List<AppTree> appTreeList = downloadStorageService.getAppTree();
+        List<AppTree> appTreeList = fileTaskStorageService.getAppTree();
         return ResponseResult.ok(appTreeList);
     }
 

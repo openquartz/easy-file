@@ -6,7 +6,7 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.remote.exception.RemoteUploadExceptionCode;
 import java.io.IOException;
 import java.util.List;
@@ -41,11 +41,11 @@ import com.openquartz.easyfile.storage.remote.EasyFileClient;
  * @author svnee
  **/
 @Slf4j
-public class RemoteDownloadStorageServiceImpl implements DownloadStorageService {
+public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService {
 
     private final EasyFileClient easyFileClient;
 
-    public RemoteDownloadStorageServiceImpl(EasyFileClient easyFileClient) {
+    public RemoteFileTaskStorageServiceImpl(EasyFileClient easyFileClient) {
         this.easyFileClient = easyFileClient;
     }
 

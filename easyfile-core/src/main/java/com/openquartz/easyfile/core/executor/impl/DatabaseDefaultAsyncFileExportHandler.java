@@ -12,7 +12,7 @@ import com.openquartz.easyfile.core.executor.FileHandlerExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.core.executor.support.FileTriggerContext;
 import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public abstract class DatabaseDefaultAsyncFileExportHandler implements AsyncFileTriggerExecuteHandler, InitializingBean {
 
     private final FileTriggerService triggerService;
-    private final DownloadStorageService storageService;
+    private final FileTaskStorageService storageService;
     private final IDatabaseAsyncHandlerProperty handlerProperties;
     private final AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory;
 
@@ -39,7 +39,7 @@ public abstract class DatabaseDefaultAsyncFileExportHandler implements AsyncFile
                     .build());
 
     protected DatabaseDefaultAsyncFileExportHandler(
-            DownloadStorageService storageService,
+            FileTaskStorageService storageService,
             FileTriggerService triggerService,
             IDatabaseAsyncHandlerProperty handlerProperties,
             AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory) {

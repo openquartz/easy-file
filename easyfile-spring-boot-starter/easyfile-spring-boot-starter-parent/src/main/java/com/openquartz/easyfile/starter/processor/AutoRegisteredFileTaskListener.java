@@ -21,7 +21,7 @@ import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 
 /**
  * 自动注册下载任务监听器
@@ -29,13 +29,13 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
  * @author svnee
  */
 @Slf4j
-public class AutoRegisteredDownloadTaskListener implements ApplicationListener<ApplicationReadyEvent> {
+public class AutoRegisteredFileTaskListener implements ApplicationListener<ApplicationReadyEvent> {
 
     private final EasyFileDownloadProperties downloadProperties;
-    private final DownloadStorageService storageService;
+    private final FileTaskStorageService storageService;
 
-    public AutoRegisteredDownloadTaskListener(EasyFileDownloadProperties downloadProperties,
-                                              DownloadStorageService storageService) {
+    public AutoRegisteredFileTaskListener(EasyFileDownloadProperties downloadProperties,
+                                          FileTaskStorageService storageService) {
         this.downloadProperties = downloadProperties;
         this.storageService = storageService;
     }

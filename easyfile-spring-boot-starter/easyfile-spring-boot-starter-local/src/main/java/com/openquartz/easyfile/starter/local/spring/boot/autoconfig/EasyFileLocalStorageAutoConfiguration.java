@@ -27,11 +27,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import com.openquartz.easyfile.common.util.StringUtils;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
-import com.openquartz.easyfile.storage.local.impl.LocalDownloadStorageServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalFileTaskStorageServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalFileTriggerServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalLimitingServiceImpl;
 import com.openquartz.easyfile.storage.local.mapper.AsyncFileRecordMapper;
@@ -50,7 +50,7 @@ import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({EasyFileLocalProperties.class})
-@ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
+@ConditionalOnClass({LocalLimitingServiceImpl.class, LocalFileTaskStorageServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
@@ -149,11 +149,11 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     }
 
     @Bean
-    @ConditionalOnMissingBean(DownloadStorageService.class)
-    @ConditionalOnClass(LocalDownloadStorageServiceImpl.class)
-    public DownloadStorageService localDownloadStorageServiceImpl(AsyncFileRecordMapper asyncFileRecordMapper,
-        AsyncFileTaskMapper asyncFileTaskMapper) {
-        return new LocalDownloadStorageServiceImpl(asyncFileTaskMapper, asyncFileRecordMapper);
+    @ConditionalOnMissingBean(FileTaskStorageService.class)
+    @ConditionalOnClass(LocalFileTaskStorageServiceImpl.class)
+    public FileTaskStorageService localDownloadStorageServiceImpl(AsyncFileRecordMapper asyncFileRecordMapper,
+                                                                  AsyncFileTaskMapper asyncFileTaskMapper) {
+        return new LocalFileTaskStorageServiceImpl(asyncFileTaskMapper, asyncFileRecordMapper);
     }
 
     @Bean

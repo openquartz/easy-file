@@ -10,7 +10,7 @@ import com.openquartz.easyfile.core.executor.trigger.MQTriggerProducer;
 import com.openquartz.easyfile.core.executor.trigger.TriggerMessage;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.MqAsyncHandlerProperties;
 import com.openquartz.easyfile.starter.util.TransactionProxyUtils;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,7 +31,7 @@ public class MqTriggerDefaultAsyncFileExportHandler extends DatabaseDefaultAsync
     private final MqAsyncHandlerProperties handlerProperties;
 
     public MqTriggerDefaultAsyncFileExportHandler(
-            DownloadStorageService storageService,
+            FileTaskStorageService storageService,
             FileTriggerService triggerService,
             MqAsyncHandlerProperties handlerProperties,
             MQTriggerProducer mqProducer,

@@ -32,7 +32,7 @@ import com.openquartz.easyfile.core.intercept.ExportExecutorInterceptor;
 import com.openquartz.easyfile.core.intercept.ExecutorInterceptorSupport;
 import com.openquartz.easyfile.core.intercept.InterceptorContext;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.file.UploadService;
 
 import java.io.BufferedOutputStream;
@@ -60,13 +60,13 @@ public class DefaultAsyncFileExportHandler implements BaseAsyncFileExportHandler
     private static final Logger logger = LoggerFactory.getLogger(DefaultAsyncFileExportHandler.class);
     private final IEasyFileDownloadProperty downloadProperties;
     private final UploadService uploadService;
-    private final DownloadStorageService downloadStorageService;
+    private final FileTaskStorageService fileTaskStorageService;
 
     public DefaultAsyncFileExportHandler(IEasyFileDownloadProperty downloadProperties,
                                             UploadService uploadService,
-                                            DownloadStorageService storageService) {
+                                            FileTaskStorageService storageService) {
         this.downloadProperties = downloadProperties;
-        this.downloadStorageService = storageService;
+        this.fileTaskStorageService = storageService;
         this.uploadService = uploadService;
     }
 
@@ -86,14 +86,14 @@ public class DefaultAsyncFileExportHandler implements BaseAsyncFileExportHandler
         if (executor.enableExportCache(baseRequest)) {
             LoadingExportCacheRequest cacheRequest =
                     buildLoadingExportCacheRequest(baseRequest, exportExecutor, registerId);
-            ExportResult exportResult = downloadStorageService.loadingCacheExportResult(cacheRequest);
+            ExportResult exportResult = fileTaskStorageService.loadingCacheExportResult(cacheRequest);
             if (Objects.nonNull(exportResult) && HandleStatusEnum.SUCCESS.equals(exportResult.getUploadStatus())) {
                 return exportResult;
             }
         }
 
         // 校验是否可以执行运行
-        if (!downloadStorageService.enableRunning(registerId)) {
+        if (!fileTaskStorageService.enableRunning(registerId)) {
             logger.error("[AsyncFileHandlerAdapter#handleResult] this registerId has running!skip,registerId:{}",
                     registerId);
             return buildDefaultRejectExportResult(registerId);
@@ -127,7 +127,7 @@ public class DefaultAsyncFileExportHandler implements BaseAsyncFileExportHandler
             request.setUploadStatus(HandleStatusEnum.FAIL);
             Optional.of(genFileResult).ifPresent(k -> request.setErrorMsg(lessErrorMsg(k.getErrorMsg())));
         }
-        downloadStorageService.uploadCallback(request);
+        fileTaskStorageService.uploadCallback(request);
         // 上传完成结果进行回调触发。
         ExportResult exportResult = buildExportResult(request);
         executor.asyncCompleteCallback(exportResult, baseRequest);
@@ -249,7 +249,7 @@ public class DefaultAsyncFileExportHandler implements BaseAsyncFileExportHandler
 
                 //report execute-process
                 ExecuteProcessReporterImpl reporter = new ExecuteProcessReporterImpl(registerId,
-                        downloadStorageService);
+                        fileTaskStorageService);
                 ExecuteProcessProbe.setCurrentReporter(reporter);
                 reporter.start();
 

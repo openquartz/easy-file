@@ -35,7 +35,7 @@ import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
 import com.openquartz.easyfile.core.executor.BaseWrapperSyncResponseHeader;
 import com.openquartz.easyfile.core.intercept.listener.ExportEndListener;
 import com.openquartz.easyfile.core.intercept.listener.ExportStartEvent;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 
 /**
@@ -48,18 +48,18 @@ public class FileExportInterceptor implements MethodInterceptor {
 
     private final EasyFileDownloadProperties downloadProperties;
     private final LimitingService limitingService;
-    private final DownloadStorageService downloadStorageService;
+    private final FileTaskStorageService fileTaskStorageService;
     private final BaseAsyncFileExportHandler handler;
     private final ApplicationContext context;
 
     public FileExportInterceptor(EasyFileDownloadProperties downloadProperties,
         LimitingService limitingService,
-        DownloadStorageService downloadStorageService,
+        FileTaskStorageService fileTaskStorageService,
         BaseAsyncFileExportHandler handler,
         ApplicationContext context) {
         this.downloadProperties = downloadProperties;
         this.limitingService = limitingService;
-        this.downloadStorageService = downloadStorageService;
+        this.fileTaskStorageService = fileTaskStorageService;
         this.handler = handler;
         this.context = context;
     }
@@ -162,7 +162,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         RegisterDownloadRequest downloadRequest = buildDownloadRequest(exportExecutor, requestContext);
         TransactionTemplate template = context.getBean(TransactionTemplate.class);
         Long downloadRegisterId = template.execute(action -> {
-            Long registerId = downloadStorageService.register(downloadRequest);
+            Long registerId = fileTaskStorageService.register(downloadRequest);
             handler.execute(executor, requestContext, registerId);
             return registerId;
         });

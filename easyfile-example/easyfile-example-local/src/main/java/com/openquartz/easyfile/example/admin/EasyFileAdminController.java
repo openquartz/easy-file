@@ -14,7 +14,7 @@ import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 
 /**
  * EasyFileAdminController
@@ -26,7 +26,7 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 @RequestMapping("/easyfile/admin")
 public class EasyFileAdminController {
 
-    private final DownloadStorageService downloadStorageService;
+    private final FileTaskStorageService fileTaskStorageService;
     private final EasyFileDownloadProperties easyFileDownloadProperties;
 
     /**
@@ -37,7 +37,7 @@ public class EasyFileAdminController {
         @RequestBody @Valid ListDownloadResultRequest request) {
         // 分页结果
         request.setUnifiedAppId(easyFileDownloadProperties.getUnifiedAppId());
-        Pagination<DownloadResult> voPagination = downloadStorageService.listExportResult(request);
+        Pagination<DownloadResult> voPagination = fileTaskStorageService.listExportResult(request);
         return ResponseResult.ok(voPagination);
     }
 
@@ -46,7 +46,7 @@ public class EasyFileAdminController {
      */
     @PostMapping("/clickDownload")
     public ResponseResult<DownloadUrlResult> clickDownload(@RequestBody @Valid DownloadRequest request) {
-        DownloadUrlResult result = downloadStorageService.download(request);
+        DownloadUrlResult result = fileTaskStorageService.download(request);
         return ResponseResult.ok(result);
     }
 
@@ -55,7 +55,7 @@ public class EasyFileAdminController {
      */
     @PostMapping("/revoke")
     public ResponseResult<?> revoke(@RequestBody @Valid CancelUploadRequest request) {
-        downloadStorageService.cancelUpload(request);
+        fileTaskStorageService.cancelUpload(request);
         return ResponseResult.ok();
     }
 }

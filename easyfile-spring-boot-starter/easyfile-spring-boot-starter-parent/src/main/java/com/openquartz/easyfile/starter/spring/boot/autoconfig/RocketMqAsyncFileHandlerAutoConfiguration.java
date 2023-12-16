@@ -11,7 +11,7 @@ import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.RocketM
 import com.openquartz.easyfile.starter.trigger.RocketMQTriggerConsumer;
 import com.openquartz.easyfile.starter.trigger.RocketMQTriggerProducer;
 import com.openquartz.easyfile.starter.trigger.handler.MqTriggerDefaultAsyncFileExportHandler;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.FileTriggerService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -43,13 +43,13 @@ public class RocketMqAsyncFileHandlerAutoConfiguration {
 
     @Bean
     @Primary
-    public MqTriggerDefaultAsyncFileExportHandler mqTriggerAsyncFileHandler(DownloadStorageService downloadStorageService,
+    public MqTriggerDefaultAsyncFileExportHandler mqTriggerAsyncFileHandler(FileTaskStorageService fileTaskStorageService,
                                                                             FileTriggerService fileTriggerService,
                                                                             MQTriggerProducer mqTriggerProducer,
                                                                             DisruptorAsyncHandlerProperties mqAsyncHandlerProperties,
                                                                             AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory) {
 
-        return new MqTriggerDefaultAsyncFileExportHandler(downloadStorageService,
+        return new MqTriggerDefaultAsyncFileExportHandler(fileTaskStorageService,
                 fileTriggerService,
                 mqAsyncHandlerProperties,
                 mqTriggerProducer,

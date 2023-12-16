@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Role;
 import com.openquartz.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileExportHandler;
-import com.openquartz.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.starter.processor.AutoRegisteredFileTaskListener;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 
 /**
@@ -33,13 +33,13 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
     @Bean
     @Role(value = BeanDefinition.ROLE_INFRASTRUCTURE)
     public Advisor fileExportExecutorAnnotationAdvisor(EasyFileDownloadProperties easyFileDownloadProperties,
-        DownloadStorageService downloadStorageService,
-        LimitingService limitingService,
-        BaseAsyncFileExportHandler baseAsyncFileHandler,
-        ApplicationContext applicationContext
+                                                       FileTaskStorageService fileTaskStorageService,
+                                                       LimitingService limitingService,
+                                                       BaseAsyncFileExportHandler baseAsyncFileHandler,
+                                                       ApplicationContext applicationContext
     ) {
         FileExportInterceptor interceptor = new FileExportInterceptor(easyFileDownloadProperties, limitingService,
-            downloadStorageService, baseAsyncFileHandler, applicationContext);
+                fileTaskStorageService, baseAsyncFileHandler, applicationContext);
         FileExportExecutorAnnotationAdvisor advisor = new FileExportExecutorAnnotationAdvisor(interceptor);
         advisor.setOrder(easyFileDownloadProperties.getExportAdvisorOrder());
         return advisor;
@@ -47,10 +47,10 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enable-auto-register", havingValue = "true")
-    public AutoRegisteredDownloadTaskListener autoRegisteredDownloadTaskListener(
-        EasyFileDownloadProperties easyFileDownloadProperties,
-        DownloadStorageService downloadStorageService) {
-        return new AutoRegisteredDownloadTaskListener(easyFileDownloadProperties, downloadStorageService);
+    public AutoRegisteredFileTaskListener autoRegisteredDownloadTaskListener(
+            EasyFileDownloadProperties easyFileDownloadProperties,
+            FileTaskStorageService fileTaskStorageService) {
+        return new AutoRegisteredFileTaskListener(easyFileDownloadProperties, fileTaskStorageService);
     }
 
 }

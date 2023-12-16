@@ -20,10 +20,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.storage.remote.EasyFileClient;
-import com.openquartz.easyfile.storage.download.DownloadStorageService;
+import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 import com.openquartz.easyfile.storage.remote.impl.HttpEasyFileClientImpl;
-import com.openquartz.easyfile.storage.remote.impl.RemoteDownloadStorageServiceImpl;
+import com.openquartz.easyfile.storage.remote.impl.RemoteFileTaskStorageServiceImpl;
 import com.openquartz.easyfile.storage.remote.impl.RemoteLimitingServiceImpl;
 import com.openquartz.easyfile.storage.remote.common.HttpAgent;
 import com.openquartz.easyfile.storage.remote.common.HttpScheduledHealthCheck;
@@ -40,16 +40,16 @@ import com.openquartz.easyfile.storage.remote.common.ServerHttpAgent;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({EasyFileRemoteProperties.class})
-@ConditionalOnClass({RemoteDownloadStorageServiceImpl.class, RemoteLimitingServiceImpl.class})
+@ConditionalOnClass({RemoteFileTaskStorageServiceImpl.class, RemoteLimitingServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
 @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 public class EasyFileRemoteStorageAutoConfiguration {
 
     @Bean
-    @ConditionalOnMissingBean(DownloadStorageService.class)
-    @ConditionalOnClass(RemoteDownloadStorageServiceImpl.class)
-    public DownloadStorageService remoteDownloadStorageService(EasyFileClient easyFileClient) {
-        return new RemoteDownloadStorageServiceImpl(easyFileClient);
+    @ConditionalOnMissingBean(FileTaskStorageService.class)
+    @ConditionalOnClass(RemoteFileTaskStorageServiceImpl.class)
+    public FileTaskStorageService remoteDownloadStorageService(EasyFileClient easyFileClient) {
+        return new RemoteFileTaskStorageServiceImpl(easyFileClient);
     }
 
     @Bean
