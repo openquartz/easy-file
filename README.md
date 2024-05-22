@@ -8,6 +8,8 @@
 
 Make BigData Export Easier!!!
 
+> **注意**：本项目未发布到maven中央仓库，需要手动添加到本地仓库 或者 到私有仓库中使用。
+
 ## 欢迎Star!!!
 
 **[主页](https://svnlab.github.io/)** \
