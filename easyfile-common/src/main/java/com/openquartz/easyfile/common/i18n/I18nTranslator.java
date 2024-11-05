@@ -42,7 +42,7 @@ public class I18nTranslator {
         }
 
         // 获取当前语言
-        Locale locale = LocaleContextHolder.currentLocale();
+        Locale locale = LocaleContext.currentLocale();
 
         MessageSource messageSource = SpringContextUtil.getBean(MessageSource.class);
         return messageSource.getMessage(key, null, locale);

@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.intercept;
 
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
-import com.openquartz.easyfile.common.i18n.LocaleContextHolder;
+import com.openquartz.easyfile.common.i18n.LocaleContext;
 import com.openquartz.easyfile.common.response.ExportResult;
 import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -30,12 +30,12 @@ public class I18nDownloadExecutorInterceptor implements DownloadExecutorIntercep
     public void beforeExecute(BaseDownloadExecutor executor, BaseDownloaderRequestContext context, Long registerId, InterceptorContext interceptorContext) {
 
         Locale currentLocale = downloadStorageService.getCurrentLocale(registerId);
-        LocaleContextHolder.setCurrentLocale(currentLocale);
+        LocaleContext.setCurrentLocale(currentLocale);
 
     }
 
     @Override
     public void afterExecute(BaseDownloadExecutor executor, BaseDownloaderRequestContext context, ExportResult result, InterceptorContext interceptorContext) {
-        LocaleContextHolder.clear();
+        LocaleContext.clear();
     }
 }

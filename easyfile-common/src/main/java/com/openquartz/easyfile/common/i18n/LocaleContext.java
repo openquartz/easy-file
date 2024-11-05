@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.common.i18n;
 
 import com.openquartz.easyfile.common.util.StringUtils;
-import org.springframework.core.NamedThreadLocal;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.lang.Nullable;
 
 import java.util.Locale;
@@ -13,31 +13,29 @@ import java.util.Optional;
  *
  * @author svnee
  */
-public class LocaleContextHolder {
+public class LocaleContext {
 
-    private static final ThreadLocal<Locale> currentLocaleContext = new NamedThreadLocal<>("Current Locale");
-
-    private LocaleContextHolder() {
+    private LocaleContext() {
     }
 
     public static Locale currentLocale() throws IllegalStateException {
-        return currentLocaleContext.get();
+        return LocaleContextHolder.getLocale();
     }
 
     public static String currentLocaleLanguage() throws IllegalStateException {
-        Locale locale = currentLocaleContext.get();
-        return Optional.ofNullable(locale).map(Locale::getLanguage).orElse(StringUtils.EMPTY);
+        Locale locale = currentLocale();
+        return Optional.of(locale).map(Locale::getLanguage).orElse(StringUtils.EMPTY);
     }
 
     public static void setCurrentLocale(@Nullable Locale locale) {
 
         if (Objects.nonNull(locale)) {
-            currentLocaleContext.set(locale);
+            LocaleContextHolder.setLocale(locale);
         }
 
     }
 
     public static void clear() {
-        currentLocaleContext.remove();
+        LocaleContextHolder.resetLocaleContext();
     }
 }
