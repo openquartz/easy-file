@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.storage.local.mapper;
 
 import java.util.List;
+
 import com.openquartz.easyfile.storage.local.entity.AsyncDownloadAppEntity;
 import com.openquartz.easyfile.storage.local.entity.AsyncDownloadTask;
 
@@ -23,7 +24,7 @@ public interface AsyncDownloadTaskMapper {
      * 根据下载code 查询异步下载任务
      *
      * @param taskCode 下载编码
-     * @param appId 系统ID
+     * @param appId    系统ID
      * @return 下载任务
      */
     AsyncDownloadTask selectByDownloadCode(String taskCode, String appId);
@@ -32,7 +33,7 @@ public interface AsyncDownloadTaskMapper {
      * 批量查询
      *
      * @param downloadCodeList 下载code
-     * @param appIdList appID
+     * @param appIdList        appID
      * @return 下载任务
      */
     List<AsyncDownloadTask> listByDownloadCode(List<String> downloadCodeList, List<String> appIdList);
@@ -40,7 +41,7 @@ public interface AsyncDownloadTaskMapper {
     /**
      * 刷新任务描述
      *
-     * @param id ID
+     * @param id       ID
      * @param taskDesc 任务描述
      * @return affect row
      */

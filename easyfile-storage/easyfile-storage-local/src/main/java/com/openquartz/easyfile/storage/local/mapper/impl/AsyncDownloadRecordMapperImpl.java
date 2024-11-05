@@ -3,6 +3,7 @@ package com.openquartz.easyfile.storage.local.mapper.impl;
 import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadRecordMapper;
 import com.openquartz.easyfile.storage.local.mapper.condition.BaseRecordQueryCondition;
 import com.openquartz.easyfile.storage.local.mapper.condition.UploadInfoChangeCondition;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -39,13 +41,13 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     private final JdbcTemplate jdbcTemplate;
 
     private static final String INSERT_SQL =
-        "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "insert into {0}(download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+                    + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by,locale) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String FIND_BY_ID_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
-            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} where id = ?";
+            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
+                    + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+                    + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by,locale from {0} where id = ?";
 
     private static final String REFRESH_UPLOAD_STATUS_SQL = "update {0} set upload_status = ?,update_by = ? where id = ? AND upload_status = ?";
 
@@ -56,17 +58,19 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     private static final String UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL = "update {0} set execute_process = ?,upload_status=? where id = ? and execute_process <= ? ";
 
     private static final String LIST_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
-            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} "
-            + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
+            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
+                    + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+                    + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by,locale from {0} "
+                    + "where download_task_id = ? and upload_status=? order by update_time desc limit ?";
 
     private static final String SELECT_ALL_SQL =
-        "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
-            + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
-            + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by from {0} ";
+            "select id,download_task_id, app_id,download_code,upload_status, file_url, file_name, file_system, download_operate_by,"
+                    + "download_operate_name, remark, notify_enable_status,notify_email, max_server_retry, current_retry,download_num,last_execute_time,"
+                    + "invalid_time,execute_param,error_msg,execute_process, version, create_time, update_time, create_by, update_by,locale from {0} ";
 
     private static final String SELECT_COUNT_SQL = "select count(*) from {0}";
+
+    private static final String SELECT_LOCALE_SQL = "select locale from {0} where is_deleted = 0 and id = ?";
 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
@@ -101,6 +105,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             ps.setTimestamp(23, new Timestamp(downloadRecord.getUpdateTime().getTime()));
             ps.setString(24, downloadRecord.getCreateBy());
             ps.setString(25, downloadRecord.getUpdateBy());
+            ps.setString(26, downloadRecord.getLocale());
             return ps;
         }, keyHolder);
 
@@ -115,9 +120,9 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     @Override
     public AsyncDownloadRecord findById(Long id) {
         String sql = MessageFormat
-            .format(FIND_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                .format(FIND_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         List<AsyncDownloadRecord> downloadRecordList = jdbcTemplate
-            .query(sql, new Object[]{id}, new AsyncDownloadRecordRowMapper());
+                .query(sql, new Object[]{id}, new AsyncDownloadRecordRowMapper());
         if (CollectionUtils.isNotEmpty(downloadRecordList)) {
             return downloadRecordList.get(0);
         }
@@ -128,8 +133,8 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     public int changeUploadInfo(UploadInfoChangeCondition condition) {
         List<Object> params = new ArrayList<>();
         final StringBuilder sql = new StringBuilder(
-            "update " + EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable()
-                + " set version=version+1,upload_status = ? ");
+                "update " + EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable()
+                        + " set version=version+1,upload_status = ? ");
         params.add(condition.getUploadStatus().getCode());
         if (StringUtils.isNotBlank(condition.getFileUrl())) {
             sql.append(",file_url = ?");
@@ -162,27 +167,27 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     @Override
     public int refreshUploadStatus(Long id, UploadStatusEnum oriUploadStatus, UploadStatusEnum tagUploadStatus,
-        String updateBy) {
+                                   String updateBy) {
         String sql = MessageFormat.format(REFRESH_UPLOAD_STATUS_SQL,
-            EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate
-            .update(sql, tagUploadStatus.getCode(), updateBy, id, oriUploadStatus.getCode());
+                .update(sql, tagUploadStatus.getCode(), updateBy, id, oriUploadStatus.getCode());
     }
 
     @Override
     public int download(Long id, UploadStatusEnum uploadStatus) {
         String sql = MessageFormat
-            .format(UPDATE_DOWNLOAD_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                .format(UPDATE_DOWNLOAD_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.update(sql, id, uploadStatus.getCode());
     }
 
     @Override
     public List<AsyncDownloadRecord> listByTaskIdAndStatus(Long downloadTaskId, UploadStatusEnum uploadStatus,
-        Integer offset) {
+                                                           Integer offset) {
         String sql = MessageFormat.format(LIST_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate
-            .query(sql, new Object[]{downloadTaskId, uploadStatus.getCode(), offset},
-                new AsyncDownloadRecordRowMapper());
+                .query(sql, new Object[]{downloadTaskId, uploadStatus.getCode(), offset},
+                        new AsyncDownloadRecordRowMapper());
     }
 
     private static class AsyncDownloadRecordRowMapper implements RowMapper<AsyncDownloadRecord> {
@@ -216,6 +221,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             downloadRecord.setUpdateTime(rs.getTimestamp("update_time"));
             downloadRecord.setCreateBy(rs.getString("create_by"));
             downloadRecord.setUpdateBy(rs.getString("update_by"));
+            downloadRecord.setLocale(rs.getString("locale"));
             return downloadRecord;
         }
     }
@@ -223,15 +229,15 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     @Override
     public int refreshExecuteProcess(Long registerId, Integer executeProcess, UploadStatusEnum nextStatus) {
         String sql = MessageFormat
-            .format(UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL,
-                EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                .format(UPDATE_EXECUTE_PROCESS_NEXT_STATUS_SQL,
+                        EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.update(sql, executeProcess, nextStatus.getCode(), registerId, executeProcess);
     }
 
     @Override
     public int resetExecuteProcess(Long registerId) {
         String sql = MessageFormat
-            .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                .format(UPDATE_EXECUTE_PROCESS_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.update(sql, 0, registerId, 100);
     }
 
@@ -239,12 +245,12 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     public List<AsyncDownloadRecord> selectByCondition(BaseRecordQueryCondition condition) {
         Pair<String, Map<String, Object>> pair = queryByCondition(condition, SELECT_ALL_SQL);
         return new NamedParameterJdbcTemplate(jdbcTemplate)
-            .query(pair.getKey(), pair.getValue(), new AsyncDownloadRecordRowMapper());
+                .query(pair.getKey(), pair.getValue(), new AsyncDownloadRecordRowMapper());
     }
 
     private Pair<String, Map<String, Object>> queryByCondition(BaseRecordQueryCondition condition, String sqlTemplate) {
         String sql = MessageFormat
-            .format(sqlTemplate, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+                .format(sqlTemplate, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
 
         StringJoiner conditionWhere = new StringJoiner(" and ");
         Map<String, Object> paramMap = new HashMap<>(10);
@@ -292,7 +298,14 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     public int countByCondition(BaseRecordQueryCondition condition) {
         Pair<String, Map<String, Object>> pair = queryByCondition(condition, SELECT_COUNT_SQL);
         Integer total = new NamedParameterJdbcTemplate(jdbcTemplate)
-            .queryForObject(pair.getKey(), pair.getValue(), Integer.class);
+                .queryForObject(pair.getKey(), pair.getValue(), Integer.class);
         return Objects.nonNull(total) ? total : 0;
+    }
+
+    @Override
+    public String getLocale(Long registerId) {
+        String sql = MessageFormat
+                .format(SELECT_LOCALE_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTaskTable());
+        return jdbcTemplate.queryForObject(sql, String.class, registerId);
     }
 }

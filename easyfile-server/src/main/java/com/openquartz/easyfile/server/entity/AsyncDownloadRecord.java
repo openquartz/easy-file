@@ -1,12 +1,15 @@
 package com.openquartz.easyfile.server.entity;
 
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
+
 import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
 import lombok.Data;
 
 import java.util.Date;
+
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
 
 /**
@@ -178,14 +181,20 @@ public class AsyncDownloadRecord {
     private String updateBy;
 
     /**
+     * locale
+     */
+    @Column(name = "locale")
+    private String locale;
+
+    /**
      * 是否已经上传完成
      *
      * @return 是否已经完成
      */
     public boolean isUploadComplete() {
         return !(UploadStatusEnum.NONE == uploadStatus
-            || UploadStatusEnum.EXECUTING == uploadStatus
-            || UploadStatusEnum.UPLOADING == uploadStatus);
+                || UploadStatusEnum.EXECUTING == uploadStatus
+                || UploadStatusEnum.UPLOADING == uploadStatus);
     }
 
 }

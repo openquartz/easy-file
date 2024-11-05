@@ -183,4 +183,16 @@ public class DownloadController {
         return ResponseResult.ok(appTreeList);
     }
 
+    /**
+     * get app tree
+     *
+     * @return result
+     */
+    @PostMapping("/getLocale")
+    public ResponseResult<String> getLocale(@RequestBody @Valid @NotNull Long registerId) {
+        String locale = asyncDownloadService.getLocale(registerId);
+        return ResponseResult.ok(locale);
+    }
+
+
 }

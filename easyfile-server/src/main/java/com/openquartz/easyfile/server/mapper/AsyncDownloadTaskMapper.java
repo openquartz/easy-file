@@ -85,4 +85,11 @@ public interface AsyncDownloadTaskMapper {
      * @return app tree
      */
     List<AsyncDownloadAppEntity> getAppTree();
+
+    /**
+     * 获取当前任务的语言
+     * @param registerId 注册ID
+     * @return locale
+     */
+    String getLocale(@Param("registerId") Long registerId);
 }

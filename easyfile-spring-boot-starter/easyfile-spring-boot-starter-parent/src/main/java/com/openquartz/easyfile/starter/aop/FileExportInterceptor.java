@@ -3,6 +3,7 @@ package com.openquartz.easyfile.starter.aop;
 import static com.openquartz.easyfile.core.exception.DownloadErrorCode.FILE_GENERATOR_MUST_SUPPORT_ANNOTATION;
 import static com.openquartz.easyfile.core.exception.DownloadErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
+import com.openquartz.easyfile.common.i18n.LocaleContextHolder;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
@@ -239,6 +240,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         registerRequest.setFileSuffix(requestContext.getFileSuffix());
         registerRequest.setOtherMap(requestContext.getOtherMap());
         registerRequest.setMaxServerRetry(executor.maxServerRetry());
+        registerRequest.setLocale(LocaleContextHolder.currentLocaleLanguage());
         return registerRequest;
     }
 }

@@ -12,16 +12,14 @@ import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadRecordMapper;
 import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTaskMapper;
 import com.openquartz.easyfile.storage.local.mapper.condition.BaseRecordQueryCondition;
 import com.openquartz.easyfile.storage.local.mapper.condition.UploadInfoChangeCondition;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.expression.Expression;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
@@ -69,8 +67,8 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     private final AsyncDownloadRecordMapper asyncDownloadRecordMapper;
 
     public LocalDownloadStorageServiceImpl(
-        AsyncDownloadTaskMapper asyncDownloadTaskMapper,
-        AsyncDownloadRecordMapper asyncDownloadRecordMapper) {
+            AsyncDownloadTaskMapper asyncDownloadTaskMapper,
+            AsyncDownloadRecordMapper asyncDownloadRecordMapper) {
         this.asyncDownloadTaskMapper = asyncDownloadTaskMapper;
         this.asyncDownloadRecordMapper = asyncDownloadRecordMapper;
     }
@@ -82,8 +80,8 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             return false;
         }
         int affect = asyncDownloadRecordMapper
-            .refreshUploadStatus(registerId, UploadStatusEnum.NONE, UploadStatusEnum.EXECUTING,
-                downloadRecord.getUpdateBy());
+                .refreshUploadStatus(registerId, UploadStatusEnum.NONE, UploadStatusEnum.EXECUTING,
+                        downloadRecord.getUpdateBy());
         return affect > 0;
     }
 
@@ -93,22 +91,22 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         Asserts.notNull(downloadRecord, DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_EXIST);
 
         List<AsyncDownloadRecord> downloadRecordList = asyncDownloadRecordMapper
-            .listByTaskIdAndStatus(downloadRecord.getDownloadTaskId(), UploadStatusEnum.SUCCESS, 500);
+                .listByTaskIdAndStatus(downloadRecord.getDownloadTaskId(), UploadStatusEnum.SUCCESS, 500);
 
         ExportResult result = Optional.ofNullable(downloadRecordList)
-            .orElse(Collections.emptyList())
-            .stream()
-            .filter(e -> matchCacheKey(request.getCacheKeyList(), request.getExportParamMap(), e))
-            .findFirst().map(e -> convertRecord(e, request.getRegisterId()))
-            .orElseGet(() -> {
-                ExportResult exportResult = new ExportResult();
-                exportResult.setRegisterId(request.getRegisterId());
-                exportResult.setUploadStatus(UploadStatusEnum.FAIL);
-                exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
-                exportResult.setFileUrl(StringUtils.EMPTY);
-                exportResult.setFileName(StringUtils.EMPTY);
-                return exportResult;
-            });
+                .orElse(Collections.emptyList())
+                .stream()
+                .filter(e -> matchCacheKey(request.getCacheKeyList(), request.getExportParamMap(), e))
+                .findFirst().map(e -> convertRecord(e, request.getRegisterId()))
+                .orElseGet(() -> {
+                    ExportResult exportResult = new ExportResult();
+                    exportResult.setRegisterId(request.getRegisterId());
+                    exportResult.setUploadStatus(UploadStatusEnum.FAIL);
+                    exportResult.setFileSystem(Constants.NONE_FILE_SYSTEM);
+                    exportResult.setFileUrl(StringUtils.EMPTY);
+                    exportResult.setFileName(StringUtils.EMPTY);
+                    return exportResult;
+                });
         if (UploadStatusEnum.SUCCESS.equals(result.getUploadStatus())) {
             UploadInfoChangeCondition condition = buildUploadInfoConditionByResult(result, request.getRegisterId());
             int affect = asyncDownloadRecordMapper.changeUploadInfo(condition);
@@ -120,13 +118,13 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     private boolean matchCacheKey(List<String> cacheKeyList, Map<String, Object> exportParamMap,
-        AsyncDownloadRecord downloadRecord) {
+                                  AsyncDownloadRecord downloadRecord) {
         if (CollectionUtils.isEmpty(cacheKeyList)) {
             return true;
         }
 
         BaseExecuteParam executeParam = JSONUtil
-            .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+                .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
         if (Objects.isNull(executeParam)) {
             if (MapUtils.isEmpty(exportParamMap)) {
                 return true;
@@ -136,7 +134,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         }
         StandardEvaluationContext oriEvaluationContext = new StandardEvaluationContext();
         oriEvaluationContext
-            .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
+                .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
 
         StandardEvaluationContext tarEvaluationContext = new StandardEvaluationContext();
         tarEvaluationContext.setVariables(exportParamMap);
@@ -154,8 +152,8 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             }
         } catch (Exception ex) {
             log.error(
-                "[LocalDownloadStorageServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
-                cacheKeyList, exportParamMap, downloadRecord, ex);
+                    "[LocalDownloadStorageServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
+                    cacheKeyList, exportParamMap, downloadRecord, ex);
             matchedKey = false;
         }
         return matchedKey;
@@ -182,7 +180,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     private UploadInfoChangeCondition buildUploadInfoChangeCondition(UploadCallbackRequest request,
-        AsyncDownloadRecord downloadRecord) {
+                                                                     AsyncDownloadRecord downloadRecord) {
         UploadInfoChangeCondition uploadInfoChangeCondition = new UploadInfoChangeCondition();
         uploadInfoChangeCondition.setId(downloadRecord.getId());
         uploadInfoChangeCondition.setUploadStatus(request.getUploadStatus());
@@ -196,7 +194,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     private UploadInfoChangeCondition buildUploadInfoConditionByResult(ExportResult exportResult,
-        Long registerId) {
+                                                                       Long registerId) {
         UploadInfoChangeCondition uploadInfoChangeCondition = new UploadInfoChangeCondition();
         uploadInfoChangeCondition.setId(registerId);
         uploadInfoChangeCondition.setUploadStatus(UploadStatusEnum.SUCCESS);
@@ -212,7 +210,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     @Override
     public Long register(RegisterDownloadRequest downloadRequest) {
         AsyncDownloadTask downloadTask = asyncDownloadTaskMapper
-            .selectByDownloadCode(downloadRequest.getDownloadCode(), downloadRequest.getAppId());
+                .selectByDownloadCode(downloadRequest.getDownloadCode(), downloadRequest.getAppId());
         if (Objects.isNull(downloadTask)) {
             throw new EasyFileException(DownloadStorageErrorCode.DOWNLOAD_TASK_NOT_EXIST);
         }
@@ -223,7 +221,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     }
 
     private AsyncDownloadRecord buildRegisterDefaultDownloadRecord(RegisterDownloadRequest request,
-        AsyncDownloadTask downloadTask) {
+                                                                   AsyncDownloadTask downloadTask) {
         AsyncDownloadRecord downloadRecord = new AsyncDownloadRecord();
         downloadRecord.setDownloadTaskId(downloadTask.getId());
         downloadRecord.setAppId(request.getAppId());
@@ -233,14 +231,14 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         downloadRecord.setFileName(StringUtils.EMPTY);
         downloadRecord.setFileSystem(Constants.NONE_FILE_SYSTEM);
         downloadRecord.setDownloadOperateBy(
-            Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserBy() : StringUtils.EMPTY);
+                Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserBy() : StringUtils.EMPTY);
         downloadRecord.setDownloadOperateName(
-            Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserName() : StringUtils.EMPTY);
+                Objects.nonNull(request.getNotifier()) ? request.getNotifier().getUserName() : StringUtils.EMPTY);
         downloadRecord.setRemark(request.getExportRemark());
         downloadRecord.setNotifyEnableStatus(Boolean.TRUE.equals(request.getEnableNotify())
-            ? EnableStatusEnum.ENABLE.getCode() : EnableStatusEnum.DISABLE.getCode());
+                ? EnableStatusEnum.ENABLE.getCode() : EnableStatusEnum.DISABLE.getCode());
         downloadRecord.setNotifyEmail(
-            Objects.nonNull(request.getNotifier()) ? request.getNotifier().getEmail() : StringUtils.EMPTY);
+                Objects.nonNull(request.getNotifier()) ? request.getNotifier().getEmail() : StringUtils.EMPTY);
         downloadRecord.setMaxServerRetry(request.getMaxServerRetry());
         downloadRecord.setCurrentRetry(0);
         downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
@@ -254,6 +252,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         downloadRecord.setUpdateTime(new Date());
         downloadRecord.setCreateBy(Constants.SYSTEM_USER);
         downloadRecord.setUpdateBy(Constants.SYSTEM_USER);
+        downloadRecord.setLocale(request.getLocale());
         return downloadRecord;
     }
 
@@ -265,10 +264,10 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         Map<String, AsyncDownloadTask> downloadTaskMap = buildDefaultAsyncDownloadTask(request);
 
         List<AsyncDownloadTask> downloadTaskList = asyncDownloadTaskMapper
-            .listByDownloadCode(CollectionUtils.newArrayList(downloadTaskMap.keySet()),
-                Collections.singletonList(request.getAppId()));
+                .listByDownloadCode(CollectionUtils.newArrayList(downloadTaskMap.keySet()),
+                        Collections.singletonList(request.getAppId()));
         Map<String, AsyncDownloadTask> existDownloadTaskMap = downloadTaskList.stream()
-            .collect(Collectors.toMap(AsyncDownloadTask::getTaskCode, Function.identity()));
+                .collect(Collectors.toMap(AsyncDownloadTask::getTaskCode, Function.identity()));
 
         for (Entry<String, String> entry : request.getDownloadCodeMap().entrySet()) {
             AsyncDownloadTask existedAsyncDownloadTask = existDownloadTaskMap.get(entry.getKey());
@@ -308,7 +307,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, AsyncDownloadExceptionCode.DOWNLOAD_RECORD_NOT_EXIST);
         Asserts.isTrue(downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS,
-            AsyncDownloadExceptionCode.DOWNLOAD_STATUS_NOT_SUPPORT);
+                AsyncDownloadExceptionCode.DOWNLOAD_STATUS_NOT_SUPPORT);
 
         // 下载
         int download = asyncDownloadRecordMapper.download(request.getRegisterId(), UploadStatusEnum.SUCCESS);
@@ -343,7 +342,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             return uploadResult;
         }
         int affect = asyncDownloadRecordMapper.refreshUploadStatus(request.getRegisterId(),
-            UploadStatusEnum.NONE, UploadStatusEnum.CANCEL, request.getCancelBy());
+                UploadStatusEnum.NONE, UploadStatusEnum.CANCEL, request.getCancelBy());
         uploadResult.setCancelResult(affect > 0);
         uploadResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
         return uploadResult;
@@ -356,7 +355,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             return null;
         }
         RegisterDownloadRequest registerRequest = JSONUtil
-            .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
+                .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
         Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
 
         DownloadRequestInfo requestInfo = new DownloadRequestInfo();
@@ -399,7 +398,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
             condition.setLimitedAppIdList(appIdList);
         } else {
             List<String> intersectionList = (List<String>) CollectionUtils
-                .intersection(appIdList, request.getLimitedAppIdList());
+                    .intersection(appIdList, request.getLimitedAppIdList());
             if (CollectionUtils.isEmpty(intersectionList)) {
                 return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
             }
@@ -416,26 +415,26 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         }
 
         condition.setStartOffset(
-            Pair.of(PageUtil.startIndex(request.getPageNum(), request.getPageSize()), request.getPageSize()));
+                Pair.of(PageUtil.startIndex(request.getPageNum(), request.getPageSize()), request.getPageSize()));
         List<AsyncDownloadRecord> recordList = asyncDownloadRecordMapper.selectByCondition(condition);
 
         List<String> downloadCodeList = recordList.stream()
-            .map(AsyncDownloadRecord::getDownloadCode)
-            .filter(StringUtils::isNotBlank).distinct()
-            .collect(Collectors.toList());
+                .map(AsyncDownloadRecord::getDownloadCode)
+                .filter(StringUtils::isNotBlank).distinct()
+                .collect(Collectors.toList());
 
         if (CollectionUtils.isEmpty(downloadCodeList)) {
             return PaginationUtils.empty(request.getPageNum(), request.getPageSize());
         }
         List<AsyncDownloadTask> downloadTaskList = asyncDownloadTaskMapper
-            .listByDownloadCode(downloadCodeList, condition.getLimitedAppIdList());
+                .listByDownloadCode(downloadCodeList, condition.getLimitedAppIdList());
         Map<Long, AsyncDownloadTask> taskMap = downloadTaskList.parallelStream()
-            .collect(Collectors.toMap(AsyncDownloadTask::getId, Function.identity()));
+                .collect(Collectors.toMap(AsyncDownloadTask::getId, Function.identity()));
 
         List<DownloadResult> resultList = recordList.stream()
-            .sorted(((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime())))
-            .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
-            .collect(Collectors.toList());
+                .sorted(((o1, o2) -> o2.getCreateTime().compareTo(o1.getCreateTime())))
+                .map(e -> AsyncDownloadRecordConverter.convert(e, taskMap.get(e.getDownloadTaskId())))
+                .collect(Collectors.toList());
 
         // 分页结果
         Pagination<DownloadResult> pagination = new Pagination<>();
@@ -450,12 +449,21 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     public List<AppTree> getAppTree() {
         List<AsyncDownloadAppEntity> entityList = asyncDownloadTaskMapper.getAsyncDownloadAppEntity();
         return entityList.stream()
-            .collect(Collectors.groupingBy(AsyncDownloadAppEntity::getUnifiedAppId,
-                Collectors.mapping(AsyncDownloadAppEntity::getAppId, Collectors.toList())))
-            .entrySet()
-            .stream()
-            .map(e -> new AppTree(e.getKey(), e.getValue()))
-            .collect(Collectors.toList());
+                .collect(Collectors.groupingBy(AsyncDownloadAppEntity::getUnifiedAppId,
+                        Collectors.mapping(AsyncDownloadAppEntity::getAppId, Collectors.toList())))
+                .entrySet()
+                .stream()
+                .map(e -> new AppTree(e.getKey(), e.getValue()))
+                .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public Locale getCurrentLocale(Long registerId) {
+        String locale = asyncDownloadRecordMapper.getLocale(registerId);
+        if (StringUtils.isNotBlank(locale)) {
+            return Locale.forLanguageTag(locale);
+        }
+        return null;
     }
 }

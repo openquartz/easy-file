@@ -1,6 +1,8 @@
 package com.openquartz.easyfile.storage.download;
 
 import java.util.List;
+import java.util.Locale;
+
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
@@ -116,5 +118,12 @@ public interface DownloadStorageService {
      * @return app
      */
     List<AppTree> getAppTree();
+
+    /**
+     * 获取当前语言
+     * @param registerId 注册ID
+     * @return 当前语言
+     */
+    Locale getCurrentLocale(Long registerId);
 
 }
