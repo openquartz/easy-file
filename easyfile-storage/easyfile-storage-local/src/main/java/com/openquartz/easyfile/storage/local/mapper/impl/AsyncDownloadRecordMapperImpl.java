@@ -70,7 +70,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
 
     private static final String SELECT_COUNT_SQL = "select count(*) from {0}";
 
-    private static final String SELECT_LOCALE_SQL = "select locale from {0} where is_deleted = 0 and id = ?";
+    private static final String SELECT_LOCALE_SQL = "select locale from {0} where id = ?";
 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
@@ -305,7 +305,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     @Override
     public String getLocale(Long registerId) {
         String sql = MessageFormat
-                .format(SELECT_LOCALE_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTaskTable());
+                .format(SELECT_LOCALE_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.queryForObject(sql, String.class, registerId);
     }
 }

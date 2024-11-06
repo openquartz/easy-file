@@ -19,7 +19,7 @@ public class Student {
     @com.alibaba.excel.annotation.ExcelProperty("ID")
     private Long id;
 
-    @ExcelProperty(value = "姓名", width = 8 * 512)
+    @ExcelProperty(value = "${student.name}", width = 8 * 512)
     @com.alibaba.excel.annotation.ExcelProperty("姓名")
     private String name;
 

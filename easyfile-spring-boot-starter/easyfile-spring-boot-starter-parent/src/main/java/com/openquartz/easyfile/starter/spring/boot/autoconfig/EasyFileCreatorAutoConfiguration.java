@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.impl.DefaultDownloadRejectExecutionHandler;
@@ -91,6 +92,11 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean
     public DownloadMetricsListener downloadMetricsListener(){
         return new DownloadMetricsListener();
+    }
+
+    @Bean
+    public SpringContextUtil springContextUtil(){
+        return new SpringContextUtil();
     }
 
 }

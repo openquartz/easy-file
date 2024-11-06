@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  */
 public class I18nTranslator {
 
-    private I18nTranslator(){
+    private I18nTranslator() {
     }
 
     // 匹配 ${key} 格式的占位符
@@ -44,8 +44,12 @@ public class I18nTranslator {
         // 获取当前语言
         Locale locale = LocaleContext.currentLocale();
 
-        MessageSource messageSource = SpringContextUtil.getBean(MessageSource.class);
-        return messageSource.getMessage(key, null, locale);
+        try {
+            MessageSource messageSource = SpringContextUtil.getBean(MessageSource.class);
+            return messageSource.getMessage(key, null, locale);
+        } catch (Exception ex) {
+            return key;
+        }
     }
 
 }

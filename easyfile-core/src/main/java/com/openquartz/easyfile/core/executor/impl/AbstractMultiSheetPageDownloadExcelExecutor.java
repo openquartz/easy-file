@@ -27,6 +27,9 @@ import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 /**
  * 多sheet分割导出
  *
+ * @param <T> 导出数据实体类对象
+ * @param <G> 导出数据分组对象(按照Group 做分Sheet导出)
+ *
  * @author svnee
  **/
 @Slf4j

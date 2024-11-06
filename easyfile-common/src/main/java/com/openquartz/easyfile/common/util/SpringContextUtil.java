@@ -20,9 +20,6 @@ public class SpringContextUtil implements ApplicationContextAware {
 
     private static ApplicationContext context;
 
-    private SpringContextUtil() {
-    }
-
     public static Class<?> getRealClass(Object springBean) {
         return AopUtils.isAopProxy(springBean) ? AopUtils.getTargetClass(springBean) : springBean.getClass();
     }
