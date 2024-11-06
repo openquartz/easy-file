@@ -45,7 +45,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     /**
      * 使用lang 参数指定语言。
-     * 例如：http://localhost:9999/student/export/page?lang=en
+     * 例如：http://localhost:9999/student/export/page?lang=zh
      */
     @Bean
     public LocaleChangeInterceptor localeChangeInterceptor() {
