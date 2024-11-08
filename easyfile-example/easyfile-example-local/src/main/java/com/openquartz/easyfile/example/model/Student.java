@@ -23,29 +23,31 @@ public class Student {
     @com.alibaba.excel.annotation.ExcelProperty("姓名")
     private String name;
 
-    @ExcelProperty("年龄")
+    @ExcelProperty(value = "${student.age}")
     @com.alibaba.excel.annotation.ExcelProperty("年龄")
     private Integer age;
 
-    @ExcelProperty(value = "学校", width = 8 * 1024)
+    @ExcelProperty(value = "${student.school}", width = 8 * 1024)
     @com.alibaba.excel.annotation.ExcelProperty("学校")
     private String school;
 
     private Long schoolId;
 
-    @ExcelProperty(value = "地址", width = 8 * 1024)
+    @ExcelProperty(value = "${student.address}", width = 8 * 1024)
     @com.alibaba.excel.annotation.ExcelProperty("地址")
     private String address;
 
-    @ExcelProperty("特征")
+    @ExcelProperty("${student.facture}")
     //    @com.alibaba.excel.annotation.ExcelProperty("特征")
     private List<Feature> featureList;
 
-    @ExcelProperty("新地址信息")
+    //新地址信息
+    @ExcelProperty("${student.addr}")
     //    @com.alibaba.excel.annotation.ExcelProperty("")
     private Address addr;
 
-    @ExcelProperty("學校等級")
+    // 學校等級
+    @ExcelProperty("${student.schoolGrade}")
     @com.alibaba.excel.annotation.ExcelProperty("学校等级")
     private String schoolGrade;
 

@@ -10,10 +10,11 @@ import com.openquartz.easyfile.common.annotations.ExcelProperty;
 @Data
 public class Address {
 
-    @ExcelProperty(value = "地址", width = 8 * 512)
+    @ExcelProperty(value = "${student.addr.addressName}", width = 8 * 512)
     private String addressName;
 
-    @ExcelProperty(value = "过期时间", width = 8 * 1024)
+    // 过期时间
+    @ExcelProperty(value = "${student.addr.expireTime}", width = 8 * 1024)
     private Date expireTime;
 
     public Address() {
