@@ -111,6 +111,6 @@ EasyFile 提供两种模式
 
 If you also think this project has helped you, welcome to sign up for the promotion!
 
-[Click to register as EasyFile user!](https://github.com/svnlab/easy-file/issues/1)
+[Click to register as EasyFile user!](https://github.com/openquartz/easy-file/issues/1)
 
 ღ( ´・ᴗ・` )ღ Many thanks to the following registered users. ღ( ´・ᴗ・` )ღ
