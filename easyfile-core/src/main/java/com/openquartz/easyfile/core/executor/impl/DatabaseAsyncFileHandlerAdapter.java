@@ -75,16 +75,15 @@ public abstract class DatabaseAsyncFileHandlerAdapter extends AsyncFileHandlerAd
         if (execute) {
             try {
                 DownloadRequestInfo requestInfo = storageService.getRequestInfoByRegisterId(k.getRegisterId());
-                BaseDownloadExecutor executor = FileExportExecutorSupport
-                    .get(requestInfo.getDownloadCode());
+                BaseDownloadExecutor executor = FileExportExecutorSupport.get(requestInfo.getDownloadCode());
 
                 // set async trigger if absent
                 FileExportTriggerContext.setAsyncTriggerFlagIfAbsent(true);
                 doExecute(executor, requestInfo.getRequestContext(), k.getRegisterId());
                 triggerService.exeSuccess(k.getRegisterId());
             } catch (Exception ex) {
-                log.error("[DatabaseAsyncFileHandlerAdapter#doTrigger] execute-failed!registerId:{}", k.getRegisterId(),
-                    ex);
+                log.error("[DatabaseAsyncFileHandlerAdapter#doTrigger] execute-failed!registerId:{}",
+                        k.getRegisterId(), ex);
                 triggerService.exeFail(k.getRegisterId());
             } finally {
                 // clear context
