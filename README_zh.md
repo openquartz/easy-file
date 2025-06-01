@@ -116,3 +116,11 @@ If you also think this project has helped you, welcome to sign up for the promot
 [Click to register as EasyFile user!](https://github.com/openquartz/easy-file/issues/1)
 
 ღ( ´・ᴗ・` )ღ Many thanks to the following registered users. ღ( ´・ᴗ・` )ღ
+
+## 🌟Misc
+
+<div align="center">
+
+[![Star History Chart](https://api.star-history.com/svg?repos=openquartz/easy-file&type=Date)](https://www.star-history.com/#openquartz/easy-file&Date)
+
+</div>
