@@ -1,7 +1,9 @@
 package com.openquartz.easyfile.storage.remote.impl;
 
 import com.openquartz.easyfile.storage.remote.common.HttpAgent;
+
 import java.util.List;
+
 import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
@@ -67,8 +69,8 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     @Override
     public ResponseResult<Pagination<DownloadResult>> listExportResult(ListDownloadResultRequest request) {
         return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_RECORD_URL, request,
-            new TypeReference<ResponseResult<Pagination<DownloadResult>>>() {
-            });
+                new TypeReference<ResponseResult<Pagination<DownloadResult>>>() {
+                });
     }
 
     @Override
@@ -89,7 +91,7 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     @Override
     public ResponseResult<DownloadRequestInfo> getRequestInfoByRegisterId(Long registerId) {
         return httpAgent
-            .httpPost(RemoteUrlConstants.GET_REQUEST_INFO_RESULT_URL, registerId, DownloadRequestInfo.class);
+                .httpPost(RemoteUrlConstants.GET_REQUEST_INFO_RESULT_URL, registerId, DownloadRequestInfo.class);
     }
 
     @Override
@@ -99,7 +101,7 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
 
     @Override
     public ResponseResult<?> refreshExecuteProcess(Long registerId, Integer executeProcess,
-        HandleStatusEnum nextUploadStatus) {
+                                                   HandleStatusEnum nextUploadStatus) {
         RefreshExecuteProcessRequest processRequest = new RefreshExecuteProcessRequest();
         processRequest.setRegisterId(registerId);
         processRequest.setExecuteProcess(executeProcess);
@@ -110,8 +112,14 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     @Override
     public ResponseResult<List<AppTree>> getAppTree() {
         return httpAgent
-            .httpPost(RemoteUrlConstants.GET_APP_TREE_URL, null,
-                new TypeReference<ResponseResult<List<AppTree>>>() {
-                });
+                .httpPost(RemoteUrlConstants.GET_APP_TREE_URL, null,
+                        new TypeReference<ResponseResult<List<AppTree>>>() {
+                        });
+    }
+
+    @Override
+    public ResponseResult<String> getCurrentLocale(Long registerId) {
+        return httpAgent
+                .httpPost(RemoteUrlConstants.GET_LOCALE_URL, registerId, String.class);
     }
 }

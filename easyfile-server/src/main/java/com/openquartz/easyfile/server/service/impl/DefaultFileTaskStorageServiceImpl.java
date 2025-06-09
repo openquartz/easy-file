@@ -1,6 +1,9 @@
 package com.openquartz.easyfile.server.service.impl;
 
 import java.util.List;
+import java.util.Locale;
+
+import com.openquartz.easyfile.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
@@ -92,5 +95,14 @@ public class DefaultFileTaskStorageServiceImpl implements FileTaskStorageService
     @Override
     public List<AppTree> getAppTree() {
         return asyncDownloadService.getAppTree();
+    }
+
+    @Override
+    public Locale getCurrentLocale(Long registerId) {
+        String locale = asyncDownloadService.getLocale(registerId);
+        if (StringUtils.isNotBlank(locale)) {
+            return Locale.forLanguageTag(locale);
+        }
+        return null;
     }
 }

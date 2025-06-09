@@ -41,7 +41,7 @@ public final class ExcelBeanUtils {
      * @param cacheLoader cacheLoader
      * @return fieldCache
      */
-    private static LinkedHashSet<ExcelFiled> loadCache(Class<?> sourceClazz,
+    private static Set<ExcelFiled> loadCache(Class<?> sourceClazz,
         Function<Class<?>, LinkedHashSet<ExcelFiled>> cacheLoader) {
         LinkedHashSet<ExcelFiled> resultMap = GROUP_BY_FIELD_CACHE_MAP.get(sourceClazz);
         if (Objects.isNull(resultMap)) {
@@ -64,7 +64,7 @@ public final class ExcelBeanUtils {
         Asserts.notNull(sourceClazz, CommonErrorCode.PARAM_ILLEGAL_ERROR);
 
         /////////// 加载缓存 /////////
-        LinkedHashSet<ExcelFiled> excelFiledList = loadCache(sourceClazz, sClazz -> {
+        Set<ExcelFiled> excelFiledList = loadCache(sourceClazz, sClazz -> {
             List<Field> fields = getClassFields(sClazz);
 
             return fields.stream()

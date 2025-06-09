@@ -9,13 +9,13 @@ import com.openquartz.easyfile.common.annotations.ExcelProperty;
 @Data
 public class Feature {
 
-    @ExcelProperty("ID")
+    @ExcelProperty("${school.feature.id}")
     private Integer id;
-    @ExcelProperty("编码")
+    @ExcelProperty("${school.feature.code}")
     private String code;
-    @ExcelProperty("名字")
+    @ExcelProperty("${school.feature.name}")
     private String name;
-    @ExcelProperty(value = "描述", width = 8 * 512)
+    @ExcelProperty(value = "${school.feature.desc}", width = 8 * 512)
     private String desc;
 
 }

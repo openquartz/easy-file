@@ -131,4 +131,11 @@ public interface EasyFileClient {
      * @return app
      */
     ResponseResult<List<AppTree>> getAppTree();
+
+    /**
+     * get current locale
+     * @param registerId registerId
+     * @return locale-language
+     */
+    ResponseResult<String> getCurrentLocale(Long registerId);
 }

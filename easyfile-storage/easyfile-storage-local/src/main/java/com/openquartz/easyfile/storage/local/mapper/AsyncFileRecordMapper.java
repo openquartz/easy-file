@@ -101,4 +101,12 @@ public interface AsyncFileRecordMapper {
      * @return total rows
      */
     int countByCondition(BaseRecordQueryCondition condition);
+
+    /**
+     * get registerId locale
+     *
+     * @param registerId registerId
+     * @return locale
+     */
+    String getLocale(Long registerId);
 }

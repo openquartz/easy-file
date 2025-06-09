@@ -1,28 +1,30 @@
-### 使用教程
+### Tutorial
 
-#### 一、引入maven依赖
+#### 1. Maven Dependency Integration
 
-如果使用本地模式 引入maven
+If using Local Mode, integrate the following Maven dependency:
 
 ```xml
 <dependency>
     <groupId>com.openquartz</groupId>
     <artifactId>easyfile-spring-boot-starter-local</artifactId>
-    <version>1.4.0</version>
+    <version>${latestVersion}</version>
 </dependency>
 ```
 
-如果使用remote模式引入maven 依赖
+If using Remote Mode, integrate the following Maven dependency:
 
 ```xml
 <dependency>
     <groupId>com.openquartz</groupId>
     <artifactId>easyfile-spring-boot-starter-remote</artifactId>
-    <version>1.4.0</version>
+    <version>${latestVersion}</version>
 </dependency>
 ```
 
-#### 二、Client端需要提供文件上传服务进行实现接口
+#### 2. Client-Side File Upload Service Implementation
+
+The client needs to implement the file upload service interface:
 
 ```java
 package com.openquartz.easyfile.storage.file;
@@ -31,33 +33,33 @@ import java.io.File;
 import com.openquartz.easyfile.common.bean.Pair;
 
 /**
- * 文件上传服务
+ * File Upload Service
  *
  * @author svnee
  */
 public interface UploadService {
 
     /**
-     * 文件上传
-     * 如果需要重试则需要抛出 com.openquartz.easyfile.core.exception.GenerateFileException
+     * Uploads a file.
+     * If retry is needed, throw com.openquartz.easyfile.core.exception.GenerateFileException
      *
-     * @param file 文件
-     * @param fileName 自定义生成的文件名
-     * @param appId 服务ID
-     * @return key: 文件系统 --> value:返回文件URL/KEY标识符
+     * @param file The file to upload
+     * @param fileName Custom generated filename
+     * @param appId Application ID
+     * @return key: file system --> value: URL or key identifier for the uploaded file
      */
     Pair<String, String> upload(File file, String fileName, String appId);
 
 }
 ```
 
-将文件上传到自己的文件存储服务
+Upload files to your own file storage service.
 
-#### 三、SpringBoot 启动入口处理
+#### 3. Spring Boot Entry Point Configuration
 
-增加注解扫描 `com.openquartz.easyfile.starter.annotation.EnableEasyFileAutoConfiguration`包在服务的启动入口上
+Add the annotation scanning `com.openquartz.easyfile.starter.annotation.EnableEasyFileAutoConfiguration` at the service startup entry.
 
-例如：
+Example:
 
 ```java
 /**
@@ -74,9 +76,9 @@ public class LocalExampleApplication {
 }
 ```
 
-#### 四、额外处理
+#### 4. Additional Setup
 
-如果是使用Local模式，需要提供Client配置
+For Local mode, provide the client-side configuration:
 
 ```properties
 ##### easyfile-local-datasource
@@ -87,7 +89,7 @@ easyfile.local.datasource.username=root
 easyfile.local.datasource.password=123456
 ```
 
-需要执行SQL:
+Execute the following SQL statements:
 
 ```sql
 CREATE TABLE ef_async_file_task
@@ -139,12 +141,12 @@ CREATE TABLE ef_async_file_record
     PRIMARY KEY (id),
     KEY                   `idx_operate_by` (`operate_by`) USING BTREE,
     KEY                   `idx_operator_record` (`operate_by`,`app_id`,`create_time`),
-    KEY                   `idx_upload_invalid` (`handle_status`,`invalid_time`,`id`),
+    KEY                   `idx_upload_invalid` (`handle_status`,`invalid_time`,[id](file:///Users/jackxu/Documents/Code/github.com/openquartz/easy-file/easyfile-example/easyfile-example-local/src/main/java/com/openquartz/easyfile/example/model/School.java#L11-L11)),
     KEY                   `idx_create_time` (`create_time`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT '异步下载记录';
 ```
 
-如果是使用remote服务，需要部署easyfile-server 服务,Client提供配置
+For Remote mode deployment, you need to deploy the `easyfile-server` service and provide the following client-side configuration:
 
 ```properties
 #### easyfile-storage-remote
@@ -154,20 +156,19 @@ easyfile.remote.server-addr=127.0.0.1:8080
 easyfile.remote.namespace=remote-example
 ```
 
-#### 五、异步文件处理器
+#### 5. Asynchronous File Handler
 
-[异步文件处理器配置](./AsyncFileHandler.md)
+[Asynchronous File Handler Configuration](./AsyncFileHandler.md)
 
-#### 六、实现下载器
+#### 6. Implementing Downloaders
 
-[下载器](./BaseDownloadExecutror.md)
+[Downloader Documentation](BaseDownloadExecutor.md)
 
-#### 七、Admin-管理界面
+#### 7. Admin - Management Interface
 
-EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需开启需要引入maven
+EasyFile provides a simple Admin management interface (available since v1.2.0). To enable it, add the following Maven dependency:
 
 ```xml
-
 <dependency>
     <groupId>com.openquartz</groupId>
     <artifactId>easyfile-ui</artifactId>
@@ -175,24 +176,28 @@ EasyFile 提供了一个简单的Admin管理界面（@since 1.2.0）。 如需�
 </dependency>
 ```
 
-服务监控路径地址为: ip+port/easyfile-ui/ 例如：`localhost:8080/easyfile-ui/` 服务默认Admin用户账户密码为: `admin / admin`
+The monitoring path for the service is: ip+port/easyfile-ui/. For example: `localhost:8080/easyfile-ui/`. The default admin credentials are: `admin / admin`.
 
-如果需要更改可以配置：
+You can change these via configuration:
 
 ```properties
 easyfile.ui.admin.username=admin
 easyfile.ui.admin.password=admin
 ```
 
-EasyFile UI 管理界面
+**EasyFile UI Management Interface**
 
 ![EasyFileUI](./image/EasyfileUi.png)
 
-#### 八、easyfile-server 部署
+#### 8. Deployment of easyfile-server
 
-如果使用**Remote模式**时,需要部署easyfile-server服务;
+When using **Remote Mode**, the `easyfile-server` service must be deployed.
 
-否则不需要进行部署
+No deployment is required otherwise.
 
-1、执行存储DB SQL \
-2、部署服务
+1. Execute the database SQL scripts \
+2. Deploy the service
+
+#### 9. Export Internationalization Support
+
+[Internationalization Feature Support](./I18n.md)

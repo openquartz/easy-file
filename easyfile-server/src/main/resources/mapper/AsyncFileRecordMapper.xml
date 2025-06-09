@@ -28,6 +28,7 @@
         <result column="update_time" property="updateTime"/>
         <result column="create_by" property="createBy"/>
         <result column="update_by" property="updateBy"/>
+        <result column="locale" property="locale"/>
     </resultMap>
 
     <sql id="Base_Column_List">
@@ -56,7 +57,8 @@
         create_time,
         update_time,
         create_by,
-        update_by
+        update_by,
+        locale
     </sql>
 
     <select id="findById" resultMap="BaseResultMap">
@@ -198,7 +200,8 @@
                                              create_time,
                                              update_time,
                                              create_by,
-                                             update_by)VALUES
+                                             update_by,
+                                             locale)VALUES
         <foreach collection="list" item="element" index="index" separator=",">
             (#{element.taskId},
             #{element.appId},
@@ -223,7 +226,8 @@
             #{element.createTime},
             #{element.updateTime},
             #{element.createBy},
-            #{element.updateBy})
+            #{element.updateBy},
+             #{element.locale})
         </foreach>
     </insert>
 
@@ -427,4 +431,9 @@
           and <![CDATA[execute_process <= #{executeProcess}
         ]]>
     </update>
+
+    <select id="getLocale" resultType="java.lang.String">
+        select locale from ef_async_download_record where id = #{registerId}
+    </select>
+
 </mapper>

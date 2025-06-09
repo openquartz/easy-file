@@ -5,11 +5,13 @@ import com.openquartz.easyfile.common.bean.ExportRequestContext;
 import com.openquartz.easyfile.core.executor.ExecuteProcessProbe;
 import com.openquartz.easyfile.core.executor.StreamExportExecutor;
 import com.openquartz.easyfile.core.executor.excel.ExcelIntensifierExecutor;
+
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.validation.groups.Default;
+
 import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.excel.ExcelBean;
 import com.openquartz.easyfile.common.bean.excel.ExcelBeanUtils;
@@ -23,12 +25,14 @@ import com.openquartz.easyfile.common.annotations.ExcelProperty;
 /**
  * 多Sheet流式导出
  *
+ * @param <T> 导出数据实体类对象
+ * @param <G> 导出数据分组对象(按照Group 做分Sheet导出)
  * @author snvee
  **/
 @Slf4j
 public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Closeable, R extends Iterable<T>, T, G>
-    extends AbstractExportExcel07Executor
-    implements StreamExportExecutor<S>, ExcelIntensifierExecutor {
+        extends AbstractExportExcel07Executor
+        implements StreamExportExecutor<S>, ExcelIntensifierExecutor {
 
     /**
      * 导出模板类分组 {@link ExcelProperty#group()}
@@ -59,8 +63,8 @@ public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Clos
     /**
      * 查询结果
      *
-     * @param context context
-     * @param session session会话
+     * @param context    context
+     * @param session    session会话
      * @param sheetGroup sheetGroup
      * @return 流式查询结果
      */
@@ -78,7 +82,7 @@ public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Clos
         // 创建workbook
         try (ExcelBean excelBean = ExcelExports.createWorkbook()) {
             List<ExcelFiled> fieldList = ExcelBeanUtils
-                .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
+                    .getExcelFiledByGroup(GenericUtils.getClassT(this, 2), exportGroup(context));
 
             // 调用流式查询
             S session = openSession();
@@ -93,26 +97,26 @@ public abstract class AbstractMultiSheetStreamExportExcelExecutor<S extends Clos
                     // 流式的进行数据导出,并对相关字段做增强操作
                     List<T> tempList = new ArrayList<>();
                     iterable
-                        .forEach(t -> {
-                            if (tempList.size() >= enhanceLength()) {
-                                // 写入数据
-                                ExcelExports.writeData(excelBean, fieldList, enhance(tempList, sheetGroup),
-                                    sheetGroup.toString());
-                                // 清除临时数据
-                                tempList.clear();
-                            }
-                            tempList.add(t);
-                        });
+                            .forEach(t -> {
+                                if (tempList.size() >= enhanceLength()) {
+                                    // 写入数据
+                                    ExcelExports.writeData(excelBean, fieldList, enhance(tempList, sheetGroup),
+                                            sheetGroup.toString());
+                                    // 清除临时数据
+                                    tempList.clear();
+                                }
+                                tempList.add(t);
+                            });
                     if (!tempList.isEmpty()) {
                         ExcelExports
-                            .writeData(excelBean, fieldList, enhance(tempList, sheetGroup), sheetGroup.toString());
+                                .writeData(excelBean, fieldList, enhance(tempList, sheetGroup), sheetGroup.toString());
                         // 清除临时数据
                         tempList.clear();
                     }
                     // 上报进度
                     ExecuteProcessProbe
-                        .report(
-                            (int) ((j + 1) / (sheetGroupList.size() * Constants.DOUBLE_ONE) * Constants.FULL_PROCESS));
+                            .report(
+                                    (int) ((j + 1) / (sheetGroupList.size() * Constants.DOUBLE_ONE) * Constants.FULL_PROCESS));
                 }
                 excelBean.logExportInfo(log);
                 // 增强

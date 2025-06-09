@@ -139,6 +139,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setVersion(Constants.DATA_INIT_VERSION);
         downloadRecord.setExecuteProcess(0);
         downloadRecord.setMaxServerRetry(request.getMaxServerRetry());
+        downloadRecord.setLocale(request.getLocale());
         downloadRecord.setCurrentRetry(0);
         downloadRecord.setDownloadNum(0);
         downloadRecord.setErrorMsg(StringUtils.EMPTY);
@@ -543,5 +544,10 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             .stream()
             .map(e -> new AppTree(e.getKey(), e.getValue()))
             .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getLocale(Long registerId) {
+        return asyncDownloadTaskMapper.getLocale(registerId);
     }
 }

@@ -4,6 +4,7 @@ import static com.openquartz.easyfile.core.exception.ExportErrorCode.FILE_GENERA
 import static com.openquartz.easyfile.core.exception.ExportErrorCode.SYNC_DOWNLOAD_EXECUTE_ERROR;
 
 import com.openquartz.easyfile.common.bean.ExportRequestContext;
+import com.openquartz.easyfile.common.i18n.LocaleContext;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.executor.BaseExportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileTriggerContext;
@@ -239,6 +240,7 @@ public class FileExportInterceptor implements MethodInterceptor {
         registerRequest.setFileSuffix(requestContext.getFileSuffix());
         registerRequest.setOtherMap(requestContext.getOtherMap());
         registerRequest.setMaxServerRetry(executor.maxServerRetry());
+        registerRequest.setLocale(LocaleContext.currentLocaleLanguage());
         return registerRequest;
     }
 }

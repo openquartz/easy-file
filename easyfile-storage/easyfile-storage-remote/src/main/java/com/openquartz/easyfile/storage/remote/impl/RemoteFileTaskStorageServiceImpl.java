@@ -6,12 +6,16 @@ import com.github.rholder.retry.Retryer;
 import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
+import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.storage.download.FileTaskStorageService;
 import com.openquartz.easyfile.storage.remote.exception.RemoteUploadExceptionCode;
+
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+
 import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
@@ -53,9 +57,9 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
     public boolean enableRunning(Long registerId) {
         log.info("[RemoteDownloadStorageServiceImpl#enableRunning] request registerId:{}", registerId);
         ResponseResult<Boolean> result = easyFileClient
-            .enableRunning(EnableRunningRequest.create(registerId));
+                .enableRunning(EnableRunningRequest.create(registerId));
         log.info("[RemoteDownloadStorageServiceImpl#enableRunning] response registerId:{},result:{}", registerId,
-            result);
+                result);
         if (Objects.nonNull(result) && result.isSuccess()) {
             return result.getData();
         }
@@ -68,7 +72,7 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
         try {
             ResponseResult<ExportResult> result = easyFileClient.loadingExportCacheResult(request);
             log.info("[RemoteDownloadStorageServiceImpl#loadingCacheExportResult] request:{},response:{}", request,
-                result);
+                    result);
             if (Objects.nonNull(result)) {
                 return result.getData();
             }
@@ -82,29 +86,29 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
     public void uploadCallback(UploadCallbackRequest request) {
         log.info("[RemoteDownloadStorageServiceImpl#uploadCallback] upload param:{}", request);
         Retryer<ResponseResult<?>> retryer = RetryerBuilder.<ResponseResult<?>>newBuilder()
-            .retryIfExceptionOfType(IOException.class)
-            .withWaitStrategy(WaitStrategies.incrementingWait(5, TimeUnit.SECONDS, 5, TimeUnit.SECONDS))
-            .withStopStrategy(StopStrategies.stopAfterAttempt(5))
-            .withRetryListener(new RetryListener() {
-                @Override
-                public <V> void onRetry(Attempt<V> attempt) {
-                    if (attempt.hasException()) {
-                        log.error("[RemoteDownloadStorageServiceImpl#uploadCallback] retry service error",
-                            attempt.getExceptionCause());
+                .retryIfExceptionOfType(IOException.class)
+                .withWaitStrategy(WaitStrategies.incrementingWait(5, TimeUnit.SECONDS, 5, TimeUnit.SECONDS))
+                .withStopStrategy(StopStrategies.stopAfterAttempt(5))
+                .withRetryListener(new RetryListener() {
+                    @Override
+                    public <V> void onRetry(Attempt<V> attempt) {
+                        if (attempt.hasException()) {
+                            log.error("[RemoteDownloadStorageServiceImpl#uploadCallback] retry service error",
+                                    attempt.getExceptionCause());
+                        }
                     }
-                }
-            })
-            .build();
+                })
+                .build();
         try {
             ResponseResult<?> callbackResponse = retryer.call(() -> easyFileClient.uploadCallback(request));
             log.info("[RemoteDownloadStorageServiceImpl#uploadCallback] upload param:{},response:{}", request,
-                JSONUtil.toJson(request));
+                    JSONUtil.toJson(request));
             Asserts.notNull(callbackResponse, RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
             Asserts.isTrue(callbackResponse.isSuccess(), RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
         } catch (Exception ex) {
             log.error("[RemoteDownloadStorageServiceImpl#uploadCallback] call easyfile-client error,request:{}",
-                request,
-                ex);
+                    request,
+                    ex);
             throw new EasyFileException(RemoteUploadExceptionCode.UPLOAD_CALLBACK_ERROR);
         }
     }
@@ -136,7 +140,7 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
         ResponseResult<CancelUploadResult> responseResult = easyFileClient.cancelUpload(request);
         Asserts.notNull(responseResult, RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR,
-            responseResult.getMessage());
+                responseResult.getMessage());
         return responseResult.getData();
     }
 
@@ -145,7 +149,7 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
         ResponseResult<DownloadRequestInfo> responseResult = easyFileClient.getRequestInfoByRegisterId(registerId);
         Asserts.notNull(responseResult, RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR,
-            responseResult.getMessage());
+                responseResult.getMessage());
         return responseResult.getData();
     }
 
@@ -167,7 +171,7 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
         ResponseResult<Pagination<DownloadResult>> responseResult = easyFileClient.listExportResult(request);
         Asserts.notNull(responseResult, RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR,
-            responseResult.getMessage());
+                responseResult.getMessage());
         return responseResult.getData();
     }
 
@@ -176,7 +180,21 @@ public class RemoteFileTaskStorageServiceImpl implements FileTaskStorageService 
         ResponseResult<List<AppTree>> responseResult = easyFileClient.getAppTree();
         Asserts.notNull(responseResult, RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR);
         Asserts.isTrue(responseResult.isSuccess(), RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR,
-            responseResult.getMessage());
+                responseResult.getMessage());
         return responseResult.getData();
+    }
+
+    @Override
+    public Locale getCurrentLocale(Long registerId) {
+
+        ResponseResult<String> responseResult = easyFileClient.getCurrentLocale(registerId);
+        Asserts.notNull(responseResult, RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_ERROR);
+        Asserts.isTrue(responseResult.isSuccess(), RemoteUploadExceptionCode.DOWNLOAD_RESPONSE_MSG_ERROR,
+                responseResult.getMessage());
+        String data = responseResult.getData();
+        if (StringUtils.isNotBlank(data)) {
+            return Locale.forLanguageTag(data);
+        }
+        return null;
     }
 }

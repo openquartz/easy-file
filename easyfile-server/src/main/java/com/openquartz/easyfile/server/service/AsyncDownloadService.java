@@ -132,5 +132,10 @@ public interface AsyncDownloadService {
      */
     List<AppTree> getAppTree();
 
-
+    /**
+     * 获取语言
+     * @param registerId registerId
+     * @return locale
+     */
+    String getLocale(Long registerId);
 }

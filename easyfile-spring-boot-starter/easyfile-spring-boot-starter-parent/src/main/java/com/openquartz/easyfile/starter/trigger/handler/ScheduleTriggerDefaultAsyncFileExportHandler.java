@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import java.util.Comparator;
 import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.common.util.CollectionUtils;
@@ -31,46 +32,45 @@ public class ScheduleTriggerDefaultAsyncFileExportHandler extends DatabaseDefaul
     private final ScheduledThreadPoolExecutor reaperScheduleExecutorService;
 
     private ScheduledThreadPoolExecutor init(ScheduleAsyncHandlerProperties handlerProperties,
-        BaseDefaultRejectExecutionHandler rejectHandler) {
+                                             BaseDefaultRejectExecutionHandler rejectHandler) {
         return new ScheduledThreadPoolExecutor(handlerProperties.getThreadPoolCoreSize(),
-            new ThreadFactoryBuilder()
-                .setNameFormat(handlerProperties.getThreadPoolThreadPrefix() + "-thread-%d")
-                .build(),
-            rejectHandler);
+                new ThreadFactoryBuilder()
+                        .setNameFormat(handlerProperties.getThreadPoolThreadPrefix() + "-thread-%d")
+                        .build(),
+                rejectHandler);
     }
 
     public ScheduleTriggerDefaultAsyncFileExportHandler(
-        FileTaskStorageService storageService,
-        FileTriggerService triggerService,
-        ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
-        AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,
+            FileTaskStorageService storageService,
+            FileTriggerService triggerService,
+            ScheduleAsyncHandlerProperties scheduleAsyncHandlerProperties,
+            AsyncFileTriggerExecuteHandlerFactory asyncFileTriggerExecuteHandlerFactory,
         BaseDefaultRejectExecutionHandler rejectExecutionHandler) {
 
         super(storageService,triggerService,scheduleAsyncHandlerProperties,asyncFileTriggerExecuteHandlerFactory);
-
         this.triggerService = triggerService;
         this.handlerProperties = scheduleAsyncHandlerProperties;
         this.scheduleExecutorService = init(scheduleAsyncHandlerProperties, rejectExecutionHandler);
         // reaper
         this.reaperScheduleExecutorService = new ScheduledThreadPoolExecutor(
-            handlerProperties.getReaperTheadPoolCoreSize(),
-            new ThreadFactoryBuilder()
-                .setNameFormat(handlerProperties.getReaperThreadPoolThreadPrefix() + "-thread-%d")
-                .build(),
-            rejectExecutionHandler);
+                handlerProperties.getReaperTheadPoolCoreSize(),
+                new ThreadFactoryBuilder()
+                        .setNameFormat(handlerProperties.getReaperThreadPoolThreadPrefix() + "-thread-%d")
+                        .build(),
+                rejectExecutionHandler);
     }
 
     public void doTrigger() {
         List<DownloadTriggerEntry> registerIdList = triggerService
-            .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
-                handlerProperties.getTriggerOffset());
+                .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
+                        handlerProperties.getTriggerOffset());
         doActualTrigger(registerIdList);
     }
 
     public void doReaperTrigger() {
         List<DownloadTriggerEntry> registerIdList = triggerService
-            .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
-                handlerProperties.getMinReaperSeconds(), handlerProperties.getTriggerOffset());
+                .getTriggerRegisterId(handlerProperties.getLookBackHours(), handlerProperties.getMaxTriggerCount(),
+                        handlerProperties.getMinReaperSeconds(), handlerProperties.getTriggerOffset());
         doActualTrigger(registerIdList);
     }
 
@@ -82,7 +82,10 @@ public class ScheduleTriggerDefaultAsyncFileExportHandler extends DatabaseDefaul
                 log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
                 return;
             }
-            registerIdList.stream().sorted().forEach(this::doTrigger);
+            registerIdList
+                    .stream()
+                    .sorted(Comparator.comparing(DownloadTriggerEntry::getRegisterId))
+                    .forEach(this::doTrigger);
         } catch (Exception ex) {
             log.error("[ScheduleTriggerAsyncFileHandler#doTrigger] error!", ex);
         }
@@ -95,12 +98,12 @@ public class ScheduleTriggerDefaultAsyncFileExportHandler extends DatabaseDefaul
         super.afterPropertiesSet();
         double initDelaySeconds = new Random(1).nextDouble() * handlerProperties.getSchedulePeriod();
         scheduleExecutorService
-            .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
-                TimeUnit.SECONDS);
+                .scheduleAtFixedRate(this::doTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
+                        TimeUnit.SECONDS);
         // do reaper
         reaperScheduleExecutorService
-            .scheduleAtFixedRate(this::doReaperTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
-                TimeUnit.SECONDS);
+                .scheduleAtFixedRate(this::doReaperTrigger, (int) initDelaySeconds, handlerProperties.getSchedulePeriod(),
+                        TimeUnit.SECONDS);
     }
 
 }

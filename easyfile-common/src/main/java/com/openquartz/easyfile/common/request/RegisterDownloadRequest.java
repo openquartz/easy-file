@@ -44,6 +44,11 @@ public class RegisterDownloadRequest extends BaseExecuteParam {
      */
     private Integer maxServerRetry;
 
+    /**
+     * locale
+     */
+    private String locale;
+
     public String getAppId() {
         return appId;
     }
@@ -82,5 +87,13 @@ public class RegisterDownloadRequest extends BaseExecuteParam {
 
     public void setMaxServerRetry(Integer maxServerRetry) {
         this.maxServerRetry = maxServerRetry;
+    }
+
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale(String locale) {
+        this.locale = locale;
     }
 }

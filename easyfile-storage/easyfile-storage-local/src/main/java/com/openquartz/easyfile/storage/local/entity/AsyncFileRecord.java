@@ -175,4 +175,10 @@ public class AsyncFileRecord {
     @Column(name = "update_by")
     private String updateBy;
 
+    /**
+     * 语言
+     */
+    @Column(name = "locale")
+    private String locale;
+
 }

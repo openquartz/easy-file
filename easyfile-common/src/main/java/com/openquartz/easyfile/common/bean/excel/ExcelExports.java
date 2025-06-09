@@ -1,9 +1,11 @@
 package com.openquartz.easyfile.common.bean.excel;
 
 import com.openquartz.easyfile.common.annotations.ExcelProperty;
+import com.openquartz.easyfile.common.i18n.I18nTranslator;
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.common.util.ReflectionUtils;
 import com.openquartz.easyfile.common.util.StringUtils;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
@@ -11,6 +13,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -36,7 +39,7 @@ public final class ExcelExports {
     /**
      * 写入数据到Excel-流
      *
-     * @param excelBean excel类
+     * @param excelBean    excel类
      * @param outputStream 输出流
      */
     public static void writeWorkbook(ExcelBean excelBean, OutputStream outputStream) {
@@ -79,7 +82,7 @@ public final class ExcelExports {
     /**
      * 写入表头
      *
-     * @param excelBean excelBean
+     * @param excelBean       excelBean
      * @param exportFieldList 导出字段
      * @return 占用行数
      */
@@ -93,13 +96,13 @@ public final class ExcelExports {
     /**
      * 写入数据
      *
-     * @param excelBean bean
+     * @param excelBean       bean
      * @param exportFieldList exportFiledList
-     * @param rowList rowList
-     * @param <T> T
+     * @param rowList         rowList
+     * @param <T>             T
      */
     public static <T> void writeData(ExcelBean excelBean, List<ExcelFiled> exportFieldList, List<T> rowList,
-        String sheetGroup) {
+                                     String sheetGroup) {
         if (CollectionUtils.isEmpty(rowList)) {
             return;
         }
@@ -110,7 +113,7 @@ public final class ExcelExports {
     /**
      * 设置表头
      *
-     * @param excelBean excelBean
+     * @param excelBean    excelBean
      * @param exportFields exportFields
      * @return 表头占用的行数
      */
@@ -125,8 +128,7 @@ public final class ExcelExports {
         titleRow += 1;
 
         boolean needSubTitle = exportFields.stream()
-            .anyMatch(e -> CollectionUtils.isNotEmpty(e.getSubFiledList())
-                && StringUtils.isNotBlank(e.getExcelProperty().value()));
+                .anyMatch(e -> CollectionUtils.isNotEmpty(e.getSubFiledList()) && StringUtils.isNotBlank(e.getExcelProperty().value()));
         Row subHeaderRow = needSubTitle ? sheet.createRow(1) : headerRow;
         titleRow = needSubTitle ? titleRow + 1 : titleRow;
         excelBean.writeRow(titleRow, sheetGroup);
@@ -140,7 +142,7 @@ public final class ExcelExports {
                 Cell cell = headerRow.createCell(field.getFrmColumnIndex());
                 cell.setCellStyle(cellStyle);
                 if (StringUtils.isNotBlank(excelProperty.value())) {
-                    setCellValue(cell, excelProperty.value(), field);
+                    setCellValue(cell, I18nTranslator.translate(excelProperty.value()), field);
                 } else {
                     setCellValue(cell, field.getField().getName(), field);
                 }
@@ -157,25 +159,25 @@ public final class ExcelExports {
                 if (StringUtils.isNotBlank(field.getExcelProperty().value())) {
                     Cell cell = headerRow.createCell(field.getFrmColumnIndex());
                     cell.setCellStyle(cellStyle);
-                    setCellValue(cell, field.getExcelProperty().value(), field);
+                    setCellValue(cell, I18nTranslator.translate(field.getExcelProperty().value()), field);
                     // 设置单元格并做合并 (index-->index+subIndex)
                     PoiMergeCellUtil.addMergedRegion(sheet, 0, 0, field.getFrmColumnIndex(), field.getToColumnIndex());
                 }
                 for (ExcelFiled subField : field.getSubFiledList()) {
                     Row customTitleRow =
-                        StringUtils.isBlank(field.getExcelProperty().value()) ? headerRow : subHeaderRow;
+                            StringUtils.isBlank(field.getExcelProperty().value()) ? headerRow : subHeaderRow;
                     sheet.setColumnWidth(subField.getFrmColumnIndex(), subField.getExcelProperty().width());
                     Cell cell = customTitleRow.createCell(subField.getFrmColumnIndex());
                     cell.setCellStyle(cellStyle);
                     if (StringUtils.isNotBlank(subField.getExcelProperty().value())) {
-                        setCellValue(cell, subField.getExcelProperty().value(), subField);
+                        setCellValue(cell, I18nTranslator.translate(subField.getExcelProperty().value()), subField);
                     } else {
                         setCellValue(cell, subField.getField().getName(), subField);
                     }
                     if (StringUtils.isBlank(field.getExcelProperty().value()) && needSubTitle) {
                         // 设置单元格并做合并 (0,index-->1,index)
                         PoiMergeCellUtil
-                            .addMergedRegion(sheet, 0, 1, subField.getFrmColumnIndex(), subField.getToColumnIndex());
+                                .addMergedRegion(sheet, 0, 1, subField.getFrmColumnIndex(), subField.getToColumnIndex());
                     }
                 }
             }
@@ -188,13 +190,13 @@ public final class ExcelExports {
     /**
      * 写入数据
      *
-     * @param excelBean excelBean
+     * @param excelBean    excelBean
      * @param exportFields exportFields
-     * @param dataRows dataRows
-     * @param <T> T
+     * @param dataRows     dataRows
+     * @param <T>          T
      */
     private static <T> void writeRows(ExcelBean excelBean, List<ExcelFiled> exportFields, List<T> dataRows,
-        String sheetGroup) {
+                                      String sheetGroup) {
         CellStyle cellStyle = excelBean.getBaseStyle();
         for (Object dataRow : dataRows) {
             writeHeader(excelBean, exportFields, sheetGroup);
@@ -206,7 +208,7 @@ public final class ExcelExports {
             for (ExcelFiled field : exportFields) {
                 // 基本类型数据
                 if (!field.isCollection()
-                    && ReflectionUtils.isJavaClass(field.getField().getType())) {
+                        && ReflectionUtils.isJavaClass(field.getField().getType())) {
                     Object value = ReflectionUtils.reflectiveGetFieldValue(dataRow, field.getField());
 
                     Cell cell = row.createCell(field.getFrmColumnIndex());
@@ -244,15 +246,15 @@ public final class ExcelExports {
                     if (!exportField.isCollection()) {
                         if (!exportField.isCustomBean()) {
                             PoiMergeCellUtil
-                                .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
-                                    exportField.getFrmColumnIndex(),
-                                    exportField.getFrmColumnIndex());
+                                    .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
+                                            exportField.getFrmColumnIndex(),
+                                            exportField.getFrmColumnIndex());
                         } else {
                             for (ExcelFiled subExcelFiled : exportField.getSubFiledList()) {
                                 PoiMergeCellUtil
-                                    .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
-                                        subExcelFiled.getFrmColumnIndex(),
-                                        subExcelFiled.getFrmColumnIndex());
+                                        .addMergedRegion(sheet, rowIndex, maxCurrentSubRowIndex,
+                                                subExcelFiled.getFrmColumnIndex(),
+                                                subExcelFiled.getFrmColumnIndex());
                             }
                         }
                     }
@@ -269,15 +271,15 @@ public final class ExcelExports {
      * 设置当前子列单元格的值
      *
      * @param cellStyle 单元格式
-     * @param row 行
-     * @param field 字段
-     * @param value 值
+     * @param row       行
+     * @param field     字段
+     * @param value     值
      */
     private static void setSubCell(CellStyle cellStyle, Row row, ExcelFiled field, Object value) {
 
         for (ExcelFiled subField : field.getSubFiledList()) {
             Object subData =
-                Objects.nonNull(value) ? ReflectionUtils.reflectiveGetFieldValue(value, subField.getField()) : null;
+                    Objects.nonNull(value) ? ReflectionUtils.reflectiveGetFieldValue(value, subField.getField()) : null;
             Cell cell = row.createCell(subField.getFrmColumnIndex());
             cell.setCellStyle(cellStyle);
             setCellValue(cell, subData, subField);

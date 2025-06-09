@@ -1,5 +1,7 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
+import com.openquartz.easyfile.core.intercept.DownloadExecutorInterceptor;
+import com.openquartz.easyfile.core.intercept.I18nDownloadExecutorInterceptor;
 import com.openquartz.easyfile.starter.aop.FileExportInterceptor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,11 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
         FileExportExecutorAnnotationAdvisor advisor = new FileExportExecutorAnnotationAdvisor(interceptor);
         advisor.setOrder(easyFileDownloadProperties.getExportAdvisorOrder());
         return advisor;
+    }
+
+    @Bean
+    public DownloadExecutorInterceptor i18nDownloadExecutorInterceptor(DownloadStorageService downloadStorageService) {
+        return new I18nDownloadExecutorInterceptor(downloadStorageService);
     }
 
     @Bean
