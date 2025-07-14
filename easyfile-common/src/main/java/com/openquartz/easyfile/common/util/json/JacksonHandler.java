@@ -7,11 +7,15 @@ import com.fasterxml.jackson.databind.JavaType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.fasterxml.jackson.databind.type.TypeFactory;
+import com.openquartz.easyfile.common.bean.Pair;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * JsonUtils
@@ -21,6 +25,10 @@ import java.util.Set;
 public abstract class JacksonHandler implements JsonFacade {
 
     private final ObjectMapper mapper = newMapper();
+
+    // 缓存已编译的类型
+    private static final Map<Type, JavaType> JACKSON_TYPE_CACHE = new ConcurrentHashMap<>();
+    private static final Map<Pair<Class<? extends Collection<?>>, Class<?>>, CollectionType> JACKSON_COLLECTION_TYPE_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 基于默认配置, 创建一个新{@link ObjectMapper},
@@ -54,7 +62,9 @@ public abstract class JacksonHandler implements JsonFacade {
     @Override
     public <T> T parseObject(String text, Class<T> clazz) {
         try {
-            return mapper.readValue(text, clazz);
+            JavaType javaType = JACKSON_TYPE_CACHE.computeIfAbsent(clazz, t -> mapper.getTypeFactory().constructType(t)
+            );
+            return mapper.readValue(text, javaType);
         } catch (IOException e) {
             return rethrow(e);
         }
@@ -63,7 +73,9 @@ public abstract class JacksonHandler implements JsonFacade {
     @Override
     public <T> T parseObject(byte[] json, Class<T> type) {
         try {
-            return mapper.readValue(json, type);
+            JavaType javaType = JACKSON_TYPE_CACHE.computeIfAbsent(type, t -> mapper.getTypeFactory().constructType(t)
+            );
+            return mapper.readValue(json, javaType);
         } catch (IOException e) {
             return rethrow(e);
         }
@@ -72,8 +84,11 @@ public abstract class JacksonHandler implements JsonFacade {
     @Override
     public <T> T parseObject(String text, TypeReference<T> typeReference) {
         try {
-            Type type = typeReference.getType();
-            JavaType javaType = mapper.getTypeFactory().constructType(type);
+            // 缓存已编译的类型
+            JavaType javaType = JACKSON_TYPE_CACHE.computeIfAbsent(
+                    typeReference.getType(),
+                    t -> mapper.getTypeFactory().constructType(t)
+            );
             return mapper.readValue(text, javaType);
         } catch (IOException e) {
             return rethrow(e);
@@ -83,8 +98,11 @@ public abstract class JacksonHandler implements JsonFacade {
     @Override
     public <T> T parseObject(byte[] json, TypeReference<T> typeReference) {
         try {
-            Type type = typeReference.getType();
-            JavaType javaType = mapper.getTypeFactory().constructType(type);
+            // 缓存已编译的类型
+            JavaType javaType = JACKSON_TYPE_CACHE.computeIfAbsent(
+                    typeReference.getType(),
+                    t -> mapper.getTypeFactory().constructType(t)
+            );
             return mapper.readValue(json, javaType);
         } catch (IOException e) {
             return rethrow(e);
@@ -111,10 +129,10 @@ public abstract class JacksonHandler implements JsonFacade {
     }
 
     private <V, C extends Collection<?>, T> V parseCollection(String json, Class<C> collectionType,
-        Class<T> elementType) {
+                                                              Class<T> elementType) {
         try {
-            TypeFactory typeFactory = mapper.getTypeFactory();
-            CollectionType javaType = typeFactory.constructCollectionType(collectionType, elementType);
+            CollectionType javaType = JACKSON_COLLECTION_TYPE_CACHE
+                    .computeIfAbsent(Pair.of(collectionType, elementType), pair -> mapper.getTypeFactory().constructCollectionType(pair.getKey(), pair.getValue()));
             return mapper.readValue(json, javaType);
         } catch (IOException e) {
             return rethrow(e);
