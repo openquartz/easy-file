@@ -110,7 +110,7 @@ public class EasyFileCreatorAutoConfiguration {
     }
 
     @Bean
-    @org.springframework.boot.autoconfigure.condition.ConditionalOnClass(com.alibaba.excel.EasyExcel.class)
+    @ConditionalOnClass(com.alibaba.excel.EasyExcel.class)
     @ConditionalOnMissingBean(ImportStreamReader.class)
     public EasyExcelImportStreamReader easyExcelImportStreamReader() {
         return new EasyExcelImportStreamReader();
