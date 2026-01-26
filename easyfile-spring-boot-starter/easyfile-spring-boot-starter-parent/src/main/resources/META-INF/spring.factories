@@ -6,4 +6,5 @@ com.openquartz.easyfile.starter.spring.boot.autoconfig.DefaultAsyncFileHandlerAu
 com.openquartz.easyfile.starter.spring.boot.autoconfig.DisruptorAsyncFileHandlerAutoConfiguration,\
 com.openquartz.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncFileHandlerAutoConfiguration,\
 com.openquartz.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration,\
-com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileUiAutoConfiguration
+com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileUiAutoConfiguration,\
+com.openquartz.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncImportHandlerAutoConfiguration

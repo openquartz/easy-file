@@ -2,8 +2,11 @@ package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
+import com.openquartz.easyfile.core.executor.AsyncImportHandler;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.impl.DefaultDownloadRejectExecutionHandler;
+import com.openquartz.easyfile.core.executor.reader.ImportStreamReader;
+import com.openquartz.easyfile.core.executor.writer.ImportResultWriter;
 import com.openquartz.easyfile.core.metrics.DownloadMetricsListener;
 import com.openquartz.easyfile.core.metrics.MetricsListener;
 import com.openquartz.easyfile.metrics.api.config.MetricsConfig;
@@ -16,7 +19,11 @@ import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFil
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileMetricsProperties;
 import com.openquartz.easyfile.storage.file.UploadService;
 import com.openquartz.easyfile.storage.file.local.LocalUploadServiceImpl;
+import com.openquartz.easyfile.storage.importer.ImportStorageService;
+import java.util.Collections;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -58,7 +65,7 @@ public class EasyFileCreatorAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(UploadService.class)
-    public UploadService localUploadService() {
+    public LocalUploadServiceImpl localUploadService() {
         return new LocalUploadServiceImpl();
     }
 
@@ -99,4 +106,16 @@ public class EasyFileCreatorAutoConfiguration {
         return new SpringContextUtil();
     }
 
+    @Bean
+    @ConditionalOnMissingBean(AsyncImportHandler.class)
+    public AsyncImportHandler asyncImportHandler(ImportStorageService importStorageService,
+                                               UploadService uploadService,
+                                               ObjectProvider<List<ImportStreamReader>> importStreamReaders,
+                                               ObjectProvider<List<ImportResultWriter>> importResultWriters,
+                                               EasyFileDownloadProperties easyFileDownloadProperties) {
+        return new AsyncImportHandler(importStorageService, uploadService,
+            importStreamReaders.getIfAvailable(Collections::emptyList),
+            importResultWriters.getIfAvailable(Collections::emptyList),
+            easyFileDownloadProperties);
+    }
 }
