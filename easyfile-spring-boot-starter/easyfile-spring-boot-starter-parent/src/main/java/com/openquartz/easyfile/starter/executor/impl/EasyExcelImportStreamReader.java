@@ -134,7 +134,7 @@ public class EasyExcelImportStreamReader implements ImportStreamReader {
                     // If finalMapping is empty (maybe invokeHeadMap wasn't called or no matches), 
                     // try to use indexFieldMap directly
                     if (finalMapping.isEmpty() && !indexFieldMap.isEmpty()) {
-                         indexFieldMap.forEach(finalMapping::put);
+                        finalMapping.putAll(indexFieldMap);
                     }
 
                     for (Map.Entry<Integer, String> entry : data.entrySet()) {
