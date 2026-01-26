@@ -81,6 +81,12 @@
             <artifactId>easyfile-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
     <build>

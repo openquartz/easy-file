@@ -11,6 +11,8 @@ import com.openquartz.easyfile.core.metrics.DownloadMetricsListener;
 import com.openquartz.easyfile.core.metrics.MetricsListener;
 import com.openquartz.easyfile.metrics.api.config.MetricsConfig;
 import com.openquartz.easyfile.metrics.api.metric.MetricsTrackerFacade;
+import com.openquartz.easyfile.starter.executor.impl.EasyExcelImportResultWriter;
+import com.openquartz.easyfile.starter.executor.impl.EasyExcelImportStreamReader;
 import com.openquartz.easyfile.starter.init.EasyFileInitializingEntrance;
 import com.openquartz.easyfile.starter.processor.ApplicationContentPostProcessor;
 import com.openquartz.easyfile.starter.processor.DownloadInterceptorPostProcessor;
@@ -24,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -104,6 +107,20 @@ public class EasyFileCreatorAutoConfiguration {
     @Bean
     public SpringContextUtil springContextUtil(){
         return new SpringContextUtil();
+    }
+
+    @Bean
+    @org.springframework.boot.autoconfigure.condition.ConditionalOnClass(com.alibaba.excel.EasyExcel.class)
+    @ConditionalOnMissingBean(ImportStreamReader.class)
+    public EasyExcelImportStreamReader easyExcelImportStreamReader() {
+        return new EasyExcelImportStreamReader();
+    }
+
+    @Bean
+    @ConditionalOnClass(com.alibaba.excel.EasyExcel.class)
+    @ConditionalOnMissingBean(ImportResultWriter.class)
+    public EasyExcelImportResultWriter easyExcelImportResultWriter() {
+        return new EasyExcelImportResultWriter();
     }
 
     @Bean
