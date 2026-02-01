@@ -1,123 +1,89 @@
-<div align=center><img src="/doc/image/logo.jpg"/></div>
-
-<div align=center> Make BigData Export Easier!!! </div>
-
--------
+<div align="center"><img src="/doc/image/logo.jpg"/></div>
+<div align="center">Make BigData Export Easier</div>
 
 # EasyFile
 
-[English](./README.md)
+- [English](./README.md) | 中文
+- ![Stars](https://img.shields.io/github/stars/openquartz/easy-file?style=social)
+- ![License](https://img.shields.io/github/license/openquartz/easy-file)
 
-Make BigData Export Easier!!!
+> 本项目暂未发布到 Maven 中央仓库，可通过本地/私有仓库引入。
 
-> **注意**：本项目未发布到maven中央仓库，需要手动添加到本地仓库 或者 到私有仓库中使用。
+**主页**：https://openquartz.github.io/  
+**GitHub**：https://github.com/openquartz/easy-file
 
-## 欢迎Star!!!
+**一句话简介**：面向大数据导出的开箱即用解决方案，覆盖同步/异步、分页/流式、缓存复用、压缩、国际化与可观测性，稳定高效，易集成。
 
-**[主页](https://openquartz.github.io/)** \
-**[GitHub](https://github.com/openquartz/easy-file)**
+## 为什么选择 EasyFile
+- 大数据量导出易超时、内存/CPU 瞬时飙高，影响线上稳定性
+- 结果不可复用、重复计算与 I/O 浪费
+- 导出任务不可观测，缺少进度与监控
+- 业务需同时关注查询与文件生成，开发复杂度高
 
-### 介绍
+EasyFile 针对以上痛点提供标准化能力与最佳实践，帮助你安全、稳定地完成大文件导出。
 
-#### 什么是EasyFile
+## 功能特性
+- 同步/异步导出、分页导出、流式导出
+- 导出结果缓存复用、文件压缩
+- 多种异步触发机制
+- i18n 国际化（按语言环境动态表头）
+- 监控与指标（Micrometer/Prometheus）
+- 代码与配置双友好，易于落地与扩展
 
-EasyFile-是为了提供更加便捷的文件服务,一整套Web大文件导出解决方案。可以轻松导出千万以上数据
+## 模式选择
+- Local（推荐）：提供本地存储 Mapper，数据落地本地数据库，快速启用、依赖少
+- Remote：部署 easyfile-server，客户端远程调用，适合多服务共享与集中管控
 
-#### 功能特性
+## 快速开始
+- 添加依赖：将工程发布到你本地或私有仓库
+- 选择模式：引入对应 Starter（Local/Remote）
+- 实现导出执行器：基于统一 API 编写下载逻辑
+- 启动并验证：运行示例或你的项目，查看导出与进度
 
-支持（同步、异步）导出、文件压缩、流式导出、分页导出、导出缓存复用、多组分页导出、多组流式导出、多种异步触发机制 等特性。同时支持i18n国际化导出(根据不同的语言环境展示不同的Excel表头)。
+详见 [快速开始文档](doc/QuickStart_zh.md) 与示例工程。
 
-优化缓解导出文件时对服务的内存和CPU影响。针对文件服务可做更多的管理。
+## 与 EasyExcel 的关系
+- EasyExcel 专注 Excel 文件读写与解析
+- EasyFile 专注“大文件导出过程”的稳定性与可观测，二者可协同
+- 文件生成可选用 EasyExcel 等库，EasyFile 负责过程治理与复用
 
-提供给开发者更加通用、快捷、统一的实现的API方案；
-
-### 解决问题
-
-1、瞬时加载数据过大导致内存飙高不够平滑机器宕机风险很大
-
-2、生成较大文件容易出现HTTP 超时，造成导出失败
-
-3、相同条件的导出结果无法做到复用，需要继续生成导出文件资源浪费
-
-4、导出任务集中出现没有可监控机制
-
-5、开发者不仅需要关心数据查询逻辑同时需要关心文件生成逻辑
-
-6、导出耗时过长时,无法查看到执行进度
-
-### 框架对比
-
-与 Alibaba 的EasyExcel 相比,两者侧重点不同。
-
-Alibaba EasyExcel 是一个Excel文件生成导出、导入 解析工具。
-
-EasyFile 是一个大文件导出的解决方案。用于解决大文件导出时遇到的，文件复用，文件导出超时，内存溢出，瞬时CPU 内存飙高等等问题的一整套解决方案。
-同时EasyFile 不仅可以用于Excel
-文件的导出,也可以用于csv,pdf,word 等文件导出的管理（暂时需要用户自己集成基础导出下载类BaseDownloadExecutor 实现文件生成逻辑）。
-
-而且,EasyFile和Alibaba EasyExcel 并不冲突，依然可以结合EasyExcel 使用,文件生成逻辑使用Alibaba EasyExcel 做自行拓展使用。
-
-1、使用全量查出100w数据+EasyExcel导出(`com.openquartz.easyfile.example.downloader.StudentDownloadDemoExecutor`)
-内存图：
+对比示例与效果：
+1. 全量 100w + EasyExcel 导出（`com.openquartz.easyfile.example.downloader.StudentDownloadDemoExecutor`）  
 ![全量导出+EasyExcel](./doc/image/FullDownloadMemory.png)
-
-2、使用分页导出(`com.openquartz.easyfile.example.downloader.StudentPageDownloadDemoExecutor`)
-内存图
+2. 分页导出（`com.openquartz.easyfile.example.downloader.StudentPageDownloadDemoExecutor`）  
 ![分页导出](./doc/image/PageDownloadMemory.png)
-
-生成的文件大小比对:
+文件大小对比：  
 ![文件大小对比图](./doc/image/PageDownloadSize2FullDownloadSize.png)
 
-### 软件架构
+## 架构与模块
+- easyfile-common：公共模块
+- easyfile-core：核心能力
+- easyfile-metrics：指标
+  - easyfile-metrics-api
+  - easyfile-metrics-promethes
+- easyfile-storage：存储
+  - easyfile-storage-api
+  - easyfile-storage-remote
+  - easyfile-storage-local
+- easyfile-spring-boot-starter：Starter 集合
+  - parent / local / remote
+- easyfile-server：远程存储服务端
+- easyfile-ui：管理端（可选）
+- easyfile-example：示例（local / remote）
 
-EasyFile 提供两种模式
-
-**Local模式(推荐)**:  需要提供本地的api 存储Mapper. 将数据存储到本地数据库中管理。
-
-**Remote模式**：需要部署easyfile-server 服务，并设置客户端调用远程EasyFile 的域名。
-
-### 代码结构
-
-- `easyfile-common`: 公共模块服务
-- `easyfile-core` : 核心服务
-- `easyfile-metrics` : metrics支持
-    - `easyfile-metrics-api` :  metrics-api 协议
-    - `easyfile-metrics-promethes` : metrics-promethes 实现
-- `easyfile-storage`: 存储服务
-    - `easyfile-storage-api`: 存储服务API
-    - `easyfile-storage-remote`: 远程调用存储
-    - `easyfile-storage-local`: 本地数据源存储
-
-- `easyfile-spring-boot-starter`: easyfile starter 包 工程module集合
-    - `easyfile-spring-boot-starter-parent`: easyfile starter parent 工程
-    - `easyfile-spring-boot-starter-local`: easyfile local 模式 starter工程包
-    - `easyfile-spring-boot-starter-remote`: easyfile remote 模式 starter工程包
-
-- `easyfile-server`: easyfile 远程存储服务端
-
-- `easyfile-ui`: easyfile-admin ui-管理服务 (可选)
-
-- `easyfile-example`: 样例工程
-    - `easyfile-example-local`: 本地储存样样例工程
-    - `easyfile-example-remote`: 远程存储样例工程
-
-### 时序图
-
+时序图：  
 ![下载时序图](./doc/image/sequence.png)
 
-### 快速开始
+## 文档与资源
+- 快速开始：doc/QuickStart_zh.md
+- 示例工程：easyfile-example
+- 指标与监控：easyfile-metrics（Micrometer/Prometheus）
+- 主页与更多资料：https://openquartz.github.io/
 
-[快速开始](doc/QuickStart_zh.md)
-
-### 推广
-
-If you also think this project has helped you, welcome to sign up for the promotion!
-
-[Click to register as EasyFile user!](https://github.com/openquartz/easy-file/issues/1)
-
-ღ( ´・ᴗ・` )ღ Many thanks to the following registered users. ღ( ´・ᴗ・` )ღ
-
-## 🌟Misc
+## 参与与推广
+- 觉得有帮助，欢迎为项目 Star
+- 注册成为 EasyFile 用户：https://github.com/openquartz/easy-file/issues/1
+- 提交 Issue/PR，一起完善生态
 
 <div align="center">
 
