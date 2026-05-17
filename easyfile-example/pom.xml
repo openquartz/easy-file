@@ -23,6 +23,8 @@
         <dependency>
             <groupId>com.openquartz</groupId>
             <artifactId>easyfile-spring-boot-starter</artifactId>
+            <version>${revision}</version>
+            <type>pom</type>
         </dependency>
     </dependencies>
 
