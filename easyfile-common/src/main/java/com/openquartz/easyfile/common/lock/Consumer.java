@@ -1,4 +1,4 @@
-package com.openquartz.easyfile.server.common.lock;
+package com.openquartz.easyfile.common.lock;
 
 /**
  * consumer function

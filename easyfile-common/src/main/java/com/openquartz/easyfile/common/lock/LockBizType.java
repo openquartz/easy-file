@@ -1,4 +1,4 @@
-package com.openquartz.easyfile.server.common.lock;
+package com.openquartz.easyfile.common.lock;
 
 import com.openquartz.easyfile.common.dictionary.BaseEnum;
 
@@ -14,6 +14,12 @@ public enum LockBizType implements BaseEnum<String> {
      * 0: 下载记录注册ID
      */
     DOWNLOAD_RUNNING_LOCK("download_running", "下载运行锁"),
+
+    /**
+     * 导入运行锁
+     * 0: 导入业务唯一键
+     */
+    IMPORT_RUNNING_LOCK("import_running", "导入运行锁"),
 
     /**
      * 下载任务自动注册锁

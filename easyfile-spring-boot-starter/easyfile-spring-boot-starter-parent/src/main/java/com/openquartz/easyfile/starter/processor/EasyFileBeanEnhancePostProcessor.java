@@ -4,12 +4,15 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.lang.NonNull;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
+import com.openquartz.easyfile.core.annotations.FileImportExecutor;
 import com.openquartz.easyfile.common.exception.EasyFileException;
 import com.openquartz.easyfile.common.file.FileUrlTransformer;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.core.exception.DownloadErrorCode;
 import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.executor.BaseImportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
+import com.openquartz.easyfile.core.executor.support.FileImportExecutorSupport;
 import com.openquartz.easyfile.storage.expand.FileUrlTransformerSupport;
 
 /**
@@ -36,6 +39,18 @@ public class EasyFileBeanEnhancePostProcessor implements BeanPostProcessor {
                     .replacePlaceHold(DownloadErrorCode.DOWNLOAD_CODE_NOT_UNIQ_ERROR, exportExecutor.value());
             }
             FileExportExecutorSupport.register(exportExecutor.value(), exportExecutor, (BaseDownloadExecutor) bean);
+        }
+
+        if (clazz.isAnnotationPresent(FileImportExecutor.class)) {
+            if (!BaseImportExecutor.class.isAssignableFrom(clazz)) {
+                throw new IllegalStateException("file import executor must implement BaseImportExecutor: " + clazz);
+            }
+            FileImportExecutor importExecutor = clazz.getAnnotation(FileImportExecutor.class);
+            if (FileImportExecutorSupport.contains(importExecutor.value())
+                && !clazz.equals(FileImportExecutorSupport.get(importExecutor.value()).getClass())) {
+                throw new IllegalStateException("import code is not unique: " + importExecutor.value());
+            }
+            FileImportExecutorSupport.register(importExecutor.value(), importExecutor, (BaseImportExecutor<?>) bean);
         }
 
         // 注册file-url-transformer

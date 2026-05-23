@@ -1,6 +1,5 @@
 package com.openquartz.easyfile.server.service.impl;
 
-import com.openquartz.easyfile.server.common.lock.LockSupport;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.dictionary.EnableStatusEnum;
+import com.openquartz.easyfile.common.lock.LockBizType;
+import com.openquartz.easyfile.common.lock.LockSupport;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.util.CollectionUtils;
-import com.openquartz.easyfile.server.common.lock.LockBizType;
 import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
 import com.openquartz.easyfile.server.mapper.AsyncDownloadTaskMapper;
 import com.openquartz.easyfile.server.service.AsyncDownloadTaskService;

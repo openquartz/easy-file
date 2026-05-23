@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.server.common.lock;
 
 import com.openquartz.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.lock.LockBizType;
 import java.util.concurrent.locks.Lock;
 
 /**

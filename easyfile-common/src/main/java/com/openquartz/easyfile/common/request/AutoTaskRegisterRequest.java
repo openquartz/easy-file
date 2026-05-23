@@ -27,4 +27,9 @@ public class AutoTaskRegisterRequest {
      * key: downloadCode, value: downloadDesc;
      */
     private Map<String, String> downloadCodeMap;
+
+    /**
+     * key: importCode, value: importDesc;
+     */
+    private Map<String, String> importCodeMap;
 }

@@ -14,8 +14,10 @@ import com.openquartz.easyfile.starter.processor.DownloadInterceptorPostProcesso
 import com.openquartz.easyfile.starter.processor.EasyFileBeanEnhancePostProcessor;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileMetricsProperties;
+import com.openquartz.easyfile.storage.file.DownloadService;
 import com.openquartz.easyfile.storage.file.UploadService;
 import com.openquartz.easyfile.storage.file.local.LocalUploadServiceImpl;
+import com.openquartz.easyfile.storage.file.url.UrlDownloadServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,6 +25,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.openquartz.easyfile.core.ImportResultFileGenerator;
 
 /**
  * spring-配置核心类
@@ -60,6 +63,17 @@ public class EasyFileCreatorAutoConfiguration {
     @ConditionalOnMissingBean(UploadService.class)
     public UploadService localUploadService() {
         return new LocalUploadServiceImpl();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(DownloadService.class)
+    public DownloadService urlDownloadService() {
+        return new UrlDownloadServiceImpl();
+    }
+
+    @Bean
+    public ImportResultFileGenerator importResultFileGenerator(UploadService uploadService) {
+        return new ImportResultFileGenerator(uploadService);
     }
 
     @Bean

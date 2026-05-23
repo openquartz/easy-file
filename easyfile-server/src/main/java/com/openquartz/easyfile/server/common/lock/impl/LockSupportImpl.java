@@ -3,7 +3,6 @@ package com.openquartz.easyfile.server.common.lock.impl;
 
 import static com.openquartz.easyfile.common.util.ParamUtils.checkNotNull;
 
-import com.openquartz.easyfile.server.common.lock.LockSupport;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,9 +12,11 @@ import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.exception.Asserts;
 import com.openquartz.easyfile.common.exception.CommonErrorCode;
-import com.openquartz.easyfile.server.common.lock.Consumer;
+import com.openquartz.easyfile.common.lock.Consumer;
+import com.openquartz.easyfile.common.lock.LockBizType;
+import com.openquartz.easyfile.common.lock.LockSupport;
 import com.openquartz.easyfile.server.common.lock.DistributedLockFactory;
-import com.openquartz.easyfile.server.common.lock.LockBizType;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,8 +31,8 @@ public class LockSupportImpl implements LockSupport {
     private final DistributedLockFactory distributedLockFactory;
     private final Map<String, Lock> localLockMap = new ConcurrentHashMap<>();
 
-    public LockSupportImpl(DistributedLockFactory distributedLockFactory) {
-        this.distributedLockFactory = distributedLockFactory;
+    public LockSupportImpl(ObjectProvider<DistributedLockFactory> distributedLockFactoryProvider) {
+        this.distributedLockFactory = distributedLockFactoryProvider.getIfAvailable();
     }
 
     public static final String LOCK_KEY_FORMATTER = "%s:%s";

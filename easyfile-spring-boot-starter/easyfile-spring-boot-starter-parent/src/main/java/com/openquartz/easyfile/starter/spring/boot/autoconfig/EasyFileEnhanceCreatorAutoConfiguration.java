@@ -17,8 +17,10 @@ import org.springframework.context.annotation.Role;
 import com.openquartz.easyfile.starter.aop.FileExportExecutorAnnotationAdvisor;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
 import com.openquartz.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
+import com.openquartz.easyfile.starter.processor.AutoRegisteredImportTaskListener;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
+import com.openquartz.easyfile.storage.imports.ImportStorageService;
 
 /**
  * spring-配置核心类
@@ -58,6 +60,15 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
             EasyFileDownloadProperties easyFileDownloadProperties,
             DownloadStorageService downloadStorageService) {
         return new AutoRegisteredDownloadTaskListener(easyFileDownloadProperties, downloadStorageService);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enable-auto-register", havingValue = "true")
+    public AutoRegisteredImportTaskListener autoRegisteredImportTaskListener(
+        EasyFileDownloadProperties easyFileDownloadProperties,
+        ImportStorageService importStorageService
+    ) {
+        return new AutoRegisteredImportTaskListener(easyFileDownloadProperties, importStorageService);
     }
 
 }
