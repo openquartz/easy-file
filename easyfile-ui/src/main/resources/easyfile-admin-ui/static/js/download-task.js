@@ -3,101 +3,161 @@ layui.use(['element', 'table', 'dropdown'], function () {
   var element = layui.element;
   var table = layui.table;
   var dropdown = layui.dropdown;
+  var currentTaskType = 'download';
+  var currentUnifiedAppId = '';
 
-  table.render({
-    elem: '#table'
-    , height: 'full-300'
-    , toolbar: '#tableToolbar'
-    , defaultToolbar: ['filter', 'exports', 'print', {
-      title: '帮助'
-      , layEvent: 'LAYTABLE_TIPS'
-      , icon: 'layui-icon-tips'
-    }]
-    , url: '/easyfile-ui/download-task/list'
-    , method: 'post'
-    , contentType: 'application/json'
-    , request: {
-      pageName: 'pageNum'
-      , limitName: 'pageSize'
-    }
-    , page: {
-      layout: ['limit', 'count', 'prev', 'page', 'next', 'skip']
-      , groups: 1
-    }
-    , parseData: function (res) {
-      return {
-        "code": res.code,
-        "msg": res.message,
-        "count": res.data.totalRecords,
-        "data": res.data.modelList
-      };
-    }
-    , cols: [[
-      {field: 'registerId', width: 80, title: 'ID', sort: true}
-      , {field: 'uploadStatusDesc', width: 100, title: '处理状态'}
-      , {field: 'downloadCodeDesc', title: '下载描述', width: 150}
-      , {field: 'downloadOperateName', width: 120, title: '下载人', sort: true}
-      , {field: 'exportTime', width: 160, title: '下载时间', sort: true}
-      , {field: 'lastExecuteTime', width: 160, title: '最新执行时间'}
-      , {field: 'invalidTime', width: 160, title: '失效时间', sort: true}
-      , {field: 'downloadNum', width: 120, title: '下载次数', sort: true}
-      , {
-        field: 'executeProcess',
-        title: '执行进度',
-        width: 200,
+  function getListUrlByType(type) {
+    return type === 'import' ? '/easyfile-ui/import-task/list' : '/easyfile-ui/download-task/list';
+  }
+
+  function getAppTreeUrlByType(type) {
+    return type === 'import' ? '/easyfile-ui/import-task/listAppId' : '/easyfile-ui/download-task/listAppId';
+  }
+
+  function progressCell(res) {
+    return '<div class="layui-progress layui-progress-big" lay-showpercent="true">'
+        + '<div class="layui-progress-bar" lay-percent="' + (res.executeProcess || 0) + '%"></div>'
+        + '</div>';
+  }
+
+  function importSummaryCell(res) {
+    return '成功 ' + (res.successCount || 0)
+        + ' / 失败 ' + (res.failCount || 0)
+        + ' / 总计 ' + (res.totalCount || 0);
+  }
+
+  function buildDownloadColumns() {
+    return [[
+      {field: 'registerId', width: 80, title: 'ID', sort: true},
+      {field: 'uploadStatusDesc', width: 100, title: '处理状态'},
+      {field: 'downloadCodeDesc', title: '下载描述', width: 150},
+      {field: 'downloadOperateName', width: 120, title: '下载人', sort: true},
+      {field: 'exportTime', width: 160, title: '下载时间', sort: true},
+      {field: 'lastExecuteTime', width: 160, title: '最新执行时间'},
+      {field: 'invalidTime', width: 160, title: '失效时间', sort: true},
+      {field: 'downloadNum', width: 120, title: '下载次数', sort: true},
+      {field: 'executeProcess', title: '执行进度', width: 200, templet: progressCell},
+      {field: 'errorMsg', width: 200, title: '异常信息', sort: true},
+      {fixed: 'right', title: '操作', toolbar: '#downloadActionToolbar', width: 150}
+    ]];
+  }
+
+  function buildImportColumns() {
+    return [[
+      {field: 'registerId', width: 80, title: 'ID', sort: true},
+      {field: 'importStatusDesc', width: 110, title: '导入状态'},
+      {field: 'importCodeDesc', title: '导入描述', width: 150},
+      {field: 'createBy', width: 120, title: '操作人'},
+      {field: 'createTime', width: 160, title: '导入时间', sort: true},
+      {field: 'lastExecuteTime', width: 160, title: '最新执行时间'},
+      {title: '处理统计', width: 220, templet: importSummaryCell},
+      {field: 'executeProcess', title: '执行进度', width: 200, templet: progressCell},
+      {
+        field: 'resultFileUrl',
+        title: '结果文件',
+        width: 120,
         templet: function (res) {
-          return '<div class="layui-progress layui-progress-big" lay-showpercent="true">\n'
-              + '  <div class="layui-progress-bar" lay-percent="'
-              + res.executeProcess + '%"></div>\n'
-              + '</div>';
+          if (res.resultFileUrl) {
+            return '可查看';
+          }
+          if (res.importStatus === 'SUCCESS') {
+            return '无异常';
+          }
+          if (res.importStatus === 'EXECUTING') {
+            return '生成中';
+          }
+          return '无结果';
         }
+      },
+      {field: 'errorMsg', width: 200, title: '异常信息'},
+      {fixed: 'right', title: '操作', toolbar: '#importActionToolbar', width: 230}
+    ]];
+  }
+
+  function loadAppTree() {
+    var array = [];
+    var $ = layui.jquery;
+    $.ajax({
+      type: 'POST',
+      url: getAppTreeUrlByType(currentTaskType),
+      contentType: 'application/json',
+      async: false,
+      success: function (result) {
+        if (result.success) {
+          for (let i = 0; i < result.data.length; i++) {
+            array.push({id: result.data[i].appId, title: result.data[i].appId});
+          }
+        }
+      },
+      dataType: 'json'
+    });
+    return array;
+  }
+
+  function renderAppDropdown() {
+    dropdown.render({
+      elem: '#switchApp',
+      align: 'center',
+      data: loadAppTree(),
+      click: function (obj) {
+        currentUnifiedAppId = obj.id;
+        reloadTaskTable();
       }
-      , {field: 'errorMsg', width: 200, title: '异常信息', sort: true}
-      , {fixed: 'right', title: '操作', toolbar: '#clickDownload', width: 150}
-    ]],
-    done: function (res, curr, count) {
-      element.render();
+    });
+  }
 
-      var id = this.id;
+  function renderTaskTable() {
+    table.render({
+      elem: '#table',
+      id: 'table',
+      height: 'full-300',
+      toolbar: '#tableToolbar',
+      defaultToolbar: ['filter', 'exports', 'print', {
+        title: '帮助',
+        layEvent: 'LAYTABLE_TIPS',
+        icon: 'layui-icon-tips'
+      }],
+      url: getListUrlByType(currentTaskType) + (currentUnifiedAppId ? ('?unifiedAppId=' + currentUnifiedAppId) : ''),
+      method: 'post',
+      contentType: 'application/json',
+      request: {
+        pageName: 'pageNum',
+        limitName: 'pageSize'
+      },
+      page: {
+        layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'],
+        groups: 1
+      },
+      parseData: function (res) {
+        return {
+          code: res.code,
+          msg: res.message,
+          count: res.data ? res.data.totalRecords : 0,
+          data: res.data ? res.data.modelList : []
+        };
+      },
+      cols: currentTaskType === 'import' ? buildImportColumns() : buildDownloadColumns(),
+      done: function () {
+        element.render();
+        renderAppDropdown();
+      }
+    });
+  }
 
-      // 重载测试
-      dropdown.render({
-        elem: '#switchApp' //可绑定在任意元素中，此处以上述按钮为例
-        , align: 'center'
-        , data: loadAppTree()
-        // 菜单被点击的事件
-        , click:
-            function (obj) {
-              // 数据重载 - 参数重置
-              table.reloadData('table', {
-                url: '/easyfile-ui/download-task/list' + "?unifiedAppId="
-                    + obj.id
-                , method: 'post'
-                , contentType: 'application/json'
-                , request: {
-                  pageName: 'pageNum'
-                  , limitName: 'pageSize'
-                }
-                , scrollPos: 'fixed'  // 保持滚动条位置不变 - v2.7.3 新增
-                , height: 2000 // 测试无效参数（即与数据无关的参数设置无效，此处以 height 设置无效为例）
-                //,url: '404'
-                //,page: {curr: 1, limit: 30} // 重新指向分页
-              });
-            }
-      });
-    }
-  });
+  function reloadTaskTable() {
+    table.reload('table', {
+      url: getListUrlByType(currentTaskType) + (currentUnifiedAppId ? ('?unifiedAppId=' + currentUnifiedAppId) : ''),
+      cols: currentTaskType === 'import' ? buildImportColumns() : buildDownloadColumns(),
+      page: {
+        curr: 1
+      }
+    });
+  }
 
-  // 工具栏事件
   table.on('toolbar(table)', function (obj) {
-
-    var id = obj.config.id;
-    var checkStatus = table.checkStatus(id);
-    var othis = lay(this);
     switch (obj.event) {
-
       case 'reloadTable':
-        table.reload('table');
+        reloadTaskTable();
         break;
       case 'LAYTABLE_TIPS':
         window.location.href = 'https://github.com/svnlab/easyfile';
@@ -105,23 +165,18 @@ layui.use(['element', 'table', 'dropdown'], function () {
     }
   });
 
-  //监听行工具事件
   table.on('tool(table)', function (obj) {
-    var $ = layui.jquery;
     var data = obj.data;
-    if (obj.event === 'click') {
+    var $ = layui.jquery;
+    if (obj.event === 'download') {
       layer.confirm('真的要下载吗?', {icon: 3, title: '提示'}, function (index) {
-
-        var requestBody = {
-          registerId: data.registerId
-        };
-
+        var requestBody = {registerId: data.registerId};
         $.ajax({
           type: 'POST',
           url: '/easyfile-ui/download-task/download',
           data: JSON.stringify(requestBody),
           contentType: 'application/json',
-          success: function (result, status, xhr) {
+          success: function (result) {
             if (result.success) {
               downloadURL(result.data.url, result.data.fileName);
               layer.msg('下载成功!');
@@ -134,39 +189,117 @@ layui.use(['element', 'table', 'dropdown'], function () {
           },
           dataType: 'json'
         });
-
         layer.close(index);
       });
-    } else if (obj.event === 'cancel') {
-      layer.confirm('真的要取消下载任务: ' + data.registerId + ' 吗?',
-          {icon: 3, title: '提示'}, function (index) {
+      return;
+    }
 
-            var requestBody = {
-              registerId: data.registerId
-            };
+    if (obj.event === 'downloadCancel') {
+      layer.confirm('真的要取消下载任务: ' + data.registerId + ' 吗?', {icon: 3, title: '提示'}, function (index) {
+        var requestBody = {registerId: data.registerId};
+        $.ajax({
+          type: 'POST',
+          url: '/easyfile-ui/download-task/revoke',
+          data: JSON.stringify(requestBody),
+          contentType: 'application/json',
+          success: function (result) {
+            if (result.success) {
+              layer.msg('取消成功！');
+              reloadTaskTable();
+            } else {
+              layer.msg('取消失败!失败原因:' + result.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            layer.msg('取消失败!' + error);
+          },
+          dataType: 'json'
+        });
+        layer.close(index);
+      });
+      return;
+    }
 
-            $.ajax({
-              type: 'POST',
-              url: '/easyfile-ui/download-task/revoke',
-              data: JSON.stringify(requestBody),
-              contentType: 'application/json',
-              success: function (result, status, xhr) {
-                if (result.success) {
-                  layer.msg('取消成功！');
-                } else {
-                  layer.msg('取消失败!失败原因:' + result.message);
-                }
-              },
-              error: function (xhr, status, error) {
-                layer.msg('下载失败!' + error);
-              },
-              dataType: 'json'
-            });
+    if (obj.event === 'importResult') {
+      var requestBody = {registerId: data.registerId};
+      $.ajax({
+        type: 'POST',
+        url: '/easyfile-ui/import-task/result',
+        data: JSON.stringify(requestBody),
+        contentType: 'application/json',
+        success: function (result) {
+          if (result.success && result.data) {
+            downloadURL(result.data.url, result.data.fileName);
+          } else {
+            layer.msg('结果文件暂不可用');
+          }
+        },
+        error: function (xhr, status, error) {
+          layer.msg('获取结果失败!' + error);
+        },
+        dataType: 'json'
+      });
+      return;
+    }
 
-            layer.close(index);
-          });
+    if (obj.event === 'importRetry') {
+      layer.confirm('真的要重试导入任务: ' + data.registerId + ' 吗?', {icon: 3, title: '提示'}, function (index) {
+        var requestBody = {registerId: data.registerId};
+        $.ajax({
+          type: 'POST',
+          url: '/easyfile-ui/import-task/retry',
+          data: JSON.stringify(requestBody),
+          contentType: 'application/json',
+          success: function (result) {
+            if (result.success) {
+              layer.msg('重试成功！');
+              reloadTaskTable();
+            } else {
+              layer.msg('重试失败!失败原因:' + result.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            layer.msg('重试失败!' + error);
+          },
+          dataType: 'json'
+        });
+        layer.close(index);
+      });
+      return;
+    }
+
+    if (obj.event === 'importRevoke') {
+      layer.confirm('真的要撤销导入任务: ' + data.registerId + ' 吗?', {icon: 3, title: '提示'}, function (index) {
+        var requestBody = {registerId: data.registerId};
+        $.ajax({
+          type: 'POST',
+          url: '/easyfile-ui/import-task/revoke',
+          data: JSON.stringify(requestBody),
+          contentType: 'application/json',
+          success: function (result) {
+            if (result.success) {
+              layer.msg('撤销成功！');
+              reloadTaskTable();
+            } else {
+              layer.msg('撤销失败!失败原因:' + result.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            layer.msg('撤销失败!' + error);
+          },
+          dataType: 'json'
+        });
+        layer.close(index);
+      });
     }
   });
+
+  element.on('tab(taskTypeTab)', function () {
+    currentTaskType = this.getAttribute('lay-id');
+    reloadTaskTable();
+  });
+
+  renderTaskTable();
 });
 
 function downloadURL(url, filename) {
@@ -179,39 +312,14 @@ function downloadURL(url, filename) {
       saveAs(xhr.response, filename);
     }
   };
-
   xhr.send();
 }
 
 function saveAs(data, name) {
   var urlObject = window.URL || window.webkitURL || window;
-  var export_blob = new Blob([data]);
-  var save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-  save_link.href = urlObject.createObjectURL(export_blob);
-  save_link.download = name;
-  save_link.click();
-}
-
-function loadAppTree() {
-
-  var array = [];
-
-  var $ = layui.jquery;
-
-  $.ajax({
-    type: 'POST',
-    url: '/easyfile-ui/download-task/listAppId',
-    contentType: 'application/json',
-    success: function (result, status, xhr) {
-      if (result.success) {
-        for (let i = 0; i < result.data.length; i++) {
-          array.push({id: result.data[i].appId, title: result.data[i].appId});
-        }
-      }
-    },
-    error: function (xhr, status, error) {
-    },
-    dataType: 'json'
-  });
-  return array;
+  var exportBlob = new Blob([data]);
+  var saveLink = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
+  saveLink.href = urlObject.createObjectURL(exportBlob);
+  saveLink.download = name;
+  saveLink.click();
 }

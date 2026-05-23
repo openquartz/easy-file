@@ -2,13 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <title>下载任务</title>
+    <title>任务管理</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <link rel="stylesheet" href="/easyfile-ui/static/layui/css/layui.css" media="all">
 </head>
 <body>
+
+<div class="layui-tab layui-tab-brief" lay-filter="taskTypeTab">
+    <ul class="layui-tab-title">
+        <li class="layui-this" lay-id="download">下载任务</li>
+        <li lay-id="import">导入任务</li>
+    </ul>
+</div>
 
 <table id="table" lay-filter="table"></table>
 
@@ -24,9 +31,20 @@
         </button>
     </div>
 </script>
-<script type="text/html" id="clickDownload">
-    <a class="layui-btn layui-btn-xs" lay-event="click">下载</a>
-    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>
+<script type="text/html" id="downloadActionToolbar">
+    <a class="layui-btn layui-btn-xs" lay-event="download">下载</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="downloadCancel">取消</a>
+</script>
+<script type="text/html" id="importActionToolbar">
+    {{#  if(d.resultFileUrl){ }}
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="importResult">查看结果</a>
+    {{#  } }}
+    {{#  if(d.allowRetry){ }}
+    <a class="layui-btn layui-btn-xs" lay-event="importRetry">重试</a>
+    {{#  } }}
+    {{#  if(d.allowRevoke){ }}
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="importRevoke">撤销</a>
+    {{#  } }}
 </script>
 <script type="text/javascript" th:src="@{/easyfile-ui/static/js/download-task.js}"></script>
 </body>
