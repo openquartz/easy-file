@@ -21,6 +21,7 @@ import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
 import com.openquartz.easyfile.common.response.CancelImportResult;
 import com.openquartz.easyfile.common.response.ImportResult;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.storage.local.entity.AsyncImportRecord;
 import com.openquartz.easyfile.storage.local.mapper.AsyncImportRecordMapper;
@@ -35,13 +36,16 @@ public class LocalImportStorageServiceImplTest {
 
     private AsyncImportTaskMapper asyncImportTaskMapper;
     private AsyncImportRecordMapper asyncImportRecordMapper;
+    private IdempotentImportManager idempotentImportManager;
     private LocalImportStorageServiceImpl service;
 
     @Before
     public void setUp() {
         asyncImportTaskMapper = mock(AsyncImportTaskMapper.class);
         asyncImportRecordMapper = mock(AsyncImportRecordMapper.class);
-        service = new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper);
+        idempotentImportManager = mock(IdempotentImportManager.class);
+        service = new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper,
+            idempotentImportManager);
     }
 
     @Test
@@ -117,8 +121,9 @@ public class LocalImportStorageServiceImplTest {
             AsyncImportRecord record = new AsyncImportRecord();
             record.setId(registerId);
             record.setImportStatus(status);
+            record.setBusinessUniqueKey("biz-" + status.name());
 
-            clearInvocations(asyncImportRecordMapper);
+            clearInvocations(asyncImportRecordMapper, idempotentImportManager);
             when(asyncImportRecordMapper.findById(registerId)).thenReturn(record);
             when(asyncImportRecordMapper.refreshImportStatus(
                 eq(registerId), eq(status), eq(ImportStatusEnum.NONE), eq("op")))
@@ -128,18 +133,39 @@ public class LocalImportStorageServiceImplTest {
             verify(asyncImportRecordMapper).refreshImportStatus(
                 eq(registerId), eq(status), eq(ImportStatusEnum.NONE), eq("op"));
             verify(asyncImportRecordMapper).resetExecuteProcess(registerId);
+            verify(idempotentImportManager).clear("biz-" + status.name());
         }
 
         AsyncImportRecord success = new AsyncImportRecord();
         success.setId(registerId);
         success.setImportStatus(ImportStatusEnum.SUCCESS);
-        clearInvocations(asyncImportRecordMapper);
+        success.setBusinessUniqueKey("biz-SUCCESS");
+        clearInvocations(asyncImportRecordMapper, idempotentImportManager);
         when(asyncImportRecordMapper.findById(registerId)).thenReturn(success);
 
         assertFalse(service.retry(registerId, "op"));
         verify(asyncImportRecordMapper, never()).refreshImportStatus(
             eq(registerId), any(), eq(ImportStatusEnum.NONE), anyString());
         verify(asyncImportRecordMapper, never()).resetExecuteProcess(registerId);
+        verify(idempotentImportManager, never()).clear(anyString());
+    }
+
+    @Test
+    public void retry_skipsIdempotentClearWhenBusinessUniqueKeyBlank() {
+        Long registerId = 31L;
+        AsyncImportRecord record = new AsyncImportRecord();
+        record.setId(registerId);
+        record.setImportStatus(ImportStatusEnum.PARTIAL_SUCCESS);
+        record.setBusinessUniqueKey("");
+
+        when(asyncImportRecordMapper.findById(registerId)).thenReturn(record);
+        when(asyncImportRecordMapper.refreshImportStatus(
+            eq(registerId), eq(ImportStatusEnum.PARTIAL_SUCCESS), eq(ImportStatusEnum.NONE), eq("op")))
+            .thenReturn(1);
+
+        assertTrue(service.retry(registerId, "op"));
+        verify(asyncImportRecordMapper).resetExecuteProcess(registerId);
+        verify(idempotentImportManager, never()).clear(anyString());
     }
 
     @Test

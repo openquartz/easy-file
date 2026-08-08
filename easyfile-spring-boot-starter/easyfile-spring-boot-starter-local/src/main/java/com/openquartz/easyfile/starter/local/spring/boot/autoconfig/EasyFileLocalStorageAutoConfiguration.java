@@ -26,7 +26,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.common.util.StringUtils;
+import org.springframework.beans.factory.ObjectProvider;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.DownloadTriggerService;
 import com.openquartz.easyfile.storage.download.LimitingService;
@@ -200,8 +202,10 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     @ConditionalOnMissingBean(ImportStorageService.class)
     @ConditionalOnClass(LocalImportStorageServiceImpl.class)
     public ImportStorageService localImportStorageServiceImpl(AsyncImportRecordMapper asyncImportRecordMapper,
-        AsyncImportTaskMapper asyncImportTaskMapper) {
-        return new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper);
+        AsyncImportTaskMapper asyncImportTaskMapper,
+        ObjectProvider<IdempotentImportManager> idempotentImportManager) {
+        return new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper,
+            idempotentImportManager.getIfAvailable());
     }
 
     @Bean

@@ -18,6 +18,7 @@ import com.openquartz.easyfile.common.util.JSONUtil;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.common.util.page.Pagination;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -43,10 +44,16 @@ import org.springframework.stereotype.Service;
  * @author svnee
  */
 @Service
-@RequiredArgsConstructor
 public class DefaultImportStorageServiceImpl implements ImportStorageService {
 
     private final JdbcTemplate jdbcTemplate;
+    private final IdempotentImportManager idempotentImportManager;
+
+    public DefaultImportStorageServiceImpl(JdbcTemplate jdbcTemplate,
+        ObjectProvider<IdempotentImportManager> idempotentImportManager) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.idempotentImportManager = idempotentImportManager.getIfAvailable();
+    }
 
     @Override
     public boolean enableRunning(Long registerId) {
@@ -339,13 +346,27 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
 
     @Override
     public boolean retry(Long registerId, String operator) {
+        ImportRecordRow row = findById(registerId);
+        if (row == null) {
+            return false;
+        }
         int affect = jdbcTemplate.update(
-            "UPDATE ef_async_import_record SET import_status = ?, execute_process = 0, error_msg = ?, "
-                + "update_by = ?, update_time = ? WHERE id = ? AND import_status IN (?, ?, ?)",
+            "UPDATE ef_async_import_record SET import_status = ?, execute_process = 0, resume_position = 0, "
+                + "error_msg = ?, update_by = ?, update_time = ? WHERE id = ? AND import_status IN (?, ?, ?)",
             ImportStatusEnum.NONE.getCode(), StringUtils.EMPTY, operator, new Date(), registerId,
             ImportStatusEnum.FAIL.getCode(), ImportStatusEnum.CANCEL.getCode(),
             ImportStatusEnum.PARTIAL_SUCCESS.getCode());
+        if (affect > 0) {
+            clearIdempotentMark(row.businessUniqueKey);
+        }
         return affect > 0;
+    }
+
+    private void clearIdempotentMark(String businessUniqueKey) {
+        if (idempotentImportManager == null || StringUtils.isBlank(businessUniqueKey)) {
+            return;
+        }
+        idempotentImportManager.clear(businessUniqueKey);
     }
 
     @Override

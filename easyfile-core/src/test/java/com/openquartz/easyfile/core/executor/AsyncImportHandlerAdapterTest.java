@@ -17,7 +17,7 @@ import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.core.context.ImportContext;
 import com.openquartz.easyfile.core.context.ImportRequestContext;
 import com.openquartz.easyfile.core.entity.ImportProcessResult;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import org.junit.Before;
 import org.junit.Test;

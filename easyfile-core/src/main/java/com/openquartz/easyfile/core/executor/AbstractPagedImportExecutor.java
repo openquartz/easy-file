@@ -14,7 +14,7 @@ import com.openquartz.easyfile.core.parser.ImportParser;
 import com.openquartz.easyfile.core.parser.ImportParserFactory;
 import com.openquartz.easyfile.core.parser.ImportRow;
 import com.openquartz.easyfile.core.executor.process.ImportExecuteProcessReporterImpl;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
 import com.openquartz.easyfile.core.exception.ConcurrentImportException;
 import lombok.extern.slf4j.Slf4j;

@@ -23,6 +23,7 @@ import com.openquartz.easyfile.common.util.PageUtil;
 import com.openquartz.easyfile.common.util.PaginationUtils;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.common.util.page.Pagination;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.local.convertor.AsyncImportRecordConverter;
 import com.openquartz.easyfile.storage.local.entity.AsyncImportAppEntity;
@@ -52,12 +53,21 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
 
     private final AsyncImportTaskMapper asyncImportTaskMapper;
     private final AsyncImportRecordMapper asyncImportRecordMapper;
+    private final IdempotentImportManager idempotentImportManager;
 
     public LocalImportStorageServiceImpl(
         AsyncImportTaskMapper asyncImportTaskMapper,
         AsyncImportRecordMapper asyncImportRecordMapper) {
+        this(asyncImportTaskMapper, asyncImportRecordMapper, null);
+    }
+
+    public LocalImportStorageServiceImpl(
+        AsyncImportTaskMapper asyncImportTaskMapper,
+        AsyncImportRecordMapper asyncImportRecordMapper,
+        IdempotentImportManager idempotentImportManager) {
         this.asyncImportTaskMapper = asyncImportTaskMapper;
         this.asyncImportRecordMapper = asyncImportRecordMapper;
+        this.idempotentImportManager = idempotentImportManager;
     }
 
     @Override
@@ -314,8 +324,16 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
             importRecord.getImportStatus(), ImportStatusEnum.NONE, operator);
         if (affect > 0) {
             asyncImportRecordMapper.resetExecuteProcess(registerId);
+            clearIdempotentMark(importRecord.getBusinessUniqueKey());
         }
         return affect > 0;
+    }
+
+    private void clearIdempotentMark(String businessUniqueKey) {
+        if (idempotentImportManager == null || StringUtils.isBlank(businessUniqueKey)) {
+            return;
+        }
+        idempotentImportManager.clear(businessUniqueKey);
     }
 
     /**

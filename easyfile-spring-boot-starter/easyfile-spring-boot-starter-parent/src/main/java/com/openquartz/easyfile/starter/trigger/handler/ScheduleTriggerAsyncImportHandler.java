@@ -5,7 +5,7 @@ import com.openquartz.easyfile.common.response.ImportTriggerEntry;
 import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.impl.DatabaseAsyncImportHandlerAdapter;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.imports.ImportTriggerService;

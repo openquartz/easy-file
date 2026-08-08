@@ -1,4 +1,4 @@
-package com.openquartz.easyfile.core.service;
+package com.openquartz.easyfile.common.service;
 
 import com.openquartz.easyfile.common.response.ImportResult;
 
@@ -33,4 +33,11 @@ public interface IdempotentImportManager {
      * @return 执行结果
      */
     ImportResult getExecutedResult(String importKey);
+
+    /**
+     * 清除幂等标记，使同 businessUniqueKey 可再次执行（如管理端重试）
+     *
+     * @param importKey 导入唯一键
+     */
+    void clear(String importKey);
 }

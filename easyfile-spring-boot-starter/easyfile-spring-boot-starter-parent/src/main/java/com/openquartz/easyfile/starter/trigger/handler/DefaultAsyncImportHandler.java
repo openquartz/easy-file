@@ -5,7 +5,7 @@ import com.openquartz.easyfile.core.context.ImportRequestContext;
 import com.openquartz.easyfile.core.executor.AsyncImportHandlerAdapter;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.BaseImportExecutor;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncImportHandlerThreadPoolProperties;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import java.util.concurrent.ArrayBlockingQueue;

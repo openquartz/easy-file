@@ -2,7 +2,7 @@ package com.openquartz.easyfile.core.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.openquartz.easyfile.common.response.ImportResult;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import java.time.Duration;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -44,5 +44,13 @@ public class RedisIdempotentImportManager implements IdempotentImportManager {
             return null;
         }
         return JSON.parseObject(value, ImportResult.class);
+    }
+
+    @Override
+    public void clear(String importKey) {
+        if (importKey == null || importKey.isEmpty()) {
+            return;
+        }
+        redisTemplate.delete(IDEMPOTENT_KEY_PREFIX + importKey);
     }
 }

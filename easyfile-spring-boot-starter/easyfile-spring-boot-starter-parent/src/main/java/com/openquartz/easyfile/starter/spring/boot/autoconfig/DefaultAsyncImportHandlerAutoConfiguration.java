@@ -2,7 +2,7 @@ package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.core.executor.BaseAsyncImportHandler;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncImportHandlerThreadPoolProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties;
 import com.openquartz.easyfile.starter.trigger.handler.DefaultAsyncImportHandler;

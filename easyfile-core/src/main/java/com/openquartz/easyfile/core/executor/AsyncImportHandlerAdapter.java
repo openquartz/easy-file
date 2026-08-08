@@ -8,7 +8,7 @@ import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.core.context.ImportContext;
 import com.openquartz.easyfile.core.context.ImportRequestContext;
 import com.openquartz.easyfile.core.entity.ImportProcessResult;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import java.util.Collections;
 import java.util.Date;

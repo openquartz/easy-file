@@ -32,7 +32,7 @@ import com.openquartz.easyfile.core.entity.ProcessResult;
 import com.openquartz.easyfile.core.entity.ValidationResult;
 import com.openquartz.easyfile.core.parser.ImportParser;
 import com.openquartz.easyfile.core.parser.ImportRow;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
 import com.openquartz.easyfile.storage.file.DownloadService;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;

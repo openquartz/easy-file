@@ -11,7 +11,7 @@ import com.openquartz.easyfile.core.executor.BaseImportExecutor;
 import com.openquartz.easyfile.core.executor.support.FileImportExecutorSupport;
 import com.openquartz.easyfile.core.executor.support.FileImportTriggerContext;
 import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
-import com.openquartz.easyfile.core.service.IdempotentImportManager;
+import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.imports.ImportTriggerService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
