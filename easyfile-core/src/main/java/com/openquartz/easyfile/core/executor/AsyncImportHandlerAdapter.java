@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.core.executor;
 
 import com.openquartz.easyfile.common.bean.ImportRequestInfo;
+import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.common.util.StringUtils;
@@ -51,17 +52,19 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
     @Override
     public ImportProcessResult handleResult(BaseImportExecutor<?> executor, ImportRequestContext context,
         Long registerId) {
-        if (!importStorageService.enableRunning(registerId)) {
-            logger.error("[AsyncImportHandlerAdapter#handleResult] registerId has running!skip,registerId:{}",
-                registerId);
-            return buildRejectResult(registerId);
-        }
-
         ImportContext importContext = buildImportContext(context, registerId);
+
+        // Idempotent short-circuit before enableRunning (mirror download cache-before-enableRunning)
         ImportProcessResult idempotentResult = tryIdempotentShortCircuit(importContext);
         if (idempotentResult != null) {
             executor.asyncCompleteCallback(idempotentResult, context);
             return idempotentResult;
+        }
+
+        if (!importStorageService.enableRunning(registerId)) {
+            logger.error("[AsyncImportHandlerAdapter#handleResult] registerId has running!skip,registerId:{}",
+                registerId);
+            return buildRejectResult(registerId);
         }
 
         ImportProcessResult result;
@@ -69,15 +72,26 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
             result = executor.process(importContext);
         } catch (Exception ex) {
             logger.error("[AsyncImportHandlerAdapter#handleResult] process error!registerId:{}", registerId, ex);
+            completeAsFail(registerId, ex.getMessage());
             result = buildFailResult(registerId, ex.getMessage());
+            executor.asyncCompleteCallback(result, context);
+            return result;
         }
 
         if (result == null) {
             result = buildFailResult(registerId, "import process returned null");
+            completeAsFail(registerId, result.getErrorMsg());
         }
 
         executor.asyncCompleteCallback(result, context);
         return result;
+    }
+
+    /**
+     * After enableRunning (NONE→EXECUTING), failure exits that skip process's own complete must finish storage.
+     */
+    private void completeAsFail(Long registerId, String errorMsg) {
+        importStorageService.complete(registerId, ImportStatusEnum.FAIL, 0L, 0L, 0L, 0L, errorMsg);
     }
 
     /**
