@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.core.executor;
 
+import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.util.FileUtils;
 import com.openquartz.easyfile.common.util.ImportTempFiles;
 import com.openquartz.easyfile.common.bean.Pair;
@@ -24,6 +25,8 @@ import com.openquartz.easyfile.storage.file.DownloadService;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * 分页导入执行器抽象基类
@@ -92,6 +95,8 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         ImportExecuteProcessReporterImpl reporter =
             new ImportExecuteProcessReporterImpl(context.getRegisterId(), importStorageService);
         ImportParser<T> parser = null;
+        ImportStatusEnum terminalStatus = ImportStatusEnum.FAIL;
+        long lastResumePosition = context.getResumePosition() == null ? 0L : context.getResumePosition();
 
         try {
             reporter.start();
@@ -101,7 +106,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             File tempFile = downloadFile(context);
             result.setTempFilePath(tempFile.getAbsolutePath());
 
-            // 2. 创建解析器
+            // 2. 创建解析器（工厂按 fileType 选择）
             parser = createParser(tempFile, context.getFileType());
 
             // 3. 获取总记录数
@@ -109,28 +114,56 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             importStorageService.updateTotalCount(context.getRegisterId(), totalCount);
 
             // 4. 分页处理
-            ImportPagedResult pagedResult = processByPage(context, parser, totalCount);
-
-            // 5. 生成结果文件
-            generateResultFile(context, pagedResult);
-
-            // 6. 设置结果（无失败才算成功）
-            boolean success = pagedResult.getFailCount() == 0;
-            result.setSuccess(success);
+            PageLoopOutcome pagedResult = processByPage(context, parser, totalCount);
+            lastResumePosition = pagedResult.resumePosition;
             result.setTotalCount(totalCount);
-            result.setSuccessCount(pagedResult.getSuccessCount());
-            result.setFailCount(pagedResult.getFailCount());
-            result.setErrorRecords(pagedResult.getErrorRecords());
-            result.setComplete(true);
+            result.setSuccessCount(pagedResult.successCount);
+            result.setFailCount(pagedResult.failCount);
+            result.setErrorRecords(pagedResult.errorRecords);
 
-            // 7. 仅真正成功时做幂等标记
-            if (success) {
-                ImportResult importResult = buildImportResult(result);
+            if (pagedResult.cancelled) {
+                terminalStatus = ImportStatusEnum.CANCEL;
+                result.setSuccess(false);
+                result.setComplete(true);
+                result.setErrorMsg("任务已取消");
+            } else if (pagedResult.taskFailed) {
+                terminalStatus = ImportStatusEnum.FAIL;
+                result.setSuccess(false);
+                result.setComplete(false);
+                result.setErrorMsg(pagedResult.errorMsg);
+            } else {
+                // 5. 生成结果文件（行级错误时必填；失败则降级 FAIL）
+                boolean resultFileOk = generateResultFile(context, pagedResult);
+                if (pagedResult.failCount > 0) {
+                    if (!resultFileOk) {
+                        terminalStatus = ImportStatusEnum.FAIL;
+                        result.setSuccess(false);
+                        result.setComplete(false);
+                        result.setErrorMsg("结果文件生成失败");
+                    } else {
+                        terminalStatus = ImportStatusEnum.PARTIAL_SUCCESS;
+                        result.setSuccess(false);
+                        result.setComplete(true);
+                        lastResumePosition = totalCount;
+                    }
+                } else {
+                    terminalStatus = ImportStatusEnum.SUCCESS;
+                    result.setSuccess(true);
+                    result.setComplete(true);
+                    lastResumePosition = totalCount;
+                }
+            }
+
+            // 6. 成功态（SUCCESS / PARTIAL_SUCCESS）做幂等标记
+            if (terminalStatus == ImportStatusEnum.SUCCESS
+                || terminalStatus == ImportStatusEnum.PARTIAL_SUCCESS) {
+                ImportResult importResult = buildImportResult(result, terminalStatus);
                 idempotentManager.markAsExecuted(context.getBusinessUniqueKey(), importResult);
             }
 
         } catch (Exception e) {
             log.error("导入处理失败: registerId={}", context.getRegisterId(), e);
+            terminalStatus = ImportStatusEnum.FAIL;
             result.setSuccess(false);
             result.setErrorMsg(e.getMessage());
             result.setComplete(false);
@@ -149,16 +182,13 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             cleanupTempFile(result.getTempFilePath());
 
             try {
-                // 更新最终状态
-                long resumePosition = result.isSuccess() ? result.getTotalCount()
-                    : (long) result.getSuccessCount() + result.getFailCount();
                 importStorageService.complete(
                     context.getRegisterId(),
-                    result.isSuccess() ? ImportStatusEnum.SUCCESS : ImportStatusEnum.FAIL,
+                    terminalStatus,
                     result.getTotalCount(),
                     (long) result.getSuccessCount(),
                     (long) result.getFailCount(),
-                    resumePosition,
+                    lastResumePosition,
                     result.getErrorMsg()
                 );
             } finally {
@@ -201,16 +231,20 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
     /**
      * 分页处理
      */
-    private ImportPagedResult processByPage(ImportContext context,
-                                           ImportParser<T> parser,
-                                           long totalCount) {
-        ImportPagedResult pagedResult = ImportPagedResult.builder().build();
-        pagedResult.setTotalCount(totalCount);
+    private PageLoopOutcome processByPage(ImportContext context,
+                                          ImportParser<T> parser,
+                                          long totalCount) {
+        PageLoopOutcome outcome = new PageLoopOutcome();
+        outcome.totalCount = totalCount;
 
         int pageSize = getPageSize();
-        int totalPages = (int) ((totalCount + pageSize - 1) / pageSize);
+        int totalPages = totalCount <= 0 ? 0 : (int) ((totalCount + pageSize - 1) / pageSize);
 
-        long resumePosition = context.getResumePosition() == null ? 0L : context.getResumePosition();
+        long resumePosition = 0L;
+        if (supportResumable() && context.getResumePosition() != null) {
+            resumePosition = context.getResumePosition();
+        }
+        outcome.resumePosition = resumePosition;
         int startPage = (int) (resumePosition / pageSize) + 1;
 
         log.info("开始分页处理: registerId={}, 总记录数={}, 分页大小={}, 起始页={}",
@@ -221,10 +255,20 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         List<ErrorRecord> errorRecords = new ArrayList<>();
 
         for (int pageNum = startPage; pageNum <= totalPages; pageNum++) {
+            if (isCancelRequested(context)) {
+                log.info("导入任务取消: registerId={}, pageNum={}", context.getRegisterId(), pageNum);
+                outcome.cancelled = true;
+                break;
+            }
+
+            long pageStartPosition = (pageNum - 1L) * pageSize;
+            long pageEndResume = Math.min(pageNum * (long) pageSize, totalCount);
+
             try {
-                long startRow = (pageNum - 1L) * pageSize + 1L;
+                long startRow = pageStartPosition + 1L;
                 List<ImportRow<T>> importRows = parser.readPage(startRow, pageSize);
-                List<T> pageData = new ArrayList<>(importRows.size());
+                List<ImportRow<T>> parsedRows = new ArrayList<>();
+                List<T> pageData = new ArrayList<>();
                 for (ImportRow<T> importRow : importRows) {
                     if (importRow.getParseError() != null || importRow.getData() == null) {
                         failCount++;
@@ -233,92 +277,148 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
                             importRow.getParseError() != null ? importRow.getParseError() : "行解析失败"));
                         continue;
                     }
+                    parsedRows.add(importRow);
                     pageData.add(importRow.getData());
                 }
 
-                if (pageData.isEmpty()) {
-                    continue;
+                List<T> validData = pageData;
+                if (!pageData.isEmpty()) {
+                    ValidationResult validationResult = validate(
+                        ImportDataContext.<T>builder()
+                            .data(pageData)
+                            .requestContext(context)
+                            .pageNumber(pageNum)
+                            .pageSize(pageSize)
+                            .totalCount(totalCount)
+                            .pageStartPosition(pageStartPosition)
+                            .pageEndPosition(pageEndResume - 1)
+                            .build());
+
+                    if (!validationResult.isSuccess()) {
+                        List<ErrorRecord> errors = validationResult.getErrors() == null
+                            ? Collections.emptyList() : validationResult.getErrors();
+                        errorRecords.addAll(errors);
+                        failCount += validationResult.getErrorCount() > 0
+                            ? validationResult.getErrorCount() : 0;
+                        validData = resolveValidData(validationResult, parsedRows, pageData);
+                        if (validationResult.getErrorCount() <= 0 && validData.isEmpty()) {
+                            failCount += pageData.size();
+                        }
+                    }
                 }
 
-                // 验证数据
-                ValidationResult validationResult = validate(
-                    ImportDataContext.<T>builder()
-                        .data(pageData)
-                        .requestContext(context)
-                        .pageNumber(pageNum)
-                        .pageSize(pageSize)
-                        .totalCount(totalCount)
-                        .build());
+                if (!validData.isEmpty()) {
+                    ProcessResult processResult;
+                    try {
+                        processResult = processBusiness(validData,
+                            ImportProcessContext.builder()
+                                .requestContext(context)
+                                .pageNumber(pageNum)
+                                .pageStartPosition(pageStartPosition)
+                                .build());
+                    } catch (Exception businessEx) {
+                        log.error("处理第{}页业务失败: registerId={}", pageNum, context.getRegisterId(), businessEx);
+                        outcome.taskFailed = true;
+                        outcome.errorMsg = businessEx.getMessage();
+                        errorRecords.add(ErrorRecord.of(pageNum, businessEx.getMessage()));
+                        break;
+                    }
 
-                if (!validationResult.isSuccess()) {
-                    List<ErrorRecord> errors = validationResult.getErrors() == null
-                        ? Collections.emptyList() : validationResult.getErrors();
-                    errorRecords.addAll(errors);
-                    failCount += validationResult.getErrorCount() > 0
-                        ? validationResult.getErrorCount() : pageData.size();
-                    continue;
+                    if (processResult == null || !processResult.isSuccess()) {
+                        outcome.taskFailed = true;
+                        outcome.errorMsg = "业务处理失败";
+                        List<ErrorRecord> errors = processResult == null || processResult.getErrors() == null
+                            ? Collections.emptyList() : processResult.getErrors();
+                        errorRecords.addAll(errors);
+                        break;
+                    }
+                    successCount += validData.size();
                 }
 
-                // 业务处理
-                ProcessResult processResult = processBusiness(pageData,
-                    ImportProcessContext.builder()
-                        .requestContext(context)
-                        .pageNumber(pageNum)
-                        .pageStartPosition((long) (pageNum - 1) * pageSize)
-                        .build());
-
-                if (processResult.isSuccess()) {
-                    successCount += pageData.size();
-                } else {
-                    failCount += pageData.size();
-                    List<ErrorRecord> errors = processResult.getErrors() == null
-                        ? Collections.emptyList() : processResult.getErrors();
-                    errorRecords.addAll(errors);
-                }
-
-                // 更新进度
-                int process = totalCount <= 0 ? 100 : (int) ((pageNum * pageSize * 100L) / totalCount);
-                long processedCount = (long) pageNum * pageSize;
-                if (processedCount > totalCount) {
-                    processedCount = totalCount;
-                }
-                ImportExecuteProcessProbe.report(process, processedCount);
+                // 仅页面成功（含纯行级错误、无业务失败）后推进断点
+                outcome.resumePosition = pageEndResume;
+                int process = totalCount <= 0 ? 100 : (int) ((pageEndResume * 100L) / totalCount);
+                ImportExecuteProcessProbe.report(process, pageEndResume);
 
             } catch (Exception e) {
                 log.error("处理第{}页失败: registerId={}", pageNum, context.getRegisterId(), e);
-                int remaining = (int) Math.max(0, totalCount - (long) (pageNum - 1) * pageSize);
-                failCount += Math.min(pageSize, remaining);
+                outcome.taskFailed = true;
+                outcome.errorMsg = e.getMessage();
                 errorRecords.add(ErrorRecord.of(pageNum, e.getMessage()));
+                break;
             }
         }
 
-        pagedResult.setSuccessCount(successCount);
-        pagedResult.setFailCount(failCount);
-        pagedResult.setErrorRecords(errorRecords);
+        outcome.successCount = successCount;
+        outcome.failCount = failCount;
+        outcome.errorRecords = errorRecords;
+        return outcome;
+    }
 
-        return pagedResult;
+    @SuppressWarnings("unchecked")
+    private List<T> resolveValidData(ValidationResult validationResult,
+                                     List<ImportRow<T>> parsedRows,
+                                     List<T> pageData) {
+        if (validationResult.getValidData() != null) {
+            return (List<T>) validationResult.getValidData();
+        }
+        List<ErrorRecord> errors = validationResult.getErrors();
+        if (errors == null || errors.isEmpty()) {
+            return Collections.emptyList();
+        }
+        Set<Integer> failedRows = errors.stream()
+            .map(ErrorRecord::getRowNumber)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+        if (failedRows.isEmpty()) {
+            return Collections.emptyList();
+        }
+        List<T> valid = new ArrayList<>();
+        for (ImportRow<T> row : parsedRows) {
+            if (!failedRows.contains((int) row.getRowNumber())) {
+                valid.add(row.getData());
+            }
+        }
+        return valid;
+    }
+
+    private boolean isCancelRequested(ImportContext context) {
+        AtomicBoolean cancelFlag = context.getCancelFlag();
+        if (cancelFlag != null && cancelFlag.get()) {
+            return true;
+        }
+        try {
+            ImportRequestInfo info = importStorageService.getRequestInfoByRegisterId(context.getRegisterId());
+            return info != null && info.getImportStatus() == ImportStatusEnum.CANCEL;
+        } catch (Exception ex) {
+            log.debug("查询取消状态失败: registerId={}", context.getRegisterId(), ex);
+            return false;
+        }
     }
 
     /**
      * 生成结果文件
+     *
+     * @return true if no errors needed, or file generated successfully
      */
-    private void generateResultFile(ImportContext context, ImportPagedResult pagedResult) {
-        if (pagedResult.getErrorRecords() == null || pagedResult.getErrorRecords().isEmpty()) {
-            return; // 没有错误记录，不生成结果文件
+    private boolean generateResultFile(ImportContext context, PageLoopOutcome pagedResult) {
+        if (pagedResult.errorRecords == null || pagedResult.errorRecords.isEmpty()) {
+            return true;
         }
 
         try {
             String resultFileUrl = importResultFileGenerator.generate(context.getAppId(),
                 context.getRegisterId(),
-                pagedResult.getErrorRecords(),
-                pagedResult.getTotalCount(),
-                pagedResult.getSuccessCount(),
-                pagedResult.getFailCount());
+                pagedResult.errorRecords,
+                pagedResult.totalCount,
+                (long) pagedResult.successCount,
+                (long) pagedResult.failCount);
 
             importStorageService.updateResultFileUrl(context.getRegisterId(), resultFileUrl);
-
+            return resultFileUrl != null && !resultFileUrl.isEmpty();
         } catch (Exception e) {
             log.error("生成结果文件失败: registerId={}", context.getRegisterId(), e);
+            return false;
         }
     }
 
@@ -360,17 +460,18 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
     /**
      * 构建导入结果
      */
-    private ImportResult buildImportResult(ImportProcessResult processResult) {
+    private ImportResult buildImportResult(ImportProcessResult processResult, ImportStatusEnum status) {
+        boolean successLike = status == ImportStatusEnum.SUCCESS || status == ImportStatusEnum.PARTIAL_SUCCESS;
         return ImportResult.builder()
             .registerId(processResult.getRegisterId())
-            .success(processResult.isSuccess())
-            .process(processResult.isSuccess() ? 100 : 0)
+            .success(successLike)
+            .process(successLike ? 100 : 0)
             .totalCount(processResult.getTotalCount())
             .successCount((long) processResult.getSuccessCount())
             .failCount((long) processResult.getFailCount())
-            .resultFileUrl(null) // 需要单独设置
+            .resultFileUrl(null)
             .errorMsg(processResult.getErrorMsg())
-            .status(processResult.isSuccess() ? "COMPLETED" : "FAILED")
+            .status(status.getCode())
             .startTime(processResult.getStartTime())
             .endTime(processResult.getEndTime())
             .duration(processResult.getDuration())
@@ -401,4 +502,15 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
     // 抽象方法，由子类实现
 
     protected abstract Class<T> getTargetClass();
+
+    private static final class PageLoopOutcome {
+        private long totalCount;
+        private int successCount;
+        private int failCount;
+        private List<ErrorRecord> errorRecords = new ArrayList<>();
+        private long resumePosition;
+        private boolean cancelled;
+        private boolean taskFailed;
+        private String errorMsg;
+    }
 }

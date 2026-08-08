@@ -34,6 +34,11 @@ public class ValidationResult {
      */
     private int successCount;
 
+    /**
+     * 验证通过、可继续业务处理的数据（可选；未设置时由引擎按错误行号过滤）
+     */
+    private List<?> validData;
+
     public static ValidationResult success() {
         return ValidationResult.builder()
                 .success(true)
@@ -48,6 +53,18 @@ public class ValidationResult {
                 .errors(errors)
                 .errorCount(errors.size())
                 .successCount(0)
+                .build();
+    }
+
+    public static <T> ValidationResult partial(List<ErrorRecord> errors, List<T> validData) {
+        List<ErrorRecord> safeErrors = errors == null ? java.util.Collections.emptyList() : errors;
+        List<T> safeValid = validData == null ? java.util.Collections.emptyList() : validData;
+        return ValidationResult.builder()
+                .success(safeErrors.isEmpty())
+                .errors(safeErrors)
+                .errorCount(safeErrors.size())
+                .successCount(safeValid.size())
+                .validData(safeValid)
                 .build();
     }
 

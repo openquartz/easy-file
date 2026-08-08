@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.core.context;
 
 import com.openquartz.easyfile.common.bean.Notifier;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Builder;
 import lombok.Data;
 
@@ -85,6 +86,11 @@ public class ImportContext {
      */
     @Builder.Default
     private Long resumePosition = 0L;
+
+    /**
+     * 协作式取消标志（执行中由 cancel 路径置位；分页循环每页检查）
+     */
+    private AtomicBoolean cancelFlag;
 
     /**
      * 创建人
