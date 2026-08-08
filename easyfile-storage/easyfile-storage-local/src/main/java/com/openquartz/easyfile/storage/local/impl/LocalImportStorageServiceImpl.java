@@ -225,6 +225,7 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
         requestInfo.setFailCount(importRecord.getFailCount());
         requestInfo.setResultFileUrl(importRecord.getResultFileUrl());
         requestInfo.setErrorMsg(importRecord.getErrorMsg());
+        requestInfo.setFileHash(importRecord.getFileHash());
         return requestInfo;
     }
 

@@ -156,6 +156,26 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
             result.setErrorMsg("幂等结果不存在，请重试");
             return result;
         }
+        // Same businessUniqueKey + different fileHash ⇒ reject on short-circuit path.
+        // If prior hash is known but current hash is not yet available, skip short-circuit so
+        // enableRunning+process can run the executor hash gate after download/MD5.
+        String priorHash = existed.getFileHash();
+        String currentHash = importContext.getFileHash();
+        if (StringUtils.isNotBlank(priorHash)) {
+            if (StringUtils.isBlank(currentHash)) {
+                return null;
+            }
+            if (!priorHash.equals(currentHash)) {
+                result.setSuccess(false);
+                result.setComplete(false);
+                result.setIdempotent(false);
+                result.setErrorMsg("相同业务键已存在不同文件的导入结果，拒绝执行");
+                result.setTotalCount(0L);
+                result.setSuccessCount(0);
+                result.setFailCount(0);
+                return result;
+            }
+        }
         String status = existed.getStatus();
         boolean successLike = Boolean.TRUE.equals(existed.isSuccess())
             || ImportStatusEnum.SUCCESS.getCode().equals(status)
@@ -181,6 +201,7 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
                 .ossUrl(req.getOssUrl())
                 .fileName(req.getFileName())
                 .fileType(req.getFileType())
+                .fileHash(info.getFileHash())
                 .businessUniqueKey(req.getBusinessUniqueKey())
                 .executeParam(req.getExecuteParam())
                 .resumePosition(info.getResumePosition() == null ? 0L : info.getResumePosition())

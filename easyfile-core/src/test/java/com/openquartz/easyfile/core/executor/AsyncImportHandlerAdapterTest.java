@@ -13,7 +13,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
+import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.core.context.ImportContext;
 import com.openquartz.easyfile.core.context.ImportRequestContext;
@@ -80,6 +82,41 @@ public class AsyncImportHandlerAdapterTest {
         verify(executor, never()).process(any(ImportContext.class));
         verify(importStorageService).complete(eq(1L), eq(ImportStatusEnum.SUCCESS), eq(10L), eq(10L), eq(0L),
             eq(10L), nullable(String.class));
+        verify(executor).asyncCompleteCallback(eq(result), eq(context));
+    }
+
+    @Test
+    public void handleResult_idempotentShortCircuit_differentFileHash_rejectsAsFail() {
+        when(idempotentImportManager.isExecuted("biz-key")).thenReturn(true);
+        when(idempotentImportManager.getExecutedResult("biz-key")).thenReturn(
+            ImportResult.builder().success(true).status("success").fileHash("prior-hash")
+                .totalCount(10L).successCount(10L).failCount(0L).build());
+
+        ImportRequestInfo info = new ImportRequestInfo();
+        info.setFileHash("other-hash");
+        info.setImportCode("code");
+        info.setRegisterRequest(ImportRegisterRequest.builder()
+            .appId("app")
+            .importCode("code")
+            .ossUrl("http://oss/other.xlsx")
+            .fileName("other.xlsx")
+            .fileType("xlsx")
+            .businessUniqueKey("biz-key")
+            .build());
+        when(importStorageService.getRequestInfoByRegisterId(1L)).thenReturn(info);
+
+        ImportRequestContext context = baseContext();
+        context.setBusinessUniqueKey("biz-key");
+
+        ImportProcessResult result = adapter.handleResult(executor, context, 1L);
+
+        assertNotNull(result);
+        assertFalse(result.isSuccess());
+        assertTrue(result.getErrorMsg() != null && result.getErrorMsg().contains("拒绝"));
+        verify(importStorageService, never()).enableRunning(anyLong());
+        verify(executor, never()).process(any(ImportContext.class));
+        verify(importStorageService).complete(eq(1L), eq(ImportStatusEnum.FAIL), eq(0L), eq(0L), eq(0L),
+            eq(0L), anyString());
         verify(executor).asyncCompleteCallback(eq(result), eq(context));
     }
 

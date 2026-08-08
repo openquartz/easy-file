@@ -197,6 +197,7 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
         requestInfo.setFailCount(row.failCount);
         requestInfo.setResultFileUrl(row.resultFileUrl);
         requestInfo.setErrorMsg(row.errorMsg);
+        requestInfo.setFileHash(row.fileHash);
         return requestInfo;
     }
 
@@ -424,7 +425,7 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
 
     private ImportRecordRow findById(Long registerId) {
         List<ImportRecordRow> rows = jdbcTemplate.query(
-            "SELECT id, app_id, import_code, import_status, source_file_url, source_file_name, file_type, "
+            "SELECT id, app_id, import_code, import_status, source_file_url, source_file_name, file_type, file_hash, "
                 + "business_unique_key, result_file_url, total_count, success_count, fail_count, execute_process, "
                 + "resume_position, notify_enable_status, notify_email, max_server_retry, execute_param, error_msg, "
                 + "create_by, locale "
@@ -470,6 +471,7 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
             row.sourceFileUrl = rs.getString("source_file_url");
             row.sourceFileName = rs.getString("source_file_name");
             row.fileType = rs.getString("file_type");
+            row.fileHash = rs.getString("file_hash");
             row.businessUniqueKey = rs.getString("business_unique_key");
             row.resultFileUrl = rs.getString("result_file_url");
             row.totalCount = rs.getLong("total_count");
@@ -496,6 +498,7 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
         private String sourceFileUrl;
         private String sourceFileName;
         private String fileType;
+        private String fileHash;
         private String businessUniqueKey;
         private String resultFileUrl;
         private Long totalCount;

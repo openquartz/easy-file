@@ -32,4 +32,9 @@ public class ImportRequestInfo {
 
     private String errorMsg;
 
+    /**
+     * Source file MD5 when already known for this register (optional; used by handler hash gate).
+     */
+    private String fileHash;
+
 }
