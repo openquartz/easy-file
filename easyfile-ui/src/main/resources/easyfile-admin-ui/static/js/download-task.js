@@ -60,10 +60,13 @@ layui.use(['element', 'table', 'dropdown'], function () {
           if (res.resultFileUrl) {
             return '可查看';
           }
-          if (res.importStatus === 'SUCCESS') {
+          if (res.importStatus === 'success') {
             return '无异常';
           }
-          if (res.importStatus === 'EXECUTING') {
+          if (res.importStatus === 'partial_success') {
+            return '部分成功无结果文件';
+          }
+          if (res.importStatus === 'executing' || res.importStatus === 'none') {
             return '生成中';
           }
           return '无结果';

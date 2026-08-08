@@ -9,6 +9,7 @@ import com.openquartz.easyfile.admin.model.response.ImportTaskResult;
 import com.openquartz.easyfile.admin.property.AdminProperty;
 import com.openquartz.easyfile.admin.service.ServerAppIdProvider;
 import com.openquartz.easyfile.common.bean.ResponseResult;
+import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
@@ -18,6 +19,7 @@ import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -78,7 +80,7 @@ public class ImportTaskController {
         ImportTaskResult target = new ImportTaskResult();
         target.setRegisterId(importResult.getRegisterId());
         target.setImportStatus(importResult.getStatus());
-        target.setImportStatusDesc(importResult.getStatus());
+        target.setImportStatusDesc(resolveStatusDesc(importResult.getStatus()));
         target.setImportCode(StringUtils.EMPTY);
         target.setImportCodeDesc(StringUtils.EMPTY);
         target.setCreateBy(StringUtils.EMPTY);
@@ -90,9 +92,23 @@ public class ImportTaskController {
         target.setFailCount(importResult.getFailCount());
         target.setResultFileUrl(importResult.getResultFileUrl());
         target.setErrorMsg(importResult.getErrorMsg());
-        target.setAllowRetry("FAILED".equals(importResult.getStatus()));
-        target.setAllowRevoke("EXECUTING".equals(importResult.getStatus()));
+        target.setAllowRetry(allowRetry(importResult.getStatus()));
+        target.setAllowRevoke(ImportStatusEnum.NONE.getCode().equals(importResult.getStatus()));
         return target;
+    }
+
+    private static String resolveStatusDesc(String status) {
+        ImportStatusEnum statusEnum = ImportStatusEnum.fromCode(status);
+        return Objects.nonNull(statusEnum) ? statusEnum.getDesc() : status;
+    }
+
+    /**
+     * Retry is offered for terminal-but-recoverable import codes.
+     */
+    private static boolean allowRetry(String status) {
+        return ImportStatusEnum.FAIL.getCode().equals(status)
+            || ImportStatusEnum.CANCEL.getCode().equals(status)
+            || ImportStatusEnum.PARTIAL_SUCCESS.getCode().equals(status);
     }
 
     /**
