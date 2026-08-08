@@ -6,24 +6,34 @@ import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
+import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
+import com.openquartz.easyfile.common.request.CancelImportRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
+import com.openquartz.easyfile.common.request.ImportCompleteRequest;
+import com.openquartz.easyfile.common.request.ImportOperatorRequest;
+import com.openquartz.easyfile.common.request.ImportRegisterRequest;
+import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
+import com.openquartz.easyfile.common.request.ImportUpdateRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.RefreshExecuteProcessRequest;
+import com.openquartz.easyfile.common.request.RefreshImportExecuteProcessRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
+import com.openquartz.easyfile.common.response.CancelImportResult;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
+import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.common.util.json.TypeReference;
 import com.openquartz.easyfile.storage.remote.EasyFileClient;
 
@@ -121,5 +131,84 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     public ResponseResult<String> getCurrentLocale(Long registerId) {
         return httpAgent
                 .httpPost(RemoteUrlConstants.GET_LOCALE_URL, registerId, String.class);
+    }
+
+    @Override
+    public ResponseResult<Long> registerImport(ImportRegisterRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_REGISTER_URL, request, Long.class);
+    }
+
+    @Override
+    public ResponseResult<Boolean> enableImportRunning(EnableRunningRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_ENABLE_RUNNING_URL, request, Boolean.class);
+    }
+
+    @Override
+    public ResponseResult<ImportRequestInfo> getImportRequestInfoByRegisterId(Long registerId) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_GET_REQUEST_INFO_URL, registerId, ImportRequestInfo.class);
+    }
+
+    @Override
+    public ResponseResult<?> refreshImportExecuteProcess(RefreshImportExecuteProcessRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_REFRESH_EXECUTE_PROCESS_URL, request);
+    }
+
+    @Override
+    public ResponseResult<?> resetImportExecuteProcess(Long registerId) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_RESET_EXECUTE_PROCESS_URL, registerId);
+    }
+
+    @Override
+    public ResponseResult<?> updateImportTotalCount(ImportUpdateRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_UPDATE_TOTAL_COUNT_URL, request);
+    }
+
+    @Override
+    public ResponseResult<?> updateImportFileHash(ImportUpdateRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_UPDATE_FILE_HASH_URL, request);
+    }
+
+    @Override
+    public ResponseResult<?> updateImportResultFileUrl(ImportUpdateRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_UPDATE_RESULT_FILE_URL, request);
+    }
+
+    @Override
+    public ResponseResult<?> completeImport(ImportCompleteRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_COMPLETE_URL, request);
+    }
+
+    @Override
+    public ResponseResult<CancelImportResult> cancelImport(CancelImportRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_CANCEL_URL, request, CancelImportResult.class);
+    }
+
+    @Override
+    public ResponseResult<Pagination<ImportResult>> listImportResult(ImportResultQueryRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_LIST_URL, request,
+            new TypeReference<ResponseResult<Pagination<ImportResult>>>() {
+            });
+    }
+
+    @Override
+    public ResponseResult<Boolean> retryImport(ImportOperatorRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_RETRY_URL, request, Boolean.class);
+    }
+
+    @Override
+    public ResponseResult<Boolean> revokeImport(ImportOperatorRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_REVOKE_URL, request, Boolean.class);
+    }
+
+    @Override
+    public ResponseResult<DownloadUrlResult> importResultFile(Long registerId) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_RESULT_FILE_URL, registerId, DownloadUrlResult.class);
+    }
+
+    @Override
+    public ResponseResult<List<AppTree>> getImportAppTree() {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_APP_TREE_URL, null,
+            new TypeReference<ResponseResult<List<AppTree>>>() {
+            });
     }
 }

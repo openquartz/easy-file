@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.starter.remote.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.condition.DownloadOrImportEnabledCondition;
 import com.openquartz.easyfile.starter.remote.spring.boot.autoconfig.properties.EasyFileRemoteProperties;
 import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
@@ -14,16 +14,18 @@ import okhttp3.OkHttpClient;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.storage.remote.EasyFileClient;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.LimitingService;
+import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.remote.impl.HttpEasyFileClientImpl;
 import com.openquartz.easyfile.storage.remote.impl.RemoteDownloadStorageServiceImpl;
+import com.openquartz.easyfile.storage.remote.impl.RemoteImportStorageServiceImpl;
 import com.openquartz.easyfile.storage.remote.impl.RemoteLimitingServiceImpl;
 import com.openquartz.easyfile.storage.remote.common.HttpAgent;
 import com.openquartz.easyfile.storage.remote.common.HttpScheduledHealthCheck;
@@ -42,7 +44,7 @@ import com.openquartz.easyfile.storage.remote.common.ServerHttpAgent;
 @EnableConfigurationProperties({EasyFileRemoteProperties.class})
 @ConditionalOnClass({RemoteDownloadStorageServiceImpl.class, RemoteLimitingServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
-@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@Conditional(DownloadOrImportEnabledCondition.class)
 public class EasyFileRemoteStorageAutoConfiguration {
 
     @Bean
@@ -50,6 +52,13 @@ public class EasyFileRemoteStorageAutoConfiguration {
     @ConditionalOnClass(RemoteDownloadStorageServiceImpl.class)
     public DownloadStorageService remoteDownloadStorageService(EasyFileClient easyFileClient) {
         return new RemoteDownloadStorageServiceImpl(easyFileClient);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ImportStorageService.class)
+    @ConditionalOnClass(RemoteImportStorageServiceImpl.class)
+    public ImportStorageService remoteImportStorageService(EasyFileClient easyFileClient) {
+        return new RemoteImportStorageServiceImpl(easyFileClient);
     }
 
     @Bean

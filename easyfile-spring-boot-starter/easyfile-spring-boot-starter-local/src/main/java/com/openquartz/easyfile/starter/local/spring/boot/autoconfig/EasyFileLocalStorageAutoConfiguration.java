@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.starter.local.spring.boot.autoconfig;
 
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileCreatorAutoConfiguration;
-import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.condition.DownloadOrImportEnabledCondition;
 import com.openquartz.easyfile.starter.local.spring.boot.autoconfig.properties.EasyFileLocalProperties;
 import com.openquartz.easyfile.storage.local.expand.NoneExportLimitingExecutor;
 import java.util.List;
@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
@@ -62,7 +62,7 @@ import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier
 @EnableConfigurationProperties({EasyFileLocalProperties.class})
 @ConditionalOnClass({LocalLimitingServiceImpl.class, LocalDownloadStorageServiceImpl.class})
 @AutoConfigureBefore(EasyFileCreatorAutoConfiguration.class)
-@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@Conditional(DownloadOrImportEnabledCondition.class)
 public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
 
     private static final String DEFAULT_DATASOURCE_TYPE = "org.apache.tomcat.jdbc.pool.DataSource";

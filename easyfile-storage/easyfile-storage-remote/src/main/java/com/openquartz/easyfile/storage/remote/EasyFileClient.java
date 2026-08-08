@@ -2,23 +2,33 @@ package com.openquartz.easyfile.storage.remote;
 
 import java.util.List;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
+import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
 import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
+import com.openquartz.easyfile.common.request.CancelImportRequest;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
+import com.openquartz.easyfile.common.request.ImportCompleteRequest;
+import com.openquartz.easyfile.common.request.ImportOperatorRequest;
+import com.openquartz.easyfile.common.request.ImportRegisterRequest;
+import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
+import com.openquartz.easyfile.common.request.ImportUpdateRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
+import com.openquartz.easyfile.common.request.RefreshImportExecuteProcessRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
+import com.openquartz.easyfile.common.response.CancelImportResult;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
+import com.openquartz.easyfile.common.response.ImportResult;
 
 /**
  * EasyFileClient
@@ -138,4 +148,34 @@ public interface EasyFileClient {
      * @return locale-language
      */
     ResponseResult<String> getCurrentLocale(Long registerId);
+
+    ResponseResult<Long> registerImport(ImportRegisterRequest request);
+
+    ResponseResult<Boolean> enableImportRunning(EnableRunningRequest request);
+
+    ResponseResult<ImportRequestInfo> getImportRequestInfoByRegisterId(Long registerId);
+
+    ResponseResult<?> refreshImportExecuteProcess(RefreshImportExecuteProcessRequest request);
+
+    ResponseResult<?> resetImportExecuteProcess(Long registerId);
+
+    ResponseResult<?> updateImportTotalCount(ImportUpdateRequest request);
+
+    ResponseResult<?> updateImportFileHash(ImportUpdateRequest request);
+
+    ResponseResult<?> updateImportResultFileUrl(ImportUpdateRequest request);
+
+    ResponseResult<?> completeImport(ImportCompleteRequest request);
+
+    ResponseResult<CancelImportResult> cancelImport(CancelImportRequest request);
+
+    ResponseResult<Pagination<ImportResult>> listImportResult(ImportResultQueryRequest request);
+
+    ResponseResult<Boolean> retryImport(ImportOperatorRequest request);
+
+    ResponseResult<Boolean> revokeImport(ImportOperatorRequest request);
+
+    ResponseResult<DownloadUrlResult> importResultFile(Long registerId);
+
+    ResponseResult<List<AppTree>> getImportAppTree();
 }

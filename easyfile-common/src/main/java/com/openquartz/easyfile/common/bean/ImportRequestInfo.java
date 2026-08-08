@@ -20,4 +20,16 @@ public class ImportRequestInfo {
 
     private ImportStatusEnum importStatus;
 
+    private Integer executeProcess;
+
+    private Long totalCount;
+
+    private Long successCount;
+
+    private Long failCount;
+
+    private String resultFileUrl;
+
+    private String errorMsg;
+
 }

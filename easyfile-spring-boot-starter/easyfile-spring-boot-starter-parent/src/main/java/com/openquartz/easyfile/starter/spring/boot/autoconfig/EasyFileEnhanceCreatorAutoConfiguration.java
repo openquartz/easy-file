@@ -10,6 +10,7 @@ import com.openquartz.easyfile.starter.aop.FileImportExecutorAnnotationAdvisor;
 import com.openquartz.easyfile.starter.aop.FileImportInterceptor;
 import com.openquartz.easyfile.starter.processor.AutoRegisteredDownloadTaskListener;
 import com.openquartz.easyfile.starter.processor.AutoRegisteredImportTaskListener;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.condition.DownloadOrImportEnabledCondition;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -19,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Advisor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,7 +27,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ConfigurationCondition;
 import org.springframework.context.annotation.Role;
 
 /**
@@ -38,7 +37,7 @@ import org.springframework.context.annotation.Role;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({EasyFileDownloadProperties.class, EasyFileImportProperties.class})
-@Conditional(EasyFileEnhanceCreatorAutoConfiguration.DownloadOrImportEnabledCondition.class)
+@Conditional(DownloadOrImportEnabledCondition.class)
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
 public class EasyFileEnhanceCreatorAutoConfiguration {
 
@@ -103,26 +102,6 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
         ImportStorageService importStorageService
     ) {
         return new AutoRegisteredImportTaskListener(easyFileDownloadProperties, importStorageService);
-    }
-
-    /**
-     * Enable enhance auto-config when download or import is enabled.
-     */
-    static class DownloadOrImportEnabledCondition extends AnyNestedCondition {
-
-        DownloadOrImportEnabledCondition() {
-            super(ConfigurationCondition.ConfigurationPhase.PARSE_CONFIGURATION);
-        }
-
-        @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true",
-            matchIfMissing = true)
-        static class DownloadEnabled {
-        }
-
-        @ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "enabled", havingValue = "true",
-            matchIfMissing = true)
-        static class ImportEnabled {
-        }
     }
 
 }
