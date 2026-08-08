@@ -26,12 +26,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnBean({ImportTriggerService.class, ImportStorageService.class})
 @EnableConfigurationProperties({EasyFileImportProperties.class})
-@ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "trigger-type", havingValue = "db_schedule")
+@ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @AutoConfigureAfter({EasyFileImportAutoConfiguration.class, EasyFileCreatorAutoConfiguration.class})
 public class ScheduleAsyncImportHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncImportHandler.class)
+    @ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "trigger-type", havingValue = "db_schedule")
     public BaseAsyncImportHandler scheduleTriggerAsyncImportHandler(
         EasyFileImportProperties easyFileImportProperties,
         ImportStorageService importStorageService,

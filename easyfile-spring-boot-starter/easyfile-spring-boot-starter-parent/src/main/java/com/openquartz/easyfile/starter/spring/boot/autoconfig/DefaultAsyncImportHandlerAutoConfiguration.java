@@ -25,14 +25,15 @@ import org.springframework.context.annotation.Configuration;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({DefaultAsyncImportHandlerThreadPoolProperties.class, EasyFileImportProperties.class})
-@ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "trigger-type", havingValue = "thread_pool",
-    matchIfMissing = true)
+@ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @ConditionalOnBean(ImportStorageService.class)
 @AutoConfigureAfter({EasyFileImportAutoConfiguration.class, EasyFileCreatorAutoConfiguration.class})
 public class DefaultAsyncImportHandlerAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean(BaseAsyncImportHandler.class)
+    @ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "trigger-type", havingValue = "thread_pool",
+        matchIfMissing = true)
     public BaseAsyncImportHandler defaultAsyncImportHandler(
         ImportStorageService importStorageService,
         ObjectProvider<IdempotentImportManager> idempotentImportManager,
