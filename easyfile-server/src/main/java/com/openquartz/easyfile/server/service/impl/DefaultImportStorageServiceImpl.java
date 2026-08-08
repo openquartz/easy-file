@@ -341,9 +341,10 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
     public boolean retry(Long registerId, String operator) {
         int affect = jdbcTemplate.update(
             "UPDATE ef_async_import_record SET import_status = ?, execute_process = 0, error_msg = ?, "
-                + "update_by = ?, update_time = ? WHERE id = ? AND import_status = ?",
+                + "update_by = ?, update_time = ? WHERE id = ? AND import_status IN (?, ?, ?)",
             ImportStatusEnum.NONE.getCode(), StringUtils.EMPTY, operator, new Date(), registerId,
-            ImportStatusEnum.FAIL.getCode());
+            ImportStatusEnum.FAIL.getCode(), ImportStatusEnum.CANCEL.getCode(),
+            ImportStatusEnum.PARTIAL_SUCCESS.getCode());
         return affect > 0;
     }
 

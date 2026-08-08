@@ -109,6 +109,40 @@ public class LocalImportStorageServiceImplTest {
     }
 
     @Test
+    public void retry_acceptsFailCancelAndPartialSuccess() {
+        Long registerId = 30L;
+
+        for (ImportStatusEnum status : new ImportStatusEnum[]{
+            ImportStatusEnum.FAIL, ImportStatusEnum.CANCEL, ImportStatusEnum.PARTIAL_SUCCESS}) {
+            AsyncImportRecord record = new AsyncImportRecord();
+            record.setId(registerId);
+            record.setImportStatus(status);
+
+            clearInvocations(asyncImportRecordMapper);
+            when(asyncImportRecordMapper.findById(registerId)).thenReturn(record);
+            when(asyncImportRecordMapper.refreshImportStatus(
+                eq(registerId), eq(status), eq(ImportStatusEnum.NONE), eq("op")))
+                .thenReturn(1);
+
+            assertTrue(status.name(), service.retry(registerId, "op"));
+            verify(asyncImportRecordMapper).refreshImportStatus(
+                eq(registerId), eq(status), eq(ImportStatusEnum.NONE), eq("op"));
+            verify(asyncImportRecordMapper).resetExecuteProcess(registerId);
+        }
+
+        AsyncImportRecord success = new AsyncImportRecord();
+        success.setId(registerId);
+        success.setImportStatus(ImportStatusEnum.SUCCESS);
+        clearInvocations(asyncImportRecordMapper);
+        when(asyncImportRecordMapper.findById(registerId)).thenReturn(success);
+
+        assertFalse(service.retry(registerId, "op"));
+        verify(asyncImportRecordMapper, never()).refreshImportStatus(
+            eq(registerId), any(), eq(ImportStatusEnum.NONE), anyString());
+        verify(asyncImportRecordMapper, never()).resetExecuteProcess(registerId);
+    }
+
+    @Test
     public void cancelImport_onlyFromNone() {
         Long registerId = 20L;
         CancelImportRequest request = new CancelImportRequest();

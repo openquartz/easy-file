@@ -307,15 +307,24 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
     @Override
     public boolean retry(Long registerId, String operator) {
         AsyncImportRecord importRecord = asyncImportRecordMapper.findById(registerId);
-        if (Objects.isNull(importRecord) || importRecord.getImportStatus() != ImportStatusEnum.FAIL) {
+        if (Objects.isNull(importRecord) || !isRetryableStatus(importRecord.getImportStatus())) {
             return false;
         }
         int affect = asyncImportRecordMapper.refreshImportStatus(registerId,
-            ImportStatusEnum.FAIL, ImportStatusEnum.NONE, operator);
+            importRecord.getImportStatus(), ImportStatusEnum.NONE, operator);
         if (affect > 0) {
             asyncImportRecordMapper.resetExecuteProcess(registerId);
         }
         return affect > 0;
+    }
+
+    /**
+     * Terminal-but-recoverable statuses: FAIL / CANCEL (code revoke) / PARTIAL_SUCCESS.
+     */
+    private static boolean isRetryableStatus(ImportStatusEnum status) {
+        return status == ImportStatusEnum.FAIL
+            || status == ImportStatusEnum.CANCEL
+            || status == ImportStatusEnum.PARTIAL_SUCCESS;
     }
 
     @Override
