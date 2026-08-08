@@ -22,6 +22,9 @@ public final class EasyFileTableGeneratorSupplier {
     private static final String TABLE_ASYNC_DOWNLOAD_RECORD_FORMAT_PATTERN = "{0}_async_download_record";
     private static final String TABLE_ASYNC_DOWNLOAD_TASK_FORMAT_PATTERN = "{0}_async_download_task";
     private static final String TABLE_ASYNC_DOWNLOAD_TRIGGER_FORMAT_PATTERN = "{0}_async_download_trigger";
+    private static final String TABLE_ASYNC_IMPORT_RECORD_FORMAT_PATTERN = "{0}_async_import_record";
+    private static final String TABLE_ASYNC_IMPORT_TASK_FORMAT_PATTERN = "{0}_async_import_task";
+    private static final String TABLE_ASYNC_IMPORT_TRIGGER_FORMAT_PATTERN = "{0}_async_import_trigger";
 
     public static void setPrefix(String prefix) {
         if (StringUtils.isNotBlank(prefix)) {
@@ -39,5 +42,17 @@ public final class EasyFileTableGeneratorSupplier {
 
     public static String genAsyncDownloadTriggerTable() {
         return MessageFormat.format(TABLE_ASYNC_DOWNLOAD_TRIGGER_FORMAT_PATTERN, prefix);
+    }
+
+    public static String genAsyncImportRecordTable() {
+        return MessageFormat.format(TABLE_ASYNC_IMPORT_RECORD_FORMAT_PATTERN, prefix);
+    }
+
+    public static String genAsyncImportTaskTable() {
+        return MessageFormat.format(TABLE_ASYNC_IMPORT_TASK_FORMAT_PATTERN, prefix);
+    }
+
+    public static String genAsyncImportTriggerTable() {
+        return MessageFormat.format(TABLE_ASYNC_IMPORT_TRIGGER_FORMAT_PATTERN, prefix);
     }
 }
