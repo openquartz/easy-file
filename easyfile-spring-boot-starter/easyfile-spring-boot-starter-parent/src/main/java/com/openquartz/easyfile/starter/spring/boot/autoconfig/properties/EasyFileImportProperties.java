@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.starter.spring.boot.autoconfig.properties;
 
+import com.openquartz.easyfile.core.property.IDatabaseAsyncHandlerProperty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -10,7 +11,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  */
 @Data
 @ConfigurationProperties(prefix = EasyFileImportProperties.PREFIX)
-public class EasyFileImportProperties {
+public class EasyFileImportProperties implements IDatabaseAsyncHandlerProperty {
 
     public static final String PREFIX = "easyfile.import";
 
@@ -18,6 +19,81 @@ public class EasyFileImportProperties {
      * 是否启用导入功能
      */
     private boolean enabled = true;
+
+    /**
+     * 异步触发类型: thread_pool | db_schedule
+     */
+    private ImportAsyncTriggerType triggerType = ImportAsyncTriggerType.THREAD_POOL;
+
+    /**
+     * 同步路径是否先持久化注册
+     */
+    private boolean syncPersist = true;
+
+    /**
+     * 失败重试是否从断点续传
+     */
+    private boolean retryFromResume = true;
+
+    /**
+     * DB 调度周期（秒）
+     */
+    private Integer schedulePeriodSeconds = 10;
+
+    /**
+     * 最大触发次数
+     */
+    private Integer maxTriggerCount = 3;
+
+    /**
+     * 执行超时时间（秒）
+     */
+    private Integer executingTimeoutSeconds = 3600;
+
+    /**
+     * 回溯小时数
+     */
+    private Integer lookBackHours = 2;
+
+    /**
+     * 最大归档小时
+     */
+    private Integer maxArchiveHours = 24;
+
+    /**
+     * 一次触发处理条数
+     */
+    private Integer triggerOffset = 50;
+
+    /**
+     * 最小收割时间（秒）
+     */
+    private Integer minReaperSeconds = 3600;
+
+    @Override
+    public Integer getSchedulePeriod() {
+        return schedulePeriodSeconds;
+    }
+
+    @Override
+    public Integer getMaxTriggerCount() {
+        return maxTriggerCount;
+    }
+
+    @Override
+    public Integer getMaxExecuteTimeout() {
+        return executingTimeoutSeconds;
+    }
+
+    @Override
+    public Integer getLookBackHours() {
+        return lookBackHours;
+    }
+
+    @Override
+    public Integer getMaxArchiveHours() {
+        return maxArchiveHours;
+    }
 
     /**
      * 默认分页大小

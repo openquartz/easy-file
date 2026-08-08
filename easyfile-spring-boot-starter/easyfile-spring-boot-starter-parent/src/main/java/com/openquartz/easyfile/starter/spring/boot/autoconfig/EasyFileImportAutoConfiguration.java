@@ -3,8 +3,6 @@ package com.openquartz.easyfile.starter.spring.boot.autoconfig;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
 import com.openquartz.easyfile.core.executor.BaseImportExecutor;
 import com.openquartz.easyfile.core.executor.impl.DefaultImportExecutor;
-import com.openquartz.easyfile.server.service.ImportService;
-import com.openquartz.easyfile.server.service.impl.ImportServiceImpl;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties;
 import com.openquartz.easyfile.storage.file.UploadService;
 import lombok.extern.slf4j.Slf4j;
@@ -48,18 +46,6 @@ public class EasyFileImportAutoConfiguration {
         log.info("初始化DefaultImportExecutor，分页大小: {}，最大重试次数: {}",
             importProperties.getPageSize(), importProperties.getMaxRetry());
         return new DefaultImportExecutor<>();
-    }
-
-    /**
-     * 导入服务
-     * 提供导入任务管理的核心业务逻辑
-     */
-    @Bean
-    @ConditionalOnMissingBean(ImportService.class)
-    public ImportService importService(EasyFileImportProperties importProperties) {
-        log.info("初始化ImportServiceImpl，异步执行: {}，断点续传: {}",
-            importProperties.isEnableAsync(), importProperties.isSupportResumable());
-        return new ImportServiceImpl();
     }
 
     /**

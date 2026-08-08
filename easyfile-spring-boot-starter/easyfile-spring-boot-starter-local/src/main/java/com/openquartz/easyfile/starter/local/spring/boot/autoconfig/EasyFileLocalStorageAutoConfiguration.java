@@ -31,15 +31,25 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.download.DownloadTriggerService;
 import com.openquartz.easyfile.storage.download.LimitingService;
 import com.openquartz.easyfile.storage.expand.ExportLimitingExecutor;
+import com.openquartz.easyfile.storage.imports.ImportStorageService;
+import com.openquartz.easyfile.storage.imports.ImportTriggerService;
 import com.openquartz.easyfile.storage.local.impl.LocalDownloadStorageServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalDownloadTriggerServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalImportStorageServiceImpl;
+import com.openquartz.easyfile.storage.local.impl.LocalImportTriggerServiceImpl;
 import com.openquartz.easyfile.storage.local.impl.LocalLimitingServiceImpl;
 import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadRecordMapper;
 import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTaskMapper;
 import com.openquartz.easyfile.storage.local.mapper.AsyncDownloadTriggerMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncImportRecordMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncImportTaskMapper;
+import com.openquartz.easyfile.storage.local.mapper.AsyncImportTriggerMapper;
 import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadRecordMapperImpl;
 import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTaskMapperImpl;
 import com.openquartz.easyfile.storage.local.mapper.impl.AsyncDownloadTriggerMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncImportRecordMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncImportTaskMapperImpl;
+import com.openquartz.easyfile.storage.local.mapper.impl.AsyncImportTriggerMapperImpl;
 import com.openquartz.easyfile.storage.local.prop.EasyFileTableGeneratorSupplier;
 
 /**
@@ -85,6 +95,12 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     @ConditionalOnMissingBean(DownloadTriggerService.class)
     public DownloadTriggerService localDownloadTriggerService(AsyncDownloadTriggerMapper asyncDownloadTriggerMapper) {
         return new LocalDownloadTriggerServiceImpl(asyncDownloadTriggerMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ImportTriggerService.class)
+    public ImportTriggerService localImportTriggerService(AsyncImportTriggerMapper asyncImportTriggerMapper) {
+        return new LocalImportTriggerServiceImpl(asyncImportTriggerMapper);
     }
 
     private DataSource buildDataSource(EasyFileLocalProperties easyFileLocalProperties) {
@@ -143,6 +159,30 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     }
 
     @Bean
+    @ConditionalOnMissingBean(AsyncImportTaskMapper.class)
+    @ConditionalOnClass(AsyncImportTaskMapper.class)
+    public AsyncImportTaskMapper asyncImportTaskMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncImportTaskMapperImpl(localStorageJdbcTemplate);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AsyncImportRecordMapper.class)
+    @ConditionalOnClass(AsyncImportRecordMapper.class)
+    public AsyncImportRecordMapper asyncImportRecordMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncImportRecordMapperImpl(localStorageJdbcTemplate);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(AsyncImportTriggerMapper.class)
+    @ConditionalOnClass(AsyncImportTriggerMapper.class)
+    public AsyncImportTriggerMapper asyncImportTriggerMapper(
+        @Qualifier("localStorageJdbcTemplate") JdbcTemplate localStorageJdbcTemplate) {
+        return new AsyncImportTriggerMapperImpl(localStorageJdbcTemplate);
+    }
+
+    @Bean
     @ConditionalOnClass(ExportLimitingExecutor.class)
     public ExportLimitingExecutor noneExportLimitingExecutor() {
         return new NoneExportLimitingExecutor();
@@ -154,6 +194,14 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     public DownloadStorageService localDownloadStorageServiceImpl(AsyncDownloadRecordMapper asyncDownloadRecordMapper,
         AsyncDownloadTaskMapper asyncDownloadTaskMapper) {
         return new LocalDownloadStorageServiceImpl(asyncDownloadTaskMapper, asyncDownloadRecordMapper);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(ImportStorageService.class)
+    @ConditionalOnClass(LocalImportStorageServiceImpl.class)
+    public ImportStorageService localImportStorageServiceImpl(AsyncImportRecordMapper asyncImportRecordMapper,
+        AsyncImportTaskMapper asyncImportTaskMapper) {
+        return new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper);
     }
 
     @Bean
