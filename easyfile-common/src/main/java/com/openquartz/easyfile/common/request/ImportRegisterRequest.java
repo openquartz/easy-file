@@ -35,4 +35,10 @@ public class ImportRegisterRequest {
     private Integer pageSize;
 
     private Integer maxRetry;
+
+    private String notifyEmail;
+
+    private String locale;
+
+    private Boolean enableNotify;
 }
