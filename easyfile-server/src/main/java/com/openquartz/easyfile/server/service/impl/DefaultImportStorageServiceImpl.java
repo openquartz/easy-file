@@ -272,18 +272,19 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
             cancelResult.setCancelMsg("任务不存在");
             return cancelResult;
         }
-        if (row.importStatus != ImportStatusEnum.NONE) {
+        // NONE → CANCEL (revoke); EXECUTING → CANCEL (cooperative cancel; engine polls status)
+        if (row.importStatus != ImportStatusEnum.NONE && row.importStatus != ImportStatusEnum.EXECUTING) {
             cancelResult.setCancelResult(false);
-            cancelResult.setCancelMsg("已经执行开始执行无法撤销");
+            cancelResult.setCancelMsg("当前状态无法取消");
             return cancelResult;
         }
         int affect = jdbcTemplate.update(
             "UPDATE ef_async_import_record SET import_status = ?, update_by = ?, update_time = ? "
                 + "WHERE id = ? AND import_status = ?",
             ImportStatusEnum.CANCEL.getCode(), request.getCancelBy(), new Date(),
-            request.getRegisterId(), ImportStatusEnum.NONE.getCode());
+            request.getRegisterId(), row.importStatus.getCode());
         cancelResult.setCancelResult(affect > 0);
-        cancelResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
+        cancelResult.setCancelMsg(affect > 0 ? "取消成功" : "取消失败");
         return cancelResult;
     }
 

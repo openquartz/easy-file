@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.nullable;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -61,10 +62,10 @@ public class AsyncImportHandlerAdapterTest {
     }
 
     @Test
-    public void handleResult_idempotentShortCircuit_beforeEnableRunning_noStuckExecuting() {
+    public void handleResult_idempotentShortCircuit_beforeEnableRunning_completesStorage() {
         when(idempotentImportManager.isExecuted("biz-key")).thenReturn(true);
         when(idempotentImportManager.getExecutedResult("biz-key")).thenReturn(
-            ImportResult.builder().success(true).status("SUCCESS").totalCount(10L).successCount(10L).failCount(0L)
+            ImportResult.builder().success(true).status("success").totalCount(10L).successCount(10L).failCount(0L)
                 .build());
 
         ImportRequestContext context = baseContext();
@@ -77,8 +78,8 @@ public class AsyncImportHandlerAdapterTest {
         assertTrue(result.isIdempotent());
         verify(importStorageService, never()).enableRunning(anyLong());
         verify(executor, never()).process(any(ImportContext.class));
-        verify(importStorageService, never()).complete(anyLong(), any(ImportStatusEnum.class),
-            anyLong(), anyLong(), anyLong(), anyLong(), anyString());
+        verify(importStorageService).complete(eq(1L), eq(ImportStatusEnum.SUCCESS), eq(10L), eq(10L), eq(0L),
+            eq(10L), nullable(String.class));
         verify(executor).asyncCompleteCallback(eq(result), eq(context));
     }
 

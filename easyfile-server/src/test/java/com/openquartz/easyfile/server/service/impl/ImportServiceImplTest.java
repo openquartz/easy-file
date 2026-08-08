@@ -119,10 +119,20 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void retryImport_delegatesToStorage() {
+    public void retryImport_delegatesToStorageAndRetriggers() {
         when(importStorageService.retry(1L, "op")).thenReturn(true);
         assertTrue(importService.retryImport(1L, "op"));
         verify(importStorageService).retry(1L, "op");
+        ArgumentCaptor<ImportTriggerRequest> triggerCaptor = ArgumentCaptor.forClass(ImportTriggerRequest.class);
+        verify(importTriggerService).trigger(triggerCaptor.capture());
+        assertEquals(Long.valueOf(1L), triggerCaptor.getValue().getRegisterId());
+    }
+
+    @Test
+    public void retryImport_skipsTriggerWhenRetryFails() {
+        when(importStorageService.retry(2L, "op")).thenReturn(false);
+        assertFalse(importService.retryImport(2L, "op"));
+        verify(importTriggerService, never()).trigger(any());
     }
 
     @Test

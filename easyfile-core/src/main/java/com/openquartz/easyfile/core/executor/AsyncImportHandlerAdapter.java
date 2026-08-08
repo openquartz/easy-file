@@ -54,9 +54,10 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
         Long registerId) {
         ImportContext importContext = buildImportContext(context, registerId);
 
-        // Idempotent short-circuit before enableRunning (mirror download cache-before-enableRunning)
+        // Idempotent short-circuit before enableRunning: still complete *this* registerId (avoid NONE forever)
         ImportProcessResult idempotentResult = tryIdempotentShortCircuit(importContext);
         if (idempotentResult != null) {
+            completeIdempotentStorage(registerId, idempotentResult);
             executor.asyncCompleteCallback(idempotentResult, context);
             return idempotentResult;
         }
@@ -82,6 +83,8 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
             result = buildFailResult(registerId, "import process returned null");
             completeAsFail(registerId, result.getErrorMsg());
         }
+        // Idempotent short-circuit inside process completes storage in process finally;
+        // pre-enableRunning short-circuit is completed above.
 
         executor.asyncCompleteCallback(result, context);
         return result;
@@ -92,6 +95,30 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
      */
     private void completeAsFail(Long registerId, String errorMsg) {
         importStorageService.complete(registerId, ImportStatusEnum.FAIL, 0L, 0L, 0L, 0L, errorMsg);
+    }
+
+    /**
+     * Copy prior idempotent outcome onto the current registerId so it does not stick in NONE/EXECUTING.
+     */
+    private void completeIdempotentStorage(Long registerId, ImportProcessResult result) {
+        ImportStatusEnum status;
+        if (result.isComplete() && result.isSuccess()) {
+            status = result.getFailCount() > 0 ? ImportStatusEnum.PARTIAL_SUCCESS : ImportStatusEnum.SUCCESS;
+        } else if (result.isComplete() && !result.isSuccess() && result.getFailCount() > 0) {
+            status = ImportStatusEnum.PARTIAL_SUCCESS;
+        } else if (!result.isComplete()) {
+            status = ImportStatusEnum.FAIL;
+        } else {
+            status = result.isSuccess() ? ImportStatusEnum.SUCCESS : ImportStatusEnum.FAIL;
+        }
+        importStorageService.complete(
+            registerId,
+            status,
+            result.getTotalCount(),
+            (long) result.getSuccessCount(),
+            (long) result.getFailCount(),
+            result.getTotalCount(),
+            result.getErrorMsg());
     }
 
     /**
@@ -129,9 +156,13 @@ public abstract class AsyncImportHandlerAdapter implements BaseAsyncImportHandle
             result.setErrorMsg("幂等结果不存在，请重试");
             return result;
         }
-        result.setSuccess(Boolean.TRUE.equals(existed.isSuccess())
-            || "SUCCESS".equals(existed.getStatus())
-            || "PARTIAL_SUCCESS".equals(existed.getStatus()));
+        String status = existed.getStatus();
+        boolean successLike = Boolean.TRUE.equals(existed.isSuccess())
+            || ImportStatusEnum.SUCCESS.getCode().equals(status)
+            || ImportStatusEnum.PARTIAL_SUCCESS.getCode().equals(status)
+            || "SUCCESS".equalsIgnoreCase(status)
+            || "PARTIAL_SUCCESS".equalsIgnoreCase(status);
+        result.setSuccess(successLike);
         result.setTotalCount(existed.getTotalCount() == null ? 0L : existed.getTotalCount());
         result.setSuccessCount(existed.getSuccessCount() == null ? 0 : existed.getSuccessCount().intValue());
         result.setFailCount(existed.getFailCount() == null ? 0 : existed.getFailCount().intValue());

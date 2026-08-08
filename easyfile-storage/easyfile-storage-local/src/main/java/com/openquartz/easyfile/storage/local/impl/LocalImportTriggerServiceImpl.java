@@ -36,6 +36,12 @@ public class LocalImportTriggerServiceImpl implements ImportTriggerService {
             AsyncImportTrigger importTrigger = asyncImportTriggerMapper
                 .selectByRegisterId(request.getRegisterId());
             if (Objects.nonNull(importTrigger)) {
+                // Retry / re-trigger: reset terminal SUCCESS/FAIL back to INIT for db_schedule pickup
+                if (importTrigger.getTriggerStatus() == ImportTriggerStatusEnum.SUCCESS
+                    || importTrigger.getTriggerStatus() == ImportTriggerStatusEnum.FAIL) {
+                    asyncImportTriggerMapper.refreshStatus(request.getRegisterId(), ImportTriggerStatusEnum.INIT,
+                        CollectionUtils.newArrayList(ImportTriggerStatusEnum.SUCCESS, ImportTriggerStatusEnum.FAIL));
+                }
                 return;
             }
             AsyncImportTrigger trigger = new AsyncImportTrigger();

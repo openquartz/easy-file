@@ -12,6 +12,7 @@ import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelImportRequest;
 import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
+import com.openquartz.easyfile.common.request.ImportTriggerRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.CancelImportResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
@@ -25,6 +26,7 @@ import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.service.IdempotentImportManager;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
+import com.openquartz.easyfile.storage.imports.ImportTriggerService;
 import com.openquartz.easyfile.storage.local.convertor.AsyncImportRecordConverter;
 import com.openquartz.easyfile.storage.local.entity.AsyncImportAppEntity;
 import com.openquartz.easyfile.storage.local.entity.AsyncImportRecord;
@@ -54,20 +56,30 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
     private final AsyncImportTaskMapper asyncImportTaskMapper;
     private final AsyncImportRecordMapper asyncImportRecordMapper;
     private final IdempotentImportManager idempotentImportManager;
+    private final ImportTriggerService importTriggerService;
 
     public LocalImportStorageServiceImpl(
         AsyncImportTaskMapper asyncImportTaskMapper,
         AsyncImportRecordMapper asyncImportRecordMapper) {
-        this(asyncImportTaskMapper, asyncImportRecordMapper, null);
+        this(asyncImportTaskMapper, asyncImportRecordMapper, null, null);
     }
 
     public LocalImportStorageServiceImpl(
         AsyncImportTaskMapper asyncImportTaskMapper,
         AsyncImportRecordMapper asyncImportRecordMapper,
         IdempotentImportManager idempotentImportManager) {
+        this(asyncImportTaskMapper, asyncImportRecordMapper, idempotentImportManager, null);
+    }
+
+    public LocalImportStorageServiceImpl(
+        AsyncImportTaskMapper asyncImportTaskMapper,
+        AsyncImportRecordMapper asyncImportRecordMapper,
+        IdempotentImportManager idempotentImportManager,
+        ImportTriggerService importTriggerService) {
         this.asyncImportTaskMapper = asyncImportTaskMapper;
         this.asyncImportRecordMapper = asyncImportRecordMapper;
         this.idempotentImportManager = idempotentImportManager;
+        this.importTriggerService = importTriggerService;
     }
 
     @Override
@@ -262,15 +274,17 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
             cancelResult.setCancelMsg("任务不存在");
             return cancelResult;
         }
-        if (importRecord.getImportStatus() != ImportStatusEnum.NONE) {
+        ImportStatusEnum current = importRecord.getImportStatus();
+        // NONE → CANCEL (revoke); EXECUTING → CANCEL (cooperative cancel; engine polls status)
+        if (current != ImportStatusEnum.NONE && current != ImportStatusEnum.EXECUTING) {
             cancelResult.setCancelResult(false);
-            cancelResult.setCancelMsg("已经执行开始执行无法撤销");
+            cancelResult.setCancelMsg("当前状态无法取消");
             return cancelResult;
         }
         int affect = asyncImportRecordMapper.refreshImportStatus(request.getRegisterId(),
-            ImportStatusEnum.NONE, ImportStatusEnum.CANCEL, request.getCancelBy());
+            current, ImportStatusEnum.CANCEL, request.getCancelBy());
         cancelResult.setCancelResult(affect > 0);
-        cancelResult.setCancelMsg(affect > 0 ? "撤销成功" : "撤销失败");
+        cancelResult.setCancelMsg(affect > 0 ? "取消成功" : "取消失败");
         return cancelResult;
     }
 
@@ -325,6 +339,11 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
         if (affect > 0) {
             asyncImportRecordMapper.resetExecuteProcess(registerId);
             clearIdempotentMark(importRecord.getBusinessUniqueKey());
+            if (importTriggerService != null) {
+                ImportTriggerRequest triggerRequest = new ImportTriggerRequest();
+                triggerRequest.setRegisterId(registerId);
+                importTriggerService.trigger(triggerRequest);
+            }
         }
         return affect > 0;
     }

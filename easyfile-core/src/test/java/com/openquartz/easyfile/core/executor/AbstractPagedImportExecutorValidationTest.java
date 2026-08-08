@@ -139,6 +139,73 @@ public class AbstractPagedImportExecutorValidationTest {
     }
 
     @Test
+    public void blankBusinessUniqueKey_skipsLockAndIdempotentMark() throws Exception {
+        File tempDir = temporaryFolder.newFolder("import-blank-key");
+        ImportParser<String> parser = mock(ImportParser.class);
+        when(parser.getTotalCount()).thenReturn(1L);
+        when(parser.readPage(1L, 1000)).thenReturn(new java.util.ArrayList<>(
+            Collections.singletonList(ImportRow.<String>builder().rowNumber(1L).data("ok-row").build())));
+        doNothing().when(parser).close();
+        executor.setParser(parser);
+        executor.setTempOverride(tempDir.getAbsolutePath());
+        executor.setValidationSuccess(true);
+
+        ImportContext context = ImportContext.builder()
+            .registerId(12L)
+            .appId("app")
+            .importCode("code")
+            .ossUrl("https://example.com/c.xlsx")
+            .fileName("ok.xlsx")
+            .fileType("xlsx")
+            .businessUniqueKey("  ")
+            .build();
+
+        ImportProcessResult result = executor.process(context);
+
+        assertTrue(result.isSuccess());
+        verify(lockSupport, org.mockito.Mockito.never()).consumeIfTryLock(
+            org.mockito.ArgumentMatchers.<Pair<String, com.openquartz.easyfile.common.lock.LockBizType>>any(),
+            org.mockito.ArgumentMatchers.any(Consumer.class));
+        verify(idempotentManager, org.mockito.Mockito.never()).markAsExecuted(anyString(), any(ImportResult.class));
+        verify(idempotentManager, org.mockito.Mockito.never()).isExecuted(anyString());
+    }
+
+    @Test
+    public void differentFileHash_rejectsAsFail() throws Exception {
+        File tempDir = temporaryFolder.newFolder("import-hash-reject");
+        ImportParser<String> parser = mock(ImportParser.class);
+        when(parser.getTotalCount()).thenReturn(1L);
+        doNothing().when(parser).close();
+        executor.setParser(parser);
+        executor.setTempOverride(tempDir.getAbsolutePath());
+
+        when(idempotentManager.isExecuted("biz-hash")).thenReturn(true);
+        when(idempotentManager.getExecutedResult("biz-hash")).thenReturn(
+            ImportResult.builder().success(true).status("success").fileHash("other-hash")
+                .totalCount(5L).successCount(5L).failCount(0L).build());
+
+        ImportContext context = ImportContext.builder()
+            .registerId(13L)
+            .appId("app")
+            .importCode("code")
+            .ossUrl("https://example.com/d.xlsx")
+            .fileName("other.xlsx")
+            .fileType("xlsx")
+            .businessUniqueKey("biz-hash")
+            .build();
+
+        ImportProcessResult result = executor.process(context);
+
+        assertFalse(result.isSuccess());
+        assertTrue(result.getErrorMsg() != null && result.getErrorMsg().contains("拒绝"));
+        verify(importStorageService).complete(
+            eq(13L), eq(ImportStatusEnum.FAIL), anyLong(), anyLong(), anyLong(), anyLong(),
+            anyString());
+        verify(idempotentManager, org.mockito.Mockito.never()).markAsExecuted(anyString(), any(ImportResult.class));
+        assertFalse(businessCalled.get());
+    }
+
+    @Test
     public void successPathShouldMarkIdempotent() throws Exception {
         File tempDir = temporaryFolder.newFolder("import-ok");
         ImportParser<String> parser = mock(ImportParser.class);

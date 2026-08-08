@@ -203,17 +203,27 @@ public class EasyFileLocalStorageAutoConfiguration implements InitializingBean {
     @ConditionalOnClass(LocalImportStorageServiceImpl.class)
     public ImportStorageService localImportStorageServiceImpl(AsyncImportRecordMapper asyncImportRecordMapper,
         AsyncImportTaskMapper asyncImportTaskMapper,
-        ObjectProvider<IdempotentImportManager> idempotentImportManager) {
+        ObjectProvider<IdempotentImportManager> idempotentImportManager,
+        ObjectProvider<ImportTriggerService> importTriggerService) {
         return new LocalImportStorageServiceImpl(asyncImportTaskMapper, asyncImportRecordMapper,
-            idempotentImportManager.getIfAvailable());
+            idempotentImportManager.getIfAvailable(), importTriggerService.getIfAvailable());
     }
 
     @Bean
     @ConditionalOnMissingBean(LimitingService.class)
     @ConditionalOnClass(LocalLimitingServiceImpl.class)
     public LimitingService localLimitingService(AsyncDownloadTaskMapper asyncDownloadTaskMapper,
-        List<ExportLimitingExecutor> executorList) {
-        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList);
+        List<ExportLimitingExecutor> executorList,
+        ObjectProvider<AsyncImportRecordMapper> asyncImportRecordMapper,
+        ObjectProvider<com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties> importProperties) {
+        int maxConcurrent = LocalLimitingServiceImpl.DEFAULT_MAX_CONCURRENT_IMPORT_TASKS;
+        com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileImportProperties props =
+            importProperties.getIfAvailable();
+        if (props != null && props.getMaxConcurrentTasks() > 0) {
+            maxConcurrent = props.getMaxConcurrentTasks();
+        }
+        return new LocalLimitingServiceImpl(asyncDownloadTaskMapper, executorList,
+            asyncImportRecordMapper.getIfAvailable(), maxConcurrent);
     }
 
     @Override

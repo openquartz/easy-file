@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.clearInvocations;
@@ -169,7 +170,7 @@ public class LocalImportStorageServiceImplTest {
     }
 
     @Test
-    public void cancelImport_onlyFromNone() {
+    public void cancelImport_fromNoneAndExecuting() {
         Long registerId = 20L;
         CancelImportRequest request = new CancelImportRequest();
         request.setRegisterId(registerId);
@@ -192,12 +193,25 @@ public class LocalImportStorageServiceImplTest {
         executing.setImportStatus(ImportStatusEnum.EXECUTING);
         clearInvocations(asyncImportRecordMapper);
         when(asyncImportRecordMapper.findById(registerId)).thenReturn(executing);
+        when(asyncImportRecordMapper.refreshImportStatus(
+            eq(registerId), eq(ImportStatusEnum.EXECUTING), eq(ImportStatusEnum.CANCEL), eq("alice")))
+            .thenReturn(1);
+
+        CancelImportResult coop = service.cancelImport(request);
+        assertTrue(coop.isCancelResult());
+        verify(asyncImportRecordMapper).refreshImportStatus(
+            eq(registerId), eq(ImportStatusEnum.EXECUTING), eq(ImportStatusEnum.CANCEL), eq("alice"));
+
+        AsyncImportRecord success = new AsyncImportRecord();
+        success.setId(registerId);
+        success.setImportStatus(ImportStatusEnum.SUCCESS);
+        clearInvocations(asyncImportRecordMapper);
+        when(asyncImportRecordMapper.findById(registerId)).thenReturn(success);
 
         CancelImportResult rejected = service.cancelImport(request);
         assertFalse(rejected.isCancelResult());
-        assertEquals("已经执行开始执行无法撤销", rejected.getCancelMsg());
         verify(asyncImportRecordMapper, never()).refreshImportStatus(
-            eq(registerId), eq(ImportStatusEnum.NONE), eq(ImportStatusEnum.CANCEL), anyString());
+            anyLong(), any(ImportStatusEnum.class), eq(ImportStatusEnum.CANCEL), anyString());
     }
 
     @Test

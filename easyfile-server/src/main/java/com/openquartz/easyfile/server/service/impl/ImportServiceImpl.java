@@ -94,7 +94,13 @@ public class ImportServiceImpl implements ImportService {
 
     @Override
     public boolean retryImport(Long registerId, String operator) {
-        return importStorageService.retry(registerId, operator);
+        boolean ok = importStorageService.retry(registerId, operator);
+        if (ok && importTriggerService != null) {
+            ImportTriggerRequest triggerRequest = new ImportTriggerRequest();
+            triggerRequest.setRegisterId(registerId);
+            importTriggerService.trigger(triggerRequest);
+        }
+        return ok;
     }
 
     @Override

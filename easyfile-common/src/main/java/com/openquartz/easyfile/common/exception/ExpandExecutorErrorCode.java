@@ -10,6 +10,7 @@ public enum ExpandExecutorErrorCode implements EasyFileErrorCode {
 
     LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR("01", "策略:{0} 限流执行器已经存在！", true),
     LIMITING_STRATEGY_EXECUTOR_NOT_EXIST_ERROR("02", "策略:{0} 限流执行器不存在！", true),
+    IMPORT_LIMITING_EXCEEDED_ERROR("03", "导入限流：appId={0}, importCode={1} 并发任务数超限", true),
     ;
 
     public static final String SIMPLE_BASE_CODE = "ExpandExecutorError-";

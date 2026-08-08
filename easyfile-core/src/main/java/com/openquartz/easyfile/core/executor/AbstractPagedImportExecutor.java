@@ -3,6 +3,7 @@ package com.openquartz.easyfile.core.executor;
 import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.util.FileUtils;
 import com.openquartz.easyfile.common.util.ImportTempFiles;
+import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.lock.LockBizType;
@@ -61,18 +62,17 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
 
     /**
      * 执行导入处理（带并发控制）
+     * Blank/null businessUniqueKey ⇒ skip distributed lock and idempotent checks (mirror handler blank guard).
      */
     private ImportProcessResult executeWithConcurrencyControl(ImportContext context,
                                                               java.util.function.Supplier<ImportProcessResult> task) {
         try {
+            if (StringUtils.isBlank(context.getBusinessUniqueKey())) {
+                return task.get();
+            }
             final ImportProcessResult[] resultHolder = new ImportProcessResult[1];
             boolean locked = lockSupport.consumeIfTryLock(
                 Pair.of(context.getBusinessUniqueKey(), LockBizType.IMPORT_RUNNING_LOCK), () -> {
-                // 幂等性检查
-                if (idempotentManager.isExecuted(context.getBusinessUniqueKey())) {
-                    resultHolder[0] = buildIdempotentResult(context);
-                    return;
-                }
                 resultHolder[0] = task.get();
             });
             if (!locked) {
@@ -102,9 +102,17 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             reporter.start();
             ImportExecuteProcessProbe.setCurrentReporter(reporter);
 
-            // 1. 下载文件
+            // 1. 下载文件 + 文件哈希
             File tempFile = downloadFile(context);
             result.setTempFilePath(tempFile.getAbsolutePath());
+            String fileHash = context.getFileHash();
+
+            // 1b. 同 businessUniqueKey：相同 hash 幂等短路；不同 hash 拒绝（finally 负责 complete）
+            ImportStatusEnum gatedStatus = applyBusinessKeyFileHashGate(context, result, fileHash);
+            if (gatedStatus != null) {
+                terminalStatus = gatedStatus;
+                return result;
+            }
 
             // 2. 创建解析器（工厂按 fileType 选择）
             parser = createParser(tempFile, context.getFileType());
@@ -154,10 +162,12 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
                 }
             }
 
-            // 6. 成功态（SUCCESS / PARTIAL_SUCCESS）做幂等标记
-            if (terminalStatus == ImportStatusEnum.SUCCESS
-                || terminalStatus == ImportStatusEnum.PARTIAL_SUCCESS) {
+            // 6. 成功态（SUCCESS / PARTIAL_SUCCESS）做幂等标记（空白 key 跳过，永不写入 null/empty Redis key）
+            if ((terminalStatus == ImportStatusEnum.SUCCESS
+                || terminalStatus == ImportStatusEnum.PARTIAL_SUCCESS)
+                && StringUtils.isNotBlank(context.getBusinessUniqueKey())) {
                 ImportResult importResult = buildImportResult(result, terminalStatus);
+                importResult.setFileHash(fileHash);
                 idempotentManager.markAsExecuted(context.getBusinessUniqueKey(), importResult);
             }
 
@@ -216,9 +226,65 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
 
         // 计算文件哈希
         String fileHash = FileUtils.md5(tempFile);
+        context.setFileHash(fileHash);
         importStorageService.updateFileHash(context.getRegisterId(), fileHash);
 
         return tempFile;
+    }
+
+    /**
+     * Same businessUniqueKey + different fileHash ⇒ FAIL reject.
+     * Same key + same hash (or prior without hash) and already executed ⇒ copy prior success-like outcome.
+     *
+     * @return terminal status when gated (caller should return); null to continue import
+     */
+    private ImportStatusEnum applyBusinessKeyFileHashGate(ImportContext context, ImportProcessResult result,
+                                                          String fileHash) {
+        if (StringUtils.isBlank(context.getBusinessUniqueKey()) || idempotentManager == null) {
+            return null;
+        }
+        ImportResult prior = idempotentManager.getExecutedResult(context.getBusinessUniqueKey());
+        boolean executed = idempotentManager.isExecuted(context.getBusinessUniqueKey());
+        if (!executed && prior == null) {
+            return null;
+        }
+        if (prior != null && StringUtils.isNotBlank(prior.getFileHash())
+            && StringUtils.isNotBlank(fileHash)
+            && !prior.getFileHash().equals(fileHash)) {
+            result.setSuccess(false);
+            result.setComplete(false);
+            result.setErrorMsg("相同业务键已存在不同文件的导入结果，拒绝执行");
+            result.setTotalCount(0L);
+            result.setSuccessCount(0);
+            result.setFailCount(0);
+            result.setErrorRecords(new ArrayList<>());
+            return ImportStatusEnum.FAIL;
+        }
+        if (!executed) {
+            return null;
+        }
+        // same hash (or prior hash unknown): idempotent short-circuit — storage complete in finally
+        ImportProcessResult idempotent = buildIdempotentResult(context);
+        result.setSuccess(idempotent.isSuccess());
+        result.setComplete(idempotent.isComplete());
+        result.setErrorMsg(idempotent.getErrorMsg());
+        result.setTotalCount(idempotent.getTotalCount());
+        result.setSuccessCount(idempotent.getSuccessCount());
+        result.setFailCount(idempotent.getFailCount());
+        result.setErrorRecords(idempotent.getErrorRecords() == null
+            ? new ArrayList<>() : idempotent.getErrorRecords());
+        result.setIdempotent(true);
+        return resolveIdempotentTerminalStatus(result);
+    }
+
+    private ImportStatusEnum resolveIdempotentTerminalStatus(ImportProcessResult result) {
+        if (!result.isComplete()) {
+            return ImportStatusEnum.FAIL;
+        }
+        if (result.getFailCount() > 0) {
+            return ImportStatusEnum.PARTIAL_SUCCESS;
+        }
+        return result.isSuccess() ? ImportStatusEnum.SUCCESS : ImportStatusEnum.FAIL;
     }
 
     /**

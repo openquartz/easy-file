@@ -32,6 +32,11 @@ public class ImportResult {
 
     private String errorMsg;
 
+    /**
+     * Source file MD5 (stored with idempotent mark for same-key / different-hash reject).
+     */
+    private String fileHash;
+
     private String status;
 
     private Date startTime;
