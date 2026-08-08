@@ -145,4 +145,12 @@ public interface AsyncDownloadRecordMapper {
     int refreshExecuteProcess(@Param("id") Long id,
         @Param("executeProcess") Integer executeProcess,
         @Param("nextUploadStatus") UploadStatusEnum nextUploadStatus);
+
+    /**
+     * 获取下载记录语言
+     *
+     * @param registerId 注册ID
+     * @return locale
+     */
+    String getLocale(@Param("registerId") Long registerId);
 }

@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.common.util.json;
 
+import com.openquartz.easyfile.common.bean.ResponseResult;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
@@ -27,7 +28,44 @@ public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
         type = ((ParameterizedType) superClass).getActualTypeArguments()[0];
     }
 
+    /**
+     * Construct with an explicit {@link Type} (avoids generic type-variable erasure).
+     */
+    protected TypeReference(Type type) {
+        if (type == null) {
+            throw new IllegalArgumentException("type must not be null");
+        }
+        this.type = type;
+    }
+
     public Type getType() { return type; }
+
+    /**
+     * Build {@code ResponseResult<D>} type reference with a concrete data class.
+     */
+    public static <D> TypeReference<ResponseResult<D>> responseResult(Class<D> dataClass) {
+        if (dataClass == null) {
+            throw new IllegalArgumentException("dataClass must not be null");
+        }
+        ParameterizedType parameterizedType = new ParameterizedType() {
+            @Override
+            public Type[] getActualTypeArguments() {
+                return new Type[]{dataClass};
+            }
+
+            @Override
+            public Type getRawType() {
+                return ResponseResult.class;
+            }
+
+            @Override
+            public Type getOwnerType() {
+                return null;
+            }
+        };
+        return new TypeReference<ResponseResult<D>>(parameterizedType) {
+        };
+    }
 
     /**
      * The only reason we define this method (and require implementation

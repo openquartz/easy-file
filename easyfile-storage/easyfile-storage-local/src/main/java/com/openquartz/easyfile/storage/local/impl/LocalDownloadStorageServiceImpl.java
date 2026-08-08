@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.expression.Expression;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.BaseExecuteParam;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
@@ -48,7 +45,9 @@ import com.openquartz.easyfile.common.response.CancelUploadResult;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
+import com.openquartz.easyfile.common.util.CacheKeyMatcher;
 import com.openquartz.easyfile.common.util.CollectionUtils;
+import com.openquartz.easyfile.common.util.FileInvalidTimeUtils;
 import com.openquartz.easyfile.common.util.JSONUtil;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.common.util.PageUtil;
@@ -119,44 +118,12 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
 
     private boolean matchCacheKey(List<String> cacheKeyList, Map<String, Object> exportParamMap,
                                   AsyncDownloadRecord downloadRecord) {
-        if (CollectionUtils.isEmpty(cacheKeyList)) {
-            return true;
-        }
-
         BaseExecuteParam executeParam = JSONUtil
                 .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
-        if (Objects.isNull(executeParam)) {
-            if (MapUtils.isEmpty(exportParamMap)) {
-                return true;
-            }
-        } else if (Objects.equals(executeParam.getOtherMap(), exportParamMap)) {
-            return true;
-        }
-        StandardEvaluationContext oriEvaluationContext = new StandardEvaluationContext();
-        oriEvaluationContext
-                .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
-
-        StandardEvaluationContext tarEvaluationContext = new StandardEvaluationContext();
-        tarEvaluationContext.setVariables(exportParamMap);
-
-        boolean matchedKey = true;
-        try {
-            for (String cacheKey : cacheKeyList) {
-                SpelExpressionParser expressionParser = new SpelExpressionParser();
-                Expression expression = expressionParser.parseExpression(cacheKey);
-                Object oriValue = expression.getValue(oriEvaluationContext);
-                Object targetValue = expression.getValue(tarEvaluationContext);
-                if (!Objects.equals(oriValue, targetValue)) {
-                    matchedKey = false;
-                }
-            }
-        } catch (Exception ex) {
-            log.error(
-                    "[LocalDownloadStorageServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
-                    cacheKeyList, exportParamMap, downloadRecord, ex);
-            matchedKey = false;
-        }
-        return matchedKey;
+        return CacheKeyMatcher.match(
+                cacheKeyList,
+                executeParam == null ? Collections.emptyMap() : executeParam.getOtherMap(),
+                exportParamMap);
     }
 
     private ExportResult convertRecord(AsyncDownloadRecord downloadRecord, Long registerId) {
@@ -174,6 +141,9 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
     public void uploadCallback(UploadCallbackRequest request) {
         AsyncDownloadRecord downloadRecord = asyncDownloadRecordMapper.findById(request.getRegisterId());
         Asserts.notNull(downloadRecord, DataExecuteErrorCode.NOT_EXIST_ERROR);
+        if (downloadRecord.getUploadStatus() == UploadStatusEnum.SUCCESS) {
+            return;
+        }
         UploadInfoChangeCondition condition = buildUploadInfoChangeCondition(request, downloadRecord);
         int affect = asyncDownloadRecordMapper.changeUploadInfo(condition);
         Asserts.isTrue(affect > 0, DataExecuteErrorCode.UPDATE_ERROR);
@@ -189,7 +159,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadInfoChangeCondition.setFileSystem(request.getSystem());
         uploadInfoChangeCondition.setErrorMsg(request.getErrorMsg());
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
-        uploadInfoChangeCondition.setInvalidTime(new Date());
+        uploadInfoChangeCondition.setInvalidTime(FileInvalidTimeUtils.calculateDefaultInvalidTime());
         return uploadInfoChangeCondition;
     }
 
@@ -203,7 +173,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
         uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
-        uploadInfoChangeCondition.setInvalidTime(new Date());
+        uploadInfoChangeCondition.setInvalidTime(FileInvalidTimeUtils.calculateDefaultInvalidTime());
         return uploadInfoChangeCondition;
     }
 
@@ -244,7 +214,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         downloadRecord.setErrorMsg(StringUtils.EMPTY);
         downloadRecord.setLastExecuteTime(new Date());
-        downloadRecord.setInvalidTime(new Date());
+        downloadRecord.setInvalidTime(FileInvalidTimeUtils.calculateDefaultInvalidTime());
         downloadRecord.setDownloadNum(0);
         downloadRecord.setExecuteProcess(0);
         downloadRecord.setVersion(Constants.DATA_INIT_VERSION);

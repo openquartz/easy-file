@@ -77,11 +77,13 @@ public class ImportContext {
     /**
      * 当前重试次数
      */
+    @Builder.Default
     private Integer currentRetry = 0;
 
     /**
      * 断点续传位置
      */
+    @Builder.Default
     private Long resumePosition = 0L;
 
     /**

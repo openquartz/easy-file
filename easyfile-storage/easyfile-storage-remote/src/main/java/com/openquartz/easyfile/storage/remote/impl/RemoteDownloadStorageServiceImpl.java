@@ -61,7 +61,7 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
         log.info("[RemoteDownloadStorageServiceImpl#enableRunning] response registerId:{},result:{}", registerId,
                 result);
         if (Objects.nonNull(result) && result.isSuccess()) {
-            return result.getData();
+            return Boolean.TRUE.equals(result.getData());
         }
         return false;
     }

@@ -1,10 +1,12 @@
 package com.openquartz.easyfile.core.parser;
 
 import com.openquartz.easyfile.common.annotations.ExcelImportField;
-import com.openquartz.easyfile.core.entity.ErrorRecord;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -16,11 +18,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 
 /**
  * Excel导入解析器
- * 支持Excel 07和Excel 03格式，使用流式读取防止OOM
+ * 支持Excel 07和Excel 03格式
  *
  * @author svnee
  */
@@ -28,12 +29,25 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 public class ExcelImportParser<T> implements ImportParser<T> {
 
     private final Class<T> targetClass;
+    private final File file;
     private final InputStream inputStream;
     private final String fileType;
     private long totalCount = -1;
 
+    public ExcelImportParser(Class<T> targetClass, File file, String fileType) {
+        this.targetClass = targetClass;
+        this.file = file;
+        this.inputStream = null;
+        this.fileType = fileType;
+    }
+
+    /**
+     * Compatibility constructor. Prefer {@link #ExcelImportParser(Class, File, String)} —
+     * reusing a single InputStream across workbook opens will fail after the first close.
+     */
     public ExcelImportParser(Class<T> targetClass, InputStream inputStream, String fileType) {
         this.targetClass = targetClass;
+        this.file = null;
         this.inputStream = inputStream;
         this.fileType = fileType;
     }
@@ -82,17 +96,36 @@ public class ExcelImportParser<T> implements ImportParser<T> {
     }
 
     /**
-     * 创建工作簿
-     * Excel 07使用SXSSFWorkbook实现流式读取
-     * Excel 03使用HSSFWorkbook
+     * 创建工作簿。File 模式下每次打开新的 FileInputStream，避免流被关闭后无法复用。
      */
     protected Workbook createWorkbook() throws java.io.IOException {
-        if ("xlsx".equals(fileType)) {
-            // 使用SXSSFWorkbook实现流式读取（防OOM）
-            return new SXSSFWorkbook(new XSSFWorkbook(inputStream), 1000, true);
-        } else {
-            return new HSSFWorkbook(inputStream);
+        InputStream in = openInputStream();
+        try {
+            if ("xlsx".equalsIgnoreCase(fileType)) {
+                return new XSSFWorkbook(in);
+            }
+            return new HSSFWorkbook(in);
+        } catch (IOException | RuntimeException e) {
+            // Workbook owns the stream on success; close only if construction failed
+            if (file != null) {
+                try {
+                    in.close();
+                } catch (IOException closeEx) {
+                    e.addSuppressed(closeEx);
+                }
+            }
+            throw e;
         }
+    }
+
+    private InputStream openInputStream() throws IOException {
+        if (file != null) {
+            return new FileInputStream(file);
+        }
+        if (inputStream == null) {
+            throw new IOException("Excel文件流未设置");
+        }
+        return inputStream;
     }
 
     /**
@@ -165,6 +198,26 @@ public class ExcelImportParser<T> implements ImportParser<T> {
             return null;
         }
 
+        if (value instanceof Number) {
+            Number number = (Number) value;
+            if (targetType.equals(Integer.class) || targetType.equals(int.class)) {
+                return number.intValue();
+            } else if (targetType.equals(Long.class) || targetType.equals(long.class)) {
+                return number.longValue();
+            } else if (targetType.equals(Double.class) || targetType.equals(double.class)) {
+                return number.doubleValue();
+            } else if (targetType.equals(Float.class) || targetType.equals(float.class)) {
+                return number.floatValue();
+            } else if (targetType.equals(BigDecimal.class)) {
+                if (value instanceof BigDecimal) {
+                    return value;
+                }
+                return BigDecimal.valueOf(number.doubleValue());
+            } else if (targetType.equals(String.class)) {
+                return value.toString();
+            }
+        }
+
         String strValue = value.toString().trim();
 
         if (strValue.isEmpty()) {
@@ -184,8 +237,8 @@ public class ExcelImportParser<T> implements ImportParser<T> {
                 return Float.parseFloat(strValue);
             } else if (targetType.equals(Boolean.class) || targetType.equals(boolean.class)) {
                 return Boolean.parseBoolean(strValue);
-            } else if (targetType.equals(java.math.BigDecimal.class)) {
-                return new java.math.BigDecimal(strValue);
+            } else if (targetType.equals(BigDecimal.class)) {
+                return new BigDecimal(strValue);
             } else if (targetType.equals(Date.class)) {
                 // 处理Excel日期格式
                 if (value instanceof Date) {

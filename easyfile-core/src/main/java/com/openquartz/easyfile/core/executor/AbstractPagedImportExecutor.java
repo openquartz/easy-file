@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.core.executor;
 
 import com.openquartz.easyfile.common.util.FileUtils;
+import com.openquartz.easyfile.common.util.ImportTempFiles;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.lock.LockBizType;
 import com.openquartz.easyfile.common.lock.LockSupport;
@@ -13,14 +14,12 @@ import com.openquartz.easyfile.core.executor.process.ImportExecuteProcessReporte
 import com.openquartz.easyfile.core.service.IdempotentImportManager;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
 import com.openquartz.easyfile.core.exception.ConcurrentImportException;
-import com.openquartz.easyfile.core.exception.FileParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.file.DownloadService;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
@@ -90,6 +89,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         result.setStartTime(new Date());
         ImportExecuteProcessReporterImpl reporter =
             new ImportExecuteProcessReporterImpl(context.getRegisterId(), importStorageService);
+        ImportParser<T> parser = null;
 
         try {
             reporter.start();
@@ -100,7 +100,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             result.setTempFilePath(tempFile.getAbsolutePath());
 
             // 2. 创建解析器
-            ImportParser<T> parser = createParser(tempFile, context.getFileType());
+            parser = createParser(tempFile, context.getFileType());
 
             // 3. 获取总记录数
             long totalCount = parser.getTotalCount();
@@ -112,17 +112,20 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             // 5. 生成结果文件
             generateResultFile(context, pagedResult);
 
-            // 6. 设置成功结果
-            result.setSuccess(true);
+            // 6. 设置结果（无失败才算成功）
+            boolean success = pagedResult.getFailCount() == 0;
+            result.setSuccess(success);
             result.setTotalCount(totalCount);
             result.setSuccessCount(pagedResult.getSuccessCount());
             result.setFailCount(pagedResult.getFailCount());
             result.setErrorRecords(pagedResult.getErrorRecords());
             result.setComplete(true);
 
-            // 7. 幂等性标记
-            ImportResult importResult = buildImportResult(result);
-            idempotentManager.markAsExecuted(context.getBusinessUniqueKey(), importResult);
+            // 7. 仅真正成功时做幂等标记
+            if (success) {
+                ImportResult importResult = buildImportResult(result);
+                idempotentManager.markAsExecuted(context.getBusinessUniqueKey(), importResult);
+            }
 
         } catch (Exception e) {
             log.error("导入处理失败: registerId={}", context.getRegisterId(), e);
@@ -130,6 +133,13 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
             result.setErrorMsg(e.getMessage());
             result.setComplete(false);
         } finally {
+            if (parser != null) {
+                try {
+                    parser.close();
+                } catch (IOException e) {
+                    log.warn("关闭解析器失败: registerId={}", context.getRegisterId(), e);
+                }
+            }
             result.setEndTime(new Date());
             result.setDuration(result.getEndTime().getTime() - result.getStartTime().getTime());
 
@@ -164,9 +174,8 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         String ossUrl = context.getOssUrl();
         String tempDir = getTempDirectory();
 
-        String fileName = context.getFileName() != null ? context.getFileName() :
-            "import_" + context.getRegisterId() + "." + context.getFileType();
-        File tempFile = new File(tempDir, fileName);
+        File tempFile = ImportTempFiles.resolveTempFile(
+            tempDir, context.getFileName(), context.getRegisterId(), context.getFileType());
 
         tempFile.getParentFile().mkdirs();
 
@@ -184,11 +193,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
      * 创建解析器
      */
     protected ImportParser<T> createParser(File file, String fileType) {
-        try (FileInputStream fis = new FileInputStream(file)) {
-            return new ExcelImportParser<>(getTargetClass(), fis, fileType);
-        } catch (IOException e) {
-            throw new FileParseException("创建解析器失败", e);
-        }
+        return new ExcelImportParser<>(getTargetClass(), file, fileType);
     }
 
     /**
@@ -203,7 +208,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         int pageSize = getPageSize();
         int totalPages = (int) ((totalCount + pageSize - 1) / pageSize);
 
-        long resumePosition = context.getResumePosition();
+        long resumePosition = context.getResumePosition() == null ? 0L : context.getResumePosition();
         int startPage = (int) (resumePosition / pageSize) + 1;
 
         log.info("开始分页处理: registerId={}, 总记录数={}, 分页大小={}, 起始页={}",
@@ -232,8 +237,12 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
                         .build());
 
                 if (!validationResult.isSuccess()) {
-                    errorRecords.addAll(validationResult.getErrors());
-                    failCount += validationResult.getErrorCount();
+                    List<ErrorRecord> errors = validationResult.getErrors() == null
+                        ? Collections.emptyList() : validationResult.getErrors();
+                    errorRecords.addAll(errors);
+                    failCount += validationResult.getErrorCount() > 0
+                        ? validationResult.getErrorCount() : pageData.size();
+                    continue;
                 }
 
                 // 业务处理
@@ -248,24 +257,23 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
                     successCount += pageData.size();
                 } else {
                     failCount += pageData.size();
-                    errorRecords.addAll(processResult.getErrors());
+                    List<ErrorRecord> errors = processResult.getErrors() == null
+                        ? Collections.emptyList() : processResult.getErrors();
+                    errorRecords.addAll(errors);
                 }
 
                 // 更新进度
-                int process = (int) ((pageNum * pageSize * 100) / totalCount);
+                int process = totalCount <= 0 ? 100 : (int) ((pageNum * pageSize * 100L) / totalCount);
                 long processedCount = (long) pageNum * pageSize;
                 if (processedCount > totalCount) {
                     processedCount = totalCount;
                 }
                 ImportExecuteProcessProbe.report(process, processedCount);
 
-                // 内存清理（防OOM关键）
-                pageData.clear();
-                System.gc(); // 提示GC回收内存
-
             } catch (Exception e) {
                 log.error("处理第{}页失败: registerId={}", pageNum, context.getRegisterId(), e);
-                failCount += pageSize;
+                int remaining = (int) Math.max(0, totalCount - (long) (pageNum - 1) * pageSize);
+                failCount += Math.min(pageSize, remaining);
                 errorRecords.add(ErrorRecord.of(pageNum, e.getMessage()));
             }
         }
@@ -281,7 +289,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
      * 生成结果文件
      */
     private void generateResultFile(ImportContext context, ImportPagedResult pagedResult) {
-        if (pagedResult.getErrorRecords().isEmpty()) {
+        if (pagedResult.getErrorRecords() == null || pagedResult.getErrorRecords().isEmpty()) {
             return; // 没有错误记录，不生成结果文件
         }
 
@@ -310,13 +318,27 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
         result.setRegisterId(context.getRegisterId());
         result.setStartTime(new Date());
         result.setEndTime(new Date());
-        result.setSuccess(existedResult.isSuccess());
-        result.setTotalCount(existedResult.getTotalCount());
-        result.setSuccessCount(Math.toIntExact(existedResult.getSuccessCount()));
-        result.setFailCount(Math.toIntExact(existedResult.getFailCount()));
         result.setErrorRecords(new ArrayList<>());
         result.setComplete(true);
         result.setIdempotent(true);
+
+        if (existedResult == null) {
+            // executed flag exists but result missing (TTL race) — do not fabricate success
+            result.setSuccess(false);
+            result.setComplete(false);
+            result.setErrorMsg("幂等结果不存在，请重试");
+            result.setTotalCount(0);
+            result.setSuccessCount(0);
+            result.setFailCount(0);
+            return result;
+        }
+
+        result.setSuccess(existedResult.isSuccess());
+        result.setTotalCount(existedResult.getTotalCount());
+        result.setSuccessCount(Math.toIntExact(existedResult.getSuccessCount() == null
+            ? 0L : existedResult.getSuccessCount()));
+        result.setFailCount(Math.toIntExact(existedResult.getFailCount() == null
+            ? 0L : existedResult.getFailCount()));
 
         return result;
     }

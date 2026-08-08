@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import com.openquartz.easyfile.core.annotations.FileExportExecutor;
 import com.openquartz.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.exception.Asserts;
+import com.openquartz.easyfile.common.exception.CommonErrorCode;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
 
@@ -46,7 +48,9 @@ public final class FileExportExecutorSupport {
      * @return 下载器
      */
     public static BaseDownloadExecutor get(String downloadCode) {
-        return BASE_DOWNLOAD_EXECUTOR_MAP.get(downloadCode).getValue();
+        Pair<FileExportExecutor, BaseDownloadExecutor> pair = BASE_DOWNLOAD_EXECUTOR_MAP.get(downloadCode);
+        Asserts.notNull(pair, CommonErrorCode.DOWNLOAD_EXECUTOR_NOT_EXIST_ERROR, downloadCode);
+        return pair.getValue();
     }
 
     /**

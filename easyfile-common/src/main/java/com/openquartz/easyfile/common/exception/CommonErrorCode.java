@@ -19,6 +19,8 @@ public enum CommonErrorCode implements EasyFileErrorCode {
     PROPERTY_NOT_EXIST_ERROR("09", "Property Not Exist!"),
     REQUEST_PARAM_ERROR("10", "request param error"),
     CAN_NOT_GET_LOCK_ERROR("11", "Can not acquire lock!"),
+    DOWNLOAD_EXECUTOR_NOT_EXIST_ERROR("12", "download executor not exist:{0}", true),
+    IMPORT_EXECUTOR_NOT_EXIST_ERROR("13", "import executor not exist:{0}", true),
     ;
     private final String errorCode;
     private final String errorMsg;

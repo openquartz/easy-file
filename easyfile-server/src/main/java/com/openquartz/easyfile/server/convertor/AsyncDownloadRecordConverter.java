@@ -38,7 +38,12 @@ public final class AsyncDownloadRecordConverter {
         downloadResult.setInvalidTime(downloadRecord.getInvalidTime());
         downloadResult.setDownloadNum(downloadRecord.getDownloadNum());
         downloadResult.setErrorMsg(downloadRecord.getErrorMsg());
-        downloadResult.setDownloadCodeDesc(task.getTaskDesc());
+        if (task == null) {
+            downloadResult.setDownloadCodeDesc(
+                downloadRecord.getDownloadCode() == null ? StringUtils.EMPTY : downloadRecord.getDownloadCode());
+        } else {
+            downloadResult.setDownloadCodeDesc(task.getTaskDesc());
+        }
         downloadResult.setUpdateBy(downloadRecord.getUpdateBy());
         return downloadResult;
     }

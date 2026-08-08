@@ -1,6 +1,8 @@
 package com.openquartz.easyfile.core.executor.support;
 
 import com.openquartz.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.exception.Asserts;
+import com.openquartz.easyfile.common.exception.CommonErrorCode;
 import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.core.annotations.FileImportExecutor;
 import com.openquartz.easyfile.core.executor.BaseImportExecutor;
@@ -51,7 +53,9 @@ public final class FileImportExecutorSupport {
      * @return 导入执行器
      */
     public static BaseImportExecutor<?> get(String importCode) {
-        return BASE_IMPORT_EXECUTOR_MAP.get(importCode).getValue();
+        Pair<FileImportExecutor, BaseImportExecutor<?>> pair = BASE_IMPORT_EXECUTOR_MAP.get(importCode);
+        Asserts.notNull(pair, CommonErrorCode.IMPORT_EXECUTOR_NOT_EXIST_ERROR, importCode);
+        return pair.getValue();
     }
 
     /**

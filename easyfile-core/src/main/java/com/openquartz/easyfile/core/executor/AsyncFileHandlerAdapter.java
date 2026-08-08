@@ -18,6 +18,7 @@ import com.openquartz.easyfile.common.util.CollectionUtils;
 import com.openquartz.easyfile.common.util.CompressUtils;
 import com.openquartz.easyfile.common.util.DateFormatUtils;
 import com.openquartz.easyfile.common.util.ExceptionUtils;
+import com.openquartz.easyfile.common.util.FileNameUtils;
 import com.openquartz.easyfile.common.util.FileUtils;
 import com.openquartz.easyfile.common.util.SpringContextUtil;
 import com.openquartz.easyfile.common.util.StringUtils;
@@ -309,11 +310,7 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
      * @return 是否已经是zip压缩文件
      */
     private boolean isZipCompress(File file) {
-        if (file.getName().contains(Constants.FILE_SUFFIX_SEPARATOR)) {
-            return false;
-        }
-        String[] fileNameSplit = file.getName().split("\\.");
-        return fileNameSplit.length > 1 && FileSuffixEnum.ZIP.getCode().equals(fileNameSplit[fileNameSplit.length - 1]);
+        return FileNameUtils.isZipCompress(file.getName());
     }
 
     /**

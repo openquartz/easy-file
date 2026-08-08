@@ -49,8 +49,7 @@ public class ServerHttpAgent implements HttpAgent {
     @Override
     public <T>ResponseResult<T> httpPost(String path, Object body,Class<T> bodyClazz) {
         isHealthStatus();
-        return remoteClient.restApiPost(buildUrl(path), body, new TypeReference<ResponseResult<T>>() {
-        });
+        return remoteClient.restApiPost(buildUrl(path), body, TypeReference.responseResult(bodyClazz));
     }
 
     @Override
@@ -74,8 +73,7 @@ public class ServerHttpAgent implements HttpAgent {
     @Override
     public <T> ResponseResult<T> httpPostByDiscovery(String path, Object body, Class<T> bodyClazz) {
         isHealthStatus();
-        return remoteClient.restApiPost(buildUrl(path), body, new TypeReference<ResponseResult<T>>() {
-        });
+        return remoteClient.restApiPost(buildUrl(path), body, TypeReference.responseResult(bodyClazz));
     }
 
     @Override

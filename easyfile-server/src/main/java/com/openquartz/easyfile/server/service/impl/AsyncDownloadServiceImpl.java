@@ -6,14 +6,12 @@ import com.openquartz.easyfile.server.convertor.AsyncDownloadRecordConverter;
 import com.openquartz.easyfile.server.entity.AsyncDownloadTask;
 import com.openquartz.easyfile.server.service.executor.ExportLimitingExecutor;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.TimeZone;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,9 +19,6 @@ import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.expression.Expression;
-import org.springframework.expression.spel.standard.SpelExpressionParser;
-import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,9 +47,10 @@ import com.openquartz.easyfile.common.response.CancelUploadResult;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
+import com.openquartz.easyfile.common.util.CacheKeyMatcher;
 import com.openquartz.easyfile.common.util.CollectionUtils;
+import com.openquartz.easyfile.common.util.FileInvalidTimeUtils;
 import com.openquartz.easyfile.common.util.JSONUtil;
-import com.openquartz.easyfile.common.util.MapUtils;
 import com.openquartz.easyfile.common.util.PaginationUtils;
 import com.openquartz.easyfile.common.util.StringUtils;
 import com.openquartz.easyfile.server.config.BizConfig;
@@ -123,7 +119,6 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
     private AsyncDownloadRecord buildAsyncRecord(RegisterDownloadRequest request, AsyncDownloadTask downloadTask) {
         AsyncDownloadRecord downloadRecord = new AsyncDownloadRecord();
-        downloadRecord.setId(downloadTask.getId());
         downloadRecord.setDownloadTaskId(downloadTask.getId());
         downloadRecord.setAppId(request.getAppId());
         downloadRecord.setDownloadCode(request.getDownloadCode());
@@ -152,11 +147,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setCreateBy(request.getNotifier().getUserBy());
         downloadRecord.setUpdateBy(request.getNotifier().getUserBy());
 
-        BaseExecuteParam param = new BaseExecuteParam();
-        param.setDownloadCode(request.getDownloadCode());
-        param.setFileSuffix(request.getFileSuffix());
-        param.setOtherMap(request.getOtherMap());
-        downloadRecord.setExecuteParam(JSONUtil.toClassJson(param));
+        downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         return downloadRecord;
     }
 
@@ -196,9 +187,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             condition.setFileUrl(request.getFileUrl());
             condition.setFileName(request.getFileName());
             condition.setLastExecuteTime(new Date());
-            Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone(Constants.GMT8));
-            calendar.add(Calendar.HOUR, bizConfig.getFileInvalidTimeMap().getOrDefault(request.getSystem(), 100));
-            condition.setInvalidTime(calendar.getTime());
+            condition.setInvalidTime(FileInvalidTimeUtils.calculateInvalidTime(
+                    request.getSystem(), bizConfig.getFileInvalidTimeMap()));
             int changeNum = asyncDownloadRecordMapper.changeUploadInfo(condition);
             DbUtils.checkUpdatedOneRow(changeNum);
 
@@ -388,10 +378,9 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
             FileUrlTransformer transformer = (FileUrlTransformer) bean;
             FileUrlTransformer fileUrlTransformer = fileUrlTransformerMap
                     .putIfAbsent(transformer.fileSystem(), transformer);
-            Asserts.isTrue(transformer == fileUrlTransformer,
+            Asserts.isTrue(fileUrlTransformer == null || transformer == fileUrlTransformer,
                     ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
                     transformer.fileSystem());
-            fileUrlTransformerMap.put(fileUrlTransformer.fileSystem(), transformer);
         }
         return bean;
     }
@@ -433,44 +422,12 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
     private boolean matchCacheKey(List<String> cacheKeyList, Map<String, Object> exportParamMap,
                                   AsyncDownloadRecord downloadRecord) {
-        if (CollectionUtils.isEmpty(cacheKeyList)) {
-            return true;
-        }
-
         BaseExecuteParam executeParam = JSONUtil
                 .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
-        if (Objects.isNull(executeParam)) {
-            if (MapUtils.isEmpty(exportParamMap)) {
-                return true;
-            }
-        } else if (Objects.equals(executeParam.getOtherMap(), exportParamMap)) {
-            return true;
-        }
-        StandardEvaluationContext oriEvaluationContext = new StandardEvaluationContext();
-        oriEvaluationContext
-                .setVariables(Objects.nonNull(executeParam) ? executeParam.getOtherMap() : Collections.emptyMap());
-
-        StandardEvaluationContext tarEvaluationContext = new StandardEvaluationContext();
-        tarEvaluationContext.setVariables(exportParamMap);
-
-        boolean matchedKey = true;
-        try {
-            for (String cacheKey : cacheKeyList) {
-                SpelExpressionParser expressionParser = new SpelExpressionParser();
-                Expression expression = expressionParser.parseExpression(cacheKey);
-                Object oriValue = expression.getValue(oriEvaluationContext);
-                Object targetValue = expression.getValue(tarEvaluationContext);
-                if (!Objects.equals(oriValue, targetValue)) {
-                    matchedKey = false;
-                }
-            }
-        } catch (Exception ex) {
-            log.error(
-                    "[AsyncDownloadServiceImpl#matchCacheKey] parse matchKey error! cacheKey:{},exportParam:{},downloadRecord:{}",
-                    cacheKeyList, exportParamMap, downloadRecord, ex);
-            matchedKey = false;
-        }
-        return matchedKey;
+        return CacheKeyMatcher.match(
+                cacheKeyList,
+                executeParam == null ? Collections.emptyMap() : executeParam.getOtherMap(),
+                exportParamMap);
     }
 
     private ExportResult convertRecord(AsyncDownloadRecord downloadRecord, Long registerId) {
@@ -494,7 +451,8 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         uploadInfoChangeCondition.setFileSystem(exportResult.getFileSystem());
         uploadInfoChangeCondition.setErrorMsg(StringUtils.EMPTY);
         uploadInfoChangeCondition.setLastExecuteTime(new Date());
-        uploadInfoChangeCondition.setInvalidTime(new Date());
+        uploadInfoChangeCondition.setInvalidTime(FileInvalidTimeUtils.calculateInvalidTime(
+                exportResult.getFileSystem(), bizConfig.getFileInvalidTimeMap()));
         return uploadInfoChangeCondition;
     }
 
@@ -548,6 +506,6 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
 
     @Override
     public String getLocale(Long registerId) {
-        return asyncDownloadTaskMapper.getLocale(registerId);
+        return asyncDownloadRecordMapper.getLocale(registerId);
     }
 }

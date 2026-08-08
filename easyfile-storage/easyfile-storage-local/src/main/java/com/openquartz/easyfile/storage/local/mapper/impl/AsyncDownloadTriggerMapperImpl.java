@@ -48,7 +48,7 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String SELECT_SQL =
         "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from {0}";
     private static final String SELECT_BY_ID_SQL =
-        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger where register_id = ?";
+        "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from {0} where register_id = ?";
     private static final String DELETE_BY_ID_SQL = "delete from {0} where id = ?";
 
     @Override

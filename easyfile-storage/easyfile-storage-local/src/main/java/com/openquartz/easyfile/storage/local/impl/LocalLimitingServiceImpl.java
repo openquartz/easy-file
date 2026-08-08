@@ -62,10 +62,9 @@ public class LocalLimitingServiceImpl implements LimitingService, BeanPostProces
         if (Objects.nonNull(bean) && bean instanceof ExportLimitingExecutor) {
             ExportLimitingExecutor executor = (ExportLimitingExecutor) bean;
             ExportLimitingExecutor existExecutor = limitingExecutorMap.putIfAbsent(executor.strategy(), executor);
-            Asserts.isTrue(executor == existExecutor,
+            Asserts.isTrue(existExecutor == null || executor == existExecutor,
                 ExpandExecutorErrorCode.LIMITING_STRATEGY_EXECUTOR_EXIST_ERROR,
                 executor.strategy());
-            limitingExecutorMap.put(executor.strategy(), executor);
         }
         return bean;
     }
