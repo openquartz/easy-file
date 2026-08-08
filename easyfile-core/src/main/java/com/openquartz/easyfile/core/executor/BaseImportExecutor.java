@@ -51,7 +51,11 @@ public interface BaseImportExecutor<T> {
     }
 
     /**
-     * 统一导入入口（默认同步直跑 process；生产由 AOP 短路）
+     * 统一导入入口。
+     * <p>
+     * 生产路径由 {@code FileImportInterceptor} AOP 短路：异步走限流→注册→{@code BaseAsyncImportHandler.execute}，
+     * 同步按配置 {@code syncPersist} 注册后调用 {@link #process(ImportContext)}。
+     * 本默认实现仅作无 AOP 时的同步回落（直跑 process）。
      * <p>
      * key: 是否异步；value: 注册ID
      *

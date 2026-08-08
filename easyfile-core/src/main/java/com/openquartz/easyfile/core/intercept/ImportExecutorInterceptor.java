@@ -1,0 +1,46 @@
+package com.openquartz.easyfile.core.intercept;
+
+import com.openquartz.easyfile.common.response.ImportResult;
+import com.openquartz.easyfile.core.context.ImportRequestContext;
+import com.openquartz.easyfile.core.executor.BaseImportExecutor;
+
+/**
+ * 导入处理器拦截器
+ *
+ * @author svnee
+ */
+public interface ImportExecutorInterceptor {
+
+    /**
+     * 拦截顺序
+     *
+     * @return 顺序
+     */
+    default int order() {
+        return Integer.MAX_VALUE;
+    }
+
+    /**
+     * 执行之前处理
+     * 执行顺序: 按照{@link #order()} 从小到大 顺序执行
+     *
+     * @param executor 执行器
+     * @param context 上下文
+     * @param registerId 注册导入任务ID
+     * @param interceptorContext 拦截上下文. 用于拦截时之前前后的上下文传递。
+     */
+    void beforeExecute(BaseImportExecutor<?> executor, ImportRequestContext context, Long registerId,
+        InterceptorContext interceptorContext);
+
+    /**
+     * 执行之后处理
+     * 执行顺序: 按照{@link #order()} 从大到小 倒序执行
+     *
+     * @param executor 执行器
+     * @param context 上下文
+     * @param result 导入结果
+     * @param interceptorContext 拦截上下文.用于拦截时之前前后的上下文传递。
+     */
+    void afterExecute(BaseImportExecutor<?> executor, ImportRequestContext context, ImportResult result,
+        InterceptorContext interceptorContext);
+}
