@@ -1,5 +1,9 @@
 # Big Data Import Implementation Plan
 
+> **Superseded for remaining work:** use
+> [`2026-08-08-async-import-architecture.md`](./2026-08-08-async-import-architecture.md).
+> Completed Tasks 1–3 below remain historical.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Build the first executable import architecture slice that integrates with EasyFile's existing extension model, starting with executor discovery and auto-registration.
