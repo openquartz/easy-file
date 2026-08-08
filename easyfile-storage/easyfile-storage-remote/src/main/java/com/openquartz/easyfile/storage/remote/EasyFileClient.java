@@ -45,12 +45,20 @@ public interface EasyFileClient {
     ResponseResult<Long> register(RegisterDownloadRequest request);
 
     /**
-     * 自动注册任务
+     * 自动注册下载任务
      *
      * @param request 注册请求
      * @return 注册结果
      */
     ResponseResult<?> autoRegisterTask(AutoTaskRegisterRequest request);
+
+    /**
+     * 自动注册导入任务（importCodeMap → ef_async_import_task）
+     *
+     * @param request 注册请求
+     * @return 注册结果
+     */
+    ResponseResult<?> autoRegisterImportTask(AutoTaskRegisterRequest request);
 
     /**
      * 下载任务回传

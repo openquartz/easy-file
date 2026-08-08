@@ -62,6 +62,11 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     }
 
     @Override
+    public ResponseResult<?> autoRegisterImportTask(AutoTaskRegisterRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.IMPORT_AUTO_REGISTER_URL, request);
+    }
+
+    @Override
     public ResponseResult<?> uploadCallback(UploadCallbackRequest request) {
         return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_CALLBACK_URL, request);
     }

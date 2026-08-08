@@ -12,9 +12,11 @@ import static org.mockito.Mockito.when;
 
 import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
+import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.request.ImportTriggerRequest;
 import com.openquartz.easyfile.common.response.ImportResult;
+import java.util.Collections;
 import com.openquartz.easyfile.server.service.NotifyService;
 import com.openquartz.easyfile.storage.imports.ImportStorageService;
 import com.openquartz.easyfile.storage.imports.ImportTriggerService;
@@ -121,5 +123,17 @@ public class ImportServiceImplTest {
         when(importStorageService.retry(1L, "op")).thenReturn(true);
         assertTrue(importService.retryImport(1L, "op"));
         verify(importStorageService).retry(1L, "op");
+    }
+
+    @Test
+    public void autoRegisterTask_delegatesToStorage() {
+        AutoTaskRegisterRequest request = new AutoTaskRegisterRequest()
+            .setAppId("app")
+            .setUnifiedAppId("u-app")
+            .setImportCodeMap(Collections.singletonMap("import-code", "desc"));
+
+        importService.autoRegisterTask(request);
+
+        verify(importStorageService).autoRegisterTask(request);
     }
 }

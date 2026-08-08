@@ -63,7 +63,7 @@ public class RemoteImportStorageServiceImpl implements ImportStorageService {
 
     @Override
     public void autoRegisterTask(AutoTaskRegisterRequest request) {
-        easyFileClient.autoRegisterTask(request);
+        easyFileClient.autoRegisterImportTask(request);
     }
 
     @Override

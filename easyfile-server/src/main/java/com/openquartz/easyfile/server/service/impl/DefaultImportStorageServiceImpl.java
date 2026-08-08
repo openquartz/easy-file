@@ -140,9 +140,12 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
                     Constants.DATA_INIT_VERSION,
                     now, now, Constants.SYSTEM_USER, Constants.SYSTEM_USER, 0L);
             } else {
-                jdbcTemplate.update(
-                    "UPDATE ef_async_import_task SET task_desc = ?, update_time = ? WHERE id = ?",
-                    entry.getValue(), now, taskId);
+                String existingDesc = findTaskDesc(taskId);
+                if (!entry.getValue().equals(existingDesc)) {
+                    jdbcTemplate.update(
+                        "UPDATE ef_async_import_task SET task_desc = ?, update_time = ? WHERE id = ?",
+                        entry.getValue(), now, taskId);
+                }
             }
         }
     }
@@ -381,6 +384,16 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
             return jdbcTemplate.queryForObject(
                 "SELECT id FROM ef_async_import_task WHERE app_id = ? AND task_code = ? AND is_deleted = 0",
                 Long.class, appId, importCode);
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
+    }
+
+    private String findTaskDesc(Long taskId) {
+        try {
+            return jdbcTemplate.queryForObject(
+                "SELECT task_desc FROM ef_async_import_task WHERE id = ?",
+                String.class, taskId);
         } catch (EmptyResultDataAccessException ex) {
             return null;
         }

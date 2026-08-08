@@ -2,6 +2,7 @@ package com.openquartz.easyfile.server.controller;
 
 import com.openquartz.easyfile.common.bean.ImportRequestInfo;
 import com.openquartz.easyfile.common.bean.ResponseResult;
+import com.openquartz.easyfile.common.request.AutoTaskRegisterRequest;
 import com.openquartz.easyfile.common.request.CancelImportRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ImportCompleteRequest;
@@ -43,6 +44,12 @@ public class ImportController {
     @PostMapping("/register")
     public ResponseResult<Long> register(@RequestBody @Valid ImportRegisterRequest request) {
         return ResponseResult.ok(importService.registerImport(request));
+    }
+
+    @PostMapping("/autoRegister")
+    public ResponseResult<Void> autoRegister(@RequestBody @Valid AutoTaskRegisterRequest request) {
+        importService.autoRegisterTask(request);
+        return ResponseResult.ok();
     }
 
     @GetMapping("/status/{registerId}")

@@ -40,6 +40,8 @@ public final class RemoteUrlConstants {
 
     public static final String IMPORT_REGISTER_URL = "/easyfile/import/register";
 
+    public static final String IMPORT_AUTO_REGISTER_URL = "/easyfile/import/autoRegister";
+
     public static final String IMPORT_ENABLE_RUNNING_URL = "/easyfile/import/enableRunning";
 
     public static final String IMPORT_GET_REQUEST_INFO_URL = "/easyfile/import/getRequestInfo";
