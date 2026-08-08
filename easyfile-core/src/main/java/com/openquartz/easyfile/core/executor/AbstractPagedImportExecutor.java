@@ -3,6 +3,7 @@ package com.openquartz.easyfile.core.executor;
 import com.openquartz.easyfile.common.util.FileUtils;
 import com.openquartz.easyfile.common.util.ImportTempFiles;
 import com.openquartz.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.lock.LockBizType;
 import com.openquartz.easyfile.common.lock.LockSupport;
 import com.openquartz.easyfile.common.response.ImportResult;
@@ -152,7 +153,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
                     : (long) result.getSuccessCount() + result.getFailCount();
                 importStorageService.complete(
                     context.getRegisterId(),
-                    result.isSuccess(),
+                    result.isSuccess() ? ImportStatusEnum.SUCCESS : ImportStatusEnum.FAIL,
                     result.getTotalCount(),
                     (long) result.getSuccessCount(),
                     (long) result.getFailCount(),

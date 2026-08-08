@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -18,6 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.openquartz.easyfile.common.bean.Pair;
+import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.lock.Consumer;
 import com.openquartz.easyfile.common.lock.LockSupport;
 import com.openquartz.easyfile.common.response.ImportResult;
@@ -81,7 +81,7 @@ public class AbstractPagedImportExecutorValidationTest {
         doNothing().when(importStorageService).refreshProgress(anyLong(), nullable(Integer.class), anyLong());
         doNothing().when(importStorageService).updateTotalCount(anyLong(), anyLong());
         doNothing().when(importStorageService).updateFileHash(anyLong(), anyString());
-        doNothing().when(importStorageService).complete(anyLong(), anyBoolean(), anyLong(),
+        doNothing().when(importStorageService).complete(anyLong(), any(ImportStatusEnum.class), anyLong(),
             anyLong(), anyLong(), anyLong(), nullable(String.class));
         doNothing().when(importStorageService).updateResultFileUrl(anyLong(), anyString());
         doReturn("http://result").when(importResultFileGenerator)

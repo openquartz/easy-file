@@ -1,7 +1,12 @@
 package com.openquartz.easyfile.server.service.impl;
 
+import com.openquartz.easyfile.common.bean.ImportRequestInfo;
+import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
+import com.openquartz.easyfile.common.request.CancelImportRequest;
+import com.openquartz.easyfile.common.request.ImportRegisterRequest;
 import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
 import com.openquartz.easyfile.common.response.AppTree;
+import com.openquartz.easyfile.common.response.CancelImportResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.common.util.StringUtils;
@@ -133,6 +138,32 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
     }
 
     @Override
+    public boolean enableRunning(Long registerId) {
+        throw new UnsupportedOperationException("enableRunning not implemented yet");
+    }
+
+    @Override
+    public Long register(ImportRegisterRequest request) {
+        throw new UnsupportedOperationException("register not implemented yet");
+    }
+
+    @Override
+    public ImportRequestInfo getRequestInfoByRegisterId(Long registerId) {
+        throw new UnsupportedOperationException("getRequestInfoByRegisterId not implemented yet");
+    }
+
+    @Override
+    public void refreshExecuteProgress(Long registerId, Integer executeProcess, Long resumePosition,
+                                       ImportStatusEnum nextStatus) {
+        throw new UnsupportedOperationException("refreshExecuteProgress not implemented yet");
+    }
+
+    @Override
+    public void resetExecuteProcess(Long registerId) {
+        throw new UnsupportedOperationException("resetExecuteProcess not implemented yet");
+    }
+
+    @Override
     public void markExecuting(Long registerId) {
         jdbcTemplate.update(
             "UPDATE ef_async_import_record "
@@ -172,16 +203,20 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
     }
 
     @Override
-    public void complete(Long registerId, boolean success, Long totalCount, Long successCount,
+    public void complete(Long registerId, ImportStatusEnum status, Long totalCount, Long successCount,
                          Long failCount, Long resumePosition, String errorMsg) {
-        String status = success ? STATUS_COMPLETED : STATUS_FAILED;
+        boolean success = status == ImportStatusEnum.SUCCESS || status == ImportStatusEnum.PARTIAL_SUCCESS;
+        String statusCode = success ? STATUS_COMPLETED : STATUS_FAILED;
+        if (status == ImportStatusEnum.CANCEL) {
+            statusCode = STATUS_CANCELLED;
+        }
         int process = success ? 100 : 0;
         jdbcTemplate.update(
             "UPDATE ef_async_import_record "
                 + "SET import_status = ?, execute_process = ?, total_count = ?, success_count = ?, fail_count = ?, "
                 + "resume_position = ?, error_msg = ?, update_time = ? "
                 + "WHERE id = ?",
-            status,
+            statusCode,
             process,
             totalCount,
             successCount,
@@ -190,6 +225,11 @@ public class DefaultImportStorageServiceImpl implements ImportStorageService {
             errorMsg,
             new Date(),
             registerId);
+    }
+
+    @Override
+    public CancelImportResult cancelImport(CancelImportRequest request) {
+        throw new UnsupportedOperationException("cancelImport not implemented yet");
     }
 
     private static final class ImportResultRowMapper implements RowMapper<ImportResult> {
