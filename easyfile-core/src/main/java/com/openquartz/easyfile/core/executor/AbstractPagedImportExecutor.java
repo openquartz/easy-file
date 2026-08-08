@@ -9,8 +9,9 @@ import com.openquartz.easyfile.common.lock.LockSupport;
 import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.core.context.*;
 import com.openquartz.easyfile.core.entity.*;
-import com.openquartz.easyfile.core.parser.ExcelImportParser;
 import com.openquartz.easyfile.core.parser.ImportParser;
+import com.openquartz.easyfile.core.parser.ImportParserFactory;
+import com.openquartz.easyfile.core.parser.ImportRow;
 import com.openquartz.easyfile.core.executor.process.ImportExecuteProcessReporterImpl;
 import com.openquartz.easyfile.core.service.IdempotentImportManager;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
@@ -194,7 +195,7 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
      * 创建解析器
      */
     protected ImportParser<T> createParser(File file, String fileType) {
-        return new ExcelImportParser<>(getTargetClass(), file, fileType);
+        return ImportParserFactory.create(fileType, file, getTargetClass());
     }
 
     /**
@@ -221,7 +222,19 @@ public abstract class AbstractPagedImportExecutor<T> implements BaseImportExecut
 
         for (int pageNum = startPage; pageNum <= totalPages; pageNum++) {
             try {
-                List<T> pageData = parser.readPage(pageNum, pageSize);
+                long startRow = (pageNum - 1L) * pageSize + 1L;
+                List<ImportRow<T>> importRows = parser.readPage(startRow, pageSize);
+                List<T> pageData = new ArrayList<>(importRows.size());
+                for (ImportRow<T> importRow : importRows) {
+                    if (importRow.getParseError() != null || importRow.getData() == null) {
+                        failCount++;
+                        errorRecords.add(ErrorRecord.of(
+                            (int) importRow.getRowNumber(),
+                            importRow.getParseError() != null ? importRow.getParseError() : "行解析失败"));
+                        continue;
+                    }
+                    pageData.add(importRow.getData());
+                }
 
                 if (pageData.isEmpty()) {
                     continue;

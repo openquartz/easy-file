@@ -29,6 +29,7 @@ import com.openquartz.easyfile.core.entity.ImportProcessResult;
 import com.openquartz.easyfile.core.entity.ProcessResult;
 import com.openquartz.easyfile.core.entity.ValidationResult;
 import com.openquartz.easyfile.core.parser.ImportParser;
+import com.openquartz.easyfile.core.parser.ImportRow;
 import com.openquartz.easyfile.core.service.IdempotentImportManager;
 import com.openquartz.easyfile.core.ImportResultFileGenerator;
 import com.openquartz.easyfile.storage.file.DownloadService;
@@ -110,7 +111,8 @@ public class AbstractPagedImportExecutorValidationTest {
         File tempDir = temporaryFolder.newFolder("import-fail");
         ImportParser<String> parser = mock(ImportParser.class);
         when(parser.getTotalCount()).thenReturn(1L);
-        when(parser.readPage(1, 1000)).thenReturn(new java.util.ArrayList<>(Collections.singletonList("bad-row")));
+        when(parser.readPage(1L, 1000)).thenReturn(new java.util.ArrayList<>(
+            Collections.singletonList(ImportRow.<String>builder().rowNumber(1L).data("bad-row").build())));
         doNothing().when(parser).close();
         executor.setParser(parser);
         executor.setTempOverride(tempDir.getAbsolutePath());
@@ -138,7 +140,8 @@ public class AbstractPagedImportExecutorValidationTest {
         File tempDir = temporaryFolder.newFolder("import-ok");
         ImportParser<String> parser = mock(ImportParser.class);
         when(parser.getTotalCount()).thenReturn(1L);
-        when(parser.readPage(1, 1000)).thenReturn(new java.util.ArrayList<>(Collections.singletonList("ok-row")));
+        when(parser.readPage(1L, 1000)).thenReturn(new java.util.ArrayList<>(
+            Collections.singletonList(ImportRow.<String>builder().rowNumber(1L).data("ok-row").build())));
         doNothing().when(parser).close();
         executor.setParser(parser);
         executor.setTempOverride(tempDir.getAbsolutePath());

@@ -29,12 +29,12 @@ public class ExcelImportParserTest {
     public void shouldConvertNumericCellToIntegerAndLong() throws Exception {
         File excel = createSampleExcel();
         ExcelImportParser<StudentRow> parser = new ExcelImportParser<>(StudentRow.class, excel, "xlsx");
-        List<StudentRow> page = parser.readPage(1, 10);
+        List<ImportRow<StudentRow>> page = parser.readPage(1, 10);
         assertEquals(2, page.size());
-        assertEquals(Integer.valueOf(20), page.get(0).getAge());
-        assertEquals(Long.valueOf(1001L), page.get(0).getId());
-        assertEquals("Alice", page.get(0).getName());
-        assertEquals(0, new BigDecimal("99.5").compareTo(page.get(1).getScore()));
+        assertEquals(Integer.valueOf(20), page.get(0).getData().getAge());
+        assertEquals(Long.valueOf(1001L), page.get(0).getData().getId());
+        assertEquals("Alice", page.get(0).getData().getName());
+        assertEquals(0, new BigDecimal("99.5").compareTo(page.get(1).getData().getScore()));
         parser.close();
     }
 
@@ -44,12 +44,12 @@ public class ExcelImportParserTest {
         ExcelImportParser<StudentRow> parser = new ExcelImportParser<>(StudentRow.class, excel, "xlsx");
         long total = parser.getTotalCount();
         assertEquals(2L, total);
-        List<StudentRow> page1 = parser.readPage(1, 1);
-        List<StudentRow> page2 = parser.readPage(2, 1);
+        List<ImportRow<StudentRow>> page1 = parser.readPage(1, 1);
+        List<ImportRow<StudentRow>> page2 = parser.readPage(2, 1);
         assertEquals(1, page1.size());
         assertEquals(1, page2.size());
-        assertEquals("Alice", page1.get(0).getName());
-        assertEquals("Bob", page2.get(0).getName());
+        assertEquals("Alice", page1.get(0).getData().getName());
+        assertEquals("Bob", page2.get(0).getData().getName());
         parser.close();
     }
 

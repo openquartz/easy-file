@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.core.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.List;
 
@@ -9,10 +10,10 @@ import java.util.List;
  *
  * @author svnee
  */
-public interface ImportParser<T> {
+public interface ImportParser<T> extends Closeable {
 
     /**
-     * 获取总记录数
+     * 获取总记录数（不含表头）
      *
      * @return 总记录数
      * @throws IOException 如果读取失败
@@ -20,19 +21,19 @@ public interface ImportParser<T> {
     long getTotalCount() throws IOException;
 
     /**
-     * 读取分页数据
+     * 从指定数据行开始读取一页
      *
-     * @param pageNum 页码 (从1开始)
+     * @param startRow 起始数据行号（从 1 开始，不含表头）
      * @param pageSize 每页大小
-     * @return 当前页的数据列表
+     * @return 当前页的 {@link ImportRow} 列表
      * @throws IOException 如果读取失败
      */
-    List<T> readPage(int pageNum, int pageSize) throws IOException;
+    List<ImportRow<T>> readPage(long startRow, int pageSize) throws IOException;
 
     /**
      * 获取文件格式
      *
-     * @return 文件格式 (xlsx, xls, csv, json等)
+     * @return 文件格式 (xlsx, xls, csv 等)
      */
     String getFileType();
 
@@ -41,5 +42,6 @@ public interface ImportParser<T> {
      *
      * @throws IOException 如果关闭失败
      */
+    @Override
     void close() throws IOException;
 }
