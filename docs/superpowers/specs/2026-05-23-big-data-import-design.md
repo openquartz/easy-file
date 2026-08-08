@@ -1,5 +1,9 @@
 # EasyFile Big Data Import Architecture Design
 
+> **Superseded for implementation:** orchestration scope and delivery decisions are revised in
+> [`2026-08-08-async-import-architecture-design.md`](./2026-08-08-async-import-architecture-design.md).
+> Keep this document for historical context and DDL/engine notes still referenced there.
+
 ## Background
 
 EasyFile already has a mature async export architecture:
