@@ -1,7 +1,7 @@
 package com.openquartz.easyfile.core.intercept;
 
-import com.openquartz.easyfile.common.response.ImportResult;
 import com.openquartz.easyfile.core.context.ImportRequestContext;
+import com.openquartz.easyfile.core.entity.ImportProcessResult;
 import com.openquartz.easyfile.core.executor.BaseImportExecutor;
 
 /**
@@ -38,9 +38,9 @@ public interface ImportExecutorInterceptor {
      *
      * @param executor 执行器
      * @param context 上下文
-     * @param result 导入结果
+     * @param result 导入处理结果
      * @param interceptorContext 拦截上下文.用于拦截时之前前后的上下文传递。
      */
-    void afterExecute(BaseImportExecutor<?> executor, ImportRequestContext context, ImportResult result,
+    void afterExecute(BaseImportExecutor<?> executor, ImportRequestContext context, ImportProcessResult result,
         InterceptorContext interceptorContext);
 }

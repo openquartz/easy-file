@@ -118,7 +118,8 @@ public class FileImportInterceptor implements MethodInterceptor {
         FileImportExecutor importExecutor) {
         Long registerId = requestContext.getRegisterId();
         if (importProperties.isSyncPersist()) {
-            registerId = importStorageService.register(buildRegisterRequest(importExecutor, requestContext, false));
+            registerId = importStorageService.register(
+                buildRegisterRequest(importExecutor, executor, requestContext, false));
             requestContext.setRegisterId(registerId);
         }
         ImportContext importContext = buildImportContext(requestContext, importExecutor, registerId);
@@ -132,7 +133,7 @@ public class FileImportInterceptor implements MethodInterceptor {
         ImportLimitingRequest limitingRequest = buildLimitingRequest(importExecutor, requestContext);
         limitingService.limiting(limitingRequest);
 
-        ImportRegisterRequest registerRequest = buildRegisterRequest(importExecutor, requestContext, true);
+        ImportRegisterRequest registerRequest = buildRegisterRequest(importExecutor, executor, requestContext, true);
         TransactionTemplate template = context.getBean(TransactionTemplate.class);
         Long importRegisterId = template.execute(action -> {
             Long registerId = importStorageService.register(registerRequest);
@@ -178,14 +179,14 @@ public class FileImportInterceptor implements MethodInterceptor {
         return limitingRequest;
     }
 
-    private ImportRegisterRequest buildRegisterRequest(FileImportExecutor executor,
-        ImportRequestContext requestContext, boolean enableAsync) {
+    private ImportRegisterRequest buildRegisterRequest(FileImportExecutor importExecutor,
+        BaseImportExecutor<?> executor, ImportRequestContext requestContext, boolean enableAsync) {
         String locale = StringUtils.isNotBlank(requestContext.getLocale())
             ? requestContext.getLocale()
             : LocaleContext.currentLocaleLanguage();
         return ImportRegisterRequest.builder()
             .appId(downloadProperties.getAppId())
-            .importCode(executor.value())
+            .importCode(importExecutor.value())
             .ossUrl(requestContext.getSourceFileUrl())
             .fileName(requestContext.getFileName())
             .fileType(requestContext.getFileType())
@@ -193,12 +194,12 @@ public class FileImportInterceptor implements MethodInterceptor {
             .executeParam(requestContext.getExecuteParam())
             .createBy(requestContext.getOperator())
             .enableAsync(enableAsync)
-            .supportResumable(true)
-            .pageSize(null)
-            .maxRetry(executor.maxServerRetry())
+            .supportResumable(executor.supportResumable())
+            .pageSize(executor.getPageSize())
+            .maxRetry(importExecutor.maxServerRetry())
             .notifyEmail(requestContext.getNotifyEmail())
             .locale(locale)
-            .enableNotify(executor.enableNotify())
+            .enableNotify(importExecutor.enableNotify())
             .build();
     }
 

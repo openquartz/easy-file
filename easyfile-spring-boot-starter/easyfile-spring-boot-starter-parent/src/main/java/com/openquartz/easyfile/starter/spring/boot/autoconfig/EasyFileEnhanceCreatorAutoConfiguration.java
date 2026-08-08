@@ -19,12 +19,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.Advisor;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ConfigurationCondition;
 import org.springframework.context.annotation.Role;
 
 /**
@@ -35,12 +38,15 @@ import org.springframework.context.annotation.Role;
 @Slf4j
 @Configuration
 @EnableConfigurationProperties({EasyFileDownloadProperties.class, EasyFileImportProperties.class})
-@ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
+@Conditional(EasyFileEnhanceCreatorAutoConfiguration.DownloadOrImportEnabledCondition.class)
 @AutoConfigureAfter(EasyFileCreatorAutoConfiguration.class)
 public class EasyFileEnhanceCreatorAutoConfiguration {
 
     @Bean
     @Role(value = BeanDefinition.ROLE_INFRASTRUCTURE)
+    @ConditionalOnBean({DownloadStorageService.class, BaseAsyncFileHandler.class, LimitingService.class})
+    @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true",
+        matchIfMissing = true)
     public Advisor fileExportExecutorAnnotationAdvisor(EasyFileDownloadProperties easyFileDownloadProperties,
                                                        DownloadStorageService downloadStorageService,
                                                        LimitingService limitingService,
@@ -56,7 +62,7 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
 
     @Bean
     @Role(value = BeanDefinition.ROLE_INFRASTRUCTURE)
-    @ConditionalOnBean({ImportStorageService.class, BaseAsyncImportHandler.class})
+    @ConditionalOnBean({ImportStorageService.class, BaseAsyncImportHandler.class, LimitingService.class})
     @ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "enabled", havingValue = "true",
         matchIfMissing = true)
     public Advisor fileImportExecutorAnnotationAdvisor(EasyFileImportProperties easyFileImportProperties,
@@ -75,6 +81,9 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
     }
 
     @Bean
+    @ConditionalOnBean(DownloadStorageService.class)
+    @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true",
+        matchIfMissing = true)
     public DownloadExecutorInterceptor i18nDownloadExecutorInterceptor(DownloadStorageService downloadStorageService) {
         return new I18nDownloadExecutorInterceptor(downloadStorageService);
     }
@@ -94,6 +103,26 @@ public class EasyFileEnhanceCreatorAutoConfiguration {
         ImportStorageService importStorageService
     ) {
         return new AutoRegisteredImportTaskListener(easyFileDownloadProperties, importStorageService);
+    }
+
+    /**
+     * Enable enhance auto-config when download or import is enabled.
+     */
+    static class DownloadOrImportEnabledCondition extends AnyNestedCondition {
+
+        DownloadOrImportEnabledCondition() {
+            super(ConfigurationCondition.ConfigurationPhase.PARSE_CONFIGURATION);
+        }
+
+        @ConditionalOnProperty(prefix = EasyFileDownloadProperties.PREFIX, name = "enabled", havingValue = "true",
+            matchIfMissing = true)
+        static class DownloadEnabled {
+        }
+
+        @ConditionalOnProperty(prefix = EasyFileImportProperties.PREFIX, name = "enabled", havingValue = "true",
+            matchIfMissing = true)
+        static class ImportEnabled {
+        }
     }
 
 }
