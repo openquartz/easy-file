@@ -2,6 +2,7 @@ package com.openquartz.easyfile.storage.local.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
@@ -17,7 +18,10 @@ import com.openquartz.easyfile.common.dictionary.ImportStatusEnum;
 import com.openquartz.easyfile.common.exception.EasyFileException;
 import com.openquartz.easyfile.common.request.CancelImportRequest;
 import com.openquartz.easyfile.common.request.ImportRegisterRequest;
+import com.openquartz.easyfile.common.request.ImportResultQueryRequest;
 import com.openquartz.easyfile.common.response.CancelImportResult;
+import com.openquartz.easyfile.common.response.ImportResult;
+import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.storage.local.entity.AsyncImportRecord;
 import com.openquartz.easyfile.storage.local.mapper.AsyncImportRecordMapper;
 import com.openquartz.easyfile.storage.local.mapper.AsyncImportTaskMapper;
@@ -134,5 +138,33 @@ public class LocalImportStorageServiceImplTest {
         assertEquals("已经执行开始执行无法撤销", rejected.getCancelMsg());
         verify(asyncImportRecordMapper, never()).refreshImportStatus(
             eq(registerId), eq(ImportStatusEnum.NONE), eq(ImportStatusEnum.CANCEL), anyString());
+    }
+
+    @Test
+    public void listImportResult_blankAppIdReturnsEmptyWithoutQuery() {
+        ImportResultQueryRequest blankAppId = ImportResultQueryRequest.builder()
+            .appId("")
+            .build();
+        blankAppId.setPageNum(2);
+        blankAppId.setPageSize(10);
+
+        Pagination<ImportResult> blankResult = service.listImportResult(blankAppId);
+        assertNotNull(blankResult);
+        assertEquals(Long.valueOf(0L), blankResult.getTotalRecords());
+        assertEquals(Long.valueOf(10L), blankResult.getPageSize());
+        assertTrue(blankResult.getModelList().isEmpty());
+        verify(asyncImportRecordMapper, never()).countByCondition(any());
+        verify(asyncImportRecordMapper, never()).selectByCondition(any());
+
+        ImportResultQueryRequest nullAppId = ImportResultQueryRequest.builder()
+            .appId(null)
+            .build();
+        clearInvocations(asyncImportRecordMapper);
+
+        Pagination<ImportResult> nullResult = service.listImportResult(nullAppId);
+        assertEquals(Long.valueOf(0L), nullResult.getTotalRecords());
+        assertTrue(nullResult.getModelList().isEmpty());
+        verify(asyncImportRecordMapper, never()).countByCondition(any());
+        verify(asyncImportRecordMapper, never()).selectByCondition(any());
     }
 }

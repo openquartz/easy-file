@@ -263,10 +263,13 @@ public class LocalImportStorageServiceImpl implements ImportStorageService {
         Integer pageNum = request.getPageNum() == null ? 1 : request.getPageNum();
         Integer pageSize = request.getPageSize() == null ? 20 : request.getPageSize();
 
-        ImportRecordQueryCondition condition = new ImportRecordQueryCondition();
-        if (StringUtils.isNotBlank(request.getAppId())) {
-            condition.setLimitedAppIdList(Collections.singletonList(request.getAppId()));
+        // Require app scope; blank/null appId must not list all apps' rows (match download safe scoping).
+        if (StringUtils.isBlank(request.getAppId())) {
+            return PaginationUtils.empty(pageNum, pageSize);
         }
+
+        ImportRecordQueryCondition condition = new ImportRecordQueryCondition();
+        condition.setLimitedAppIdList(Collections.singletonList(request.getAppId()));
         condition.setImportCode(request.getImportCode());
         condition.setCreateBy(request.getCreateBy());
         condition.setBusinessUniqueKey(request.getBusinessUniqueKey());
