@@ -1,8 +1,10 @@
 package com.openquartz.easyfile.core.executor;
 
+import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.core.context.ImportContext;
 import com.openquartz.easyfile.core.context.ImportDataContext;
 import com.openquartz.easyfile.core.context.ImportProcessContext;
+import com.openquartz.easyfile.core.context.ImportRequestContext;
 import com.openquartz.easyfile.core.entity.ImportProcessResult;
 import com.openquartz.easyfile.core.entity.ProcessResult;
 import com.openquartz.easyfile.core.entity.ValidationResult;
@@ -46,6 +48,38 @@ public interface BaseImportExecutor<T> {
      */
     default boolean supportResumable() {
         return true;
+    }
+
+    /**
+     * 统一导入入口（默认同步直跑 process；生产由 AOP 短路）
+     * <p>
+     * key: 是否异步；value: 注册ID
+     *
+     * @param context 请求上下文
+     * @return 异步标记与注册ID
+     */
+    default Pair<Boolean, Long> importResult(ImportRequestContext context) {
+        ImportContext importContext = ImportContext.builder()
+            .ossUrl(context.getSourceFileUrl())
+            .fileName(context.getFileName())
+            .fileType(context.getFileType())
+            .businessUniqueKey(context.getBusinessUniqueKey())
+            .executeParam(context.getExecuteParam())
+            .registerId(context.getRegisterId())
+            .importCode(context.getImportCode())
+            .createBy(context.getOperator())
+            .build();
+        process(importContext);
+        return Pair.of(Boolean.FALSE, context.getRegisterId());
+    }
+
+    /**
+     * 异步导入完成回调
+     *
+     * @param result 处理结果
+     * @param context 请求上下文
+     */
+    default void asyncCompleteCallback(ImportProcessResult result, ImportRequestContext context) {
     }
 
     /**
