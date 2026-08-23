@@ -58,6 +58,9 @@ public class DefaultAsyncFileHandler extends AsyncFileHandlerAdapter {
 
     @Override
     public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
-        executorService.execute(() -> doExecute(executor, baseRequest, registerId));
+        executorService.execute(() -> {
+            doExecute(executor, baseRequest, registerId);
+            dispatchRetry(registerId);
+        });
     }
 }

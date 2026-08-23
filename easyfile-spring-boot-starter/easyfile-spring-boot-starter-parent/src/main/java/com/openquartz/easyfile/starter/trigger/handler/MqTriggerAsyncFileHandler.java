@@ -60,7 +60,7 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         });
     }
 
-    private void doSend(Long registerId) {
+    protected void doSend(Long registerId) {
         //发送消息
         DownloadTriggerMessage triggerMessage = new DownloadTriggerMessage();
         triggerMessage.setRegisterId(registerId);
@@ -69,6 +69,12 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         if (send) {
             triggerService.enterWaiting(registerId);
         }
+    }
+
+    @Override
+    public void reexecute(Long registerId) {
+        triggerService.retrigger(registerId);
+        doSend(registerId);
     }
 
     @Override

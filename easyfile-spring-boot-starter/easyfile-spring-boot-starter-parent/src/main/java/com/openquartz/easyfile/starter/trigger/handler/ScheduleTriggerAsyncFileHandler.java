@@ -93,6 +93,17 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         log.info("[ScheduleTriggerAsyncFileHandler#doTrigger] end.....");
     }
 
+    @Override
+    public void reexecute(Long registerId) {
+        triggerService.retrigger(registerId);
+        DownloadTriggerEntry entry = triggerService.getTriggerRegisterId(registerId,
+            handlerProperties.getMaxTriggerCount());
+        if (entry == null) {
+            return;
+        }
+        scheduleExecutorService.execute(() -> doTrigger(entry));
+    }
+
 
     @Override
     public void afterPropertiesSet() {

@@ -5,6 +5,7 @@ import com.github.rholder.retry.RetryerBuilder;
 import com.github.rholder.retry.StopStrategies;
 import com.github.rholder.retry.WaitStrategies;
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
+import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.bean.DownloaderRequestContext;
 import com.openquartz.easyfile.common.bean.Pair;
 import com.openquartz.easyfile.common.constants.Constants;
@@ -28,6 +29,7 @@ import com.openquartz.easyfile.core.exception.GenerateFileException;
 import com.openquartz.easyfile.core.executor.bean.GenerateFileResult;
 import com.openquartz.easyfile.core.executor.bean.HandleFileResult;
 import com.openquartz.easyfile.core.executor.process.ExecuteProcessReporterImpl;
+import com.openquartz.easyfile.core.executor.support.FileExportExecutorSupport;
 import com.openquartz.easyfile.core.intercept.DownloadExecutorInterceptor;
 import com.openquartz.easyfile.core.intercept.ExecutorInterceptorSupport;
 import com.openquartz.easyfile.core.intercept.InterceptorContext;
@@ -170,6 +172,30 @@ public abstract class AsyncFileHandlerAdapter implements BaseAsyncFileHandler {
             PageTotalContext.clear();
         }
         logger.info("[AsyncFileHandlerAdapter#execute]end,execute!registerId:{}", registerId);
+    }
+
+    @Override
+    public void reexecute(Long registerId) {
+        DownloadRequestInfo requestInfo = downloadStorageService.getRequestInfoByRegisterId(registerId);
+        if (requestInfo == null || requestInfo.getRequestContext() == null
+            || !FileExportExecutorSupport.contains(requestInfo.getDownloadCode())) {
+            logger.error("[AsyncFileHandlerAdapter#reexecute] skip, missing request or executor, registerId:{}",
+                registerId);
+            return;
+        }
+        execute(FileExportExecutorSupport.get(requestInfo.getDownloadCode()),
+            requestInfo.getRequestContext(), registerId);
+    }
+
+    protected void dispatchRetry(Long registerId) {
+        try {
+            if (!downloadStorageService.claimRetry(registerId, Constants.SYSTEM_USER)) {
+                return;
+            }
+            reexecute(registerId);
+        } catch (Exception ex) {
+            logger.error("[AsyncFileHandlerAdapter#dispatchRetry] error, registerId:{}", registerId, ex);
+        }
     }
 
     private LoadingExportCacheRequest buildLoadingExportCacheRequest(BaseDownloaderRequestContext baseRequest,

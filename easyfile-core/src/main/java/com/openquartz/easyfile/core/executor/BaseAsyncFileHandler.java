@@ -47,4 +47,13 @@ public interface BaseAsyncFileHandler {
     default void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
         handle(executor, baseRequest, registerId);
     }
+
+    /**
+     * 业务重试：按 registerId 重新触发执行
+     *
+     * @param registerId 注册下载任务ID
+     */
+    default void reexecute(Long registerId) {
+        // no-op default; adapter overrides
+    }
 }
