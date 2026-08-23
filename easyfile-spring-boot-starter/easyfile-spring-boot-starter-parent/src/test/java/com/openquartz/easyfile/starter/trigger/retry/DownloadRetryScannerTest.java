@@ -53,6 +53,19 @@ public class DownloadRetryScannerTest {
     }
 
     @Test
+    public void scan_swallowsListRetryableFailure() {
+        EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
+        when(downloadStorageService.listRetryable(24, 50, 30))
+            .thenThrow(new RuntimeException("list failed"));
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties);
+
+        scanner.scan();
+
+        verify(handler, never()).reexecute(anyLong());
+        verify(downloadStorageService, never()).claimRetry(anyLong(), anyString());
+    }
+
+    @Test
     public void scan_noopWhenEmpty() {
         EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
         when(downloadStorageService.listRetryable(24, 50, 30)).thenReturn(Collections.emptyList());

@@ -23,18 +23,22 @@ public class DownloadRetryScanner {
     }
 
     public void scan() {
-        List<Long> ids = downloadStorageService.listRetryable(properties.getLookBackHours(),
-            properties.getScanBatchSize(), properties.getOrphanGraceSeconds());
-        if (CollectionUtils.isEmpty(ids)) {
-            return;
-        }
-        for (Long registerId : ids) {
-            try {
-                downloadStorageService.claimRetry(registerId, Constants.SYSTEM_USER);
-                handler.reexecute(registerId);
-            } catch (Exception ex) {
-                log.error("[DownloadRetryScanner#scan] registerId:{}", registerId, ex);
+        try {
+            List<Long> ids = downloadStorageService.listRetryable(properties.getLookBackHours(),
+                properties.getScanBatchSize(), properties.getOrphanGraceSeconds());
+            if (CollectionUtils.isEmpty(ids)) {
+                return;
             }
+            for (Long registerId : ids) {
+                try {
+                    downloadStorageService.claimRetry(registerId, Constants.SYSTEM_USER);
+                    handler.reexecute(registerId);
+                } catch (Exception ex) {
+                    log.error("[DownloadRetryScanner#scan] registerId:{}", registerId, ex);
+                }
+            }
+        } catch (Exception ex) {
+            log.error("[DownloadRetryScanner#scan] listRetryable failed", ex);
         }
     }
 }
