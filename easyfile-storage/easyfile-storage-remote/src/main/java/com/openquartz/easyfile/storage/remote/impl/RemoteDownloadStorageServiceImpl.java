@@ -11,6 +11,7 @@ import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import com.openquartz.easyfile.storage.remote.exception.RemoteUploadExceptionCode;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -28,8 +29,10 @@ import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
+import com.openquartz.easyfile.common.request.ListRetryableRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
+import com.openquartz.easyfile.common.request.RetryDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
@@ -196,5 +199,24 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
             return Locale.forLanguageTag(data);
         }
         return null;
+    }
+
+    @Override
+    public boolean claimRetry(Long registerId, String operator) {
+        ResponseResult<Boolean> result = easyFileClient.claimRetry(RetryDownloadRequest.create(registerId));
+        if (result == null || !result.isSuccess()) {
+            return false;
+        }
+        return Boolean.TRUE.equals(result.getData());
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        ResponseResult<List<Long>> result = easyFileClient.listRetryable(
+            ListRetryableRequest.create(lookBackHours, limit, orphanGraceSeconds));
+        if (result == null || !result.isSuccess() || result.getData() == null) {
+            return Collections.emptyList();
+        }
+        return result.getData();
     }
 }

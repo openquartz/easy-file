@@ -37,4 +37,8 @@ public final class RemoteUrlConstants {
     public static final String GET_APP_TREE_URL = "/easyfile/download/getAppTree";
 
     public static final String GET_LOCALE_URL = "/easyfile/download/getLocale";
+
+    public static final String DOWNLOAD_RETRY_URL = "/easyfile/download/retry";
+
+    public static final String DOWNLOAD_LIST_RETRYABLE_URL = "/easyfile/download/listRetryable";
 }

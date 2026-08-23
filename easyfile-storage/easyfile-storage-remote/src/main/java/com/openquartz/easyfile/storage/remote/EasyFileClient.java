@@ -11,8 +11,10 @@ import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
+import com.openquartz.easyfile.common.request.ListRetryableRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
+import com.openquartz.easyfile.common.request.RetryDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
@@ -138,4 +140,8 @@ public interface EasyFileClient {
      * @return locale-language
      */
     ResponseResult<String> getCurrentLocale(Long registerId);
+
+    ResponseResult<Boolean> claimRetry(RetryDownloadRequest request);
+
+    ResponseResult<java.util.List<Long>> listRetryable(ListRetryableRequest request);
 }

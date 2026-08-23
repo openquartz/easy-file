@@ -15,9 +15,11 @@ import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
+import com.openquartz.easyfile.common.request.ListRetryableRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.RefreshExecuteProcessRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
+import com.openquartz.easyfile.common.request.RetryDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
@@ -121,5 +123,17 @@ public class HttpEasyFileClientImpl implements EasyFileClient {
     public ResponseResult<String> getCurrentLocale(Long registerId) {
         return httpAgent
                 .httpPost(RemoteUrlConstants.GET_LOCALE_URL, registerId, String.class);
+    }
+
+    @Override
+    public ResponseResult<Boolean> claimRetry(RetryDownloadRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_RETRY_URL, request, Boolean.class);
+    }
+
+    @Override
+    public ResponseResult<List<Long>> listRetryable(ListRetryableRequest request) {
+        return httpAgent.httpPost(RemoteUrlConstants.DOWNLOAD_LIST_RETRYABLE_URL, request,
+            new TypeReference<ResponseResult<List<Long>>>() {
+            });
     }
 }
