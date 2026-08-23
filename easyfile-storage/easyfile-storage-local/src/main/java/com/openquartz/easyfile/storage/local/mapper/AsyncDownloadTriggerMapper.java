@@ -67,4 +67,12 @@ public interface AsyncDownloadTriggerMapper {
      */
     int deleteById(Long id);
 
+    /**
+     * 重置触发器以便业务重试
+     *
+     * @param registerId 注册ID
+     * @return 影响行数
+     */
+    int resetForRetry(Long registerId);
+
 }

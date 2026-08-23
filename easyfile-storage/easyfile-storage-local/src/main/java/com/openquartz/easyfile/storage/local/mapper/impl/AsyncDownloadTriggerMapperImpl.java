@@ -50,6 +50,8 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     private static final String SELECT_BY_ID_SQL =
         "select id,register_id, trigger_status, start_time, last_execute_time,trigger_count,creating_owner,processing_owner from ef_async_download_trigger where register_id = ?";
     private static final String DELETE_BY_ID_SQL = "delete from {0} where id = ?";
+    private static final String RESET_FOR_RETRY_SQL =
+        "update {0} set trigger_status = :triggerStatus, trigger_count = 0, last_execute_time = :lastExecuteTime where register_id = :registerId";
 
     @Override
     public int insert(AsyncDownloadTrigger trigger) {
@@ -186,5 +188,19 @@ public class AsyncDownloadTriggerMapperImpl implements AsyncDownloadTriggerMappe
     public int deleteById(Long id) {
         return jdbcTemplate.update(
             MessageFormat.format(DELETE_BY_ID_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable()), id);
+    }
+
+    @Override
+    public int resetForRetry(Long registerId) {
+        LocalDateTime now = LocalDateTime.now();
+
+        Map<String, Object> paramMap = new HashMap<>(3);
+        paramMap.put("triggerStatus", DownloadTriggerStatusEnum.INIT.getCode());
+        paramMap.put("lastExecuteTime", now);
+        paramMap.put("registerId", registerId);
+
+        String sql = MessageFormat.format(RESET_FOR_RETRY_SQL,
+            EasyFileTableGeneratorSupplier.genAsyncDownloadTriggerTable());
+        return new NamedParameterJdbcTemplate(jdbcTemplate).update(sql, paramMap);
     }
 }

@@ -19,6 +19,13 @@ public interface DownloadTriggerService {
     void trigger(DownloadTriggerRequest request);
 
     /**
+     * 业务重试时重置或创建触发器
+     *
+     * @param registerId 注册ID
+     */
+    void retrigger(Long registerId);
+
+    /**
      * 需要触发注册ID
      *
      * @param lookBackHours 回溯时间

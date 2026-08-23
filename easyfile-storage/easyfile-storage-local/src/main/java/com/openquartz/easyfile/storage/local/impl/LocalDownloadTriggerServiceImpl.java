@@ -53,6 +53,18 @@ public class LocalDownloadTriggerServiceImpl implements DownloadTriggerService {
     }
 
     @Override
+    public void retrigger(Long registerId) {
+        AsyncDownloadTrigger existing = asyncDownloadTriggerMapper.selectByRegisterId(registerId);
+        if (existing != null) {
+            asyncDownloadTriggerMapper.resetForRetry(registerId);
+            return;
+        }
+        DownloadTriggerRequest request = new DownloadTriggerRequest();
+        request.setRegisterId(registerId);
+        trigger(request);
+    }
+
+    @Override
     public List<DownloadTriggerEntry> getTriggerRegisterId(Integer lookBackHours, Integer maxTriggerCount,
         Integer triggerOffset) {
         QueryDownloadTriggerCondition triggerCondition = new QueryDownloadTriggerCondition();
