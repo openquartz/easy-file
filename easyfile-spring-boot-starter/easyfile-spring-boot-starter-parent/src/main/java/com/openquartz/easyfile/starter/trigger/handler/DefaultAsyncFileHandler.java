@@ -13,6 +13,7 @@ import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.core.executor.AsyncFileHandlerAdapter;
 import com.openquartz.easyfile.core.executor.BaseDefaultDownloadRejectExecutionHandler;
 import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
+import com.openquartz.easyfile.core.executor.support.FileExportTriggerContext;
 import com.openquartz.easyfile.core.property.IEasyFileDownloadProperty;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.DefaultAsyncHandlerThreadPoolProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
@@ -59,8 +60,13 @@ public class DefaultAsyncFileHandler extends AsyncFileHandlerAdapter {
     @Override
     public void execute(BaseDownloadExecutor executor, BaseDownloaderRequestContext baseRequest, Long registerId) {
         executorService.execute(() -> {
-            doExecute(executor, baseRequest, registerId);
-            dispatchRetry(registerId);
+            FileExportTriggerContext.setAsyncTriggerFlagIfAbsent(true);
+            try {
+                doExecute(executor, baseRequest, registerId);
+                dispatchRetry(registerId);
+            } finally {
+                FileExportTriggerContext.clear();
+            }
         });
     }
 }
