@@ -53,7 +53,16 @@ layui.use(['element', 'table', 'dropdown'], function () {
         }
       }
       , {field: 'errorMsg', width: 200, title: '异常信息', sort: true}
-      , {fixed: 'right', title: '操作', toolbar: '#clickDownload', width: 150}
+      , {
+        fixed: 'right', title: '操作', width: 200, templet: function (d) {
+          var html = '<a class="layui-btn layui-btn-xs" lay-event="click">下载</a>';
+          if (d.uploadStatus === 'fail') {
+            html += '<a class="layui-btn layui-btn-xs" lay-event="retry">重试</a>';
+          }
+          html += '<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cancel">取消</a>';
+          return html;
+        }
+      }
     ]],
     done: function (res, curr, count) {
       element.render();
@@ -165,6 +174,29 @@ layui.use(['element', 'table', 'dropdown'], function () {
 
             layer.close(index);
           });
+    } else if (obj.event === 'retry') {
+      layer.confirm('真的要重试下载任务: ' + data.registerId + ' 吗?', {icon: 3, title: '提示'}, function (index) {
+        var requestBody = {registerId: data.registerId};
+        $.ajax({
+          type: 'POST',
+          url: '/easyfile-ui/download-task/retry',
+          data: JSON.stringify(requestBody),
+          contentType: 'application/json',
+          success: function (result) {
+            if (result.success) {
+              layer.msg('重试成功！');
+              table.reload('table');
+            } else {
+              layer.msg('重试失败!失败原因:' + result.message);
+            }
+          },
+          error: function (xhr, status, error) {
+            layer.msg('重试失败!' + error);
+          },
+          dataType: 'json'
+        });
+        layer.close(index);
+      });
     }
   });
 });

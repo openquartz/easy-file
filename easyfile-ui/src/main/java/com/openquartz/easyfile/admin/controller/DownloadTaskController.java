@@ -2,6 +2,7 @@ package com.openquartz.easyfile.admin.controller;
 
 import com.openquartz.easyfile.admin.controller.annotation.Auth;
 import com.openquartz.easyfile.admin.model.request.ClickDownloadRequest;
+import com.openquartz.easyfile.admin.model.request.RetryDownloadTaskRequest;
 import com.openquartz.easyfile.admin.model.request.RevokeDownloadTaskRequest;
 import com.openquartz.easyfile.admin.model.request.ShowDownloadTaskRequest;
 import com.openquartz.easyfile.admin.model.response.DownloadTaskResult;
@@ -143,6 +144,19 @@ public class DownloadTaskController {
         }
     }
 
+    /**
+     * 重试下载
+     */
+    @Auth
+    @ResponseBody
+    @PostMapping(value = "/retry", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResult<?> retry(@RequestBody @Valid RetryDownloadTaskRequest request) {
+        boolean claimed = downloadStorageService.retry(request.getRegisterId(), adminProperty.getAdminUsername());
+        if (!claimed) {
+            return ResponseResult.fail("01", "重试失败");
+        }
+        return ResponseResult.ok();
+    }
 
     /**
      * appId
