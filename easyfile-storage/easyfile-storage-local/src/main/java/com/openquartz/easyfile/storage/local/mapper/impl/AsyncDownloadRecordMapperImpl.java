@@ -11,6 +11,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -71,6 +72,17 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     private static final String SELECT_COUNT_SQL = "select count(*) from {0}";
 
     private static final String SELECT_LOCALE_SQL = "select locale from {0} where id = ?";
+
+    private static final String CLAIM_RETRY_SQL =
+        "update {0} set upload_status = 'none', current_retry = current_retry + 1, execute_process = 0, "
+            + "error_msg = '', last_execute_time = now(), update_by = ? "
+            + "where id = ? and upload_status = 'fail' and max_server_retry > current_retry";
+
+    private static final String SELECT_RETRYABLE_SQL =
+        "select id from {0} where last_execute_time >= :startTime and ("
+            + "(upload_status = 'fail' and max_server_retry > current_retry) or "
+            + "(upload_status = 'none' and current_retry > 0 and last_execute_time < :orphanBefore)"
+            + ") limit :limit";
 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
@@ -307,5 +319,24 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         String sql = MessageFormat
                 .format(SELECT_LOCALE_SQL, EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
         return jdbcTemplate.queryForObject(sql, String.class, registerId);
+    }
+
+    @Override
+    public int claimRetry(Long id, String operator) {
+        String sql = MessageFormat.format(CLAIM_RETRY_SQL,
+            EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+        return jdbcTemplate.update(sql, operator, id);
+    }
+
+    @Override
+    public List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit) {
+        String sql = MessageFormat.format(SELECT_RETRYABLE_SQL,
+            EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
+        Map<String, Object> params = new HashMap<>(4);
+        params.put("startTime", startTime);
+        params.put("orphanBefore", orphanBefore);
+        params.put("limit", limit);
+        return new NamedParameterJdbcTemplate(jdbcTemplate)
+            .query(sql, params, (rs, rowNum) -> rs.getLong("id"));
     }
 }

@@ -1,5 +1,6 @@
 package com.openquartz.easyfile.storage.download;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -125,5 +126,17 @@ public interface DownloadStorageService {
      * @return 当前语言
      */
     Locale getCurrentLocale(Long registerId);
+
+    default boolean claimRetry(Long registerId, String operator) {
+        return false;
+    }
+
+    default List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        return Collections.emptyList();
+    }
+
+    default boolean retry(Long registerId, String operator) {
+        return claimRetry(registerId, operator);
+    }
 
 }

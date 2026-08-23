@@ -2,6 +2,7 @@ package com.openquartz.easyfile.storage.local.mapper;
 
 import com.openquartz.easyfile.storage.local.mapper.condition.BaseRecordQueryCondition;
 import com.openquartz.easyfile.storage.local.mapper.condition.UploadInfoChangeCondition;
+import java.util.Date;
 import java.util.List;
 import com.openquartz.easyfile.common.dictionary.UploadStatusEnum;
 import com.openquartz.easyfile.storage.local.entity.AsyncDownloadRecord;
@@ -109,4 +110,8 @@ public interface AsyncDownloadRecordMapper {
      * @return locale
      */
     String getLocale(Long registerId);
+
+    int claimRetry(Long id, String operator);
+
+    List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit);
 }
