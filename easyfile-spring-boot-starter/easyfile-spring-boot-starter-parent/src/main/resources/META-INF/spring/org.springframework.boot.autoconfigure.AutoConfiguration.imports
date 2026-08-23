@@ -6,3 +6,4 @@ com.openquartz.easyfile.starter.spring.boot.autoconfig.DisruptorAsyncFileHandler
 com.openquartz.easyfile.starter.spring.boot.autoconfig.ScheduleAsyncFileHandlerAutoConfiguration
 com.openquartz.easyfile.starter.spring.boot.autoconfig.RocketMqAsyncFileHandlerAutoConfiguration
 com.openquartz.easyfile.starter.spring.boot.autoconfig.EasyFileUiAutoConfiguration
+com.openquartz.easyfile.starter.spring.boot.autoconfig.DownloadRetryAutoConfiguration
