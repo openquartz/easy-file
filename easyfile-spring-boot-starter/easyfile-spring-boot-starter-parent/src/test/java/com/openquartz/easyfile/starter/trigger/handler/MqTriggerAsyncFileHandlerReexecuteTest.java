@@ -1,7 +1,11 @@
 package com.openquartz.easyfile.starter.trigger.handler;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -38,8 +42,13 @@ public class MqTriggerAsyncFileHandlerReexecuteTest {
     @Mock
     private BaseDownloaderRequestContext requestContext;
 
+    private MqTriggerAsyncFileHandler handler;
+
     @After
     public void tearDown() {
+        if (handler != null) {
+            handler.destroy();
+        }
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             TransactionSynchronizationManager.clearSynchronization();
         }
@@ -51,14 +60,32 @@ public class MqTriggerAsyncFileHandlerReexecuteTest {
         downloadProperties.setAppId("demo");
         when(mqTriggerProducer.send(any(DownloadTriggerMessage.class))).thenReturn(true);
 
-        MqTriggerAsyncFileHandler handler = new MqTriggerAsyncFileHandler(downloadProperties, uploadService,
+        handler = new MqTriggerAsyncFileHandler(downloadProperties, uploadService,
             storageService, triggerService, new RocketMqAsyncHandlerProperties(), mqTriggerProducer);
 
         handler.reexecute(21L);
 
         verify(triggerService).retrigger(21L);
-        verify(mqTriggerProducer).send(any(DownloadTriggerMessage.class));
-        verify(triggerService).enterWaiting(21L);
+        verify(mqTriggerProducer, timeout(2000)).send(any(DownloadTriggerMessage.class));
+        verify(triggerService, timeout(2000)).enterWaiting(21L);
+    }
+
+    @Test
+    public void reexecute_enqueuesWithoutDoSendOnStack() {
+        EasyFileDownloadProperties downloadProperties = new EasyFileDownloadProperties();
+        downloadProperties.setAppId("demo");
+
+        RecordingHandler recordingHandler = new RecordingHandler(downloadProperties, uploadService,
+            storageService, triggerService, new RocketMqAsyncHandlerProperties(), mqTriggerProducer);
+        handler = recordingHandler;
+
+        recordingHandler.reexecute(21L);
+
+        verify(triggerService).retrigger(21L);
+        assertNotNull(recordingHandler.enqueuedRegisterId);
+        assertEquals(Long.valueOf(21L), recordingHandler.enqueuedRegisterId);
+        verify(mqTriggerProducer, never()).send(any(DownloadTriggerMessage.class));
+        assertNull(recordingHandler.doSendOnStackRegisterId);
     }
 
     @Test
@@ -67,7 +94,7 @@ public class MqTriggerAsyncFileHandlerReexecuteTest {
         downloadProperties.setAppId("demo");
         when(mqTriggerProducer.send(any(DownloadTriggerMessage.class))).thenReturn(true);
 
-        MqTriggerAsyncFileHandler handler = new MqTriggerAsyncFileHandler(downloadProperties, uploadService,
+        handler = new MqTriggerAsyncFileHandler(downloadProperties, uploadService,
             storageService, triggerService, new RocketMqAsyncHandlerProperties(), mqTriggerProducer);
 
         TransactionSynchronizationManager.initSynchronization();
@@ -81,5 +108,28 @@ public class MqTriggerAsyncFileHandlerReexecuteTest {
         }
 
         verify(mqTriggerProducer).send(any(DownloadTriggerMessage.class));
+    }
+
+    private static final class RecordingHandler extends MqTriggerAsyncFileHandler {
+
+        private Long enqueuedRegisterId;
+        private Long doSendOnStackRegisterId;
+
+        private RecordingHandler(EasyFileDownloadProperties downloadProperties, UploadService uploadService,
+            DownloadStorageService storageService, DownloadTriggerService triggerService,
+            RocketMqAsyncHandlerProperties handlerProperties, MQTriggerProducer mqProducer) {
+            super(downloadProperties, uploadService, storageService, triggerService, handlerProperties, mqProducer);
+        }
+
+        @Override
+        protected void enqueueDoSend(Long registerId) {
+            enqueuedRegisterId = registerId;
+        }
+
+        @Override
+        protected void doSend(Long registerId) {
+            doSendOnStackRegisterId = registerId;
+            super.doSend(registerId);
+        }
     }
 }

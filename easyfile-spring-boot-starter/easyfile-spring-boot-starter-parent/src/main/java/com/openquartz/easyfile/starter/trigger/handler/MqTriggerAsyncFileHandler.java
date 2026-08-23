@@ -3,9 +3,13 @@ package com.openquartz.easyfile.starter.trigger.handler;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import com.openquartz.easyfile.common.concurrent.ThreadFactoryBuilder;
 import com.openquartz.easyfile.common.bean.BaseDownloaderRequestContext;
 import com.openquartz.easyfile.common.response.DownloadTriggerEntry;
 import com.openquartz.easyfile.core.executor.BaseDownloadExecutor;
@@ -25,11 +29,13 @@ import com.openquartz.easyfile.storage.file.UploadService;
  * @author svnee
  **/
 @Slf4j
-public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter implements MQTriggerHandler {
+public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter
+    implements MQTriggerHandler, DisposableBean {
 
     private final DownloadTriggerService triggerService;
     private final MQTriggerProducer mqTriggerProducer;
     private final MqAsyncHandlerProperties handlerProperties;
+    private final ExecutorService retrySendExecutor;
 
     public MqTriggerAsyncFileHandler(
         EasyFileDownloadProperties downloadProperties,
@@ -43,6 +49,10 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         this.triggerService = triggerService;
         this.mqTriggerProducer = mqProducer;
         this.handlerProperties = handlerProperties;
+        this.retrySendExecutor = Executors.newSingleThreadExecutor(
+            new ThreadFactoryBuilder()
+                .setNameFormat("MqRetrySend-thread-%d")
+                .build());
     }
 
     @Override
@@ -71,10 +81,25 @@ public class MqTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAdapter i
         }
     }
 
+    protected void enqueueDoSend(Long registerId) {
+        retrySendExecutor.execute(() -> {
+            try {
+                doSend(registerId);
+            } catch (Exception ex) {
+                log.error("[MqTriggerAsyncFileHandler#enqueueDoSend] doSend error! registerId:{}", registerId, ex);
+            }
+        });
+    }
+
     @Override
     public void reexecute(Long registerId) {
         triggerService.retrigger(registerId);
-        doSend(registerId);
+        enqueueDoSend(registerId);
+    }
+
+    @Override
+    public void destroy() {
+        retrySendExecutor.shutdownNow();
     }
 
     @Override
