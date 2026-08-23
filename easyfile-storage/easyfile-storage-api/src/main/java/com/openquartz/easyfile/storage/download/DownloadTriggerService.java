@@ -23,7 +23,8 @@ public interface DownloadTriggerService {
      *
      * @param registerId 注册ID
      */
-    void retrigger(Long registerId);
+    default void retrigger(Long registerId) {
+    }
 
     /**
      * 需要触发注册ID

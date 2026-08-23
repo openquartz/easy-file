@@ -23,11 +23,22 @@ public class AsyncDownloadRecordMapperImplClaimSqlTest {
 
     @Test
     public void selectRetryableSql_usesNamedParametersNotQuotedLiterals() {
-        String sql = MessageFormat.format(AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_SQL, TABLE);
+        String sql = MessageFormat.format(AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_SQL, TABLE)
+            + AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_LIMIT_CLAUSE;
 
         assertTrue(sql.contains("upload_status = :failStatus"));
         assertTrue(sql.contains("upload_status = :noneStatus"));
         assertFalse(sql.contains("upload_status = fail"));
         assertFalse(sql.contains("upload_status = none"));
+    }
+
+    @Test
+    public void selectRetryableSql_withAppIdIncludesAppIdBind() {
+        String sql = MessageFormat.format(AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_SQL, TABLE)
+            + AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_APP_ID_CLAUSE
+            + AsyncDownloadRecordMapperImpl.SELECT_RETRYABLE_LIMIT_CLAUSE;
+
+        assertTrue(sql.contains("app_id = :appId"));
+        assertTrue(sql.contains("upload_status = :failStatus"));
     }
 }

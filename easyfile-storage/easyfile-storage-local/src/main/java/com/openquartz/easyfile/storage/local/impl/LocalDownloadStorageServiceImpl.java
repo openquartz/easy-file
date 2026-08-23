@@ -474,6 +474,11 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
 
     @Override
     public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        return listRetryable(lookBackHours, limit, orphanGraceSeconds, null);
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds, String appId) {
         Date now = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
@@ -482,7 +487,7 @@ public class LocalDownloadStorageServiceImpl implements DownloadStorageService {
         calendar.setTime(now);
         calendar.add(Calendar.SECOND, -orphanGraceSeconds);
         Date orphanBefore = calendar.getTime();
-        List<Long> ids = asyncDownloadRecordMapper.selectRetryableRegisterIds(startTime, orphanBefore, limit);
+        List<Long> ids = asyncDownloadRecordMapper.selectRetryableRegisterIds(startTime, orphanBefore, limit, appId);
         return ids == null ? Collections.emptyList() : ids;
     }
 }

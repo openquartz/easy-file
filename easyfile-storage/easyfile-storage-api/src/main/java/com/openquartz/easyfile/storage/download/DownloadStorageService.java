@@ -132,6 +132,10 @@ public interface DownloadStorageService {
     }
 
     default List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        return listRetryable(lookBackHours, limit, orphanGraceSeconds, null);
+    }
+
+    default List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds, String appId) {
         return Collections.emptyList();
     }
 

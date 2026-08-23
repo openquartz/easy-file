@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,9 +48,17 @@ public class AsyncDownloadServiceImplClaimRetryTest {
 
     @Test
     public void listRetryable_delegatesToMapper() {
-        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(20)))
+        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(20), isNull()))
             .thenReturn(Collections.singletonList(7L));
         assertEquals(Collections.singletonList(7L), asyncDownloadService.listRetryable(24, 20, 30));
-        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(20));
+        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(20), isNull());
+    }
+
+    @Test
+    public void listRetryable_fourArgPassesAppId() {
+        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(20), eq("app-b")))
+            .thenReturn(Collections.singletonList(8L));
+        assertEquals(Collections.singletonList(8L), asyncDownloadService.listRetryable(24, 20, 30, "app-b"));
+        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(20), eq("app-b"));
     }
 }

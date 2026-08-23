@@ -82,7 +82,11 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
         "select id from {0} where last_execute_time >= :startTime and ("
             + "(upload_status = :failStatus and max_server_retry > current_retry) or "
             + "(upload_status = :noneStatus and current_retry > 0 and last_execute_time < :orphanBefore)"
-            + ") limit :limit";
+            + ")";
+
+    static final String SELECT_RETRYABLE_APP_ID_CLAUSE = " and app_id = :appId";
+
+    static final String SELECT_RETRYABLE_LIMIT_CLAUSE = " limit :limit";
 
     @Override
     public int insertSelective(AsyncDownloadRecord downloadRecord) {
@@ -330,16 +334,21 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
     }
 
     @Override
-    public List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit) {
-        String sql = MessageFormat.format(SELECT_RETRYABLE_SQL,
-            EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable());
-        Map<String, Object> params = new HashMap<>(6);
+    public List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit, String appId) {
+        StringBuilder sql = new StringBuilder(MessageFormat.format(SELECT_RETRYABLE_SQL,
+            EasyFileTableGeneratorSupplier.genAsyncDownloadRecordTable()));
+        Map<String, Object> params = new HashMap<>(8);
         params.put("startTime", startTime);
         params.put("orphanBefore", orphanBefore);
         params.put("limit", limit);
         params.put("failStatus", UploadStatusEnum.FAIL.getCode());
         params.put("noneStatus", UploadStatusEnum.NONE.getCode());
+        if (StringUtils.isNotBlank(appId)) {
+            sql.append(SELECT_RETRYABLE_APP_ID_CLAUSE);
+            params.put("appId", appId);
+        }
+        sql.append(SELECT_RETRYABLE_LIMIT_CLAUSE);
         return new NamedParameterJdbcTemplate(jdbcTemplate)
-            .query(sql, params, (rs, rowNum) -> rs.getLong("id"));
+            .query(sql.toString(), params, (rs, rowNum) -> rs.getLong("id"));
     }
 }

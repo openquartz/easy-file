@@ -157,4 +157,15 @@ public interface AsyncDownloadService {
      * @return register ids
      */
     java.util.List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds);
+
+    /**
+     * List retryable register ids scoped by app.
+     *
+     * @param lookBackHours look-back hours
+     * @param limit max rows
+     * @param orphanGraceSeconds orphan grace seconds
+     * @param appId app id; blank skips app filter
+     * @return register ids
+     */
+    java.util.List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds, String appId);
 }

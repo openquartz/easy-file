@@ -76,7 +76,7 @@ public interface AsyncDownloadRecordMapper {
      * @return register ids
      */
     List<Long> selectRetryableRegisterIds(@Param("startTime") Date startTime,
-        @Param("orphanBefore") Date orphanBefore, @Param("limit") Integer limit);
+        @Param("orphanBefore") Date orphanBefore, @Param("limit") Integer limit, @Param("appId") String appId);
 
     /**
      * 更新重试执行异常

@@ -1,7 +1,9 @@
 package com.openquartz.easyfile.starter.trigger.retry;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.core.executor.BaseAsyncFileHandler;
+import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadProperties;
 import com.openquartz.easyfile.starter.spring.boot.autoconfig.properties.EasyFileDownloadRetryProperties;
 import com.openquartz.easyfile.storage.download.DownloadStorageService;
 import java.util.Arrays;
@@ -26,11 +29,18 @@ public class DownloadRetryScannerTest {
     @Mock
     private BaseAsyncFileHandler handler;
 
+    private static EasyFileDownloadProperties downloadProperties(String appId) {
+        EasyFileDownloadProperties properties = new EasyFileDownloadProperties();
+        properties.setAppId(appId);
+        return properties;
+    }
+
     @Test
     public void scan_claimsAndReexecutesEachId() {
         EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
-        when(downloadStorageService.listRetryable(24, 50, 30)).thenReturn(Arrays.asList(1L, 2L));
-        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties);
+        when(downloadStorageService.listRetryable(24, 50, 30, "demo-app")).thenReturn(Arrays.asList(1L, 2L));
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties,
+            downloadProperties("demo-app"));
 
         scanner.scan();
 
@@ -43,9 +53,10 @@ public class DownloadRetryScannerTest {
     @Test
     public void scan_continuesWhenOneIdThrows() {
         EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
-        when(downloadStorageService.listRetryable(24, 50, 30)).thenReturn(Arrays.asList(1L, 2L));
+        when(downloadStorageService.listRetryable(24, 50, 30, "demo-app")).thenReturn(Arrays.asList(1L, 2L));
         doThrow(new RuntimeException("x")).when(handler).reexecute(1L);
-        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties);
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties,
+            downloadProperties("demo-app"));
 
         scanner.scan();
 
@@ -55,9 +66,10 @@ public class DownloadRetryScannerTest {
     @Test
     public void scan_swallowsListRetryableFailure() {
         EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
-        when(downloadStorageService.listRetryable(24, 50, 30))
+        when(downloadStorageService.listRetryable(24, 50, 30, "demo-app"))
             .thenThrow(new RuntimeException("list failed"));
-        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties);
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties,
+            downloadProperties("demo-app"));
 
         scanner.scan();
 
@@ -68,12 +80,26 @@ public class DownloadRetryScannerTest {
     @Test
     public void scan_noopWhenEmpty() {
         EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
-        when(downloadStorageService.listRetryable(24, 50, 30)).thenReturn(Collections.emptyList());
-        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties);
+        when(downloadStorageService.listRetryable(24, 50, 30, "demo-app")).thenReturn(Collections.emptyList());
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties,
+            downloadProperties("demo-app"));
 
         scanner.scan();
 
         verify(handler, never()).reexecute(anyLong());
         verify(downloadStorageService, never()).claimRetry(anyLong(), anyString());
+    }
+
+    @Test
+    public void scan_skipsWhenAppIdBlank() {
+        EasyFileDownloadRetryProperties properties = new EasyFileDownloadRetryProperties();
+        DownloadRetryScanner scanner = new DownloadRetryScanner(downloadStorageService, handler, properties,
+            downloadProperties("  "));
+
+        scanner.scan();
+
+        verify(downloadStorageService, never()).listRetryable(anyInt(), anyInt(), anyInt(), anyString());
+        verify(downloadStorageService, never()).claimRetry(anyLong(), anyString());
+        verify(handler, never()).reexecute(anyLong());
     }
 }

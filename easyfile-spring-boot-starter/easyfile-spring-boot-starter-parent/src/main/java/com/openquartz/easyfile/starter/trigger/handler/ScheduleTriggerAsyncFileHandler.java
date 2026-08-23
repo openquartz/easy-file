@@ -101,6 +101,10 @@ public class ScheduleTriggerAsyncFileHandler extends DatabaseAsyncFileHandlerAda
         if (entry == null) {
             return;
         }
+        enqueueDoTrigger(entry);
+    }
+
+    protected void enqueueDoTrigger(DownloadTriggerEntry entry) {
         scheduleExecutorService.execute(() -> doTrigger(entry));
     }
 

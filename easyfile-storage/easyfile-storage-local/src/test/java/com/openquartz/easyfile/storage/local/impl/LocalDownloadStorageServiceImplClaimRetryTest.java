@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -45,16 +46,25 @@ public class LocalDownloadStorageServiceImplClaimRetryTest {
 
     @Test
     public void listRetryable_mapsMapperIds() {
-        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(50)))
+        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(50), isNull()))
             .thenReturn(Arrays.asList(1L, 2L));
         List<Long> ids = service.listRetryable(24, 50, 30);
         assertEquals(Arrays.asList(1L, 2L), ids);
-        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(50));
+        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(50), isNull());
+    }
+
+    @Test
+    public void listRetryable_fourArgPassesAppId() {
+        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(50), eq("app-a")))
+            .thenReturn(Collections.singletonList(3L));
+        List<Long> ids = service.listRetryable(24, 50, 30, "app-a");
+        assertEquals(Collections.singletonList(3L), ids);
+        verify(asyncDownloadRecordMapper).selectRetryableRegisterIds(any(), any(), eq(50), eq("app-a"));
     }
 
     @Test
     public void listRetryable_emptyWhenMapperEmpty() {
-        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(10)))
+        when(asyncDownloadRecordMapper.selectRetryableRegisterIds(any(), any(), eq(10), isNull()))
             .thenReturn(Collections.emptyList());
         assertTrue(service.listRetryable(2, 10, 30).isEmpty());
         verifyNoInteractions(asyncDownloadTaskMapper);

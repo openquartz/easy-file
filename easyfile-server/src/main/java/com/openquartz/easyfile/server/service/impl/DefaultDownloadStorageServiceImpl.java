@@ -113,6 +113,11 @@ public class DefaultDownloadStorageServiceImpl implements DownloadStorageService
 
     @Override
     public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
-        return asyncDownloadService.listRetryable(lookBackHours, limit, orphanGraceSeconds);
+        return listRetryable(lookBackHours, limit, orphanGraceSeconds, null);
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds, String appId) {
+        return asyncDownloadService.listRetryable(lookBackHours, limit, orphanGraceSeconds, appId);
     }
 }

@@ -212,8 +212,13 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
 
     @Override
     public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        return listRetryable(lookBackHours, limit, orphanGraceSeconds, null);
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds, String appId) {
         ResponseResult<List<Long>> result = easyFileClient.listRetryable(
-            ListRetryableRequest.create(lookBackHours, limit, orphanGraceSeconds));
+            ListRetryableRequest.create(lookBackHours, limit, orphanGraceSeconds, appId));
         if (result == null || !result.isSuccess() || result.getData() == null) {
             return Collections.emptyList();
         }

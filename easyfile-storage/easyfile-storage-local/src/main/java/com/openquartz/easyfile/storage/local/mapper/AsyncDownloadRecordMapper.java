@@ -113,5 +113,5 @@ public interface AsyncDownloadRecordMapper {
 
     int claimRetry(Long id, String operator);
 
-    List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit);
+    List<Long> selectRetryableRegisterIds(Date startTime, Date orphanBefore, int limit, String appId);
 }

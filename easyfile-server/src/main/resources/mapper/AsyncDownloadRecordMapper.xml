@@ -123,6 +123,9 @@
             (upload_status = 'fail' AND max_server_retry > current_retry)
             OR (upload_status = 'none' AND current_retry > 0 AND last_execute_time &lt; #{orphanBefore})
           )
+          <if test="appId != null and appId != ''">
+            AND app_id = #{appId}
+          </if>
         LIMIT #{limit}
     </select>
 

@@ -1,6 +1,7 @@
 package com.openquartz.easyfile.server.controller;
 
 import com.openquartz.easyfile.server.service.AsyncDownloadService;
+import java.util.Collections;
 import java.util.List;
 import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import com.openquartz.easyfile.common.response.CancelUploadResult;
 import com.openquartz.easyfile.common.response.DownloadResult;
 import com.openquartz.easyfile.common.response.DownloadUrlResult;
 import com.openquartz.easyfile.common.response.ExportResult;
+import com.openquartz.easyfile.common.util.StringUtils;
 
 /**
  * 下载controller
@@ -204,10 +206,13 @@ public class DownloadController {
 
     @PostMapping("/listRetryable")
     public ResponseResult<List<Long>> listRetryable(@RequestBody @Valid ListRetryableRequest request) {
+        if (StringUtils.isBlank(request.getAppId())) {
+            return ResponseResult.ok(Collections.emptyList());
+        }
         int lookBack = request.getLookBackHours() == null ? 24 : request.getLookBackHours();
         int limit = request.getLimit() == null ? 50 : request.getLimit();
         int grace = request.getOrphanGraceSeconds() == null ? 30 : request.getOrphanGraceSeconds();
-        return ResponseResult.ok(asyncDownloadService.listRetryable(lookBack, limit, grace));
+        return ResponseResult.ok(asyncDownloadService.listRetryable(lookBack, limit, grace, request.getAppId()));
     }
 
 
