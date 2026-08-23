@@ -42,7 +42,9 @@ public class RemoteDownloadStorageServiceImplClaimRetryTest {
     @Test
     public void claimRetry_trueWhenDataTrue() {
         when(easyFileClient.claimRetry(any(RetryDownloadRequest.class))).thenReturn(ResponseResult.ok(Boolean.TRUE));
-        assertTrue(service.claimRetry(3L, "system"));
+        assertTrue(service.claimRetry(3L, "admin-user"));
+        verify(easyFileClient).claimRetry(argThat(req ->
+            Long.valueOf(3L).equals(req.getRegisterId()) && "admin-user".equals(req.getOperator())));
     }
 
     @Test

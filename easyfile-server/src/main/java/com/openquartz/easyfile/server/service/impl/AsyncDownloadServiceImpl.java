@@ -152,11 +152,7 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         downloadRecord.setCreateBy(request.getNotifier().getUserBy());
         downloadRecord.setUpdateBy(request.getNotifier().getUserBy());
 
-        BaseExecuteParam param = new BaseExecuteParam();
-        param.setDownloadCode(request.getDownloadCode());
-        param.setFileSuffix(request.getFileSuffix());
-        param.setOtherMap(request.getOtherMap());
-        downloadRecord.setExecuteParam(JSONUtil.toClassJson(param));
+        downloadRecord.setExecuteParam(JSONUtil.toClassJson(request));
         return downloadRecord;
     }
 
@@ -515,14 +511,34 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         if (Objects.isNull(downloadRecord)) {
             return null;
         }
-        RegisterDownloadRequest registerRequest = JSONUtil
-                .parseClassObject(downloadRecord.getExecuteParam(), RegisterDownloadRequest.class);
-        Asserts.notNull(registerRequest, CommonErrorCode.PARAM_ILLEGAL_ERROR);
+
+        BaseDownloaderRequestContext requestContext;
+        RegisterDownloadRequest registerRequest = tryParseRegisterDownloadRequest(downloadRecord.getExecuteParam());
+        if (Objects.nonNull(registerRequest)) {
+            requestContext = convertBaseDownloadRequestContext(registerRequest);
+        } else {
+            BaseExecuteParam executeParam = JSONUtil
+                    .parseClassObject(downloadRecord.getExecuteParam(), BaseExecuteParam.class);
+            Asserts.notNull(executeParam, CommonErrorCode.PARAM_ILLEGAL_ERROR);
+            requestContext = convertBaseDownloadRequestContext(executeParam, downloadRecord);
+        }
 
         DownloadRequestInfo requestInfo = new DownloadRequestInfo();
-        requestInfo.setRequestContext(convertBaseDownloadRequestContext(registerRequest));
+        requestInfo.setRequestContext(requestContext);
         requestInfo.setDownloadCode(downloadRecord.getDownloadCode());
         return requestInfo;
+    }
+
+    /**
+     * Legacy rows store {@link BaseExecuteParam}; Class Jackson then throws InvalidTypeIdException
+     * when parsed as {@link RegisterDownloadRequest}. Catch and fall back.
+     */
+    private RegisterDownloadRequest tryParseRegisterDownloadRequest(String executeParam) {
+        try {
+            return JSONUtil.parseClassObject(executeParam, RegisterDownloadRequest.class);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     private BaseDownloaderRequestContext convertBaseDownloadRequestContext(RegisterDownloadRequest registerRequest) {
@@ -531,6 +547,20 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
         baseDownloaderRequestContext.setFileSuffix(registerRequest.getFileSuffix());
         baseDownloaderRequestContext.setExportRemark(registerRequest.getExportRemark());
         baseDownloaderRequestContext.setOtherMap(registerRequest.getOtherMap());
+        return baseDownloaderRequestContext;
+    }
+
+    private BaseDownloaderRequestContext convertBaseDownloadRequestContext(BaseExecuteParam executeParam,
+                                                                           AsyncDownloadRecord downloadRecord) {
+        BaseDownloaderRequestContext baseDownloaderRequestContext = new BaseDownloaderRequestContext();
+        baseDownloaderRequestContext.setFileSuffix(executeParam.getFileSuffix());
+        baseDownloaderRequestContext.setOtherMap(executeParam.getOtherMap());
+        baseDownloaderRequestContext.setExportRemark(downloadRecord.getRemark());
+        Notifier notifier = new Notifier();
+        notifier.setUserBy(downloadRecord.getDownloadOperateBy());
+        notifier.setUserName(downloadRecord.getDownloadOperateName());
+        notifier.setEmail(downloadRecord.getNotifyEmail());
+        baseDownloaderRequestContext.setNotifier(notifier);
         return baseDownloaderRequestContext;
     }
 

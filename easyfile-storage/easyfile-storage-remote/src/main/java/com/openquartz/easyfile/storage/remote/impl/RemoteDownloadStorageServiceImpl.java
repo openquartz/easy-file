@@ -203,7 +203,7 @@ public class RemoteDownloadStorageServiceImpl implements DownloadStorageService 
 
     @Override
     public boolean claimRetry(Long registerId, String operator) {
-        ResponseResult<Boolean> result = easyFileClient.claimRetry(RetryDownloadRequest.create(registerId));
+        ResponseResult<Boolean> result = easyFileClient.claimRetry(RetryDownloadRequest.create(registerId, operator));
         if (result == null || !result.isSuccess()) {
             return false;
         }

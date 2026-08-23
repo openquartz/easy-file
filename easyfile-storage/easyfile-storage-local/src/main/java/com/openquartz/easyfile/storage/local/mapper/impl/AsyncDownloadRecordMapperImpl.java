@@ -84,6 +84,9 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             + "(upload_status = :noneStatus and current_retry > 0 and last_execute_time < :orphanBefore)"
             + ")";
 
+    static final String SELECT_RETRYABLE_ORDER_BY_CLAUSE =
+        " order by case when upload_status = :failStatus then 0 else 1 end, last_execute_time asc";
+
     static final String SELECT_RETRYABLE_APP_ID_CLAUSE = " and app_id = :appId";
 
     static final String SELECT_RETRYABLE_LIMIT_CLAUSE = " limit :limit";
@@ -347,6 +350,7 @@ public class AsyncDownloadRecordMapperImpl implements AsyncDownloadRecordMapper 
             sql.append(SELECT_RETRYABLE_APP_ID_CLAUSE);
             params.put("appId", appId);
         }
+        sql.append(SELECT_RETRYABLE_ORDER_BY_CLAUSE);
         sql.append(SELECT_RETRYABLE_LIMIT_CLAUSE);
         return new NamedParameterJdbcTemplate(jdbcTemplate)
             .query(sql.toString(), params, (rs, rowNum) -> rs.getLong("id"));

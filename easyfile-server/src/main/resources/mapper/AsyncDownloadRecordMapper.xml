@@ -126,6 +126,7 @@
           <if test="appId != null and appId != ''">
             AND app_id = #{appId}
           </if>
+        ORDER BY CASE WHEN upload_status = 'fail' THEN 0 ELSE 1 END, last_execute_time ASC
         LIMIT #{limit}
     </select>
 

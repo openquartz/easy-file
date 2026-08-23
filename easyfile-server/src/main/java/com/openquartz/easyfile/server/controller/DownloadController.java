@@ -201,7 +201,9 @@ public class DownloadController {
 
     @PostMapping("/retry")
     public ResponseResult<Boolean> retry(@RequestBody @Valid RetryDownloadRequest request) {
-        return ResponseResult.ok(asyncDownloadService.claimRetry(request.getRegisterId(), Constants.SYSTEM_USER));
+        String operator = StringUtils.isNotBlank(request.getOperator())
+                ? request.getOperator() : Constants.SYSTEM_USER;
+        return ResponseResult.ok(asyncDownloadService.claimRetry(request.getRegisterId(), operator));
     }
 
     @PostMapping("/listRetryable")
