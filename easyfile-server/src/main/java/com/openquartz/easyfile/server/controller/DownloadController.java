@@ -10,14 +10,17 @@ import javax.validation.Valid;
 import com.openquartz.easyfile.common.bean.DownloadRequestInfo;
 import com.openquartz.easyfile.common.util.page.Pagination;
 import com.openquartz.easyfile.common.bean.ResponseResult;
+import com.openquartz.easyfile.common.constants.Constants;
 import com.openquartz.easyfile.common.request.CancelUploadRequest;
 import com.openquartz.easyfile.common.request.DownloadRequest;
 import com.openquartz.easyfile.common.request.EnableRunningRequest;
 import com.openquartz.easyfile.common.request.ExportLimitingRequest;
 import com.openquartz.easyfile.common.request.ListDownloadResultRequest;
+import com.openquartz.easyfile.common.request.ListRetryableRequest;
 import com.openquartz.easyfile.common.request.LoadingExportCacheRequest;
 import com.openquartz.easyfile.common.request.RefreshExecuteProcessRequest;
 import com.openquartz.easyfile.common.request.RegisterDownloadRequest;
+import com.openquartz.easyfile.common.request.RetryDownloadRequest;
 import com.openquartz.easyfile.common.request.UploadCallbackRequest;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.common.response.CancelUploadResult;
@@ -192,6 +195,19 @@ public class DownloadController {
     public ResponseResult<String> getLocale(@RequestBody @Valid @NotNull Long registerId) {
         String locale = asyncDownloadService.getLocale(registerId);
         return ResponseResult.ok(locale);
+    }
+
+    @PostMapping("/retry")
+    public ResponseResult<Boolean> retry(@RequestBody @Valid RetryDownloadRequest request) {
+        return ResponseResult.ok(asyncDownloadService.claimRetry(request.getRegisterId(), Constants.SYSTEM_USER));
+    }
+
+    @PostMapping("/listRetryable")
+    public ResponseResult<List<Long>> listRetryable(@RequestBody @Valid ListRetryableRequest request) {
+        int lookBack = request.getLookBackHours() == null ? 24 : request.getLookBackHours();
+        int limit = request.getLimit() == null ? 50 : request.getLimit();
+        int grace = request.getOrphanGraceSeconds() == null ? 30 : request.getOrphanGraceSeconds();
+        return ResponseResult.ok(asyncDownloadService.listRetryable(lookBack, limit, grace));
     }
 
 

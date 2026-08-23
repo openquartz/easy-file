@@ -550,4 +550,23 @@ public class AsyncDownloadServiceImpl implements AsyncDownloadService, BeanPostP
     public String getLocale(Long registerId) {
         return asyncDownloadTaskMapper.getLocale(registerId);
     }
+
+    @Override
+    public boolean claimRetry(Long registerId, String operator) {
+        return asyncDownloadRecordMapper.claimRetry(registerId, operator) > 0;
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        Date now = new Date();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.HOUR_OF_DAY, -lookBackHours);
+        Date startTime = calendar.getTime();
+        calendar.setTime(now);
+        calendar.add(Calendar.SECOND, -orphanGraceSeconds);
+        Date orphanBefore = calendar.getTime();
+        List<Long> ids = asyncDownloadRecordMapper.selectRetryableRegisterIds(startTime, orphanBefore, limit);
+        return ids == null ? Collections.emptyList() : ids;
+    }
 }

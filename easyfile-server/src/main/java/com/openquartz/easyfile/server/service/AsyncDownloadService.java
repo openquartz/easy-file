@@ -138,4 +138,23 @@ public interface AsyncDownloadService {
      * @return locale
      */
     String getLocale(Long registerId);
+
+    /**
+     * Claim a failed download record for business retry.
+     *
+     * @param registerId register id
+     * @param operator operator
+     * @return true if claimed
+     */
+    boolean claimRetry(Long registerId, String operator);
+
+    /**
+     * List retryable register ids.
+     *
+     * @param lookBackHours look-back hours
+     * @param limit max rows
+     * @param orphanGraceSeconds orphan grace seconds
+     * @return register ids
+     */
+    java.util.List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds);
 }

@@ -2,8 +2,8 @@ package com.openquartz.easyfile.server.mapper;
 
 import com.openquartz.easyfile.server.mapper.condition.BaseRecordQueryCondition;
 import com.openquartz.easyfile.server.mapper.condition.LimiterRecordQueryCondition;
-import com.openquartz.easyfile.server.mapper.condition.RetryQueryCondition;
 import com.openquartz.easyfile.server.mapper.condition.UploadInfoChangeCondition;
+import java.util.Date;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -59,20 +59,24 @@ public interface AsyncDownloadRecordMapper {
     Integer countTimeRange(@Param("condition") LimiterRecordQueryCondition condition);
 
     /**
-     * 查询导出重试记录
+     * Claim a failed download record for business retry.
      *
-     * @param condition 查询条件
-     * @return 下载记录
-     */
-    List<AsyncDownloadRecord> selectExportRecordOfRetryable(@Param("condition") RetryQueryCondition condition);
-
-    /**
-     * 更新重试信息
-     *
-     * @param id 主键
+     * @param id record id
+     * @param operator operator
      * @return affect rows
      */
-    int updateRetryById(@Param("id") Long id);
+    int claimRetry(@Param("id") Long id, @Param("operator") String operator);
+
+    /**
+     * Select retryable register ids within look-back window (failed + orphan none).
+     *
+     * @param startTime look-back start
+     * @param orphanBefore orphan grace cutoff
+     * @param limit max rows
+     * @return register ids
+     */
+    List<Long> selectRetryableRegisterIds(@Param("startTime") Date startTime,
+        @Param("orphanBefore") Date orphanBefore, @Param("limit") Integer limit);
 
     /**
      * 更新重试执行异常

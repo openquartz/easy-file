@@ -105,4 +105,14 @@ public class DefaultDownloadStorageServiceImpl implements DownloadStorageService
         }
         return null;
     }
+
+    @Override
+    public boolean claimRetry(Long registerId, String operator) {
+        return asyncDownloadService.claimRetry(registerId, operator);
+    }
+
+    @Override
+    public List<Long> listRetryable(int lookBackHours, int limit, int orphanGraceSeconds) {
+        return asyncDownloadService.listRetryable(lookBackHours, limit, orphanGraceSeconds);
+    }
 }

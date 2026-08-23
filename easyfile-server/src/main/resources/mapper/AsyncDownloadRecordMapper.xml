@@ -102,30 +102,29 @@
           AND create_time >= #{condition.minCreateTime}
     </select>
 
-    <!--    查询可重试导出记录-->
-    <select id="selectExportRecordOfRetryable" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM ef_async_download_record
-            WHERE last_execute_time >= #{condition.startTime}
-              AND #{condition.endTime} > last_execute_time
-              AND upload_status IN
-        <foreach collection="condition.needRetryableStatusList" item="item" open="(" close=")" separator=","
-            index="index">
-            #{item.code}
-        </foreach>
-        AND max_server_retry > current_retry
-            limit #{condition.limit}
-    </select>
-
-    <!--    重试信息-->
-    <update id="updateRetryById">
+    <update id="claimRetry">
         UPDATE ef_async_download_record
         SET last_execute_time = now(),
-            current_retry     = current_retry + 1
+            current_retry     = current_retry + 1,
+            upload_status     = 'none',
+            execute_process   = 0,
+            error_msg         = '',
+            update_by         = #{operator}
         WHERE id = #{id}
-          AND max_server_retry >= current_retry + 1
+          AND upload_status = 'fail'
+          AND max_server_retry > current_retry
     </update>
+
+    <select id="selectRetryableRegisterIds" resultType="long">
+        SELECT id
+        FROM ef_async_download_record
+        WHERE last_execute_time >= #{startTime}
+          AND (
+            (upload_status = 'fail' AND max_server_retry > current_retry)
+            OR (upload_status = 'none' AND current_retry > 0 AND last_execute_time &lt; #{orphanBefore})
+          )
+        LIMIT #{limit}
+    </select>
 
     <update id="updateExecuteErrorMsg">
         UPDATE ef_async_download_record
