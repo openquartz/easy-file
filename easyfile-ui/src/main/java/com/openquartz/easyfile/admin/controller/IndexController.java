@@ -2,6 +2,10 @@ package com.openquartz.easyfile.admin.controller;
 
 import com.openquartz.easyfile.admin.controller.annotation.Auth;
 import com.openquartz.easyfile.admin.model.request.LoginRequest;
+import com.openquartz.easyfile.admin.service.LoginService;
+import com.openquartz.easyfile.common.bean.ResponseResult;
+import com.openquartz.easyfile.common.constants.Constants;
+import com.openquartz.easyfile.common.util.StringUtils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -11,19 +15,12 @@ import javax.validation.Valid;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
-import com.openquartz.easyfile.admin.service.LoginService;
-import com.openquartz.easyfile.common.bean.ResponseResult;
-import com.openquartz.easyfile.common.constants.Constants;
-import com.openquartz.easyfile.common.util.StringUtils;
 
 /**
  * index controller
@@ -43,17 +40,16 @@ public class IndexController {
 
     @Auth
     @RequestMapping("/")
-    public String index(Model model) {
-        return "index";
+    public String index() {
+        return "forward:/easyfile-ui/index.html";
     }
 
     @RequestMapping("/toLogin")
-    public ModelAndView toLogin(HttpServletRequest request, HttpServletResponse response, ModelAndView modelAndView) {
+    public String toLogin(HttpServletRequest request, HttpServletResponse response) {
         if (loginService.ifLogin(request, response) != null) {
-            modelAndView.setView(new RedirectView("/", true, false));
-            return modelAndView;
+            return "redirect:/easyfile-ui/";
         }
-        return new ModelAndView("login");
+        return "forward:/easyfile-ui/index.html";
     }
 
     @ResponseBody
@@ -69,7 +65,7 @@ public class IndexController {
     @RequestMapping("/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         loginService.logout(request, response);
-        return "login";
+        return "redirect:/easyfile-ui/toLogin";
     }
 
     @InitBinder

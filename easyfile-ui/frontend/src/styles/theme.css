@@ -1,0 +1,53 @@
+:root {
+  --ef-bg: #f2f5f9;
+  --ef-surface: #ffffff;
+  --ef-sidebar: #e8eef6;
+  --ef-accent: #5ba3e8;
+  --ef-accent-soft: #e7f2fb;
+  --ef-text: #1d1d1f;
+  --ef-text-secondary: #6e6e73;
+  --ef-border: rgba(15, 23, 42, 0.08);
+  --ef-shadow: 0 8px 24px rgba(31, 45, 61, 0.06);
+  --ef-radius: 12px;
+  --el-color-primary: #5ba3e8;
+  --el-color-primary-light-3: #7eb8ee;
+  --el-color-primary-light-5: #a3cdf3;
+  --el-color-primary-light-7: #c7e1f8;
+  --el-color-primary-light-8: #d8ebfa;
+  --el-color-primary-light-9: #e7f2fb;
+  --el-color-primary-dark-2: #3d8ad4;
+  --el-bg-color-page: #f2f5f9;
+  --el-border-radius-base: 10px;
+  --el-font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
+    "Hiragino Sans GB", "Helvetica Neue", sans-serif;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+  margin: 0;
+  background: var(--ef-bg);
+  color: var(--ef-text);
+  font-family: var(--el-font-family);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--ef-accent);
+  --el-button-border-color: var(--ef-accent);
+}
+
+.el-table {
+  --el-table-header-bg-color: #f7fafd;
+  --el-table-row-hover-bg-color: var(--ef-accent-soft);
+  --el-table-border-color: var(--ef-border);
+}
+
+.el-message-box {
+  border-radius: var(--ef-radius);
+  box-shadow: var(--ef-shadow);
+}

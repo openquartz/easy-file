@@ -5,6 +5,7 @@ import com.openquartz.easyfile.admin.model.request.ClickDownloadRequest;
 import com.openquartz.easyfile.admin.model.request.RetryDownloadTaskRequest;
 import com.openquartz.easyfile.admin.model.request.RevokeDownloadTaskRequest;
 import com.openquartz.easyfile.admin.model.request.ShowDownloadTaskRequest;
+import com.openquartz.easyfile.admin.model.response.AdminUiConfig;
 import com.openquartz.easyfile.admin.model.response.DownloadTaskResult;
 import java.util.List;
 import java.util.Objects;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.ModelAndView;
 import com.openquartz.easyfile.common.response.AppTree;
 import com.openquartz.easyfile.admin.property.AdminProperty;
 import com.openquartz.easyfile.admin.service.ServerAppIdProvider;
@@ -55,11 +55,18 @@ public class DownloadTaskController {
      */
     @Auth
     @RequestMapping(value = "/get")
-    public ModelAndView get() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("download-task");
-        modelAndView.addObject("showAppId", serverAppIdProvider.isShow());
-        return modelAndView;
+    public String get() {
+        return "redirect:/easyfile-ui/";
+    }
+
+    /**
+     * SPA runtime flags previously rendered by Thymeleaf
+     */
+    @Auth
+    @ResponseBody
+    @PostMapping(value = "/ui-config", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseResult<AdminUiConfig> uiConfig() {
+        return ResponseResult.ok(new AdminUiConfig(serverAppIdProvider.isShow()));
     }
 
     /**

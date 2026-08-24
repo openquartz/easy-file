@@ -32,6 +32,8 @@ public class EasyFileAdminWebMvcConfig implements WebMvcConfigurer {
 
         registry.addResourceHandler("/easyfile-ui/static/**")
             .addResourceLocations("classpath:/easyfile-admin-ui/static/");
+        registry.addResourceHandler("/easyfile-ui/index.html")
+            .addResourceLocations("classpath:/easyfile-admin-ui/");
         WebMvcConfigurer.super.addResourceHandlers(registry);
     }
 }

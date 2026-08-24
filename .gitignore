@@ -33,3 +33,9 @@ build/
 .vscode/
 **/**/.flattened-pom.xml
 ./.flattened-pom.xml
+
+### Vue admin frontend ###
+easyfile-ui/frontend/node_modules
+easyfile-ui/frontend/node
+easyfile-ui/frontend/dist
+easyfile-ui/src/main/resources/easyfile-admin-ui/
